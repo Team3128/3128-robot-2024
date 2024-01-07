@@ -220,39 +220,6 @@ public class Constants {
     public static class FieldConstants{
         public static final double FIELD_X_LENGTH = Units.inchesToMeters(651.25); // meters
         public static final double FIELD_Y_LENGTH = Units.inchesToMeters(315.5); // meters
-        public static final double HUB_RADIUS = Units.inchesToMeters(26.69); // meters
-
-        public static final double LOADING_X_LEFT = 13.2; // meters
-        public static final double LOADING_X_RIGHT = FIELD_X_LENGTH;
-        public static final double tapeWidth = Units.inchesToMeters(2.0);
-        public static final double midX = Units.inchesToMeters(132.375); // Tape to the left of charging station
-        public static final double outerX = Units.inchesToMeters(193.25); // Tape to the right of charging station
-        public static final double leftY = Units.feetToMeters(18.0);
-        public static final double midY = leftY - Units.inchesToMeters(59.39) + tapeWidth;
-
-        public static final double chargingStationLength = Units.inchesToMeters(76.125);
-        public static final double chargingStationWidth = Units.inchesToMeters(97.25);
-        public static final double chargingStationOuterX = outerX - tapeWidth;
-        public static final double chargingStationInnerX = chargingStationOuterX - chargingStationLength;
-        public static final double chargingStationLeftY = midY - tapeWidth;
-        public static final double chargingStationRightY = chargingStationLeftY - chargingStationWidth;
-        public static final Translation2d[] chargingStationCorners =
-        new Translation2d[] {
-          new Translation2d(chargingStationInnerX, chargingStationRightY),
-          new Translation2d(chargingStationInnerX, chargingStationLeftY),
-          new Translation2d(chargingStationOuterX, chargingStationRightY),
-          new Translation2d(chargingStationOuterX, chargingStationLeftY)
-        };
-
-        public static final double cableBumpInnerX = Units.inchesToMeters(149.5);
-        public static final double cableBumpOuterX = cableBumpInnerX + Units.inchesToMeters(7);
-        public static final Translation2d[] cableBumpCorners =
-        new Translation2d[] {
-          new Translation2d(cableBumpInnerX, 0.0),
-          new Translation2d(cableBumpInnerX, chargingStationRightY),
-          new Translation2d(cableBumpOuterX, 0.0),
-          new Translation2d(cableBumpOuterX, chargingStationRightY)
-        };
 
         public static Pose2d allianceFlip(Pose2d pose) {
             if (DriverStation.getAlliance() == Alliance.Red) {
