@@ -179,7 +179,7 @@ public class Constants {
  
         public static final Matrix<N3,N1> SVR_VISION_MEASUREMENT_STD = VecBuilder.fill(1,1,Units.degreesToRadians(10));
 
-        public static final HashMap<Integer,Pose2d> APRIL_TAG_POS = new HashMap<Integer,Pose2d>();
+        public static final HashMap<Integer ,Pose2d> APRIL_TAG_POS = new HashMap<Integer,Pose2d>();
 
         static {
             APRIL_TAG_POS.put(1, new Pose2d(
