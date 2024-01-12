@@ -4,7 +4,11 @@
 
 package frc.team3128;
 
+import java.util.Optional;
+
 import common.core.misc.NAR_Robot;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -19,6 +23,17 @@ import frc.team3128.subsystems.Swerve;
  * each mode, as described in the TimedRobot documentation.
  */
 public class Robot extends NAR_Robot {
+
+    public static Alliance alliance;
+
+    public static Alliance getAlliance() {
+        if (alliance == null) {
+            Optional<Alliance> DSalliance = DriverStation.getAlliance();
+            if (DSalliance.isPresent()) alliance = DSalliance.get();
+        }
+        return alliance;
+    }
+
     public static Robot instance;
 
     public static RobotContainer m_robotContainer = new RobotContainer();
