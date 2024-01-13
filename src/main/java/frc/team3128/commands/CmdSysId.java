@@ -1,7 +1,7 @@
 package frc.team3128.commands;
 
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import java.util.LinkedList;
 import java.util.List;
@@ -9,23 +9,26 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class CmdFFCharacterization extends CommandBase{
-    private static final double startDelaySecs = 2.0;
-    private static final double rampRateVoltsPerSec = 0.05;
+import frc.team3128.util.PolynomialRegression;
 
-    private final boolean forwards;
-    private final boolean isDrive;
+public class CmdSysId extends Command {
+  private static final double startDelaySecs = 2.0;
+  private static final double rampRateVoltsPerSec = 0.05;
 
-    private final FeedForwardCharacterizationData dataPrimary;
-    private final FeedForwardCharacterizationData dataSecondary;
-    private final Consumer<Double> voltageConsumerSimple;
-    private final BiConsumer<Double, Double> voltageConsumerDrive;
-    private final Supplier<Double> velocitySupplierPrimary;
-    private final Supplier<Double> velocitySupplierSecondary;
-  
-    private final Timer timer = new Timer();
+  private final boolean forwards;
+  private final boolean isDrive;
 
-    public FeedForwardCharacterization(
+  private final FeedForwardCharacterizationData dataPrimary;
+  private final FeedForwardCharacterizationData dataSecondary;
+  private final Consumer<Double> voltageConsumerSimple;
+  private final BiConsumer<Double, Double> voltageConsumerDrive;
+  private final Supplier<Double> velocitySupplierPrimary;
+  private final Supplier<Double> velocitySupplierSecondary;
+
+  private final Timer timer = new Timer();
+
+  /** Creates a new FeedForwardCharacterization for a differential drive. */
+  public CmdSysId(
       Subsystem drive,
       boolean forwards,
       FeedForwardCharacterizationData leftData,
@@ -45,7 +48,7 @@ public class CmdFFCharacterization extends CommandBase{
   }
 
   /** Creates a new FeedForwardCharacterization for a simple subsystem. */
-    public FeedForwardCharacterization(
+  public CmdSysId(
       Subsystem subsystem,
       boolean forwards,
       FeedForwardCharacterizationData data,
@@ -62,6 +65,7 @@ public class CmdFFCharacterization extends CommandBase{
     this.velocitySupplierSecondary = null;
   }
 
+  // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     timer.reset();
@@ -90,6 +94,8 @@ public class CmdFFCharacterization extends CommandBase{
       }
     }
   }
+
+  // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     if (isDrive) {
@@ -143,6 +149,5 @@ public class CmdFFCharacterization extends CommandBase{
       System.out.println(String.format("\tkS=%.5f", regression.beta(0)));
       System.out.println(String.format("\tkV=%.5f", regression.beta(1)));
     }
-
-}
+  }
 }
