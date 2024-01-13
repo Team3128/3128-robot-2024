@@ -32,15 +32,14 @@ public class CmdFocalAim extends Command {
 
     @Override
     public void initialize() {
-        controller.setSetpoint(setpoint.getAsDouble());
+        controller.setSetpoint(setpoint.getAsDouble()); //sets setpoint
     }
 
     @Override
     public void execute() 
     {
         //rotation needed calculated based off of the setpoint
-        rotation = Units.degreesToRadians(controller.calculate(swerve.getGyroRotation2d().getDegrees()));
-
+        rotation = Units.degreesToRadians(controller.calculate(swerve.getGyroRotation2d().getDegrees())); //calculate based off of setpoint
         swerve.drive(new Translation2d(0, 0), rotation, true);
     }
 
