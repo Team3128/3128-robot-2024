@@ -16,6 +16,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -300,8 +301,61 @@ public class Constants {
     
         }
     }
+    public static class ManipulatorConstants{
+        public static PIDFFConfig PIDConstants;
+        public static final int MANIP_LEFT_MOTOR_ID = 0;
+        public static final int MANIP_RIGHT_MOTOR_ID = 0;
+        public static final int MANIP_CURRENT_LIMIT = 0;
+        public static final double MANIP_GEAR_RATIO = 0;
+        public static final double INTAKE_POWER = -0.5;
+        public static final double SHOOTING_POWER = 0.5;
+        public static final double STALL_POWER = 0.1;
+        public static final double ABSOLUTE_THRESHOLD = 12;
+        
+    }
 
+    public static class PivotConstants{
+        public static PIDFFConfig PIDConstants;
+        public static Constraints MAX_ACCELERATION;
+        public static final double PIVOT_TOLERANCE = 0.0;
+        public static final int PIVOT_MOTOR_ID = 0;
+        public static final int PIVOT_CURRENT_LIMIT = 0;
+        public static final int ENCODER_DIO_ID = 0;
+        public static final int ANGLE_OFFSET = 0;
+        
+    }
+    
+    public static class TelescopeConstants{
+        public static PIDFFConfig PIDConstants;
+        public static final int TELE_MOTOR_ID = 0;
+        public static final int TELE_CURRENT_LIMIT = 0;
+        public static final double TELE_POWER = 0;
+        public static final double TELE_RATIO = 0;
+        
+    }
 
+    public static class ShooterConstants{
+        public static final double RPM_THRESHOLD_PERCENT = 0.425;
+    }
+
+    public static class Shooter2Constants{
+        public static Constraints MAX_ACCELERATION;
+        public static final int TELE_MOTOR_ID = 0;
+        public static final int TELE_CURRENT_LIMIT = 0;
+        public static final double SPEAKER_X = 0;
+        public static final double SPEAKER_Y = 0;
+        
+        
+    }
+    public static class WristConstants{
+        public static PIDFFConfig PIDConstants;
+        public static Constraints MAX_ACCELERATION;
+        public static final int WRIST_MOTOR_ID = 0;
+        public static final int WRIST_CURRENT_LIMIT = 0;
+        public static final double WRIST_TOLERANCE = 0;
+        public static final double ANGLE_OFFSET = 0;
+        public static final double RPM_THRESHOLD_PERCENT = 0.425;
+    }
 }
 
 
