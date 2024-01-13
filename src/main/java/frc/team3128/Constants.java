@@ -324,6 +324,8 @@ public class Constants {
         public static final int PIVOT_TOLERANCE = 1;//change prob
 
         public static final int PIVOT_ID = 0;//change
+
+        public static final int PIVOT_MOTOR_ID = 0;
     }
 
     public static class WristConstants{
@@ -349,6 +351,8 @@ public class Constants {
         public static final int WRIST_TOLERANCE = 1;//change prob
 
         public static final int WRIST_ID = 0;//change
+
+        public static final int WRIST_MOTOR_ID = 0;
     }
 }
 
