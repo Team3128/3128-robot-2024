@@ -18,12 +18,9 @@ import frc.team3128.subsystems.Swerve;
 public class RobotContainer {
 
     private Swerve swerve;
-
     private NAR_Joystick rightStick;
     private NAR_ButtonBoard buttonPad;
-
     public static NAR_XboxController controller;
-
     private NarwhalDashboard dashboard;
 
     public RobotContainer() {
