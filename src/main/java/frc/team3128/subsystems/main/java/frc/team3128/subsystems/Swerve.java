@@ -1,4 +1,4 @@
-package frc.team3128.subsystems;
+package main.java.frc.team3128.subsystems;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
 

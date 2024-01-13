@@ -301,7 +301,55 @@ public class Constants {
         }
     }
 
+    public static class PivotConstants{
+        
+        public static final double kP = 0.1;//change
+        public static final double kI = 0.1;//change
+        public static final double kD = 0.1;//change
 
+        public static final double kS = 0.1;//change
+        public static final double kV = 0.1;//change
+        public static final double kG = 0.1;//change
+
+        public static final double GEAR_RATIO = 10.00;//change
+        public static final double ROTATION_TO_DEGREES = 360;
+        public static final double ANGLE_OFFSET = 0;
+
+        public static final double maxVelocity = 0;//change
+        public static final double maxAccelerration = 0;//change
+
+        public static final int MIN_ANGLE = -90;
+        public static final int MAX_ANGLE = 90;
+
+        public static final int PIVOT_TOLERANCE = 1;//change prob
+
+        public static final int PIVOT_ID = 0;//change
+    }
+
+    public static class WristConstants{
+        
+        public static final double kP = 0.1;//change
+        public static final double kI = 0.1;//change
+        public static final double kD = 0.1;//change
+
+        public static final double kS = 0.1;//change
+        public static final double kV = 0.1;//change
+        public static final double kG = 0.1;//change
+
+        public static final double GEAR_RATIO = 10.00;//change
+        public static final double ROTATION_TO_DEGREES = 360;
+        public static final double ANGLE_OFFSET = 0;
+
+        public static final double maxVelocity = 0;//change
+        public static final double maxAccelerration = 0;//change
+
+        public static final int MIN_ANGLE = -90;
+        public static final int MAX_ANGLE = 90;
+
+        public static final int WRIST_TOLERANCE = 1;//change prob
+
+        public static final int WRIST_ID = 0;//change
+    }
 }
 
 
