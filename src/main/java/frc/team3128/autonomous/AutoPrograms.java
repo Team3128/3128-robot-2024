@@ -17,9 +17,7 @@ public class AutoPrograms {
     }
 
     private void initAutoSelector() {
-        final String[] autoStrings = new String[] {
-
-                                            };
+        final String[] autoStrings = new String[] {};
         NarwhalDashboard.getInstance().addAutos(autoStrings);
     }
 

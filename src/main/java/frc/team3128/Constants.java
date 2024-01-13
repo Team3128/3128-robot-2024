@@ -2,7 +2,7 @@ package frc.team3128;
 
 import java.util.HashMap;
 
-import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.path.PathConstraints;
 
 import common.core.controllers.PIDFFConfig;
 import common.core.swerve.SwerveConversions;
@@ -18,7 +18,6 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 import edu.wpi.first.math.MathUtil;
@@ -36,8 +35,8 @@ public class Constants {
         public static final double slowSpeed = 1.5;
         public static final double slowAcceleration = 2;
 
-        public static final PathConstraints fast = new PathConstraints(SwerveConstants.maxSpeed, SwerveConstants.maxAcceleration); 
-        public static final PathConstraints slow = new PathConstraints(slowSpeed, slowAcceleration);
+        public static final PathConstraints constraints = new PathConstraints(
+            SwerveConstants.maxSpeed, SwerveConstants.maxAcceleration, SwerveConstants.maxAngularVelocity, SwerveConstants.maxAngularAcceleration); 
 
         /* Translation PID Values */
         public static final double translationKP = 3;
@@ -109,10 +108,11 @@ public class Constants {
         // Theoretical: v = 4.96824, omega = 11.5
         // Real: v = 4.5, omega = 10
         // For safety, use less than theoretical and real values
-        public static final double maxSpeed = 4.4; //meters per second - 16.3 ft/sec
+        public static final double maxSpeed = 5; //meters per second - 16.3 ft/sec
+        public static final double maxAttainableSpeed = maxSpeed * 0.85; //Stole from citrus.
         public static final double maxAcceleration = 3;
         public static final double maxAngularVelocity = 8; //3; //11.5; // citrus: 10 - Mason look at this later wtf
-        public static final TrapezoidProfile.Constraints CONSTRAINTS = new TrapezoidProfile.Constraints(maxSpeed, maxAcceleration);
+        public static final double maxAngularAcceleration = 2 * Math.PI; //I stole from citrus.
 
         /* Motor Inverts */
         public static final boolean driveMotorInvert = true;
@@ -219,25 +219,26 @@ public class Constants {
     }
     
     public static class FieldConstants{
+
         public static final double FIELD_X_LENGTH = Units.inchesToMeters(651.25); // meters
         public static final double FIELD_Y_LENGTH = Units.inchesToMeters(315.5); // meters
 
         public static Pose2d allianceFlip(Pose2d pose) {
-            if (DriverStation.getAlliance() == Alliance.Red) {
+            if (Robot.getAlliance() == Alliance.Red) {
                 return flip(pose);
             }
             return pose;
         }
 
         public static Translation2d allianceFlip(Translation2d translation) {
-            if (DriverStation.getAlliance() == Alliance.Red) {
+            if (Robot.getAlliance() == Alliance.Red) {
                 return flipTranslation(translation);
             }
             return translation;
         }
 
         public static Rotation2d allianceFlip(Rotation2d rotation) {
-            if (DriverStation.getAlliance() == Alliance.Red) {
+            if (Robot.getAlliance() == Alliance.Red) {
                 return flipRotation(rotation);
             }
             return rotation;

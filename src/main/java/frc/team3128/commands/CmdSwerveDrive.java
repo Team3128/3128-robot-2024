@@ -8,14 +8,14 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
+import frc.team3128.Robot;
 import frc.team3128.subsystems.Swerve;
 import static frc.team3128.Constants.SwerveConstants.*;
 
-public class CmdSwerveDrive extends CommandBase {
+public class CmdSwerveDrive extends Command {
     private final Swerve swerve;
 
     private double rotation;
@@ -51,8 +51,8 @@ public class CmdSwerveDrive extends CommandBase {
     public void execute() {
         // deadbands are taken care of in NAR_Joystick
         // TODO: add in slewratelimiter here
-        translation = new Translation2d(xAxis.getAsDouble(), yAxis.getAsDouble()).times(swerve.throttle).times(maxSpeed);
-        if (DriverStation.getAlliance() == Alliance.Red || !swerve.fieldRelative) {
+        translation = new Translation2d(xAxis.getAsDouble(), yAxis.getAsDouble()).times(swerve.throttle).times(maxAttainableSpeed);
+        if (Robot.getAlliance() == Alliance.Red || !swerve.fieldRelative) {
             translation = translation.rotateBy(Rotation2d.fromDegrees(90));
         }
         else {
