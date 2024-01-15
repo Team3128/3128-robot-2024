@@ -5,6 +5,7 @@ import com.ctre.phoenix6.hardware.Pigeon2;
 import common.core.swerve.SwerveBase;
 import common.core.swerve.SwerveModule;
 import common.utility.shuffleboard.NAR_Shuffleboard;
+import edu.wpi.first.math.geometry.Pose2d;
 
 import static frc.team3128.Constants.SwerveConstants.*;
 import static frc.team3128.Constants.VisionConstants.*;
@@ -59,5 +60,6 @@ public class Swerve extends SwerveBase {
     public void zeroGyro(double reset) {
         gyro.setYaw(reset);
     }
+
 
 }

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import com.pathplanner.lib.path.PathConstraints;
 
 import common.core.controllers.PIDFFConfig;
+import common.core.controllers.TrapController;
 import common.core.swerve.SwerveConversions;
 import common.core.swerve.SwerveModuleConfig;
 import common.core.swerve.SwerveModuleConfig.SwerveMotorConfig;
@@ -15,6 +16,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
@@ -299,6 +302,16 @@ public class Constants {
             }
     
         }
+
+    }
+
+    public static class FocalAimConstants {
+        public static double turnKP = 5;
+        public static double kP = 0.1;
+        public static double kI = 0;
+        public static double kD = 0;
+        public static Constraints constraints = new Constraints(5, 2);
+        public static PIDFFConfig config = new PIDFFConfig(kP, kI, kD);
     }
 
 

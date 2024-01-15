@@ -2,6 +2,7 @@ package frc.team3128;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.team3128.commands.CmdFocalAim;
 import frc.team3128.commands.CmdSwerveDrive;
 import common.hardware.input.NAR_ButtonBoard;
 import common.hardware.input.NAR_Joystick;
@@ -18,12 +19,9 @@ import frc.team3128.subsystems.Swerve;
 public class RobotContainer {
 
     private Swerve swerve;
-
     private NAR_Joystick rightStick;
     private NAR_ButtonBoard buttonPad;
-
     public static NAR_XboxController controller;
-
     private NarwhalDashboard dashboard;
 
     public RobotContainer() {
@@ -42,6 +40,6 @@ public class RobotContainer {
     }   
 
     private void configureButtonBindings() {
-        
+        rightStick.getButton(1).onTrue(new CmdFocalAim(() -> 180)); //degrees converts to radians in command
     }
 }
