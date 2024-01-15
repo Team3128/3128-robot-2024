@@ -4,6 +4,7 @@ import static frc.team3128.Constants.FocalAimConstants.config;
 import static frc.team3128.Constants.FocalAimConstants.constraints;
 import java.util.function.DoubleSupplier;
 import common.core.controllers.TrapController;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import frc.team3128.subsystems.Swerve;
@@ -21,7 +22,6 @@ public class CmdFocalAim extends Command {
     private Swerve swerve;
     private DoubleSupplier setpoint;
     private double rotation;
-    
 
     public CmdFocalAim(DoubleSupplier setpoint)
     { 
@@ -42,6 +42,21 @@ public class CmdFocalAim extends Command {
         rotation = Units.degreesToRadians(controller.calculate(swerve.getGyroRotation2d().getDegrees())); //calculate based off of setpoint
         swerve.drive(new Translation2d(0, 0), rotation, true);
     }
+
+    //focal aim command method thing, kinda just throwing it in here
+    // public double getSetpoint(Pose2d focalPoint) {
+    //     double coordRobotX = robotPosition.getTranslation().getX();
+    //     double coordRobotY = robotPosition.getTranslation().getY();
+    //     double coordFocalX = focalPoint.getTranslation().getX();
+    //     double coordFocalY = focalPoint.getTranslation().getY();
+    //     //distance
+    //     double distance = Math.hypot(coordFocalX - coordRobotX, coordFocalY - coordRobotY);
+
+    //     //angle
+    //     double angleSetpoint = Math.atan((coordFocalY-coordRobotY)/(coordFocalX-coordRobotX));
+    //     return angleSetpoint;
+    //     }
+    
 
     @Override
     public void end(boolean interrupted) {

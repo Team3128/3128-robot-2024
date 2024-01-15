@@ -21,9 +21,6 @@ public class Swerve extends SwerveBase {
     public double throttle = 1;
 
     public Supplier<Double> yaw, pitch, roll;
-       //stuff for focal point
-    private Pose2d focalPosition; // field relative, temporary value
-    private Pose2d robotPosition;
 
     public static synchronized Swerve getInstance() {
         if (instance == null) {
@@ -64,14 +61,5 @@ public class Swerve extends SwerveBase {
         gyro.setYaw(reset);
     }
 
-     //focal aim command method thing, kinda just throwing it in here
-     public double getSetpoint() {
-        double coordRobotX = robotPosition.getTranslation().getX();
-        double coordRobotY = robotPosition.getTranslation().getY();
-        double coordFocalX = focalPosition.getTranslation().getX();
-        double coordFocalY = focalPosition.getTranslation().getY();
-        double angleSetpoint = Math.atan((coordFocalY-coordRobotY)/(coordFocalX-coordRobotX));
-        return angleSetpoint;
-    }
 
 }
