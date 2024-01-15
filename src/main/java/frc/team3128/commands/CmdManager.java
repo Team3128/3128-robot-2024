@@ -10,6 +10,12 @@ public class CmdManager {
      }
 
     public static double getDesiredAngle() {
-        return setpoint;
+        
+        double coordRobotX = robotPosition.getTranslation().getX();
+        double coordRobotY = robotPosition.getTranslation().getY();
+        double coordFocalX = focalPoint.getTranslation().getX();
+        double coordFocalY = focalPoint.getTranslation().getY();
+        double angleSetpoint = Math.atan((coordFocalY-coordRobotY)/(coordFocalX-coordRobotX));
+        return angleSetpoint;
     }
 }
