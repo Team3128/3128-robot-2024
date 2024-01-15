@@ -4,12 +4,12 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class CmdManager {
-    public Pose2d aimPoint;
-    public static Command shoot() {
-        new CmdFocalAim(()-> getDesiredAngle());
-    }
+    private static double setpoint = 2;
+     public static Command shoot() {
+         new CmdFocalAim(()-> getDesiredAngle());
+     }
 
     public static double getDesiredAngle() {
-        return 4;
+        return setpoint;
     }
 }
