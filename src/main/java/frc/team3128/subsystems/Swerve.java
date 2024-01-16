@@ -61,5 +61,11 @@ public class Swerve extends SwerveBase {
         gyro.setYaw(reset);
     }
 
+    @Override
+    public void stop() {
+
+    
+    }
+
 
 }

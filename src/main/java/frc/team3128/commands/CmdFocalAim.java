@@ -8,6 +8,8 @@ import common.core.commands.NAR_PIDCommand;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import frc.team3128.Robot;
 import frc.team3128.subsystems.Swerve;
 
 
@@ -27,7 +29,7 @@ public class CmdFocalAim extends NAR_PIDCommand {
     
     public CmdFocalAim(DoubleSupplier setpoint)
     { 
-        super(controller, measurement, setpoint, (double output)-> Swerve.getInstance().drive(new Translation2d(), output, false));
+        super(controller, measurement, setpoint, (double output)-> Swerve.getInstance().drive(new Translation2d(0,0), output, false));
         this.setpoint = setpoint;
         swerve = Swerve.getInstance();
         controller = new TrapController(config, constraints); //put into constants folder 
@@ -46,15 +48,6 @@ public class CmdFocalAim extends NAR_PIDCommand {
         // swerve.drive(new Translation2d(0, 0), rotation, true);
     }
 
-    //focal aim command method thing, kinda just throwing it in here
-    // public double getSetpoint(Pose2d focalPoint) {
-    //     double coordRobotX = robotPosition.getTranslation().getX();
-    //     double coordRobotY = robotPosition.getTranslation().getY();
-    //     double coordFocalX = focalPoint.getTranslation().getX();
-    //     double coordFocalY = focalPoint.getTranslation().getY();
-    //     double angleSetpoint = Math.atan((coordFocalY-coordRobotY)/(coordFocalX-coordRobotX));
-    //     return angleSetpoint;
-    //     }
     
 
     @Override

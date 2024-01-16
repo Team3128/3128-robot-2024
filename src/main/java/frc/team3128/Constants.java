@@ -310,8 +310,11 @@ public class Constants {
         public static double kP = 0.1;
         public static double kI = 0;
         public static double kD = 0;
+        public static double kS = 0;
+        public static double kV = 0;
+        public static double kG = 0;
         public static Constraints constraints = new Constraints(5, 2);
-        public static PIDFFConfig config = new PIDFFConfig(kP, kI, kD);
+        public static PIDFFConfig config = new PIDFFConfig(kP, kI, kD, kS, kV, kG);
     }
 
 
