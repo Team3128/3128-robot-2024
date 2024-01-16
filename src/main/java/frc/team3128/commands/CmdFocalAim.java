@@ -41,6 +41,16 @@ public class CmdFocalAim extends NAR_PIDCommand {
     public void initialize() {
 
     }
+    public double getDist(Pose2d aimPoint){
+        Pose2d robotPosition = Swerve.getInstance().getPose();
+        double coordRobotX = robotPosition.getTranslation().getX();
+        double coordRobotY = robotPosition.getTranslation().getY();
+        double coordFocalX = aimPoint.getTranslation().getX();
+        double coordFocalY = aimPoint.getTranslation().getY();
+        double distance = Math.sqrt(Math.pow((coordFocalX-coordRobotX),2)+Math.pow((coordFocalY-coordRobotY),2));
+        return distance;
+
+    }
     public Pose2d getAimPoint() {
         Pose2d robotPosition = Swerve.getInstance().getPose();
         double coordRobotYInteger = robotPosition.getTranslation().getY() - (8.21/2);
@@ -61,7 +71,7 @@ public class CmdFocalAim extends NAR_PIDCommand {
             }
             return new Pose2d(focalPoint[0], focalPoint[1], new Rotation2d(0));
         }
-        
+
         else{
             double[] midpointCoordSpeaker = {midPointSpeakerRed.getTranslation().getX(), midPointSpeakerRed.getTranslation().getY()};
             double ratioRobot = coordRobotYInteger/FIELD_Y_LENGTH;
