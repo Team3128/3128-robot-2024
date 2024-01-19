@@ -41,6 +41,6 @@ public class RobotContainer {
     }   
 
     private void configureButtonBindings() {
-        rightStick.getButton(1).onTrue(new CmdFocalAim(() -> 180)).onFalse(stop()); //degrees converts to radians in command
+        rightStick.getButton(1).onTrue(new CmdFocalAim(() -> 180)); //degrees converts to radians in command
     }
 }
