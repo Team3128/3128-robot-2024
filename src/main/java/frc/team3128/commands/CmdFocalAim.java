@@ -9,19 +9,23 @@ import edu.wpi.first.math.util.Units;
 import frc.team3128.subsystems.Swerve;
 
 public class CmdFocalAim extends NAR_PIDCommand {
-    private static TrapController controller;
     private Swerve swerve;
-    private static DoubleSupplier measurement;
     private DoubleSupplier setpoint;
-    private double rotation;
+    private DoubleSupplier measurement;
+    private static TrapController controller = new TrapController(config, constraints); //put into constants folder 
     
-    public CmdFocalAim(DoubleSupplier setpoint)
+    public CmdFocalAim(DoubleSupplier setpoint, DoubleSupplier measurement)
     { 
         super(controller, measurement, setpoint, (double output)-> Swerve.getInstance().drive(new Translation2d(0,0), Units.degreesToRadians(output), false));
         this.setpoint = setpoint;
+        this.measurement = measurement;
         swerve = Swerve.getInstance();
-        controller = new TrapController(config, constraints); //put into constants folder 
+    
       
+    }
+    @Override
+    public void execute() {
+
     }
 }
 

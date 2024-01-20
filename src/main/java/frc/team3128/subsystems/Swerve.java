@@ -16,6 +16,7 @@ import static frc.team3128.Constants.SwerveConstants.*;
 import static frc.team3128.Constants.VisionConstants.*;
 import static frc.team3128.Constants.FocalAimConstants.*;
 
+import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 public class Swerve extends SwerveBase {
@@ -51,6 +52,8 @@ public class Swerve extends SwerveBase {
     public double getYaw() {
         return yaw.get();
     }
+    
+
 
     @Override
     public double getPitch() {

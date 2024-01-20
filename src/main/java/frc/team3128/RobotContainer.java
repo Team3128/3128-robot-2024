@@ -5,6 +5,9 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.team3128.commands.CmdFocalAim;
 import frc.team3128.commands.CmdSwerveDrive;
 import frc.team3128.commands.CmdManager;
+
+import java.util.function.DoubleSupplier;
+
 import common.hardware.input.NAR_ButtonBoard;
 import common.hardware.input.NAR_Joystick;
 import common.hardware.input.NAR_XboxController;
@@ -18,7 +21,7 @@ import frc.team3128.subsystems.Swerve;
  * commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-
+    private DoubleSupplier measurement;
     private Swerve swerve;
     private NAR_Joystick rightStick;
     private NAR_ButtonBoard buttonPad;
@@ -41,6 +44,9 @@ public class RobotContainer {
     }   
 
     private void configureButtonBindings() {
-        rightStick.getButton(1).onTrue(new CmdFocalAim(() -> 180)); //degrees converts to radians in command
+
+        // rightStick.getButton(1).onTrue(new CmdFocalAim(() -> 180, (swerve.getYaw().isNull()) ? ()-> 1.0 : ()->swerve.getYaw())); //degrees converts to radians in command
+        rightStick.getButton(1).onTrue(new CmdFocalAim(() -> 180, ()-> swerve.getYaw())); //degrees converts to radians in command
+
     }
 }
