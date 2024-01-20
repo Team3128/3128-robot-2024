@@ -17,7 +17,9 @@ import static frc.team3128.Constants.PivotConstants.*;
 import frc.team3128.PositionConstants.Positions;
 
 public class Pivot extends NAR_PIDSubsystem {
-    public NAR_CANSparkMax m_pivot;
+
+    public NAR_CANSparkMax pivotMotor;
+
     private static Pivot instance;
     
     public static synchronized Pivot getInstance() {
@@ -26,13 +28,11 @@ public class Pivot extends NAR_PIDSubsystem {
         }
         return instance;
     }
-    
-
 
     public Pivot() {
-        super(new TrapController(new PIDFFConfig(kP,kI,kD,kS,kV,kG), new TrapezoidProfile.Constraints(maxVelocity, maxAccelerration), 0.1));
+        super(new TrapController(new PIDFFConfig(kP, kI, kD, kS, kV, kA, kG), new TrapezoidProfile.Constraints(maxVelocity, maxAccelerration)));
         setkG_Function(()-> Math.cos(Units.degreesToRadians(getSetpoint())));
-        setConstraints(MIN_ANGLE,MAX_ANGLE);
+        setConstraints(MIN_ANGLE, MAX_ANGLE);
         configMotor();
         getController().setTolerance(PIVOT_TOLERANCE);
     }
@@ -42,40 +42,47 @@ public class Pivot extends NAR_PIDSubsystem {
     }
 
     private void configMotor() {
-        m_pivot = new NAR_CANSparkMax(PIVOT_MOTOR_ID);
-        m_pivot.setInverted(false);
-        m_pivot.setNeutralMode(Neutral.COAST);
-        m_pivot.setCurrentLimit(40);
-        m_pivot.setUnitConversionFactor(GEAR_RATIO * 360);
+        pivotMotor = new NAR_CANSparkMax(PIVOT_MOTOR_ID);
+        pivotMotor.setInverted(false);
+        pivotMotor.setNeutralMode(Neutral.COAST);
+        pivotMotor.setUnitConversionFactor(GEAR_RATIO * 360);
         resetEncoder();
     }
 
     public void resetEncoder() {
-        m_pivot.resetPosition(90*GEAR_RATIO/ROTATION_TO_DEGREES);
+        pivotMotor.resetPosition(0);
     }
 
     public void set(double power) {
         disable();
-        m_pivot.set(power);
+        pivotMotor.set(power);
     }
 
     @Override
     protected void useOutput(double output, double setpoint) {
-        double percentOutput = output / 12.0;
-        m_pivot.set(MathUtil.clamp(percentOutput, -1, 1));
+        final double percentOutput = output / 12.0;
+        pivotMotor.set(MathUtil.clamp(percentOutput, -1, 1));
     }
 
     @Override
     protected double getMeasurement() {
-        return m_pivot.getPosition();
+        return pivotMotor.getPosition();
     }
 
     //Commands
-    public Command movePivot(double power) {
+    public Command setPivot(double power) {
         return runOnce(()-> set(power));
     }
     
-    public Command anglePivot(Positions pivotPosition) {
-        return runOnce(()-> startPID(pivotPosition.pivotANGLE));
+    public Command pivotTo(Positions pivotPosition) {
+        return runOnce(()-> startPID(pivotPosition));
+    }
+
+    public Command pivotTo(double pivotAngle) {
+        return runOnce(()-> startPID(pivotAngle));
+    }
+
+    public Command resetPivot() {
+        return runOnce(()-> resetEncoder());
     }
 }

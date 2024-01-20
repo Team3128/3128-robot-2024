@@ -2,9 +2,8 @@ package frc.team3128.subsystems;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import common.core.controllers.TrapController;
-
+import common.core.controllers.Controller.Type;
+import common.core.controllers.Controller;
 import common.core.controllers.PIDFFConfig;
 import common.core.subsystems.NAR_PIDSubsystem;
 
@@ -17,7 +16,9 @@ import static frc.team3128.Constants.WristConstants.*;
 import frc.team3128.PositionConstants.Positions;
 
 public class Wrist extends NAR_PIDSubsystem {
-    public NAR_CANSparkMax m_wrist;
+
+    public NAR_CANSparkMax wristMotor;
+
     private static Wrist instance;
     
     public static synchronized Wrist getInstance() {
@@ -26,11 +27,9 @@ public class Wrist extends NAR_PIDSubsystem {
         }
         return instance;
     }
-    
-
 
     public Wrist() {
-        super(new TrapController(new PIDFFConfig(kP,kI,kD,kS,kV,kG), new TrapezoidProfile.Constraints(maxVelocity, maxAccelerration), 0.1));
+        super(new Controller(new PIDFFConfig(kP,kI,kD,kS,kV,kG), Type.POSITION));
         setkG_Function(()-> Math.cos(Units.degreesToRadians(getSetpoint())));
         setConstraints(MIN_ANGLE,MAX_ANGLE);
         configMotor();
@@ -42,40 +41,43 @@ public class Wrist extends NAR_PIDSubsystem {
     }
 
     private void configMotor() {
-        m_wrist = new NAR_CANSparkMax(WRIST_MOTOR_ID);
-        m_wrist.setInverted(false);
-        m_wrist.setNeutralMode(Neutral.COAST);
-        m_wrist.setCurrentLimit(40);
-        m_wrist.setUnitConversionFactor(GEAR_RATIO * 360);
+        wristMotor = new NAR_CANSparkMax(WRIST_MOTOR_ID);
+        wristMotor.setInverted(false);
+        wristMotor.setNeutralMode(Neutral.COAST);
+        wristMotor.setUnitConversionFactor(GEAR_RATIO * 360);
         resetEncoder();
     }
 
     public void resetEncoder() {
-        m_wrist.resetPosition(90*GEAR_RATIO/ROTATION_TO_DEGREES);
+        wristMotor.resetPosition(0);
     }
 
     public void set(double power) {
         disable();
-        m_wrist.set(power);
+        wristMotor.set(power);
     }
 
     @Override
     protected void useOutput(double output, double setpoint) {
-        double percentOutput = output / 12.0;
-        m_wrist.set(MathUtil.clamp(percentOutput, -1, 1));
+        final double percentOutput = output / 12.0;
+        wristMotor.set(MathUtil.clamp(percentOutput, -1, 1));
     }
 
     @Override
     protected double getMeasurement() {
-        return m_wrist.getPosition();
+        return wristMotor.getPosition();
     }
 
     //Commands
-    public Command moveWrist(double power) {
+    public Command setWrist(double power) {
         return runOnce(()-> set(power));
     }
     
-    public Command angleWrist(Positions pivotPosition) {
-        return runOnce(()-> startPID(pivotPosition.wristANGLE));
+    public Command moveWrist(Positions pivotPosition) {
+        return runOnce(()-> startPID(pivotPosition));
+    }
+
+    public Command moveWrist(double wristAngle) {
+        return runOnce(()-> startPID(wristAngle));
     }
 }

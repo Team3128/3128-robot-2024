@@ -303,15 +303,16 @@ public class Constants {
 
     public static class PivotConstants{
         
-        public static final double kP = 0.1;//change
-        public static final double kI = 0.1;//change
-        public static final double kD = 0.1;//change
+        public static final double kP = 0;//change
+        public static final double kI = 0;//change
+        public static final double kD = 0;//change
 
-        public static final double kS = 0.1;//change
-        public static final double kV = 0.1;//change
-        public static final double kG = 0.1;//change
+        public static final double kS = 0;//change
+        public static final double kV = 0;//change
+        public static final double kA = 0;
+        public static final double kG = 0;//change
 
-        public static final double GEAR_RATIO = 10.00;//change
+        public static final double GEAR_RATIO = 1.0 / 175.0;//change
         public static final double ROTATION_TO_DEGREES = 360;
         public static final double ANGLE_OFFSET = 0;
 
@@ -330,15 +331,15 @@ public class Constants {
 
     public static class WristConstants{
         
-        public static final double kP = 0.1;//change
-        public static final double kI = 0.1;//change
-        public static final double kD = 0.1;//change
+        public static final double kP = 0;//change
+        public static final double kI = 0;//change
+        public static final double kD = 0;//change
 
-        public static final double kS = 0.1;//change
-        public static final double kV = 0.1;//change
-        public static final double kG = 0.1;//change
+        public static final double kS = 0;//change
+        public static final double kV = 0;//change
+        public static final double kG = 0;//change
 
-        public static final double GEAR_RATIO = 10.00;//change
+        public static final double GEAR_RATIO = 1 / 175.0;//change
         public static final double ROTATION_TO_DEGREES = 360;
         public static final double ANGLE_OFFSET = 0;
 
