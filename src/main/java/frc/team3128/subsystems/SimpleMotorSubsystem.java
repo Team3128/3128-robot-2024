@@ -6,15 +6,23 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class SimpleMotorSubsystem extends SubsystemBase{
     
+    private static SimpleMotorSubsystem instance;
 
     private NAR_CANSparkMax motor;
+
+    public static synchronized SimpleMotorSubsystem getInstance() {
+        if (instance == null) {
+            instance = new SimpleMotorSubsystem();
+        }
+        return instance;
+    }
 
     public SimpleMotorSubsystem(){
         configMotor();
     }
 
     public void configMotor(){
-        motor = new NAR_CANSparkMax(0);
+        motor = new NAR_CANSparkMax(21);
         motor.setCurrentLimit(40);
         motor.setStatusFrames(SparkMaxConfig.POSITION);
     }
