@@ -88,35 +88,37 @@ public class Swerve extends SwerveBase {
     }
     public Pose2d getAimPoint() {
         Pose2d robotPosition = Swerve.getInstance().getPose();
-        double coordRobotYInteger = robotPosition.getTranslation().getY() - (8.21/2);
+        double robotCoordY = robotPosition.getTranslation().getY() - (8.21/2);
         double[] focalPoint;
         
+        //if "above" the field, focal point coord is the left most area of the speaker
         if (Robot.getAlliance() == Alliance.Blue ){
             double[] midpointCoordSpeaker = {midPointSpeakerBlue.getTranslation().getX(), midPointSpeakerBlue.getTranslation().getY()};
-            double ratioRobot = coordRobotYInteger/FIELD_Y_LENGTH;
+            double ratioRobot = robotCoordY/FIELD_Y_LENGTH;
             focalPoint = new double[2];
-            if (coordRobotYInteger > 0) {
-                focalPoint[1] = -1*((speakerLength/2) * ratioRobot)+ 6.057+ (speakerLength/2);
-                focalPoint[0] = midpointCoordSpeaker[0];
+            if (robotCoordY > 0) {
+                focalPoint[1] = -1*((speakerLength/2) * ratioRobot)+ 6.057+ (speakerLength/2); //y coord
+                focalPoint[0] = midpointCoordSpeaker[0]; //x coord (always constant)
             } 
-
-            else if (coordRobotYInteger < 0) { 
+        //if "below" the field, focal point coord is the right most area of the speaker
+            else if (robotCoordY < 0) { 
                 focalPoint[1] = ((speakerLength/2) * ratioRobot)+ 6.057+ (speakerLength/2);
                 focalPoint[0] = midpointCoordSpeaker[0];
             }
+        //returns ideal focal point coord
             return new Pose2d(focalPoint[0], focalPoint[1], new Rotation2d(0));
         }
 
         else{
             double[] midpointCoordSpeaker = {midPointSpeakerRed.getTranslation().getX(), midPointSpeakerRed.getTranslation().getY()};
-            double ratioRobot = coordRobotYInteger/FIELD_Y_LENGTH;
+            double ratioRobot = robotCoordY/FIELD_Y_LENGTH;
             focalPoint = new double[2];
-            if (coordRobotYInteger > 0) {
-                focalPoint[1] = -1*((speakerLength/2) * ratioRobot) + 6.057+ (speakerLength/2);
-                focalPoint[0] = midpointCoordSpeaker[0];
+            if (robotCoordY > 0) {
+                focalPoint[1] = -1*((speakerLength/2) * ratioRobot) + 6.057+ (speakerLength/2); 
+                focalPoint[0] = midpointCoordSpeaker[0]; 
             }
 
-            else if (coordRobotYInteger < 0) { 
+            else if (robotCoordY < 0) { 
                 focalPoint[1] = ((speakerLength/2) * ratioRobot) + 6.057+ (speakerLength/2);
                 focalPoint[0] = midpointCoordSpeaker[0];
             }

@@ -306,8 +306,8 @@ public class Constants {
     }
 
     public static class FocalAimConstants {
-        public static Pose2d midPointSpeakerBlue = new Pose2d(0, (6.057-(1.043/2)), Rotation2d.fromDegrees(0));
-        public static Pose2d midPointSpeakerRed = new Pose2d(16.57, (6.057-(1.043/2)), Rotation2d.fromDegrees(0));
+        public static Pose2d midPointSpeakerBlue = new Pose2d(0, (6.057-(1.043/2)), Rotation2d.fromDegrees(0)); //coord of midpoint
+        public static Pose2d midPointSpeakerRed = new Pose2d(16.57, (6.057-(1.043/2)), Rotation2d.fromDegrees(0)); //coord of midpoint
         public static double speakerLength = 1.043;
         public static double FIELD_X_LENGTH = 16.57; // meters
         public static double FIELD_Y_LENGTH = 8.21; // meters

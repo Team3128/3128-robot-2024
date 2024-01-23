@@ -45,8 +45,6 @@ public class RobotContainer {
     }   
 
     private void configureButtonBindings() {
-
-        // rightStick.getButton(1).onTrue(new CmdFocalAim(() -> 180, (swerve.getYaw().isNull()) ? ()-> 1.0 : ()->swerve.getYaw())); //degrees converts to radians in command
         rightStick.getButton(1).onTrue(new CmdFocalAim(() -> 180, ()-> swerve.getYaw())); //degrees converts to radians in command
 
     }
