@@ -121,7 +121,7 @@ public class Constants {
 
         public static final MotorConfig driveMotorConfig = new MotorConfig(SwerveConversions.rotationsToMeters(1, wheelCircumference, driveGearRatio), 60, driveLimit, false, Neutral.COAST);
 
-        public static final MotorConfig angleMotorConfig = new MotorConfig(SwerveConversions.rotationsToDegrees(1, angleGearRatio), 1, angleLimit, true, Neutral.COAST);
+        public static final MotorConfig angleMotorConfig = new MotorConfig(SwerveConversions.rotationsToDegrees(1, angleGearRatio), 1, angleLimit, false, Neutral.COAST);
 
         public static final PIDFFConfig drivePIDConfig = new PIDFFConfig(driveKP, driveKI, driveKD, driveKS, driveKV, driveKA);
 
@@ -132,7 +132,7 @@ public class Constants {
             new SwerveMotorConfig(1, driveMotorConfig, drivePIDConfig),
             new SwerveMotorConfig(2, angleMotorConfig, anglePIDConfig),
             20,
-            174.111328125,
+            -9.31640625,
             canCoderInvert,
             maxSpeed);
 
@@ -141,7 +141,7 @@ public class Constants {
             new SwerveMotorConfig(3, driveMotorConfig, drivePIDConfig),
             new SwerveMotorConfig(4, angleMotorConfig, anglePIDConfig),
             21,
-            115.224609375,
+            -64.423828125,
             canCoderInvert,
             maxSpeed);
         
@@ -150,7 +150,7 @@ public class Constants {
             new SwerveMotorConfig(5, driveMotorConfig, drivePIDConfig),
             new SwerveMotorConfig(6, angleMotorConfig, anglePIDConfig),
             22,
-            107.841796875,
+            109.775390625,
             canCoderInvert,
             maxSpeed);
         
@@ -159,7 +159,7 @@ public class Constants {
             new SwerveMotorConfig(7, driveMotorConfig, drivePIDConfig),
             new SwerveMotorConfig(8, angleMotorConfig, anglePIDConfig),
             23,
-            70.576171875,
+            -108.45703125,
             canCoderInvert,
             maxSpeed);
     }
@@ -354,6 +354,13 @@ public class Constants {
         public static final int WRIST_ID = 0;//change
 
         public static final int WRIST_MOTOR_ID = 0;
+    }
+
+    public static class ShooterConstants {
+        public static final PIDFFConfig PIDConstants = new PIDFFConfig(0, 0, 0, 0, 0, 0);
+        public static final int LEFT_MOTOR_ID = 0;
+        public static final int RIGHT_MOTOR_ID = 0;
+        public static final double GEAR_RATIO = 1;
     }
 }
 
