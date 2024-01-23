@@ -121,7 +121,7 @@ public class Constants {
 
         public static final MotorConfig driveMotorConfig = new MotorConfig(SwerveConversions.rotationsToMeters(1, wheelCircumference, driveGearRatio), 60, driveLimit, false, Neutral.COAST);
 
-        public static final MotorConfig angleMotorConfig = new MotorConfig(SwerveConversions.rotationsToDegrees(1, angleGearRatio), 1, angleLimit, false, Neutral.COAST);
+        public static final MotorConfig angleMotorConfig = new MotorConfig(SwerveConversions.rotationsToDegrees(1, angleGearRatio), 1, angleLimit, true, Neutral.COAST);
 
         public static final PIDFFConfig drivePIDConfig = new PIDFFConfig(driveKP, driveKI, driveKD, driveKS, driveKV, driveKA);
 
@@ -132,7 +132,7 @@ public class Constants {
             new SwerveMotorConfig(1, driveMotorConfig, drivePIDConfig),
             new SwerveMotorConfig(2, angleMotorConfig, anglePIDConfig),
             20,
-            -9.31640625,
+            174.111328125,
             canCoderInvert,
             maxSpeed);
 
@@ -141,7 +141,7 @@ public class Constants {
             new SwerveMotorConfig(3, driveMotorConfig, drivePIDConfig),
             new SwerveMotorConfig(4, angleMotorConfig, anglePIDConfig),
             21,
-            -64.423828125,
+            115.224609375,
             canCoderInvert,
             maxSpeed);
         
@@ -150,7 +150,7 @@ public class Constants {
             new SwerveMotorConfig(5, driveMotorConfig, drivePIDConfig),
             new SwerveMotorConfig(6, angleMotorConfig, anglePIDConfig),
             22,
-            109.775390625,
+            107.841796875,
             canCoderInvert,
             maxSpeed);
         
@@ -159,7 +159,7 @@ public class Constants {
             new SwerveMotorConfig(7, driveMotorConfig, drivePIDConfig),
             new SwerveMotorConfig(8, angleMotorConfig, anglePIDConfig),
             23,
-            -108.45703125,
+            70.576171875,
             canCoderInvert,
             maxSpeed);
     }
@@ -167,10 +167,10 @@ public class Constants {
 
     public static class VisionConstants {
 
-        public static final Camera FRONT_LEFT = new Camera("FRONT_LEFT", true,
-                                                        new Transform2d(
-                                                            new Translation2d(Units.inchesToMeters(5.43), Units.inchesToMeters(-11.9)), 
-                                                                Rotation2d.fromDegrees(0)));
+        // public static final Camera FRONT_LEFT = new Camera("FRONT_LEFT", true,
+        //                                                 new Transform2d(
+        //                                                     new Translation2d(Units.inchesToMeters(5.43), Units.inchesToMeters(-11.9)), 
+        //                                                         Rotation2d.fromDegrees(0)));
 
         public static final double POSE_THRESH = 100;
 

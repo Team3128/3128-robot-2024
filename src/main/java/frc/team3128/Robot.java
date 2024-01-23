@@ -50,7 +50,7 @@ public class Robot extends NAR_Robot {
 
     @Override
     public void robotInit(){
-        new Trigger(this::isEnabled).negate().debounce(2).onTrue(new InstantCommand(()-> Swerve.getInstance().setBrakeMode(false)).ignoringDisable(true));
+        // new Trigger(this::isEnabled).negate().debounce(2).onTrue(new InstantCommand(()-> Swerve.getInstance().setBrakeMode(false)).ignoringDisable(true));
         LiveWindow.disableAllTelemetry();
     }
 
@@ -94,7 +94,7 @@ public class Robot extends NAR_Robot {
 
     @Override
     public void disabledInit() {
-        Swerve.getInstance().setBrakeMode(true);
+        // Swerve.getInstance().setBrakeMode(true);
     }
     
     @Override

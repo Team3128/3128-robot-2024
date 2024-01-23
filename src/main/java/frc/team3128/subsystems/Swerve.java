@@ -36,9 +36,7 @@ public class Swerve extends SwerveBase {
         pitch = gyro.getPitch().asSupplier();
         roll = gyro.getRoll().asSupplier();
         initSwerveOdometry(SVR_STATE_STD, SVR_VISION_MEASUREMENT_STD);
-        for (SwerveModule module : modules) {
-            NAR_Shuffleboard.addData("Swerve", "module " + module.moduleNumber, ()-> module.getCanCoder().getDegrees(), 0, module.moduleNumber);
-        }
+        initShuffleboard();
 
         NarwhalDashboard.getInstance().addUpdate("robotX", ()-> getPose().getTranslation().getX());
         NarwhalDashboard.getInstance().addUpdate("robotY", ()-> getPose().getTranslation().getY());
