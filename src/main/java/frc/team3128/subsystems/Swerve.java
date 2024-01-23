@@ -4,6 +4,7 @@ import com.ctre.phoenix6.hardware.Pigeon2;
 
 import common.core.swerve.SwerveBase;
 import common.core.swerve.SwerveModule;
+import common.utility.narwhaldashboard.NarwhalDashboard;
 import common.utility.shuffleboard.NAR_Shuffleboard;
 
 import static frc.team3128.Constants.SwerveConstants.*;
@@ -38,6 +39,11 @@ public class Swerve extends SwerveBase {
         for (SwerveModule module : modules) {
             NAR_Shuffleboard.addData("Swerve", "module " + module.moduleNumber, ()-> module.getCanCoder().getDegrees(), 0, module.moduleNumber);
         }
+
+        NarwhalDashboard.getInstance().addUpdate("robotX", ()-> getPose().getTranslation().getX());
+        NarwhalDashboard.getInstance().addUpdate("robotY", ()-> getPose().getTranslation().getY());
+        NarwhalDashboard.getInstance().addUpdate("robotYaw", ()-> yaw);
+        
     }
 
     @Override

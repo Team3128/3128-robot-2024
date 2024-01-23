@@ -3,6 +3,8 @@ package frc.team3128.autonomous;
 import java.util.HashMap;
 import com.pathplanner.lib.path.PathPlannerPath;
 
+import common.utility.narwhaldashboard.NarwhalDashboard;
+
 /**
  * Store trajectories for autonomous. Edit points here. 
  * @author Daniel Wang
@@ -12,7 +14,11 @@ public class Trajectories {
     private static final HashMap<String, PathPlannerPath> trajectories = new HashMap<String, PathPlannerPath>();
 
     public static void initTrajectories() {
-        final String[] trajectoryNames = {};
+        final String[] trajectoryNames = {
+
+            //ADD AUTO NAMES HERE
+        };
+        NarwhalDashboard.getInstance().addAutos(trajectoryNames);
 
         for (final String trajectoryName : trajectoryNames) {
 
