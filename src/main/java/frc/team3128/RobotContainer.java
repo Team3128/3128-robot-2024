@@ -4,10 +4,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.team3128.commands.CmdFocalAim;
 import frc.team3128.commands.CmdSwerveDrive;
-import frc.team3128.commands.CmdManager;
-
+import frc.team3128.commands.CmdSetSpeed;
 import java.util.function.DoubleSupplier;
-
 import common.hardware.input.NAR_ButtonBoard;
 import common.hardware.input.NAR_Joystick;
 import common.hardware.input.NAR_XboxController;
@@ -27,11 +25,13 @@ public class RobotContainer {
     private NAR_ButtonBoard buttonPad;
     public static NAR_XboxController controller;
     private NarwhalDashboard dashboard;
+    private CmdSetSpeed gyro;
+    
 
     public RobotContainer() {
 
         swerve = Swerve.getInstance();
-
+        gyro = new CmdSetSpeed();
         rightStick = new NAR_Joystick(1);
         controller = new NAR_XboxController(2);
         buttonPad = new NAR_ButtonBoard(3);
@@ -41,6 +41,7 @@ public class RobotContainer {
         configureButtonBindings();
         
         DriverStation.silenceJoystickConnectionWarning(true);
+        gyro.initShuffleboard();
     }   
 
     private void configureButtonBindings() {
