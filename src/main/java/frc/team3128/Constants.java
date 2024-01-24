@@ -66,7 +66,7 @@ public class Constants {
 
         public static final double closedLoopRamp = 0.0;
 
-        public static final double driveGearRatio = 6.75; 
+        public static final double driveGearRatio = 425.0 / 72.0; 
         public static final double angleGearRatio = (150.0 / 7.0); 
 
         public static final SwerveDriveKinematics swerveKinematics = new SwerveDriveKinematics(
