@@ -40,7 +40,7 @@ public class Swerve extends SwerveBase {
 
         NarwhalDashboard.getInstance().addUpdate("robotX", ()-> getPose().getTranslation().getX());
         NarwhalDashboard.getInstance().addUpdate("robotY", ()-> getPose().getTranslation().getY());
-        NarwhalDashboard.getInstance().addUpdate("robotYaw", ()-> yaw);
+        NarwhalDashboard.getInstance().addUpdate("robotYaw", ()-> yaw.get());
         
     }
 
