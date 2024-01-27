@@ -15,6 +15,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
@@ -356,6 +357,26 @@ public class Constants {
             }
     
         }
+    }
+
+    public static class FocalAimConstants {
+        public static Pose2d midPointSpeakerBlue = new Pose2d(0, (6.057-(1.043/2)), Rotation2d.fromDegrees(0)); //coord of midpoint
+        public static Pose2d midPointSpeakerRed = new Pose2d(16.57, (6.057-(1.043/2)), Rotation2d.fromDegrees(0)); //coord of midpoint
+        public static double speakerLength = 1.043;
+        public static double FIELD_X_LENGTH = 16.57; // meters
+        public static double FIELD_Y_LENGTH = 8.21; // meters
+        public static double turnKP = 5;
+        public static double kP = 0.1;
+        public static double kI = 0;
+        public static double kD = 0;
+        public static double kS = 0;
+        public static double kV = 0;
+        public static double kA = 0;
+        public static double kG = 0;
+        public static Constraints constraints = new Constraints(5, 2);
+        public static PIDFFConfig config = new PIDFFConfig(kP, kI, kD, kS, kV, kA, kG);
+        //testing: kV: drivetrain spinning consistently (ie. v1 = vel at  vel at 1 rad/sec v2=2 rad/sec). 1/(v2-v1) = kV
+        //kS: plug kV into 1= kS + kV(v1)
     }
 
 
