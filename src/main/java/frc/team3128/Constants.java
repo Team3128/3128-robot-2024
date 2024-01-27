@@ -66,7 +66,7 @@ public class Constants {
 
         public static final double closedLoopRamp = 0.0;
 
-        public static final double driveGearRatio = 6.75; 
+        public static final double driveGearRatio = 425.0 / 72.0;
         public static final double angleGearRatio = (150.0 / 7.0); 
 
         public static final SwerveDriveKinematics swerveKinematics = new SwerveDriveKinematics(
@@ -167,11 +167,6 @@ public class Constants {
 
     public static class VisionConstants {
 
-        public static final Camera FRONT_LEFT = new Camera("FRONT_LEFT", true,
-                                                        new Transform2d(
-                                                            new Translation2d(Units.inchesToMeters(5.43), Units.inchesToMeters(-11.9)), 
-                                                                Rotation2d.fromDegrees(0)));
-
         public static final double POSE_THRESH = 100;
 
         public static final Matrix<N3,N1> SVR_STATE_STD = VecBuilder.fill(0.1,0.1,Units.degreesToRadians(3));
@@ -256,6 +251,68 @@ public class Constants {
         public static Rotation2d flipRotation(Rotation2d rotation) {
             return Rotation2d.fromDegrees(MathUtil.inputModulus(180 - rotation.getDegrees(), -180, 180));
         }
+    }
+
+    public static class PivotConstants{
+
+        public static final double kP = 0;//change
+        public static final double kI = 0;//change
+        public static final double kD = 0;//change
+
+        public static final double kS = 0;//change
+        public static final double kV = 0;//change
+        public static final double kA = 0;
+        public static final double kG = 0;//change
+
+        public static final double GEAR_RATIO = 1.0 / 175.0;//change
+        public static final double ROTATION_TO_DEGREES = 360;
+        public static final double ANGLE_OFFSET = 0;
+
+        public static final double maxVelocity = 0;//change
+        public static final double maxAccelerration = 0;//change
+
+        public static final int MIN_ANGLE = -90;
+        public static final int MAX_ANGLE = 90;
+
+        public static final int PIVOT_TOLERANCE = 1;//change prob
+
+        public static final int PIVOT_ID = 0;//change
+
+        public static final int PIVOT_MOTOR_ID = 0;
+    }
+
+    public static class WristConstants{
+
+        public static final double kP = 0;//change
+        public static final double kI = 0;//change
+        public static final double kD = 0;//change
+
+        public static final double kS = 0;//change
+        public static final double kV = 0;//change
+        public static final double kG = 0;//change
+
+        public static final double GEAR_RATIO = 1 / 175.0;//change
+        public static final double ROTATION_TO_DEGREES = 360;
+        public static final double ANGLE_OFFSET = 0;
+
+        public static final double maxVelocity = 0;//change
+        public static final double maxAccelerration = 0;//change
+
+        public static final int MIN_ANGLE = -90;
+        public static final int MAX_ANGLE = 90;
+
+        public static final int WRIST_TOLERANCE = 1;//change prob
+
+        public static final int WRIST_ID = 0;//change
+
+        public static final int WRIST_MOTOR_ID = 0;
+    }
+
+    public static class ShooterConstants {
+        public static final PIDFFConfig PIDConstants = new PIDFFConfig(0, 0, 0, 0, 0, 0);
+        public static final int LEFT_MOTOR_ID = 0;
+        public static final int RIGHT_MOTOR_ID = 0;
+        public static final double GEAR_RATIO = 1;
     }
 
     public static class LedConstants{

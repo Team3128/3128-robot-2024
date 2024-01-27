@@ -3,8 +3,6 @@ package frc.team3128.subsystems;
 import com.ctre.phoenix6.hardware.Pigeon2;
 
 import common.core.swerve.SwerveBase;
-import common.core.swerve.SwerveModule;
-import common.utility.shuffleboard.NAR_Shuffleboard;
 
 import static frc.team3128.Constants.SwerveConstants.*;
 import static frc.team3128.Constants.VisionConstants.*;
@@ -35,9 +33,7 @@ public class Swerve extends SwerveBase {
         pitch = gyro.getPitch().asSupplier();
         roll = gyro.getRoll().asSupplier();
         initSwerveOdometry(SVR_STATE_STD, SVR_VISION_MEASUREMENT_STD);
-        for (SwerveModule module : modules) {
-            NAR_Shuffleboard.addData("Swerve", "module " + module.moduleNumber, ()-> module.getCanCoder().getDegrees(), 0, module.moduleNumber);
-        }
+        initShuffleboard();
     }
 
     @Override
