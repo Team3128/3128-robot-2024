@@ -4,12 +4,16 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.team3128.commands.CmdSwerveDrive;
+import frc.team3128.commands.ModularSwerveSysId;
+import frc.team3128.commands.SimpleSubsystemSysId;
 import common.hardware.input.NAR_ButtonBoard;
 import common.hardware.input.NAR_Joystick;
 import common.hardware.input.NAR_XboxController;
 import common.hardware.input.NAR_XboxController.XboxButton;
 import common.utility.narwhaldashboard.NarwhalDashboard;
+import frc.team3128.subsystems.SimpleMotorSubsystem;
 import frc.team3128.subsystems.Swerve;
+import frc.team3128.util.FFCharacterization;
 
 /**
  * Command-based is a "declarative" paradigm, very little robot logic should
@@ -20,6 +24,7 @@ import frc.team3128.subsystems.Swerve;
 public class RobotContainer {
 
     private Swerve swerve;
+    private SimpleMotorSubsystem motor;
 
     private NAR_Joystick rightStick;
     private NAR_ButtonBoard buttonPad;
@@ -45,5 +50,11 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
         controller.getButton(XboxButton.kB).onTrue(new InstantCommand(()-> swerve.resetEncoders()));
+        rightStick.getButton(1).onTrue(new SimpleSubsystemSysId(motor, true, new FFCharacterization("Wrist"), (voltage)->motor.setVoltage(voltage), ()-> motor.getVelocity(), ()-> motor.getPosition(), -90, 90))
+                                 .onFalse(new InstantCommand(()-> motor.stop()));
+        rightStick.getButton(2).onTrue(new InstantCommand(()-> motor.resetPosiiton(0)));
+        rightStick.getButton(3).onTrue(new InstantCommand(()-> motor.setVoltage(3))).onFalse(new InstantCommand(()-> motor.stop()));
+
+        rightStick.getButton(4).onTrue(new ModularSwerveSysId(swerve, true, new FFCharacterization("Drive"), (voltage)->swerve.setVoltage(voltage), ()-> swerve.getSwerveVelocity()));
     }
 }

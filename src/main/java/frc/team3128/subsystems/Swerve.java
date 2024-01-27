@@ -5,7 +5,9 @@ import com.ctre.phoenix6.hardware.Pigeon2;
 import common.core.swerve.SwerveBase;
 import common.core.swerve.SwerveModule;
 import common.utility.narwhaldashboard.NarwhalDashboard;
+import common.hardware.motorcontroller.NAR_Motor.Control;
 import common.utility.shuffleboard.NAR_Shuffleboard;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 
 import static frc.team3128.Constants.SwerveConstants.*;
 import static frc.team3128.Constants.VisionConstants.*;
@@ -42,6 +44,25 @@ public class Swerve extends SwerveBase {
         NarwhalDashboard.getInstance().addUpdate("robotY", ()-> getPose().getTranslation().getY());
         NarwhalDashboard.getInstance().addUpdate("robotYaw", ()-> yaw.get());
         
+    }
+    
+    public ChassisSpeeds getChassisSpeeds() {
+        return swerveKinematics.toChassisSpeeds(getStates());
+    }
+
+    public double getSwerveVelocity() {
+        double velocity = Math.hypot(getChassisSpeeds().vxMetersPerSecond, getChassisSpeeds().vyMetersPerSecond);
+        return velocity;
+    }
+
+    public void setVoltage(double volts) {
+        for (final SwerveModule module : modules) {
+            module.getDriveMotor().setVolts(volts);
+        }
+    }
+
+    public void resetEncoders() {
+        resetEncoders();
     }
 
     @Override
