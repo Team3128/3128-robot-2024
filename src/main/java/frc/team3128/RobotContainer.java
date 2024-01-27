@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.team3128.commands.CmdSwerveDrive;
+import frc.team3128.commands.ModularSwerveSysId;
 import frc.team3128.commands.SimpleSubsystemSysId;
 import common.hardware.input.NAR_ButtonBoard;
 import common.hardware.input.NAR_Joystick;
@@ -51,5 +52,7 @@ public class RobotContainer {
                                  .onFalse(new InstantCommand(()-> motor.stop()));
         rightStick.getButton(2).onTrue(new InstantCommand(()-> motor.resetPosiiton(0)));
         rightStick.getButton(3).onTrue(new InstantCommand(()-> motor.setVoltage(3))).onFalse(new InstantCommand(()-> motor.stop()));
+
+        rightStick.getButton(4).onTrue(new ModularSwerveSysId(swerve, true, new FFCharacterization("Drive"), (voltage)->swerve.setVoltage(voltage), ()-> swerve.getSwerveVelocity()));
     }
 }
