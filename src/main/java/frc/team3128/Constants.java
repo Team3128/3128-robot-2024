@@ -119,9 +119,9 @@ public class Constants {
         /* Angle Encoder Invert */
         public static final boolean canCoderInvert = false;
 
-        public static final MotorConfig driveMotorConfig = new MotorConfig(SwerveConversions.rotationsToMeters(1, wheelCircumference, driveGearRatio), 60, driveLimit, false, Neutral.COAST);
+        public static final MotorConfig driveMotorConfig = new MotorConfig(SwerveConversions.rotationsToMeters(1, wheelCircumference, driveGearRatio), 60, driveLimit, driveMotorInvert, Neutral.COAST);
 
-        public static final MotorConfig angleMotorConfig = new MotorConfig(SwerveConversions.rotationsToDegrees(1, angleGearRatio), 1, angleLimit, false, Neutral.COAST);
+        public static final MotorConfig angleMotorConfig = new MotorConfig(SwerveConversions.rotationsToDegrees(1, angleGearRatio), 1, angleLimit, angleMotorInvert, Neutral.COAST);
 
         public static final PIDFFConfig drivePIDConfig = new PIDFFConfig(driveKP, driveKI, driveKD, driveKS, driveKV, driveKA);
 
@@ -150,7 +150,7 @@ public class Constants {
             new SwerveMotorConfig(5, driveMotorConfig, drivePIDConfig),
             new SwerveMotorConfig(6, angleMotorConfig, anglePIDConfig),
             22,
-            109.775390625,
+            109.775390625 - 180,
             canCoderInvert,
             maxSpeed);
         

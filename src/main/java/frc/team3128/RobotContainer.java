@@ -1,12 +1,16 @@
 package frc.team3128;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.team3128.commands.CmdSwerveDrive;
 import common.hardware.input.NAR_ButtonBoard;
 import common.hardware.input.NAR_Joystick;
 import common.hardware.input.NAR_XboxController;
+import common.hardware.input.NAR_XboxController.XboxButton;
 import common.utility.narwhaldashboard.NarwhalDashboard;
+import common.utility.shuffleboard.NAR_Shuffleboard;
 import frc.team3128.subsystems.Swerve;
 
 /**
@@ -27,6 +31,7 @@ public class RobotContainer {
     private NarwhalDashboard dashboard;
 
     public RobotContainer() {
+        NAR_Shuffleboard.WINDOW_WIDTH = 10;
 
         swerve = Swerve.getInstance();
 
@@ -42,6 +47,9 @@ public class RobotContainer {
     }   
 
     private void configureButtonBindings() {
-        
+        controller.getButton(XboxButton.kB).onTrue(Commands.runOnce(()-> swerve.resetEncoders()));
+
+        rightStick.getButton(1).onTrue(Commands.runOnce(()-> swerve.zeroGyro(0)));
+
     }
 }
