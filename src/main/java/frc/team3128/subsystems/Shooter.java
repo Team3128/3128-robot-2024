@@ -7,6 +7,7 @@ import common.hardware.motorcontroller.NAR_CANSparkMax;
 import common.hardware.motorcontroller.NAR_Motor.Neutral;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 
 import static frc.team3128.Constants.ShooterConstants.*;
 
@@ -33,16 +34,37 @@ public class Shooter extends NAR_PIDSubsystem {
     private void configMotors(){
         leftMotor = new NAR_CANSparkMax(LEFT_MOTOR_ID);
         rightMotor = new NAR_CANSparkMax(RIGHT_MOTOR_ID);
+        
         leftMotor.setInverted(false);
         rightMotor.follow(leftMotor, true);
         leftMotor.setUnitConversionFactor(GEAR_RATIO);
+
+        leftMotor.enableVoltageCompensation(12.0);
+
         leftMotor.setNeutralMode(Neutral.COAST);
         rightMotor.setNeutralMode(Neutral.COAST);
     }
 
-    private void setPower(double power){
+    private void setPow(double power){
         disable();
         leftMotor.set(power);
+    }
+
+    public void stop(){
+        disable();
+        leftMotor.set(0);
+    }
+
+    private double interpolate(double dist){
+        return 0;
+    }
+
+    public void setVoltage(double voltage){
+        leftMotor.setVolts(voltage);
+    }
+
+    public double getVelocity(){
+        return leftMotor.getVelocity();
     }
 
     @Override
@@ -56,10 +78,14 @@ public class Shooter extends NAR_PIDSubsystem {
     }
 
     public Command shoot(double setpoint){
-        return runOnce(() -> startPID(setpoint));
+        return Commands.sequence(
+            runOnce(() -> startPID(interpolate(setpoint))),
+            Commands.waitUntil(() -> atSetpoint())
+        );
     }
 
-    public Command setShooter(double power) {
-        return runOnce(()-> setPower(power));
+    public Command setPower(double power) {
+        return runOnce(()-> setPow(power));
     }
+
 }
