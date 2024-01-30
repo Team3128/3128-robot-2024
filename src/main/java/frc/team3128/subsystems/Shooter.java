@@ -5,7 +5,6 @@ import common.core.controllers.Controller.Type;
 import common.core.subsystems.NAR_PIDSubsystem;
 import common.hardware.motorcontroller.NAR_CANSparkMax;
 import common.hardware.motorcontroller.NAR_Motor.Neutral;
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 
 import static frc.team3128.Constants.ShooterConstants.*;
@@ -33,9 +32,13 @@ public class Shooter extends NAR_PIDSubsystem {
     private void configMotors(){
         leftMotor = new NAR_CANSparkMax(LEFT_MOTOR_ID);
         rightMotor = new NAR_CANSparkMax(RIGHT_MOTOR_ID);
+        
         leftMotor.setInverted(false);
         rightMotor.follow(leftMotor, true);
         leftMotor.setUnitConversionFactor(GEAR_RATIO);
+
+        leftMotor.enableVoltageCompensation(12.0);
+
         leftMotor.setNeutralMode(Neutral.COAST);
         rightMotor.setNeutralMode(Neutral.COAST);
     }
@@ -45,13 +48,21 @@ public class Shooter extends NAR_PIDSubsystem {
         leftMotor.set(power);
     }
 
-    @Override
-    protected void useOutput(double output, double setpoint) {
-        leftMotor.set(MathUtil.clamp(output/12.0, -1, 1));
+    public double interpolate(double dist){
+        return 0;
+    }
+
+    public double getVelocity(){
+        return leftMotor.getVelocity();
     }
 
     @Override
-    protected double getMeasurement() {
+    protected void useOutput(double output, double setpoint) {
+        leftMotor.setVolts(output);
+    }
+
+    @Override
+    public double getMeasurement() {
         return leftMotor.getVelocity();
     }
 
@@ -62,4 +73,5 @@ public class Shooter extends NAR_PIDSubsystem {
     public Command setShooter(double power) {
         return runOnce(()-> setPower(power));
     }
+
 }
