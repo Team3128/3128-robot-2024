@@ -14,8 +14,11 @@ import java.util.function.Supplier;
 import com.ctre.phoenix6.hardware.Pigeon2;
 
 import common.core.swerve.SwerveBase;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Translation2d;
+
+import static frc.team3128.Constants.SwerveConstants.*;
+import static frc.team3128.Constants.VisionConstants.*;
+
+import java.util.function.Supplier;
 
 public class Swerve extends SwerveBase {
 
@@ -41,27 +44,6 @@ public class Swerve extends SwerveBase {
         pitch = gyro.getPitch().asSupplier();
         roll = gyro.getRoll().asSupplier();
         initShuffleboard();
-        // NAR_Shuffleboard.addData("Tab", "Tab1", ()-> getRobotVelocity().toString(), 1, 0);
-        // NAR_Shuffleboard.addData("Tab", "Tab2", ()-> getRobotVelocity().toString(), 2, 0);
-        // NAR_Shuffleboard.addData("Tab", "Tab3", ()-> getRobotVelocity().toString(), 3, 0);
-        
-        // try {
-            // final Field field = SwerveBase.class.getDeclaredField("useShuffleboard");
-        //     field.setAccessible(true);
-        //     field.setBoolean(this, false);
-        // } catch (NoSuchFieldException e) {
-        //     // TODO Auto-generated catch block
-        //     e.printStackTrace();
-        // } catch (SecurityException e) {
-        //     // TODO Auto-generated catch block
-        //     e.printStackTrace();
-        // } catch (IllegalArgumentException e) {
-        //     // TODO Auto-generated catch block
-        //     e.printStackTrace();
-        // } catch (IllegalAccessException e) {
-        //     // TODO Auto-generated catch block
-        //     e.printStackTrace();
-        // }
     }
 
     @Override
