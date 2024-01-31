@@ -1,8 +1,7 @@
 package frc.team3128.subsystems;
 
-import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 
 import static frc.team3128.Constants.ClimberConstants.*;
 
@@ -15,7 +14,7 @@ public class Climber extends NAR_PIDSubsystem {
 
     public enum State {
         EXTENDED(180),
-        RETRACTED(0);
+        RETRACTED(0.05);
 
         public final double setpoint;
         private State(double setpoint) {
@@ -28,8 +27,8 @@ public class Climber extends NAR_PIDSubsystem {
     private NAR_CANSparkMax leftMotor;
     private NAR_CANSparkMax rightMotor;
     
-    public Climber() {
-        super(new TrapController(PIDConstants, new Constraints(MAX_VELCOTIY, MAX_ACCELERATION)));
+    private Climber() {
+        super(new TrapController(PIDConstants, TRAP_CONSTRAINTS));
         configMotors();
         setTolerance(POSITION_TOLERANCE);
         setConstraints(POSITION_MINIMUM, POSITION_MAXIMUM);
@@ -49,40 +48,27 @@ public class Climber extends NAR_PIDSubsystem {
         leftMotor.setInverted(false);
         rightMotor.follow(leftMotor, true);
         leftMotor.setUnitConversionFactor(GEAR_RATIO);
-        
-        leftMotor.setCurrentLimit(CURRENT_LIMIT);
-        leftMotor.enableVoltageCompensation(12.0);
 
         leftMotor.setNeutralMode(Neutral.COAST);
         rightMotor.setNeutralMode(Neutral.COAST);
     }
 
-    private void setPow(double power) {
+    private void setPower(double power) {
         disable();
         leftMotor.set(power);
     }
 
-    public void stop() {
-        disable();
-        leftMotor.set(0);
-    }
-
-    public void setVoltage(double voltage) {
-        disable();
-        leftMotor.setVolts(voltage);
-    }
-
     @Override
     protected void useOutput(double output, double setpoint) {
-        leftMotor.set(output);
+        leftMotor.setVolts(output);
     }
 
     public double getAngle(){
-        return Math.atan(leftMotor.getPosition() / SHOOTER_PIVOT_DIST);
+        return Units.radiansToDegrees(Math.atan2((getMeasurement() + HEIGHT_OFFSET), PIVOT_CLIMBER_DIST));
     }
 
-    public void reset(){
-        leftMotor.resetPosition(POSITION_MINIMUM);
+    public Command reset(){
+        return runOnce(() -> leftMotor.resetPosition(POSITION_MINIMUM - 0.05));
     }
 
     public double interpolate(double dist){
@@ -90,30 +76,24 @@ public class Climber extends NAR_PIDSubsystem {
     }
 
     @Override
-    protected double getMeasurement() {
+    public double getMeasurement() {
         return leftMotor.getPosition();
     }
     
-    public Command moveTo(double setpoint){
+    public Command climbTo(double setpoint){
         return runOnce(() -> startPID(setpoint));
     }
 
-    public Command moveTo(State state) {
-        return moveTo(state.setpoint);
+    public Command climbTo(State state) {
+        return climbTo(state.setpoint);
     }
 
-    public Command setPower(double power) {
-        return runOnce(() -> setPow(power));
+    public Command setClimber(double power) {
+        return runOnce(() -> setPower(power));
     }
+
 
     public Command setAngle(double angle){
-        return moveTo(Math.tan(angle) * SHOOTER_PIVOT_DIST);
-    }
-
-    public Command shoot(double dist){
-        return Commands.sequence(
-            moveTo(dist),
-            Commands.waitUntil(() -> atSetpoint())
-        );
+        return climbTo(Math.tan(Units.degreesToRadians(angle)) * PIVOT_CLIMBER_DIST - HEIGHT_OFFSET);
     }
 }
