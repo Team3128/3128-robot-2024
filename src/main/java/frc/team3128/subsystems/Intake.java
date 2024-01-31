@@ -4,20 +4,16 @@ import common.core.controllers.TrapController;
 import common.core.subsystems.NAR_PIDSubsystem;
 import common.hardware.motorcontroller.NAR_CANSparkMax;
 import common.hardware.motorcontroller.NAR_Motor.Neutral;
-import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
-
+import static edu.wpi.first.wpilibj2.command.Commands.*;
 import static frc.team3128.Constants.IntakeConstants.*;
 
 public class Intake extends NAR_PIDSubsystem{
 
     public enum State {
-        EXTENDED(180, 0.5),
-        AMP(75, -0.5),
-        PICKUP(90, 0.5),
-        RETRACTED(0, 1);
+        EXTENDED(180, 0.9),
+        PICKUP_HP(90, 0.9);
 
         public final double setpoint, power;
         private State(double setpoint, double power) {
@@ -28,15 +24,15 @@ public class Intake extends NAR_PIDSubsystem{
     
     private static Intake instance;
     private NAR_CANSparkMax pivotMotor;
-    private NAR_CANSparkMax intakeMotor;
+    private NAR_CANSparkMax rollerMotor;
 
-    private boolean hasNote = false;
-    
-    public Intake(){
-        super(new TrapController(PIDConstants, new Constraints(MAX_VELCOTIY, MAX_ACCELERATION)));
+    private Intake(){
+        super(new TrapController(PIDConstants, TRAP_CONSTRAINTS));
+        setkG_Function(()-> Math.cos(Units.degreesToRadians(getSetpoint())));
         configMotors();
         setTolerance(ANGLE_TOLERANCE);
         setConstraints(POSITION_MINIMUM, POSITION_MINIMUM);
+        setSafetyThresh(1);
     }
     
     public static synchronized Intake getInstance(){
@@ -48,111 +44,82 @@ public class Intake extends NAR_PIDSubsystem{
     
     private void configMotors(){
         pivotMotor = new NAR_CANSparkMax(PIVOT_MOTOR_ID);
-        intakeMotor = new NAR_CANSparkMax(INTAKE_MOTOR_ID);
-        intakeMotor.setCurrentLimit(CURRENT_LIMIT);
+        rollerMotor = new NAR_CANSparkMax(INTAKE_MOTOR_ID);
+        rollerMotor.setCurrentLimit(CURRENT_LIMIT);
         pivotMotor.setInverted(false);
-        intakeMotor.setInverted(false);
+        rollerMotor.setInverted(false);
         pivotMotor.setUnitConversionFactor(360);
         pivotMotor.setNeutralMode(Neutral.COAST);
-        intakeMotor.setNeutralMode(Neutral.BRAKE);
+        rollerMotor.setNeutralMode(Neutral.BRAKE);
     }
     
-    private void setPow(double power){
+    private void setPivotPower(double power){
         disable();
         pivotMotor.set(power);
     }
 
-    public void setVoltage(double voltage){
-        pivotMotor.setVolts(voltage);
-    }
-
-    private void setIntakePower(double power){
-        intakeMotor.set(power);
+    private void setRollerPower(double power){
+        rollerMotor.set(power);
     }
 
     public boolean hasObjectPresent(){
-        hasNote = intakeMotor.getStallCurrent() > STALL_CURRENT;
-        return hasNote;
+        return rollerMotor.getStallCurrent() > STALL_CURRENT;
     }
     
-    public void reset() {
-        pivotMotor.resetPosition(POSITION_MINIMUM);
-    }
-    
-    public void stop(){
-        disable();
-        setPow(0);
-        setIntakePower(0);
-    }
-    
-    public double getAngle(){
-        return pivotMotor.getPosition();
+    public Command reset() {
+        return runOnce(()-> pivotMotor.resetPosition(POSITION_MINIMUM));
     }
 
     @Override
     protected void useOutput(double output, double setpoint) {
-        if(pivotMotor.getStallCurrent() > RETRACTION_CURRENT_THRESHOLD){
-            disable();
-        }
-        setPow(output);
+        pivotMotor.setVolts(output);
     }
     
     @Override
-    protected double getMeasurement() {
+    public double getMeasurement() {
         return pivotMotor.getPosition();
     }
     
-    public Command moveTo(double setpoint){
+    public Command pivotTo(double setpoint){
         return runOnce(() -> startPID(setpoint));
     }
 
-    public Command setPower(double power){
-        return runOnce(() -> setPow(power));
+    public Command pivotTo(State setpoint){
+        return runOnce(() -> startPID(setpoint.setpoint));
+    }
+
+    public Command setPivot(double power){
+        return runOnce(() -> setPivotPower(power));
+    }
+
+    public Command setRoller(double power){
+        return runOnce(() -> setRollerPower(power));
+    }
+
+    public Command setRoller(State setpoint){
+        return runOnce(() -> setRollerPower(setpoint.power));
     }
 
     public Command retract(){
-        return Commands.sequence(
-            moveTo(State.RETRACTED.setpoint),
-            Commands.waitUntil(() -> atSetpoint()),
-            runOnce(()-> setIntakePower(hasNote ? STALL_POWER : 0)),
+        return sequence(
+            setRoller(STALL_POWER),
+            pivotTo(Climber.getInstance().getAngle()),
+            waitUntil(() -> atSetpoint()),
             runOnce(()-> disable())
         );
     }
     
-    public Command intake(){
-        return Commands.sequence(
-            moveTo(State.EXTENDED.setpoint),
-            runOnce(()-> setIntakePower(State.EXTENDED.power)),
-            Commands.waitSeconds(0.2),
-            Commands.waitUntil(() -> hasObjectPresent()),
-            runOnce(()-> setIntakePower(INTAKE_POWER)),
+    public Command intake(State setpoint) {
+        return sequence(
+            pivotTo(setpoint),
+            runOnce(()-> setRoller(setpoint)),
+            waitSeconds(0.2),
+            waitUntil(() -> hasObjectPresent()),
             retract()
         );
     }
 
-    public Command intakeHP(){
-        return Commands.sequence(
-            moveTo(State.PICKUP.setpoint),
-            runOnce(()-> setIntakePower(State.PICKUP.power)),
-            Commands.waitSeconds(0.2),
-            Commands.waitUntil(() -> hasObjectPresent()),
-            retract()
-        );
-    }
-
-    public Command outake(){
-        return Commands.sequence(
-            moveTo(State.AMP.setpoint),
-            runOnce(() -> setIntakePower(State.AMP.power)),
-            Commands.waitSeconds(0.2),
-            Commands.waitUntil(() -> !hasObjectPresent()),
-            retract()
-        );
-    }
-
-    public Command shoot(){
-        return Commands.sequence(
-            runOnce(() -> setIntakePower(State.RETRACTED.power))
-        );
+    public Command outtake(){
+        return setRoller(OUTTAKE_POWER);
     }
 }

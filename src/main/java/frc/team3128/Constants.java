@@ -8,13 +8,13 @@ import common.core.controllers.PIDFFConfig;
 import common.core.swerve.SwerveConversions;
 import common.core.swerve.SwerveModuleConfig;
 import common.core.swerve.SwerveModuleConfig.SwerveMotorConfig;
-import common.hardware.camera.Camera;
 import common.hardware.motorcontroller.NAR_Motor.MotorConfig;
 import common.hardware.motorcontroller.NAR_Motor.Neutral;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
@@ -257,43 +257,42 @@ public class Constants {
 
     public static class ShooterConstants {
         public static final PIDFFConfig PIDConstants = new PIDFFConfig(0, 0, 0, 0, 0, 0);
-        public static final int LEFT_MOTOR_ID = 0;
-        public static final int RIGHT_MOTOR_ID = 1;
+        public static final int LEFT_MOTOR_ID = 11;
+        public static final int RIGHT_MOTOR_ID = 12;
         public static final double GEAR_RATIO = 1;
         public static final double MAX_VELCOTIY = 0;
     }
 
     public static class ClimberConstants {
-        public static final PIDFFConfig PIDConstants = new PIDFFConfig(0, 0, 0, 0, 0, 0);
-        public static final double MAX_VELCOTIY = 0;
-        public static final double MAX_ACCELERATION = 0;
-        public static final int LEFT_MOTOR_ID = 0;
-        public static final int RIGHT_MOTOR_ID = 1;
-        public static final double GEAR_RATIO = 1;
-        public static final double POSITION_TOLERANCE = 0;
-        public static final int CURRENT_LIMIT = 0;
-        public static final double ANGLE_HEIGHT_CONVERSION = 1;
-        public static final double SHOOTER_PIVOT_DIST = 1;
-        public static final double POSITION_MINIMUM = 0;
+        public static final PIDFFConfig PIDConstants = new PIDFFConfig(0, 0, 0, 0, 0, 0, 0);
+        public static final double MAX_VELOCTIY = 10000000;
+        public static final double MAX_ACCELERATION = 100000;
+        public static final Constraints TRAP_CONSTRAINTS = new Constraints(MAX_VELOCTIY, MAX_ACCELERATION);
+        public static final int LEFT_MOTOR_ID = 21;
+        public static final int RIGHT_MOTOR_ID = 22;
+        public static final double GEAR_RATIO = 1.0 / 12.0;
+        public static final double POSITION_TOLERANCE = 0.05;
+        public static final double PIVOT_CLIMBER_DIST = 1;
+        public static final double POSITION_MINIMUM = 0.05;
         public static final double POSITION_MAXIMUM = 100;
+        public static final double HEIGHT_OFFSET = 0;
     }
 
     public static class IntakeConstants {
         public static final PIDFFConfig PIDConstants = new PIDFFConfig(0, 0, 0, 0, 0, 0);
-        public static final int PIVOT_MOTOR_ID = 0;
-        public static final int INTAKE_MOTOR_ID = 1;
-        public static final double GEAR_RATIO = 1;
-        public static final double ANGLE_TOLERANCE = 0;
-        public static final int CURRENT_LIMIT = 0;
+        public static final int PIVOT_MOTOR_ID = 31;
+        public static final int INTAKE_MOTOR_ID = 32;
+        public static final double GEAR_RATIO = 1.0 / 80.0;
+        public static final double ANGLE_TOLERANCE = 1;
+        public static final int CURRENT_LIMIT = 80;
         public static final double POSITION_MINIMUM = 0;
         public static final double POSITION_MAXIMUM = 100;
-        public static final double MAX_VELCOTIY = 1;
-        public static final double MAX_ACCELERATION = 1;
-        public static final double INTAKE_POWER = 0.5;
-        public static final double INTAKE_SHOOTER_TOLERANCE = 0;
-        public static final double STALL_CURRENT = 0;
-        public static final double STALL_POWER = 0;
-        public static final double RETRACTION_CURRENT_THRESHOLD = 0;
+        public static final double MAX_VELCOTIY = 1000000;
+        public static final double MAX_ACCELERATION = 100000;
+        public static final Constraints TRAP_CONSTRAINTS = new Constraints(MAX_VELCOTIY, MAX_ACCELERATION);
+        public static final double STALL_CURRENT = 1000000000;
+        public static final double STALL_POWER = 0.5;
+        public static final double OUTTAKE_POWER = -0.5;
     }
 
     public static class LedConstants{
