@@ -1,20 +1,21 @@
 package frc.team3128.subsystems;
 
+import static frc.team3128.Constants.SwerveConstants.Mod0;
+import static frc.team3128.Constants.SwerveConstants.Mod1;
+import static frc.team3128.Constants.SwerveConstants.Mod2;
+import static frc.team3128.Constants.SwerveConstants.Mod3;
+import static frc.team3128.Constants.SwerveConstants.pigeonID;
+import static frc.team3128.Constants.SwerveConstants.swerveKinematics;
+import static frc.team3128.Constants.VisionConstants.SVR_STATE_STD;
+import static frc.team3128.Constants.VisionConstants.SVR_VISION_MEASUREMENT_STD;
+
+import java.util.function.Supplier;
+
 import com.ctre.phoenix6.hardware.Pigeon2;
 
 import common.core.swerve.SwerveBase;
-import common.utility.shuffleboard.NAR_Shuffleboard;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import frc.team3128.Robot;
-
-import static frc.team3128.Constants.FocalAimConstants.*;
-import static frc.team3128.Constants.SwerveConstants.*;
-import static frc.team3128.Constants.VisionConstants.*;
-
-import java.text.DateFormat.Field;
-import java.util.function.Supplier;
+import edu.wpi.first.math.geometry.Translation2d;
 
 public class Swerve extends SwerveBase {
 
@@ -83,55 +84,27 @@ public class Swerve extends SwerveBase {
         gyro.setYaw(reset);
     }
 
-    public double getDist(Pose2d aimPoint) {
+    public double getDist(Translation2d aimPoint) {
+         Pose2d robotPosition = Swerve.getInstance().getPose();
+        double coordRobotX = robotPosition.getTranslation().getX();
+        double coordRobotY = robotPosition.getTranslation().getY();
+        double coordFocalX = aimPoint.getX();
+        double coordFocalY = aimPoint.getY();
+        double distance = Math.sqrt((coordRobotY-coordFocalY) * (coordRobotY-coordFocalY) + (coordRobotX-coordFocalX) * (coordRobotX-coordFocalX));
+        return distance;
+    }
+
+    public double getTurnAngle(Translation2d aimPoint) {
         Pose2d robotPosition = Swerve.getInstance().getPose();
         double coordRobotX = robotPosition.getTranslation().getX();
         double coordRobotY = robotPosition.getTranslation().getY();
-        double coordFocalX = aimPoint.getTranslation().getX();
-        double coordFocalY = aimPoint.getTranslation().getY();
-        double distance = Math.sqrt(Math.pow((coordFocalX-coordRobotX),2)+Math.pow((coordFocalY-coordRobotY),2));
-        return distance;
-
+        double coordFocalX = aimPoint.getX();
+        double coordFocalY = aimPoint.getY();
+        double angle = Math.toDegrees(Math.atan2(coordRobotY-coordFocalY, coordRobotX-coordFocalX));
+        return angle;
     }
 
-    public Pose2d getAimPoint() {
-        Pose2d robotPosition = Swerve.getInstance().getPose();
-        double robotCoordY = robotPosition.getTranslation().getY() - (8.21/2);
-        double[] focalPoint;
-        
-        //if "above" the field, focal point coord is the left most area of the speaker
-        if (Robot.getAlliance() == Alliance.Blue) {
-            double[] midpointCoordSpeaker = {midPointSpeakerBlue.getTranslation().getX(), midPointSpeakerBlue.getTranslation().getY()};
-            double ratioRobot = robotCoordY/FIELD_Y_LENGTH;
-            focalPoint = new double[2];
-            if (robotCoordY > 0) {
-                focalPoint[1] = -1*((speakerLength/2) * ratioRobot)+ 6.057+ (speakerLength/2); //y coord
-                focalPoint[0] = midpointCoordSpeaker[0]; //x coord (always constant)
-            } 
-        //if "below" the field, focal point coord is the right most area of the speaker
-            else if (robotCoordY < 0) { 
-                focalPoint[1] = ((speakerLength/2) * ratioRobot)+ 6.057+ (speakerLength/2);
-                focalPoint[0] = midpointCoordSpeaker[0];
-            }
-        //returns ideal focal point coord
-            return new Pose2d(focalPoint[0], focalPoint[1], new Rotation2d(0));
+
         }
+    
 
-        else {
-            double[] midpointCoordSpeaker = {midPointSpeakerRed.getTranslation().getX(), midPointSpeakerRed.getTranslation().getY()};
-            double ratioRobot = robotCoordY/FIELD_Y_LENGTH;
-            focalPoint = new double[2];
-            if (robotCoordY > 0) {
-                focalPoint[1] = -1*((speakerLength/2) * ratioRobot) + 6.057+ (speakerLength/2); 
-                focalPoint[0] = midpointCoordSpeaker[0]; 
-            }
-
-            else if (robotCoordY < 0) { 
-                focalPoint[1] = ((speakerLength/2) * ratioRobot) + 6.057+ (speakerLength/2);
-                focalPoint[0] = midpointCoordSpeaker[0];
-            }
-            return new Pose2d(focalPoint[0], focalPoint[1], new Rotation2d(0));
-        }
-    }
-
-}

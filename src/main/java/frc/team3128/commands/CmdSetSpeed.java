@@ -1,8 +1,12 @@
 package frc.team3128.commands;
 import static frc.team3128.Constants.SwerveConstants.pigeonID;
+
+import java.util.function.DoubleFunction;
 import java.util.function.DoubleSupplier;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import common.utility.shuffleboard.NAR_Shuffleboard;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -16,13 +20,14 @@ public class CmdSetSpeed extends Command {
     private DoubleSupplier velocity;
     private Pigeon2 gyro;
     private DoubleSupplier position;
+
     public CmdSetSpeed() {
-        
         swerve = Swerve.getInstance();
         gyro = new Pigeon2(pigeonID);
         gyro.setYaw(0);
-    }
 
+    }
+    
     @Override
     public void execute() {
         swerve.drive(new Translation2d(0,0), setpoint.getAsDouble(), false);

@@ -12,6 +12,7 @@ import common.hardware.camera.Camera;
 import common.hardware.motorcontroller.NAR_Motor.MotorConfig;
 import common.hardware.motorcontroller.NAR_Motor.Neutral;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
@@ -314,6 +315,11 @@ public class Constants {
         public static final int LEFT_MOTOR_ID = 0;
         public static final int RIGHT_MOTOR_ID = 0;
         public static final double GEAR_RATIO = 1;
+
+        public static InterpolatingDoubleTreeMap shooterRPMMap = new InterpolatingDoubleTreeMap();
+        static {
+            shooterRPMMap.put(0.0, 0.0);
+        }
     }
 
     public static class LedConstants{
@@ -363,6 +369,7 @@ public class Constants {
         public static Pose2d midPointSpeakerBlue = new Pose2d(0, (6.057-(1.043/2)), Rotation2d.fromDegrees(0)); //coord of midpoint
         public static Pose2d midPointSpeakerRed = new Pose2d(16.57, (6.057-(1.043/2)), Rotation2d.fromDegrees(0)); //coord of midpoint
         public static double speakerLength = 1.043;
+        public static double focalPointY = 1.4583577128;
         public static double FIELD_X_LENGTH = 16.57; // meters
         public static double FIELD_Y_LENGTH = 8.21; // meters
         public static double turnKP = 5;
@@ -375,6 +382,7 @@ public class Constants {
         public static double kG = 0;
         public static Constraints constraints = new Constraints(5, 2);
         public static PIDFFConfig config = new PIDFFConfig(kP, kI, kD, kS, kV, kA, kG);
+        public static Translation2d focalPoint = new Translation2d(0,0);
         //testing: kV: drivetrain spinning consistently (ie. v1 = vel at  vel at 1 rad/sec v2=2 rad/sec). 1/(v2-v1) = kV
         //kS: plug kV into 1= kS + kV(v1)
     }

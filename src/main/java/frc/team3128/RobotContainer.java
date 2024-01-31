@@ -11,6 +11,7 @@ import common.hardware.input.NAR_XboxController;
 import common.hardware.input.NAR_XboxController.XboxButton;
 import common.utility.narwhaldashboard.NarwhalDashboard;
 import common.utility.shuffleboard.NAR_Shuffleboard;
+import static frc.team3128.commands.CmdManager.*;
 import frc.team3128.subsystems.Swerve;
 
 /**
@@ -25,9 +26,7 @@ public class RobotContainer {
 
     private NAR_Joystick rightStick;
     private NAR_ButtonBoard buttonPad;
-
     public static NAR_XboxController controller;
-
     private NarwhalDashboard dashboard;
 
     public RobotContainer() {
@@ -42,14 +41,13 @@ public class RobotContainer {
         //uncomment line below to enable driving
         CommandScheduler.getInstance().setDefaultCommand(swerve, new CmdSwerveDrive(controller::getLeftX,controller::getLeftY, controller::getRightX, true));
         configureButtonBindings();
-        
         DriverStation.silenceJoystickConnectionWarning(true);
+        
     }   
 
     private void configureButtonBindings() {
         controller.getButton(XboxButton.kB).onTrue(Commands.runOnce(()-> swerve.resetEncoders()));
-
         rightStick.getButton(1).onTrue(Commands.runOnce(()-> swerve.zeroGyro(0)));
-
+        rightStick.getButton(2).onTrue(CmdTurnInPlace());
     }
 }
