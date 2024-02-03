@@ -25,7 +25,7 @@ public class Climber extends NAR_PIDSubsystem {
     private static Climber instance;
     
     private NAR_CANSparkMax leftMotor;
-    private NAR_CANSparkMax rightMotor;
+    //private NAR_CANSparkMax rightMotor;
     
     private Climber() {
         super(new TrapController(PIDConstants, TRAP_CONSTRAINTS));
@@ -43,14 +43,14 @@ public class Climber extends NAR_PIDSubsystem {
     
     private void configMotors() {
         leftMotor = new NAR_CANSparkMax(LEFT_MOTOR_ID);
-        rightMotor = new NAR_CANSparkMax(RIGHT_MOTOR_ID);
+        //rightMotor = new NAR_CANSparkMax(RIGHT_MOTOR_ID);
 
         leftMotor.setInverted(false);
-        rightMotor.follow(leftMotor, true);
+        //rightMotor.follow(leftMotor, true);
         leftMotor.setUnitConversionFactor(GEAR_RATIO);
 
         leftMotor.setNeutralMode(Neutral.COAST);
-        rightMotor.setNeutralMode(Neutral.COAST);
+        //rightMotor.setNeutralMode(Neutral.COAST);
     }
 
     private void setPower(double power) {
