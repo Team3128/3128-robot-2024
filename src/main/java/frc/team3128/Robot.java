@@ -9,7 +9,7 @@ import java.util.Optional;
 import common.core.misc.NAR_Robot;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.MatchType;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -17,6 +17,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.team3128.autonomous.AutoPrograms;
 import frc.team3128.subsystems.Swerve;
+
+import org.littletonrobotics.junction.Logger;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -38,8 +40,6 @@ public class Robot extends NAR_Robot {
 
     public static RobotContainer m_robotContainer = new RobotContainer();
     public static AutoPrograms autoPrograms = new AutoPrograms();
-    public Timer xLockTimer = new Timer();
-    public double startTime;
 
     public static synchronized Robot getInstance() {
         if (instance == null) {
@@ -52,6 +52,9 @@ public class Robot extends NAR_Robot {
     public void robotInit(){
         new Trigger(this::isEnabled).negate().debounce(2).onTrue(new InstantCommand(()-> Swerve.getInstance().setBrakeMode(false)).ignoringDisable(true));
         LiveWindow.disableAllTelemetry();
+
+        addReceiver(true, LoggingState.SESSION);
+        
     }
 
     @Override
@@ -65,6 +68,11 @@ public class Robot extends NAR_Robot {
         if (m_autonomousCommand != null) {
             m_autonomousCommand.schedule();
         }
+
+        if(DriverStation.getMatchType() != MatchType.None)
+            addReceiver(true, LoggingState.FULLMATCH);
+        Logger.start();
+
     }
 
     @Override
@@ -75,6 +83,11 @@ public class Robot extends NAR_Robot {
     @Override
     public void teleopInit() {
         CommandScheduler.getInstance().cancelAll();
+
+        if(DriverStation.getMatchType() != MatchType.None)
+            addReceiver(true, LoggingState.FULLMATCH);
+        Logger.start();
+        
     }
 
     @Override
