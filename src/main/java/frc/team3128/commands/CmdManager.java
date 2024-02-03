@@ -12,7 +12,10 @@ import frc.team3128.subsystems.Swerve;
 
 public class CmdManager {
     public static Command CmdTurnInPlace() {
-        return new NAR_PIDCommand(new TrapController(config, constraints), 
+        TrapController trap = new TrapController(config, constraints);
+        trap.enableContinuousInput(0, 360);
+        trap.setTolerance(0.5);
+        return new NAR_PIDCommand(trap, 
         ()-> Swerve.getInstance().getYaw(), //measurement
         ()-> Swerve.getInstance().getTurnAngle(focalPoint), //setpoint
         (double output) -> Swerve.getInstance().drive(new Translation2d(), Units.degreesToRadians(output), false),

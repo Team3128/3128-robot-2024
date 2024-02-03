@@ -14,6 +14,9 @@ import java.util.function.Supplier;
 import com.ctre.phoenix6.hardware.Pigeon2;
 
 import common.core.swerve.SwerveBase;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
 
 import static frc.team3128.Constants.SwerveConstants.*;
 import static frc.team3128.Constants.VisionConstants.*;
@@ -67,26 +70,13 @@ public class Swerve extends SwerveBase {
     }
 
     public double getDist(Translation2d aimPoint) {
-         Pose2d robotPosition = Swerve.getInstance().getPose();
-        double coordRobotX = robotPosition.getTranslation().getX();
-        double coordRobotY = robotPosition.getTranslation().getY();
-        double coordFocalX = aimPoint.getX();
-        double coordFocalY = aimPoint.getY();
-        double distance = Math.sqrt((coordRobotY-coordFocalY) * (coordRobotY-coordFocalY) + (coordRobotX-coordFocalX) * (coordRobotX-coordFocalX));
-        return distance;
+        return Swerve.getInstance().getPose().getTranslation().getDistance(aimPoint);
     }
 
     public double getTurnAngle(Translation2d aimPoint) {
-        Pose2d robotPosition = Swerve.getInstance().getPose();
-        double coordRobotX = robotPosition.getTranslation().getX();
-        double coordRobotY = robotPosition.getTranslation().getY();
-        double coordFocalX = aimPoint.getX();
-        double coordFocalY = aimPoint.getY();
-        double angle = Math.toDegrees(Math.atan2(coordRobotY-coordFocalY, coordRobotX-coordFocalX));
-        return angle;
+        Translation2d pos = Swerve.getInstance().getPose().getTranslation();
+        return Math.toDegrees(Math.atan2(aimPoint.getY()-pos.getY(), aimPoint.getX()-pos.getX()));
     }
-
-
-        }
+}
     
 
