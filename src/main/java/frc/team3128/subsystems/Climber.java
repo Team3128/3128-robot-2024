@@ -9,6 +9,7 @@ import common.core.controllers.TrapController;
 import common.core.subsystems.NAR_PIDSubsystem;
 import common.hardware.motorcontroller.NAR_CANSparkMax;
 import common.hardware.motorcontroller.NAR_Motor.Neutral;
+import common.utility.shuffleboard.NAR_Shuffleboard;
 
 public class Climber extends NAR_PIDSubsystem {
 
@@ -25,13 +26,14 @@ public class Climber extends NAR_PIDSubsystem {
     private static Climber instance;
     
     private NAR_CANSparkMax leftMotor;
-    //private NAR_CANSparkMax rightMotor;
+    private NAR_CANSparkMax rightMotor;
     
     private Climber() {
         super(new TrapController(PIDConstants, TRAP_CONSTRAINTS));
         configMotors();
         setTolerance(POSITION_TOLERANCE);
         setConstraints(POSITION_MINIMUM, POSITION_MAXIMUM);
+        initShuffleboard();
     }
     
     public static synchronized Climber getInstance(){
@@ -40,17 +42,23 @@ public class Climber extends NAR_PIDSubsystem {
         }
         return instance;
     }
+
+    @Override
+    public void initShuffleboard() {
+        super.initShuffleboard();
+        NAR_Shuffleboard.addData("Climber", "angle", ()-> getAngle(), 4, 0);
+    }
     
     private void configMotors() {
         leftMotor = new NAR_CANSparkMax(LEFT_MOTOR_ID);
-        //rightMotor = new NAR_CANSparkMax(RIGHT_MOTOR_ID);
+        rightMotor = new NAR_CANSparkMax(RIGHT_MOTOR_ID);
 
         leftMotor.setInverted(false);
-        //rightMotor.follow(leftMotor, true);
-        leftMotor.setUnitConversionFactor(GEAR_RATIO);
+        rightMotor.follow(leftMotor, true);
+        leftMotor.setUnitConversionFactor(GEAR_RATIO * WHEEL_CIRCUMFERENCE);
 
         leftMotor.setNeutralMode(Neutral.COAST);
-        //rightMotor.setNeutralMode(Neutral.COAST);
+        rightMotor.setNeutralMode(Neutral.COAST);
     }
 
     private void setPower(double power) {
@@ -68,7 +76,7 @@ public class Climber extends NAR_PIDSubsystem {
     }
 
     public Command reset(){
-        return runOnce(() -> leftMotor.resetPosition(POSITION_MINIMUM - 0.05));
+        return runOnce(() -> leftMotor.resetPosition(POSITION_MINIMUM));
     }
 
     public double interpolate(double dist){

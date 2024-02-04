@@ -3,6 +3,8 @@ package frc.team3128.subsystems;
 import com.ctre.phoenix6.hardware.Pigeon2;
 
 import common.core.swerve.SwerveBase;
+import common.core.swerve.SwerveModule;
+import common.hardware.motorcontroller.NAR_Motor.Control;
 import common.utility.shuffleboard.NAR_Shuffleboard;
 
 import static frc.team3128.Constants.SwerveConstants.*;
@@ -30,6 +32,7 @@ public class Swerve extends SwerveBase {
 
     private Swerve() {
         super(swerveKinematics, SVR_STATE_STD, SVR_VISION_MEASUREMENT_STD, Mod0, Mod1, Mod2, Mod3);
+        chassisVelocityCorrection = false;
         gyro = new Pigeon2(pigeonID);
         yaw = gyro.getYaw().asSupplier();
         pitch = gyro.getPitch().asSupplier();
@@ -56,6 +59,18 @@ public class Swerve extends SwerveBase {
         //     // TODO Auto-generated catch block
         //     e.printStackTrace();
         // }
+    }
+
+    public void setVoltage(double volts) {
+        for (final SwerveModule module : modules) {
+            module.getAngleMotor().set(0, Control.Position);
+            module.getDriveMotor().setVolts(volts);
+        }
+    }
+
+    public double getVelocity() {
+        var x = getRobotVelocity();
+        return Math.hypot(x.vxMetersPerSecond, x.vyMetersPerSecond);
     }
 
     @Override
