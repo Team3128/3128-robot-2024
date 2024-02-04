@@ -18,6 +18,8 @@ public class Shooter extends NAR_PIDSubsystem {
 
     private Shooter(){
         super(new Controller(PIDConstants, Type.VELOCITY));
+        setConstraints(0, 5700);
+        setTolerance(80);
         configMotors();
         initShuffleboard();
     }
@@ -33,11 +35,9 @@ public class Shooter extends NAR_PIDSubsystem {
         leftMotor = new NAR_CANSparkMax(LEFT_MOTOR_ID);
         rightMotor = new NAR_CANSparkMax(RIGHT_MOTOR_ID);
         
-        leftMotor.setInverted(false);
-        rightMotor.follow(leftMotor, true);
+        leftMotor.setInverted(true);
+        rightMotor.follow(leftMotor, false);
         leftMotor.setUnitConversionFactor(GEAR_RATIO);
-
-        leftMotor.enableVoltageCompensation(12.0);
 
         leftMotor.setNeutralMode(Neutral.COAST);
         rightMotor.setNeutralMode(Neutral.COAST);

@@ -98,15 +98,15 @@ public class Constants {
         public static final double driveKF = 0.0;
 
         /* Drive Motor Characterization Values */
-        public static final double driveKS = 0.19255;//0.60094; // 0.19225;
-        public static final double driveKV = 2.4366;//1.1559;  // 2.4366
-        public static final double driveKA = 0; //0.12348; // 0.34415
+        public static final double driveKS = 0.26134;//0.60094; // 0.19225;
+        public static final double driveKV = 2.35409;//1.1559;  // 2.4366
+        public static final double driveKA = 0.13906; //0.12348; // 0.34415
 
         /* Swerve Profiling Values */
         // Theoretical: v = 4.96824, omega = 11.5
         // Real: v = 4.5, omega = 10
         // For safety, use less than theoretical and real values
-        public static final double maxSpeed = 5; //meters per second - 16.3 ft/sec
+        public static final double maxSpeed = 4.8; //meters per second - 16.3 ft/sec
         public static final double maxAttainableSpeed = maxSpeed * 0.85; //Stole from citrus.
         public static final double maxAcceleration = 3;
         public static final double maxAngularVelocity = 8; //3; //11.5; // citrus: 10 - Mason look at this later wtf
@@ -132,7 +132,7 @@ public class Constants {
             new SwerveMotorConfig(1, driveMotorConfig, drivePIDConfig),
             new SwerveMotorConfig(2, angleMotorConfig, anglePIDConfig),
             20,
-            -9.31640625,
+            -8.525390625,
             canCoderInvert,
             maxSpeed);
 
@@ -141,7 +141,7 @@ public class Constants {
             new SwerveMotorConfig(3, driveMotorConfig, drivePIDConfig),
             new SwerveMotorConfig(4, angleMotorConfig, anglePIDConfig),
             21,
-            -64.423828125,
+            -66.533203125,
             canCoderInvert,
             maxSpeed);
         
@@ -150,7 +150,7 @@ public class Constants {
             new SwerveMotorConfig(5, driveMotorConfig, drivePIDConfig),
             new SwerveMotorConfig(6, angleMotorConfig, anglePIDConfig),
             22,
-            109.775390625 - 180,
+            111.00585937500001-180,
             canCoderInvert,
             maxSpeed);
         
@@ -159,7 +159,7 @@ public class Constants {
             new SwerveMotorConfig(7, driveMotorConfig, drivePIDConfig),
             new SwerveMotorConfig(8, angleMotorConfig, anglePIDConfig),
             23,
-            -108.45703125,
+            69.521484375-180,
             canCoderInvert,
             maxSpeed);
     }
@@ -256,42 +256,43 @@ public class Constants {
     }
 
     public static class ShooterConstants {
-        public static final PIDFFConfig PIDConstants = new PIDFFConfig(0, 0, 0, 0, 0, 0);
+        public static final PIDFFConfig PIDConstants = new PIDFFConfig(0, 0, 0, 0, 0.002, 0);
         public static final int LEFT_MOTOR_ID = 11;
         public static final int RIGHT_MOTOR_ID = 12;
         public static final double GEAR_RATIO = 1;
-        public static final double MAX_VELCOTIY = 0;
+        public static final double MAX_VELCOTIY = 1000000;
     }
 
     public static class ClimberConstants {
-        public static final PIDFFConfig PIDConstants = new PIDFFConfig(0, 0, 0, 0, 0, 0, 0);
+        public static final PIDFFConfig PIDConstants = new PIDFFConfig(240, 0, 0, 0.19, 0, 0, 0.205);
         public static final double MAX_VELOCTIY = 10000000;
         public static final double MAX_ACCELERATION = 100000;
         public static final Constraints TRAP_CONSTRAINTS = new Constraints(MAX_VELOCTIY, MAX_ACCELERATION);
         public static final int LEFT_MOTOR_ID = 21;
         public static final int RIGHT_MOTOR_ID = 22;
         public static final double GEAR_RATIO = 1.0 / 12.0;
+        public static final double WHEEL_CIRCUMFERENCE = Units.inchesToMeters(1.751) * Math.PI;
         public static final double POSITION_TOLERANCE = 0.05;
-        public static final double PIVOT_CLIMBER_DIST = 1;
-        public static final double POSITION_MINIMUM = 0.05;
-        public static final double POSITION_MAXIMUM = 100;
-        public static final double HEIGHT_OFFSET = 0;
+        public static final double PIVOT_CLIMBER_DIST = 0.28;
+        public static final double POSITION_MINIMUM = 0;
+        public static final double POSITION_MAXIMUM = 0.25;
+        public static final double HEIGHT_OFFSET = 0.1;
     }
 
     public static class IntakeConstants {
-        public static final PIDFFConfig PIDConstants = new PIDFFConfig(0, 0, 0, 0, 0, 0);
+        public static final PIDFFConfig PIDConstants = new PIDFFConfig(0.25, 0, 0, 0.11, 0, 0, 0.21);
         public static final int PIVOT_MOTOR_ID = 31;
         public static final int INTAKE_MOTOR_ID = 32;
         public static final double GEAR_RATIO = 1.0 / 80.0;
         public static final double ANGLE_TOLERANCE = 1;
         public static final int CURRENT_LIMIT = 80;
         public static final double POSITION_MINIMUM = 0;
-        public static final double POSITION_MAXIMUM = 100;
+        public static final double POSITION_MAXIMUM = 200;
         public static final double MAX_VELCOTIY = 1000000;
         public static final double MAX_ACCELERATION = 100000;
         public static final Constraints TRAP_CONSTRAINTS = new Constraints(MAX_VELCOTIY, MAX_ACCELERATION);
-        public static final double STALL_CURRENT = 1000000000;
-        public static final double STALL_POWER = 0.5;
+        public static final double STALL_CURRENT = 25;
+        public static final double STALL_POWER = 0;
         public static final double OUTTAKE_POWER = -0.5;
     }
 

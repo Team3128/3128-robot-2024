@@ -14,6 +14,7 @@ import common.hardware.input.NAR_XboxController;
 import common.hardware.input.NAR_XboxController.XboxButton;
 import common.utility.narwhaldashboard.NarwhalDashboard;
 import common.utility.shuffleboard.NAR_Shuffleboard;
+import common.utility.sysid.CmdSysId;
 import frc.team3128.subsystems.Climber;
 import frc.team3128.subsystems.Intake;
 import frc.team3128.subsystems.Shooter;
@@ -61,7 +62,7 @@ public class RobotContainer {
     private void configureButtonBindings() {
         controller.getButton(XboxButton.kB).onTrue(runOnce(()-> swerve.resetEncoders()));
         controller.getButton(XboxButton.kRightTrigger).onTrue(shoot());
-        controller.getButton(XboxButton.kRightBumper).onTrue(rampUp(0)).onFalse(neutral());
+        controller.getButton(XboxButton.kRightBumper).onTrue(shootRam());
         controller.getButton(XboxButton.kY).onTrue(shoot()); //TODO: AMP 
         controller.getButton(XboxButton.kB).onTrue(climber.climbTo(Climber.State.EXTENDED));
         controller.getButton(XboxButton.kStart).onTrue(climber.climbTo(Climber.State.RETRACTED)); 
@@ -80,9 +81,10 @@ public class RobotContainer {
         rightStick.getButton(7).onTrue(climber.reset());
         rightStick.getButton(8).onTrue(intake.setPivot(0.2)).onFalse(intake.setPivot(0));
         rightStick.getButton(9).onTrue(intake.setPivot(-0.2)).onFalse(intake.setPivot(0));
-        rightStick.getButton(10).onTrue(intake.pivotTo(0));
+        rightStick.getButton(10).onTrue(intake.pivotTo(180));
         rightStick.getButton(11).onTrue(intake.reset());
-        rightStick.getButton(12).onTrue(intake.setRoller(0.9)).onFalse(intake.setRoller(0));
+        rightStick.getButton(12).onTrue(intake.setRoller(0.5)).onFalse(intake.setRoller(0));
         rightStick.getButton(13).onTrue(intake.setRoller(IntakeConstants.OUTTAKE_POWER)).onFalse(intake.setRoller(0));
+        rightStick.getButton(14).onTrue(new CmdSysId("Swerve", (Double volts)-> swerve.setVoltage(volts), ()-> swerve.getVelocity(), swerve)).onFalse(runOnce(()-> swerve.stop(), swerve));
     }
 }

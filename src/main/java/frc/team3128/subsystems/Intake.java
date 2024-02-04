@@ -1,9 +1,13 @@
 package frc.team3128.subsystems;
 
+import common.core.controllers.Controller;
+import common.core.controllers.PIDFFConfig;
 import common.core.controllers.TrapController;
+import common.core.controllers.Controller.Type;
 import common.core.subsystems.NAR_PIDSubsystem;
 import common.hardware.motorcontroller.NAR_CANSparkMax;
 import common.hardware.motorcontroller.NAR_Motor.Neutral;
+import common.utility.shuffleboard.NAR_Shuffleboard;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import static edu.wpi.first.wpilibj2.command.Commands.*;
@@ -12,8 +16,8 @@ import static frc.team3128.Constants.IntakeConstants.*;
 public class Intake extends NAR_PIDSubsystem{
 
     public enum State {
-        EXTENDED(180, 0.9),
-        PICKUP_HP(90, 0.9);
+        EXTENDED(-200, 0.5),
+        PICKUP_HP(90, 0.5);
 
         public final double setpoint, power;
         private State(double setpoint, double power) {
@@ -31,8 +35,9 @@ public class Intake extends NAR_PIDSubsystem{
         setkG_Function(()-> Math.cos(Units.degreesToRadians(getSetpoint())));
         configMotors();
         setTolerance(ANGLE_TOLERANCE);
-        setConstraints(POSITION_MINIMUM, POSITION_MINIMUM);
-        setSafetyThresh(1);
+        setConstraints(-POSITION_MAXIMUM, POSITION_MINIMUM);
+        setSafetyThresh(5);
+        initShuffleboard();
     }
     
     public static synchronized Intake getInstance(){
@@ -41,14 +46,21 @@ public class Intake extends NAR_PIDSubsystem{
         }
         return instance;
     }
+
+    @Override
+    public void initShuffleboard() {
+        super.initShuffleboard();
+        NAR_Shuffleboard.addData("Intake", "Current", ()-> rollerMotor.getStallCurrent(), 4, 0);
+        NAR_Shuffleboard.addData("Intake", "Object", ()-> hasObjectPresent(), 4, 1);
+    }
     
     private void configMotors(){
         pivotMotor = new NAR_CANSparkMax(PIVOT_MOTOR_ID);
         rollerMotor = new NAR_CANSparkMax(INTAKE_MOTOR_ID);
         rollerMotor.setCurrentLimit(CURRENT_LIMIT);
-        pivotMotor.setInverted(false);
+        pivotMotor.setInverted(true);
         rollerMotor.setInverted(false);
-        pivotMotor.setUnitConversionFactor(360);
+        pivotMotor.setUnitConversionFactor(360 * GEAR_RATIO);
         pivotMotor.setNeutralMode(Neutral.COAST);
         rollerMotor.setNeutralMode(Neutral.BRAKE);
     }
@@ -63,7 +75,7 @@ public class Intake extends NAR_PIDSubsystem{
     }
 
     public boolean hasObjectPresent(){
-        return rollerMotor.getStallCurrent() > STALL_CURRENT;
+        return Math.abs(rollerMotor.getStallCurrent()) > STALL_CURRENT;
     }
     
     public Command reset() {
@@ -103,7 +115,7 @@ public class Intake extends NAR_PIDSubsystem{
     public Command retract(){
         return sequence(
             setRoller(STALL_POWER),
-            pivotTo(Climber.getInstance().getAngle()),
+            pivotTo(0),
             waitUntil(() -> atSetpoint()),
             runOnce(()-> disable())
         );
@@ -112,9 +124,10 @@ public class Intake extends NAR_PIDSubsystem{
     public Command intake(State setpoint) {
         return sequence(
             pivotTo(setpoint),
-            runOnce(()-> setRoller(setpoint)),
+            setRoller(setpoint),
             waitSeconds(0.2),
             waitUntil(() -> hasObjectPresent()),
+            waitSeconds(0.2),
             retract()
         );
     }

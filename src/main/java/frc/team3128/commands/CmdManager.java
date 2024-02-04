@@ -41,6 +41,21 @@ public class CmdManager {
         );
     }
 
+    public static Command shootRam() {
+        return sequence(
+            climber.climbTo(0.25),
+            shooter.shoot(5000),
+            waitUntil(()-> climber.atSetpoint()),
+            waitUntil(()-> shooter.atSetpoint()),
+            waitSeconds(0.5),
+            intake.outtake(),
+            waitSeconds(0.5),
+            shooter.setShooter(0),
+            intake.setRoller(0),
+            climber.climbTo(0)
+        );
+    }
+
     public static Command rampUp(double dist){
         return sequence(
             climber.climbTo(climber.interpolate(dist)),
