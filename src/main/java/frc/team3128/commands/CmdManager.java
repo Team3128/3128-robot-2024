@@ -52,7 +52,14 @@ public class CmdManager {
             waitSeconds(0.5),
             shooter.setShooter(0),
             intake.setRoller(0),
-            climber.climbTo(0)
+            climber.climbTo(0),
+            waitUntil(()-> climber.atSetpoint()),
+            // climber.setClimber(-0.5),
+            waitSeconds(0.1),
+            // climber.setClimber(0),
+            waitSeconds(0.1),
+            // climber.reset(),
+            intake.reset()
         );
     }
 

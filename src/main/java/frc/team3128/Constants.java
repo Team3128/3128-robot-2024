@@ -264,7 +264,7 @@ public class Constants {
     }
 
     public static class ClimberConstants {
-        public static final PIDFFConfig PIDConstants = new PIDFFConfig(240, 0, 0, 0.19, 0, 0, 0.205);
+        public static final PIDFFConfig PIDConstants = new PIDFFConfig(1, 0, 0, 0.19, 0, 0, 0.205);//240
         public static final double MAX_VELOCTIY = 10000000;
         public static final double MAX_ACCELERATION = 100000;
         public static final Constraints TRAP_CONSTRAINTS = new Constraints(MAX_VELOCTIY, MAX_ACCELERATION);

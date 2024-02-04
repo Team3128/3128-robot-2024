@@ -16,8 +16,7 @@ import static frc.team3128.Constants.IntakeConstants.*;
 public class Intake extends NAR_PIDSubsystem{
 
     public enum State {
-        EXTENDED(-200, 0.5),
-        PICKUP_HP(90, 0.5);
+        EXTENDED(-195, 0.5);
 
         public final double setpoint, power;
         private State(double setpoint, double power) {
@@ -117,7 +116,11 @@ public class Intake extends NAR_PIDSubsystem{
             setRoller(STALL_POWER),
             pivotTo(0),
             waitUntil(() -> atSetpoint()),
-            runOnce(()-> disable())
+            setPivot(0.5),
+            waitSeconds(0.1),
+            setPivot(0),
+            waitSeconds(0.1),
+            reset()
         );
     }
     
