@@ -35,18 +35,23 @@ public class CmdManager {
         return shoot(shooter.interpolate(dist), climber.interpolate(dist));
     }
 
-    public static Command shoot(double speed, double angle){
+    public static Command shoot(double speed, double height){
         return sequence(
-            rampUp(speed, angle),
+            rampUp(speed, height),
             intake.outtake(),
             waitSeconds(1),
             neutral()
         );
     }
 
-    public static Command rampUp(double speed, double angle){
+    public static Command rampUp(){
+        double dist = swerve.getPose().relativeTo(SPEAKER).getTranslation().getNorm();
+        return rampUp(shooter.interpolate(dist), climber.interpolate(dist));
+    }
+
+    public static Command rampUp(double speed, double height){
         return sequence(
-            climber.setAngle(angle),
+            climber.climbTo(height),
             shooter.shoot(speed),
             waitUntil(climber::atSetpoint),
             waitUntil(shooter::atSetpoint)
@@ -54,7 +59,15 @@ public class CmdManager {
     }
 
     public static Command shootRam() {
-        return shoot(5000, climber.heightToAngle(0.25));
+        return shoot(5000, 0.25);
+    }
+
+    public static Command outtakeRetract(){
+        return sequence(
+            intake.outtake(),
+            waitSeconds(1),
+            neutral()
+        );
     }
 
     public static Command neutral(){

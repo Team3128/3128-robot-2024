@@ -62,7 +62,9 @@ public class RobotContainer {
     private void configureButtonBindings() {
         controller.getButton(XboxButton.kB).onTrue(runOnce(()-> swerve.resetEncoders()));
         controller.getButton(XboxButton.kRightTrigger).onTrue(shoot());
-        controller.getButton(XboxButton.kRightBumper).onTrue(shootRam());
+        controller.getButton(XboxButton.kRightTrigger).onTrue(rampUp()).onFalse(outtakeRetract());
+        // controller.getButton(XboxButton.kRightBumper).onTrue(shootRam());
+        controller.getButton(XboxButton.kRightBumper).onTrue(rampUp(5000, 0.25)).onFalse(outtakeRetract());
         controller.getButton(XboxButton.kY).onTrue(intake.pivotTo(Intake.State.AMP)).onFalse(intake.outtake(Intake.State.AMP)); //TODO: AMP 
         controller.getButton(XboxButton.kB).onTrue(climber.climbTo(Climber.State.EXTENDED));
         controller.getButton(XboxButton.kStart).onTrue(climber.climbTo(Climber.State.RETRACTED)); 
