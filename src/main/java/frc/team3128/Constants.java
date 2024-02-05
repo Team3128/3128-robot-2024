@@ -264,7 +264,7 @@ public class Constants {
     }
 
     public static class ClimberConstants {
-        public static final PIDFFConfig PIDConstants = new PIDFFConfig(1, 0, 0, 0.19, 0, 0, 0.205);//240
+        public static final PIDFFConfig PIDConstants = new PIDFFConfig(100, 0, 0, 0.19, 0, 0, 0.205);//240
         public static final double MAX_VELOCTIY = 10000000;
         public static final double MAX_ACCELERATION = 100000;
         public static final Constraints TRAP_CONSTRAINTS = new Constraints(MAX_VELOCTIY, MAX_ACCELERATION);
@@ -276,7 +276,7 @@ public class Constants {
         public static final double PIVOT_CLIMBER_DIST = 0.28;
         public static final double POSITION_MINIMUM = 0;
         public static final double POSITION_MAXIMUM = 0.25;
-        public static final double HEIGHT_OFFSET = 0.1;
+        public static final double HEIGHT_OFFSET = 0.07; // 14 degrees ish
     }
 
     public static class IntakeConstants {
@@ -287,12 +287,12 @@ public class Constants {
         public static final double ANGLE_TOLERANCE = 1;
         public static final int CURRENT_LIMIT = 80;
         public static final double POSITION_MINIMUM = 0;
-        public static final double POSITION_MAXIMUM = 200;
+        public static final double POSITION_MAXIMUM = 220;
         public static final double MAX_VELCOTIY = 1000000;
         public static final double MAX_ACCELERATION = 100000;
         public static final Constraints TRAP_CONSTRAINTS = new Constraints(MAX_VELCOTIY, MAX_ACCELERATION);
         public static final double STALL_CURRENT = 25;
-        public static final double STALL_POWER = 0;
+        public static final double STALL_POWER = 0.05;
         public static final double OUTTAKE_POWER = -0.5;
     }
 

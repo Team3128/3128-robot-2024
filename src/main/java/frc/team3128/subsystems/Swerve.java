@@ -1,16 +1,31 @@
 package frc.team3128.subsystems;
 
+import static frc.team3128.Constants.SwerveConstants.Mod0;
+import static frc.team3128.Constants.SwerveConstants.Mod1;
+import static frc.team3128.Constants.SwerveConstants.Mod2;
+import static frc.team3128.Constants.SwerveConstants.Mod3;
+import static frc.team3128.Constants.SwerveConstants.pigeonID;
+import static frc.team3128.Constants.SwerveConstants.swerveKinematics;
+import static frc.team3128.Constants.VisionConstants.SVR_STATE_STD;
+import static frc.team3128.Constants.VisionConstants.SVR_VISION_MEASUREMENT_STD;
+
+import java.util.function.Supplier;
+
 import com.ctre.phoenix6.hardware.Pigeon2;
 
 import common.core.swerve.SwerveBase;
 import common.core.swerve.SwerveModule;
 import common.hardware.motorcontroller.NAR_Motor.Control;
 import common.utility.shuffleboard.NAR_Shuffleboard;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
 
 import static frc.team3128.Constants.SwerveConstants.*;
 import static frc.team3128.Constants.VisionConstants.*;
 
-import java.lang.reflect.Field;
 import java.util.function.Supplier;
 
 public class Swerve extends SwerveBase {
@@ -38,12 +53,13 @@ public class Swerve extends SwerveBase {
         pitch = gyro.getPitch().asSupplier();
         roll = gyro.getRoll().asSupplier();
         initShuffleboard();
+        
         // NAR_Shuffleboard.addData("Tab", "Tab1", ()-> getRobotVelocity().toString(), 1, 0);
         // NAR_Shuffleboard.addData("Tab", "Tab2", ()-> getRobotVelocity().toString(), 2, 0);
         // NAR_Shuffleboard.addData("Tab", "Tab3", ()-> getRobotVelocity().toString(), 3, 0);
         
         // try {
-        //     final Field field = SwerveBase.class.getDeclaredField("useShuffleboard");
+            // final Field field = SwerveBase.class.getDeclaredField("useShuffleboard");
         //     field.setAccessible(true);
         //     field.setBoolean(this, false);
         // } catch (NoSuchFieldException e) {
@@ -93,4 +109,14 @@ public class Swerve extends SwerveBase {
         gyro.setYaw(reset);
     }
 
+    public double getDist(Translation2d aimPoint) {
+        return Swerve.getInstance().getPose().getTranslation().getDistance(aimPoint);
+    }
+
+    public double getTurnAngle(Translation2d aimPoint) {
+        Translation2d pos = Swerve.getInstance().getPose().getTranslation();
+        return Math.toDegrees(Math.atan2(aimPoint.getY()-pos.getY(), aimPoint.getX()-pos.getX()));
+    }
 }
+    
+

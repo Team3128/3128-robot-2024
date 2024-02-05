@@ -3,6 +3,7 @@ package frc.team3128.commands;
 import common.hardware.input.NAR_XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.team3128.RobotContainer;
+import frc.team3128.Constants.IntakeConstants;
 import frc.team3128.subsystems.Climber;
 import frc.team3128.subsystems.Intake;
 import frc.team3128.subsystems.Shooter;
@@ -31,43 +32,29 @@ public class CmdManager {
 
     public static Command shoot(){ 
         double dist = swerve.getPose().relativeTo(SPEAKER).getTranslation().getNorm();
+        return shoot(shooter.interpolate(dist), climber.interpolate(dist));
+    }
+
+    public static Command shoot(double speed, double angle){
         return sequence(
-            rampUp(dist),
-            waitUntil(climber::atSetpoint),
-            waitUntil(shooter::atSetpoint),
+            rampUp(speed, angle),
             intake.outtake(),
             waitSeconds(1),
             neutral()
         );
     }
 
-    public static Command shootRam() {
+    public static Command rampUp(double speed, double angle){
         return sequence(
-            climber.climbTo(0.25),
-            shooter.shoot(5000),
-            waitUntil(()-> climber.atSetpoint()),
-            waitUntil(()-> shooter.atSetpoint()),
-            waitSeconds(0.5),
-            intake.outtake(),
-            waitSeconds(0.5),
-            shooter.setShooter(0),
-            intake.setRoller(0),
-            climber.climbTo(0),
-            waitUntil(()-> climber.atSetpoint()),
-            // climber.setClimber(-0.5),
-            waitSeconds(0.1),
-            // climber.setClimber(0),
-            waitSeconds(0.1),
-            // climber.reset(),
-            intake.reset()
+            climber.setAngle(angle),
+            shooter.shoot(speed),
+            waitUntil(climber::atSetpoint),
+            waitUntil(shooter::atSetpoint)
         );
     }
 
-    public static Command rampUp(double dist){
-        return sequence(
-            climber.climbTo(climber.interpolate(dist)),
-            shooter.shoot(shooter.interpolate(dist))
-        );
+    public static Command shootRam() {
+        return shoot(5000, climber.heightToAngle(0.25));
     }
 
     public static Command neutral(){

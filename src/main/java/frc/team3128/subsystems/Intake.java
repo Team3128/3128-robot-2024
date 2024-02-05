@@ -12,11 +12,17 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import static edu.wpi.first.wpilibj2.command.Commands.*;
 import static frc.team3128.Constants.IntakeConstants.*;
+import static frc.team3128.commands.CmdManager.neutral;
+
+import java.util.function.DoubleSupplier;
 
 public class Intake extends NAR_PIDSubsystem{
 
+    public DoubleSupplier power;
+
     public enum State {
-        EXTENDED(-195, 0.5);
+        EXTENDED(-195, 0.5),
+        AMP(-89, -0.25);
 
         public final double setpoint, power;
         private State(double setpoint, double power) {
@@ -90,6 +96,14 @@ public class Intake extends NAR_PIDSubsystem{
     public double getMeasurement() {
         return pivotMotor.getPosition();
     }
+
+    public Command setState(State setpoint){
+        return sequence(
+            pivotTo(setpoint),
+            waitUntil(()-> atSetpoint()),
+            setRoller(setpoint)
+        );
+    }
     
     public Command pivotTo(double setpoint){
         return runOnce(() -> startPID(setpoint));
@@ -117,10 +131,10 @@ public class Intake extends NAR_PIDSubsystem{
             pivotTo(0),
             waitUntil(() -> atSetpoint()),
             setPivot(0.5),
-            waitSeconds(0.1),
-            setPivot(0),
-            waitSeconds(0.1),
-            reset()
+            // waitSeconds(0.1),
+            reset(),
+            setPivot(0),    
+            waitSeconds(0.1)
         );
     }
     
@@ -132,6 +146,14 @@ public class Intake extends NAR_PIDSubsystem{
             waitUntil(() -> hasObjectPresent()),
             waitSeconds(0.2),
             retract()
+        );
+    }
+
+    public Command outtake(State state){
+        return sequence(
+            setRoller(state.power),
+            waitSeconds(0.3),
+            neutral()
         );
     }
 

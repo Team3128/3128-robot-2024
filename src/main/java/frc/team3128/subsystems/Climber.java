@@ -75,6 +75,10 @@ public class Climber extends NAR_PIDSubsystem {
         return Units.radiansToDegrees(Math.atan2((getMeasurement() + HEIGHT_OFFSET), PIVOT_CLIMBER_DIST));
     }
 
+    public double heightToAngle(double height){
+        return Units.radiansToDegrees(Math.atan2((height + HEIGHT_OFFSET), PIVOT_CLIMBER_DIST));
+    }
+
     public Command reset(){
         return runOnce(() -> leftMotor.resetPosition(POSITION_MINIMUM));
     }
