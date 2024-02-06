@@ -19,8 +19,8 @@ public class Shooter extends NAR_PIDSubsystem {
 
     private Shooter(){
         super(new Controller(PIDConstants, Type.VELOCITY));
-        setConstraints(0, 5700);
-        setTolerance(80);
+        setConstraints(MIN_RPM, MAX_RPM);
+        setTolerance(TOLERANCE);
         configMotors();
         initShuffleboard();
     }

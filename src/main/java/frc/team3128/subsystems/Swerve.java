@@ -9,22 +9,29 @@ import static frc.team3128.Constants.SwerveConstants.swerveKinematics;
 import static frc.team3128.Constants.VisionConstants.SVR_STATE_STD;
 import static frc.team3128.Constants.VisionConstants.SVR_VISION_MEASUREMENT_STD;
 
+import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
 
+import common.core.commands.NAR_PIDCommand;
+import common.core.controllers.TrapController;
 import common.core.swerve.SwerveBase;
 import common.core.swerve.SwerveModule;
 import common.hardware.motorcontroller.NAR_Motor.Control;
 import common.utility.shuffleboard.NAR_Shuffleboard;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj2.command.Command;
+import frc.team3128.RobotContainer;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 
 import static frc.team3128.Constants.SwerveConstants.*;
 import static frc.team3128.Constants.VisionConstants.*;
+import static frc.team3128.Constants.FocalAimConstants.*;
 
 import java.util.function.Supplier;
 
@@ -53,7 +60,7 @@ public class Swerve extends SwerveBase {
         pitch = gyro.getPitch().asSupplier();
         roll = gyro.getRoll().asSupplier();
         initShuffleboard();
-        
+
         // NAR_Shuffleboard.addData("Tab", "Tab1", ()-> getRobotVelocity().toString(), 1, 0);
         // NAR_Shuffleboard.addData("Tab", "Tab2", ()-> getRobotVelocity().toString(), 2, 0);
         // NAR_Shuffleboard.addData("Tab", "Tab3", ()-> getRobotVelocity().toString(), 3, 0);
@@ -110,12 +117,33 @@ public class Swerve extends SwerveBase {
     }
 
     public double getDist(Translation2d aimPoint) {
-        return Swerve.getInstance().getPose().getTranslation().getDistance(aimPoint);
+        return Swerve.getInstance().getPose().getTranslation().getDistance(aimPoint) + distanceOffset;
     }
 
     public double getTurnAngle(Translation2d aimPoint) {
         Translation2d pos = Swerve.getInstance().getPose().getTranslation();
-        return Math.toDegrees(Math.atan2(aimPoint.getY()-pos.getY(), aimPoint.getX()-pos.getX()));
+        return Math.toDegrees(Math.atan2(aimPoint.getY() - pos.getY(), aimPoint.getX() - pos.getX()));
+    }
+
+    public Command CmdTurnInPlace(DoubleSupplier setpoint) {
+        TrapController trap = new TrapController(config, constraints);
+        trap.enableContinuousInput(0, 360);
+        trap.setTolerance(0.5);
+        return new NAR_PIDCommand(trap, 
+        ()-> Swerve.getInstance().getYaw(), //measurement
+        setpoint, //setpoint
+        (double output) -> {
+            final double x = RobotContainer.controller.getLeftX();
+            final double y = RobotContainer.controller.getLeftY();
+            final Translation2d translation2d = new Translation2d(x,y).times(maxAttainableSpeed);
+
+            Swerve.getInstance().drive(translation2d, Units.degreesToRadians(output), false);
+        },
+        Swerve.getInstance());
+    }
+
+    public Pigeon2 getGyro() {
+        return gyro;
     }
 }
     

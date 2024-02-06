@@ -84,7 +84,7 @@ public class Climber extends NAR_PIDSubsystem {
     }
 
     public double interpolate(double dist){
-        return 0;
+        return climberHeightMap.get(dist);
     }
 
     @Override

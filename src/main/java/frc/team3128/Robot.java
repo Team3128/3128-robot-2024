@@ -53,7 +53,7 @@ public class Robot extends NAR_Robot {
         new Trigger(this::isEnabled).negate().debounce(2).onTrue(new InstantCommand(()-> Swerve.getInstance().setBrakeMode(false)).ignoringDisable(true));
         LiveWindow.disableAllTelemetry();
 
-        addReceiver(true, LoggingState.SESSION);
+        addReceiver(true, LoggingState.NONE);
         
     }
 

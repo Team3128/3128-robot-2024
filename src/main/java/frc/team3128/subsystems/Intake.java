@@ -131,10 +131,11 @@ public class Intake extends NAR_PIDSubsystem{
             pivotTo(0),
             waitUntil(() -> atSetpoint()),
             setPivot(0.5),
-            // waitSeconds(0.1),
-            reset(),
-            setPivot(0),    
-            waitSeconds(0.1)
+            waitSeconds(0.1),
+            setPivot(0),
+            waitSeconds(0.5),
+            reset()
+            
         );
     }
     

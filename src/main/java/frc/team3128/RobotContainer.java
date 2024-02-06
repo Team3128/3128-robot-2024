@@ -1,12 +1,18 @@
 package frc.team3128;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import static edu.wpi.first.wpilibj2.command.Commands.*;
+import static frc.team3128.Constants.FieldConstants.FIELD_X_LENGTH;
 import static frc.team3128.commands.CmdManager.*;
 
+import frc.team3128.Constants.FocalAimConstants;
 import frc.team3128.Constants.IntakeConstants;
+import frc.team3128.commands.CmdSetSpeed;
 import frc.team3128.commands.CmdSwerveDrive;
 import common.hardware.input.NAR_ButtonBoard;
 import common.hardware.input.NAR_Joystick;
@@ -61,8 +67,7 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
         controller.getButton(XboxButton.kB).onTrue(runOnce(()-> swerve.resetEncoders()));
-        controller.getButton(XboxButton.kRightTrigger).onTrue(shoot());
-        controller.getButton(XboxButton.kRightTrigger).onTrue(rampUp()).onFalse(outtakeRetract());
+        controller.getButton(XboxButton.kRightTrigger).onTrue(autoShoot());
         // controller.getButton(XboxButton.kRightBumper).onTrue(shootRam());
         controller.getButton(XboxButton.kRightBumper).onTrue(rampUp(5000, 0.25)).onFalse(outtakeRetract());
         controller.getButton(XboxButton.kY).onTrue(intake.pivotTo(Intake.State.AMP)).onFalse(intake.outtake(Intake.State.AMP)); //TODO: AMP 
@@ -74,19 +79,24 @@ public class RobotContainer {
 
 
         rightStick.getButton(1).onTrue(runOnce(()-> swerve.zeroGyro(0)));
-
-        rightStick.getButton(2).onTrue(shooter.setShooter(0.8)).onFalse(shooter.setShooter(0));
-        rightStick.getButton(3).onTrue(shooter.shoot(0));
-        rightStick.getButton(4).onTrue(climber.setClimber(0.2)).onFalse(climber.setClimber(0));
-        rightStick.getButton(5).onTrue(climber.setClimber(-0.2)).onFalse(climber.setClimber(0));
-        rightStick.getButton(6).onTrue(climber.climbTo(0));
-        rightStick.getButton(7).onTrue(climber.reset());
-        rightStick.getButton(8).onTrue(intake.setPivot(0.2)).onFalse(intake.setPivot(0));
-        rightStick.getButton(9).onTrue(intake.setPivot(-0.2)).onFalse(intake.setPivot(0));
-        rightStick.getButton(10).onTrue(intake.pivotTo(180));
-        rightStick.getButton(11).onTrue(intake.reset());
-        rightStick.getButton(12).onTrue(intake.setRoller(0.5)).onFalse(intake.setRoller(0));
-        rightStick.getButton(13).onTrue(intake.setRoller(IntakeConstants.OUTTAKE_POWER)).onFalse(intake.setRoller(0));
+        rightStick.getButton(2).onTrue(new CmdSetSpeed());
+        rightStick.getButton(3).onTrue(new CmdSysId("Rotation", (Double radiansPerSec) -> swerve.drive(new Translation2d(), radiansPerSec, true), ()-> swerve.getYaw(), swerve));
+        rightStick.getButton(4).onTrue(runOnce(()-> swerve.resetOdometry(new Pose2d(1.35, FocalAimConstants.focalPointY, Rotation2d.fromDegrees(180)))));
+        rightStick.getButton(5).onTrue(runOnce(()-> swerve.resetOdometry(new Pose2d(FIELD_X_LENGTH - 1.35, FocalAimConstants.focalPointY, Rotation2d.fromDegrees(0)))));
+        rightStick.getButton(6).onTrue(swerve.CmdTurnInPlace(()-> 0));
+        
+        // rightStick.getButton(2).onTrue(shooter.setShooter(0.8)).onFalse(shooter.setShooter(0));
+        // rightStick.getButton(3).onTrue(shooter.shoot(0));
+        // rightStick.getButton(4).onTrue(climber.setClimber(0.2)).onFalse(climber.setClimber(0));
+        // rightStick.getButton(5).onTrue(climber.setClimber(-0.2)).onFalse(climber.setClimber(0));
+        // rightStick.getButton(6).onTrue(climber.climbTo(0));
+        // rightStick.getButton(7).onTrue(climber.reset());
+        // rightStick.getButton(8).onTrue(intake.setPivot(0.2)).onFalse(intake.setPivot(0));
+        // rightStick.getButton(9).onTrue(intake.setPivot(-0.2)).onFalse(intake.setPivot(0));
+        // rightStick.getButton(10).onTrue(intake.pivotTo(180));
+        // rightStick.getButton(11).onTrue(intake.reset());
+        // rightStick.getButton(12).onTrue(intake.setRoller(0.5)).onFalse(intake.setRoller(0));
+        // rightStick.getButton(13).onTrue(intake.setRoller(IntakeConstants.OUTTAKE_POWER)).onFalse(intake.setRoller(0));
         rightStick.getButton(14).onTrue(new CmdSysId("Swerve", (Double volts)-> swerve.setVoltage(volts), ()-> swerve.getVelocity(), swerve)).onFalse(runOnce(()-> swerve.stop(), swerve));
 
 

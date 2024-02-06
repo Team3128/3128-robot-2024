@@ -1,8 +1,11 @@
 package frc.team3128.commands;
 
 import common.hardware.input.NAR_XboxController;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.team3128.Robot;
 import frc.team3128.RobotContainer;
+import frc.team3128.Constants.FieldConstants;
 import frc.team3128.Constants.IntakeConstants;
 import frc.team3128.subsystems.Climber;
 import frc.team3128.subsystems.Intake;
@@ -10,6 +13,8 @@ import frc.team3128.subsystems.Shooter;
 import frc.team3128.subsystems.Swerve;
 
 import static frc.team3128.Constants.FieldConstants.*;
+import static frc.team3128.Constants.FocalAimConstants.focalPointBlue;
+import static frc.team3128.Constants.FocalAimConstants.focalPointRed;
 import static edu.wpi.first.wpilibj2.command.Commands.*;
 
 
@@ -29,24 +34,24 @@ public class CmdManager {
         return startEnd(()-> controller.startVibrate(), ()-> controller.stopVibrate()).withTimeout(0.5);
     }
 
-
-    public static Command shoot(){ 
-        double dist = swerve.getPose().relativeTo(SPEAKER).getTranslation().getNorm();
-        return shoot(shooter.interpolate(dist), climber.interpolate(dist));
+    public static Command autoShoot() {
+        return parallel(
+            shoot(),
+            swerve.CmdTurnInPlace(()-> swerve.getTurnAngle(Robot.getAlliance() == Alliance.Red ? focalPointRed : focalPointBlue))
+        );
     }
 
-    public static Command shoot(double speed, double height){
+    public static Command shoot(){ 
+        return shoot(5700, climber.interpolate(swerve.getDist(Robot.getAlliance() == Alliance.Red ? focalPointRed : focalPointBlue)));
+    }
+
+    public static Command shoot(double rpm, double height){
         return sequence(
-            rampUp(speed, height),
+            rampUp(rpm, height),
             intake.outtake(),
             waitSeconds(1),
             neutral()
         );
-    }
-
-    public static Command rampUp(){
-        double dist = swerve.getPose().relativeTo(SPEAKER).getTranslation().getNorm();
-        return rampUp(shooter.interpolate(dist), climber.interpolate(dist));
     }
 
     public static Command rampUp(double speed, double height){
@@ -75,7 +80,12 @@ public class CmdManager {
             intake.setRoller(0),
             shooter.setShooter(0),
             climber.climbTo(Climber.State.RETRACTED),
-            intake.retract()
+            waitUntil(()-> climber.atSetpoint()),
+            climber.setClimber(-0.5),
+            waitSeconds(0.1),
+            climber.setClimber(0),
+            waitSeconds(0.5),
+            climber.reset()
         );
     }
 

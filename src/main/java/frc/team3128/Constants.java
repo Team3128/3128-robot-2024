@@ -1,5 +1,7 @@
 package frc.team3128;
 
+import static frc.team3128.Constants.FocalAimConstants.speakerLength;
+
 import java.util.HashMap;
 
 import com.pathplanner.lib.path.PathConstraints;
@@ -11,6 +13,7 @@ import common.core.swerve.SwerveModuleConfig.SwerveMotorConfig;
 import common.hardware.motorcontroller.NAR_Motor.MotorConfig;
 import common.hardware.motorcontroller.NAR_Motor.Neutral;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
@@ -255,12 +258,36 @@ public class Constants {
         }
     }
 
+    public static class FocalAimConstants {
+        public static final double speakerLength = 1.043;
+        public static final double focalPointX = 1.4583577128;
+        public static final double focalPointY = FieldConstants.FIELD_Y_LENGTH - speakerLength / 2;
+        public static final Translation2d focalPointBlue = new Translation2d(focalPointX, focalPointY);
+        public static final Translation2d focalPointRed = new Translation2d(FieldConstants.FIELD_X_LENGTH - focalPointX, focalPointY);
+        public static final double turnKP = 5;
+        public static final double kP = 0.1;
+        public static final double kI = 0;
+        public static final double kD = 0;
+        public static final double kS = 0;
+        public static final double kV = 0;
+        public static final double kA = 0;
+        public static final double kG = 0;
+        public static final Constraints constraints = new Constraints(5, 2);
+        public static final PIDFFConfig config = new PIDFFConfig(kP, kI, kD, kS, kV, kA, kG);
+        public static final Translation2d focalPoint = new Translation2d(0,0);
+        public static final double distanceOffset = 0;
+        //testing: kV: drivetrain spinning consistently (ie. v1 = vel at  vel at 1 rad/sec v2=2 rad/sec). 1/(v2-v1) = kV
+        //kS: plug kV into 1= kS + kV(v1)
+    }
+
     public static class ShooterConstants {
         public static final PIDFFConfig PIDConstants = new PIDFFConfig(0, 0, 0, 0, 0.002, 0);
         public static final int LEFT_MOTOR_ID = 11;
         public static final int RIGHT_MOTOR_ID = 12;
         public static final double GEAR_RATIO = 1;
-        public static final double MAX_VELCOTIY = 1000000;
+        public static final double MAX_RPM = 5500;
+        public static final double MIN_RPM = 0;
+        public static final double TOLERANCE = 80;
     }
 
     public static class ClimberConstants {
@@ -277,10 +304,14 @@ public class Constants {
         public static final double POSITION_MINIMUM = 0;
         public static final double POSITION_MAXIMUM = 0.25;
         public static final double HEIGHT_OFFSET = 0.07; // 14 degrees ish
+        public static InterpolatingDoubleTreeMap climberHeightMap = new InterpolatingDoubleTreeMap();
+        static {
+            climberHeightMap.put(0.0, 0.0);
+        }
     }
 
     public static class IntakeConstants {
-        public static final PIDFFConfig PIDConstants = new PIDFFConfig(0.25, 0, 0, 0.11, 0, 0, 0.21);
+        public static final PIDFFConfig PIDConstants = new PIDFFConfig(0.25, 0, 0, 0.11, 0, 0, 0.25);
         public static final int PIVOT_MOTOR_ID = 31;
         public static final int INTAKE_MOTOR_ID = 32;
         public static final double GEAR_RATIO = 1.0 / 80.0;
