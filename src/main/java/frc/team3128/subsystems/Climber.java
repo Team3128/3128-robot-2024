@@ -5,6 +5,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 import static frc.team3128.Constants.ClimberConstants.*;
 
+import java.util.function.DoubleSupplier;
+
 import common.core.controllers.TrapController;
 import common.core.subsystems.NAR_PIDSubsystem;
 import common.hardware.motorcontroller.NAR_CANSparkMax;
@@ -91,9 +93,13 @@ public class Climber extends NAR_PIDSubsystem {
     public double getMeasurement() {
         return leftMotor.getPosition();
     }
+
+    public Command climbTo(DoubleSupplier setpointSupplier) {
+        return runOnce(()-> startPID(setpointSupplier.getAsDouble()));
+    }
     
     public Command climbTo(double setpoint){
-        return runOnce(() -> startPID(setpoint));
+        return climbTo(()-> setpoint);
     }
 
     public Command climbTo(State state) {

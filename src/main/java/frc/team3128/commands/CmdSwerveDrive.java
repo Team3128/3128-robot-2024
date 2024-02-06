@@ -28,8 +28,8 @@ public class CmdSwerveDrive extends Command {
     private final SlewRateLimiter accelLimiter;
 
     private final PIDController rController;
-    public static boolean enabled = false;
-    public static double rSetpoint;
+    private static boolean enabled = false;
+    private static double rSetpoint;
     
     public CmdSwerveDrive(DoubleSupplier xAxis, DoubleSupplier yAxis, DoubleSupplier zAxis, boolean fieldRelative) {
         this.swerve = Swerve.getInstance();
@@ -40,7 +40,7 @@ public class CmdSwerveDrive extends Command {
         this.zAxis = zAxis;
 
         accelLimiter = new SlewRateLimiter(maxAcceleration);
-        rController = new PIDController(turnKP, 0, 0);
+        rController = new PIDController(turnkP, 0, 0);
         rController.enableContinuousInput(0, 360);
         rController.setTolerance(0.5);
 
@@ -87,21 +87,30 @@ public class CmdSwerveDrive extends Command {
     public static void setTurnSetpoint() {
         final double currentRotation = MathUtil.inputModulus(Swerve.getInstance().getYaw(), 0, 360);
         if (currentRotation <= 45) {
-            rSetpoint = 0;
+            setTurnSetpoint(0);
         }
         else if (currentRotation <= 135) {
-            rSetpoint = 90;
+            setTurnSetpoint(90);
         }
         else if (currentRotation <= 225) {
-            rSetpoint = 180;
+            setTurnSetpoint(180);
         }
         else if (currentRotation <= 315) {
-            rSetpoint = 270;
+            setTurnSetpoint(270);
         }
         else {
-            rSetpoint = 360;
+            setTurnSetpoint(360);
         }
+    }
+
+    public static void setTurnSetpoint(double setpoint) {
+        rSetpoint = setpoint;
         enabled = true;
+        TURN_CONTROLLER.reset();
+    }
+
+    private static void disableTurn() {
+        enabled = false;
     }
 
     @Override

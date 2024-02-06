@@ -50,6 +50,7 @@ public class Robot extends NAR_Robot {
 
     @Override
     public void robotInit(){
+        m_robotContainer.initDashboard();
         new Trigger(this::isEnabled).negate().debounce(2).onTrue(new InstantCommand(()-> Swerve.getInstance().setBrakeMode(false)).ignoringDisable(true));
         LiveWindow.disableAllTelemetry();
 

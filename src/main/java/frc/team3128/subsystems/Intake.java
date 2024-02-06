@@ -1,9 +1,6 @@
 package frc.team3128.subsystems;
 
-import common.core.controllers.Controller;
-import common.core.controllers.PIDFFConfig;
 import common.core.controllers.TrapController;
-import common.core.controllers.Controller.Type;
 import common.core.subsystems.NAR_PIDSubsystem;
 import common.hardware.motorcontroller.NAR_CANSparkMax;
 import common.hardware.motorcontroller.NAR_Motor.Neutral;
@@ -12,7 +9,6 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import static edu.wpi.first.wpilibj2.command.Commands.*;
 import static frc.team3128.Constants.IntakeConstants.*;
-import static frc.team3128.commands.CmdManager.neutral;
 
 import java.util.function.DoubleSupplier;
 
@@ -154,7 +150,7 @@ public class Intake extends NAR_PIDSubsystem{
         return sequence(
             setRoller(state.power),
             waitSeconds(0.3),
-            neutral()
+            retract()
         );
     }
 

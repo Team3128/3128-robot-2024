@@ -1,16 +1,10 @@
 package frc.team3128.commands;
-import static frc.team3128.Constants.SwerveConstants.pigeonID;
-
-import java.util.function.DoubleFunction;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
 import common.utility.shuffleboard.NAR_Shuffleboard;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.team3128.subsystems.Swerve;
@@ -34,17 +28,19 @@ public class CmdSetSpeed extends Command {
         addRequirements(swerve);
     }
 
+    @Override
     public void initialize() {
         timer.restart();
+        prevPosition = position.get();
     }
 
     @Override
     public void execute() {
         if (timer.hasElapsed(0.5)) {
             swerve.drive(new Translation2d(0,0), setpoint.getAsDouble(), false);
-            velocity = (position.get() - prevPosition) / 0.5;
+            velocity = (position.get() - prevPosition) / timer.get();
             prevPosition = position.get();
-            acceleration = (velocity - prevVelocity) / 0.5;
+            acceleration = (velocity - prevVelocity) / timer.get();
             prevVelocity = velocity;
             timer.reset();
         }

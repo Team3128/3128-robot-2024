@@ -1,12 +1,11 @@
 package frc.team3128;
 
-import static frc.team3128.Constants.FocalAimConstants.speakerLength;
-
 import java.util.HashMap;
 
 import com.pathplanner.lib.path.PathConstraints;
 
 import common.core.controllers.PIDFFConfig;
+import common.core.controllers.TrapController;
 import common.core.swerve.SwerveConversions;
 import common.core.swerve.SwerveModuleConfig;
 import common.core.swerve.SwerveModuleConfig.SwerveMotorConfig;
@@ -26,7 +25,6 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
 
 
 public class Constants {
@@ -81,11 +79,6 @@ public class Constants {
         /* Swerve Current Limiting */
         public static final int angleLimit = 30; //30
         public static final int driveLimit = 40; //40;
-
-        /* Turning PID Values */
-        public static final double turnKP = 5;
-        public static final double turnKI = 0;
-        public static final double turnKD = 0;
 
         /* Angle Motor PID Values */
         // switched 364 pid values to SDS pid values
@@ -165,6 +158,23 @@ public class Constants {
             69.521484375-180,
             canCoderInvert,
             maxSpeed);
+
+        public static final double turnkP = 0.1;
+        public static final double turnkI = 0;
+        public static final double turnkD = 0;
+        public static final double turnkS = 0;
+        public static final double turnkV = 0;
+        public static final double turnkA = 0;
+        public static final Constraints constraints = new Constraints(maxAngularVelocity, maxAngularAcceleration);
+        public static final PIDFFConfig config = new PIDFFConfig(turnkP, turnkI, turnkD, turnkS, turnkV, turnkA, 0);
+
+        public static final TrapController TURN_CONTROLLER = new TrapController(config, constraints);
+        public static final double TURN_TOLERANCE = 0.5;
+
+        static {
+            TURN_CONTROLLER.enableContinuousInput(0, 360);
+            TURN_CONTROLLER.setTolerance(TURN_TOLERANCE);
+        }
     }
 
 
@@ -264,16 +274,6 @@ public class Constants {
         public static final double focalPointY = FieldConstants.FIELD_Y_LENGTH - speakerLength / 2;
         public static final Translation2d focalPointBlue = new Translation2d(focalPointX, focalPointY);
         public static final Translation2d focalPointRed = new Translation2d(FieldConstants.FIELD_X_LENGTH - focalPointX, focalPointY);
-        public static final double turnKP = 5;
-        public static final double kP = 0.1;
-        public static final double kI = 0;
-        public static final double kD = 0;
-        public static final double kS = 0;
-        public static final double kV = 0;
-        public static final double kA = 0;
-        public static final double kG = 0;
-        public static final Constraints constraints = new Constraints(5, 2);
-        public static final PIDFFConfig config = new PIDFFConfig(kP, kI, kD, kS, kV, kA, kG);
         public static final Translation2d focalPoint = new Translation2d(0,0);
         public static final double distanceOffset = 0;
         //testing: kV: drivetrain spinning consistently (ie. v1 = vel at  vel at 1 rad/sec v2=2 rad/sec). 1/(v2-v1) = kV
@@ -304,9 +304,21 @@ public class Constants {
         public static final double POSITION_MINIMUM = 0;
         public static final double POSITION_MAXIMUM = 0.25;
         public static final double HEIGHT_OFFSET = 0.07; // 14 degrees ish
-        public static InterpolatingDoubleTreeMap climberHeightMap = new InterpolatingDoubleTreeMap();
+        public static final InterpolatingDoubleTreeMap climberHeightMap = new InterpolatingDoubleTreeMap();
         static {
-            climberHeightMap.put(0.0, 0.0);
+            climberHeightMap.put(0.0, 0.25);
+            climberHeightMap.put(0.25, 0.25);
+            climberHeightMap.put(0.5, 0.2);
+            climberHeightMap.put(0.75, 0.17);
+            climberHeightMap.put(1.0, 0.15);
+            climberHeightMap.put(1.25, 0.14);
+            climberHeightMap.put(1.5, 0.13);
+            climberHeightMap.put(1.75, 0.12);
+            climberHeightMap.put(2.0, 0.1125);
+            climberHeightMap.put(2.25, 0.1);
+            climberHeightMap.put(2.5, 0.097);
+            climberHeightMap.put(2.75, 0.095);
+            climberHeightMap.put(3.0, 0.095);
         }
     }
 

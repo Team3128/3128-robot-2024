@@ -4,7 +4,9 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import static edu.wpi.first.wpilibj2.command.Commands.*;
 import static frc.team3128.Constants.FieldConstants.FIELD_X_LENGTH;
@@ -12,6 +14,7 @@ import static frc.team3128.commands.CmdManager.*;
 
 import frc.team3128.Constants.FocalAimConstants;
 import frc.team3128.Constants.IntakeConstants;
+import frc.team3128.Constants.ShooterConstants;
 import frc.team3128.commands.CmdSetSpeed;
 import frc.team3128.commands.CmdSwerveDrive;
 import common.hardware.input.NAR_ButtonBoard;
@@ -67,23 +70,36 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
         controller.getButton(XboxButton.kB).onTrue(runOnce(()-> swerve.resetEncoders()));
-        controller.getButton(XboxButton.kRightTrigger).onTrue(autoShoot());
-        // controller.getButton(XboxButton.kRightBumper).onTrue(shootRam());
-        controller.getButton(XboxButton.kRightBumper).onTrue(rampUp(5000, 0.25)).onFalse(outtakeRetract());
+        controller.getButton(XboxButton.kRightTrigger).onTrue(rampUpContinuous()).onFalse(autoShoot());
+        controller.getButton(XboxButton.kRightBumper).onTrue(rampUp(ShooterConstants.MAX_RPM, 0.25)).onFalse(shoot(ShooterConstants.MAX_RPM, 0.25));
         controller.getButton(XboxButton.kY).onTrue(intake.pivotTo(Intake.State.AMP)).onFalse(intake.outtake(Intake.State.AMP)); //TODO: AMP 
         controller.getButton(XboxButton.kB).onTrue(climber.climbTo(Climber.State.EXTENDED));
         controller.getButton(XboxButton.kStart).onTrue(climber.climbTo(Climber.State.RETRACTED)); 
         controller.getButton(XboxButton.kLeftTrigger).onTrue(intake.intake(Intake.State.EXTENDED)); 
-        controller.getButton(XboxButton.kLeftBumper).onTrue(intake.retract()); 
-        controller.getButton(XboxButton.kX).onTrue(shoot()); //TODO: Trap
+        controller.getButton(XboxButton.kLeftBumper).onTrue(intake.retract());
 
+        controller.getButton(XboxButton.kRightStick).onTrue(runOnce(()-> CmdSwerveDrive.setTurnSetpoint()));
+        controller.getUpPOVButton().onTrue(runOnce(()-> {
+            CmdSwerveDrive.setTurnSetpoint(Robot.getAlliance() == Alliance.Red ? 180 : 0);
+        }));
+        controller.getDownPOVButton().onTrue(runOnce(()-> {
+            CmdSwerveDrive.setTurnSetpoint(Robot.getAlliance() == Alliance.Red ? 0 : 180);
+        }));
+
+        controller.getRightPOVButton().onTrue(runOnce(()-> {
+            CmdSwerveDrive.setTurnSetpoint(Robot.getAlliance() == Alliance.Red ? 90 : 270);
+        }));
+
+        controller.getLeftPOVButton().onTrue(runOnce(()-> {
+            CmdSwerveDrive.setTurnSetpoint(Robot.getAlliance() == Alliance.Red ? 270 : 90);
+        }));
 
         rightStick.getButton(1).onTrue(runOnce(()-> swerve.zeroGyro(0)));
         rightStick.getButton(2).onTrue(new CmdSetSpeed());
         rightStick.getButton(3).onTrue(new CmdSysId("Rotation", (Double radiansPerSec) -> swerve.drive(new Translation2d(), radiansPerSec, true), ()-> swerve.getYaw(), swerve));
         rightStick.getButton(4).onTrue(runOnce(()-> swerve.resetOdometry(new Pose2d(1.35, FocalAimConstants.focalPointY, Rotation2d.fromDegrees(180)))));
         rightStick.getButton(5).onTrue(runOnce(()-> swerve.resetOdometry(new Pose2d(FIELD_X_LENGTH - 1.35, FocalAimConstants.focalPointY, Rotation2d.fromDegrees(0)))));
-        rightStick.getButton(6).onTrue(swerve.CmdTurnInPlace(()-> 0));
+        rightStick.getButton(6).onTrue(swerve.turnInPlace(()-> 0));
         
         // rightStick.getButton(2).onTrue(shooter.setShooter(0.8)).onFalse(shooter.setShooter(0));
         // rightStick.getButton(3).onTrue(shooter.shoot(0));
@@ -117,9 +133,13 @@ public class RobotContainer {
         buttonPad.getButton(14).onTrue(runOnce(()-> swerve.zeroGyro(0)));
         buttonPad.getButton(15).onTrue(intake.setRoller(0.5)).onFalse(intake.setRoller(0));
         buttonPad.getButton(16).onTrue(intake.setRoller(IntakeConstants.OUTTAKE_POWER)).onFalse(intake.setRoller(0));
+    }
 
-
-
-
+    public void initDashboard() {
+        dashboard = NarwhalDashboard.getInstance();
+        dashboard.addUpdate("time", ()-> Timer.getMatchTime());
+        dashboard.addUpdate("voltage",()-> RobotController.getBatteryVoltage());
+        dashboard.addUpdate("x", ()-> swerve.getPose().getX());
+        dashboard.addUpdate("y", ()-> swerve.getPose().getY());
     }
 }
