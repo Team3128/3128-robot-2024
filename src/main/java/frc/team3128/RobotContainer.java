@@ -3,6 +3,7 @@ package frc.team3128;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotController;
@@ -96,7 +97,7 @@ public class RobotContainer {
 
         rightStick.getButton(1).onTrue(runOnce(()-> swerve.zeroGyro(0)));
         rightStick.getButton(2).onTrue(new CmdSetSpeed());
-        rightStick.getButton(3).onTrue(new CmdSysId("Rotation", (Double radiansPerSec) -> swerve.drive(new Translation2d(), radiansPerSec, true), ()-> swerve.getYaw(), swerve));
+        rightStick.getButton(3).onTrue(new CmdSysId("Rotation", (Double radiansPerSec) -> swerve.drive(new Translation2d(), radiansPerSec, true), ()-> Units.radiansToDegrees(swerve.getRobotVelocity().omegaRadiansPerSecond), swerve));
         rightStick.getButton(4).onTrue(runOnce(()-> swerve.resetOdometry(new Pose2d(1.35, FocalAimConstants.focalPointY, Rotation2d.fromDegrees(180)))));
         rightStick.getButton(5).onTrue(runOnce(()-> swerve.resetOdometry(new Pose2d(FIELD_X_LENGTH - 1.35, FocalAimConstants.focalPointY, Rotation2d.fromDegrees(0)))));
         rightStick.getButton(6).onTrue(swerve.turnInPlace(()-> 0));

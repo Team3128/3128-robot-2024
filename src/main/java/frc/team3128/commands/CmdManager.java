@@ -39,7 +39,8 @@ public class CmdManager {
         return sequence(
             parallel(
                 rampUp(),
-                swerve.turnInPlace(()-> swerve.getTurnAngle(Robot.getAlliance() == Alliance.Red ? focalPointRed : focalPointBlue))
+                runOnce(()-> CmdSwerveDrive.setTurnSetpoint(swerve.getTurnAngle(Robot.getAlliance() == Alliance.Red ? focalPointRed : focalPointBlue))),
+                waitUntil(()-> CmdSwerveDrive.rController.atSetpoint())
             ),
             intake.outtake(),
             waitSeconds(1),
@@ -57,7 +58,16 @@ public class CmdManager {
     }
 
     public static Command rampUp() {
-        return rampUp(ShooterConstants.MAX_RPM, swerve.getDist());
+        return rampUp(ShooterConstants.MAX_RPM, ()-> climber.interpolate(swerve.getDist()));
+    }
+
+    public static Command rampUp(double rpm, DoubleSupplier height) {
+        return sequence(
+            climber.climbTo(height),
+            shooter.shoot(rpm),
+            waitUntil(climber::atSetpoint),
+            waitUntil(shooter::atSetpoint)
+        );
     }
 
     public static Command rampUp(double rpm, double height){
@@ -70,14 +80,15 @@ public class CmdManager {
     }
 
     public static Command rampUpContinuous() {
-        return rampUpContinuous(ShooterConstants.MAX_RPM, ()-> swerve.getDist());
+        return rampUpContinuous(ShooterConstants.MAX_RPM, ()-> climber.interpolate(swerve.getDist()));
     }
 
     public static Command rampUpContinuous(double rpm, DoubleSupplier height) {
         return sequence(
             shooter.shoot(rpm),
             repeatingSequence(
-                climber.climbTo(height)
+                climber.climbTo(height),
+                waitSeconds(0.1)
             )
         );
     }

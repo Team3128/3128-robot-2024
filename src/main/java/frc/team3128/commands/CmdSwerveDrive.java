@@ -2,6 +2,8 @@ package frc.team3128.commands;
 
 import java.util.function.DoubleSupplier;
 
+import common.core.controllers.ControllerBase;
+import common.utility.shuffleboard.NAR_Shuffleboard;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -27,7 +29,7 @@ public class CmdSwerveDrive extends Command {
 
     private final SlewRateLimiter accelLimiter;
 
-    private final PIDController rController;
+    public static ControllerBase rController;
     private static boolean enabled = false;
     private static double rSetpoint;
     
@@ -40,10 +42,15 @@ public class CmdSwerveDrive extends Command {
         this.zAxis = zAxis;
 
         accelLimiter = new SlewRateLimiter(maxAcceleration);
-        rController = new PIDController(turnkP, 0, 0);
+        // rController = new PIDController(turnkP, 0, 0);
+        rController = TURN_CONTROLLER;
         rController.enableContinuousInput(0, 360);
+        rController.setMeasurementSource(()-> swerve.getYaw());
         rController.setTolerance(0.5);
 
+        rController.setkV(NAR_Shuffleboard.debug("Test", "kV", rController.getkV(), 3, 1));
+        rController.setkA(NAR_Shuffleboard.debug("Test", "kA", rController.getkA(), 3, 2));
+        NAR_Shuffleboard.addSendable("Test", "ADASD", TURN_CONTROLLER, 1, 0);
         swerve.fieldRelative = fieldRelative;
     }
 
@@ -109,7 +116,7 @@ public class CmdSwerveDrive extends Command {
         TURN_CONTROLLER.reset();
     }
 
-    private static void disableTurn() {
+    public static void disableTurn() {
         enabled = false;
     }
 

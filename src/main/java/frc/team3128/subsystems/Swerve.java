@@ -1,11 +1,5 @@
 package frc.team3128.subsystems;
 
-import static frc.team3128.Constants.SwerveConstants.Mod0;
-import static frc.team3128.Constants.SwerveConstants.Mod1;
-import static frc.team3128.Constants.SwerveConstants.Mod2;
-import static frc.team3128.Constants.SwerveConstants.Mod3;
-import static frc.team3128.Constants.SwerveConstants.pigeonID;
-import static frc.team3128.Constants.SwerveConstants.swerveKinematics;
 import static frc.team3128.Constants.VisionConstants.SVR_STATE_STD;
 import static frc.team3128.Constants.VisionConstants.SVR_VISION_MEASUREMENT_STD;
 
@@ -18,6 +12,8 @@ import common.core.commands.NAR_PIDCommand;
 import common.core.swerve.SwerveBase;
 import common.core.swerve.SwerveModule;
 import common.hardware.motorcontroller.NAR_Motor.Control;
+import common.utility.shuffleboard.NAR_Shuffleboard;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -27,6 +23,7 @@ import frc.team3128.RobotContainer;
 import frc.team3128.commands.CmdSwerveDrive;
 
 import static frc.team3128.Constants.SwerveConstants.*;
+import static edu.wpi.first.wpilibj2.command.Commands.waitUntil;
 import static frc.team3128.Constants.FocalAimConstants.*;
 
 public class Swerve extends SwerveBase {
@@ -54,6 +51,7 @@ public class Swerve extends SwerveBase {
         pitch = gyro.getPitch().asSupplier();
         roll = gyro.getRoll().asSupplier();
         initShuffleboard();
+        NAR_Shuffleboard.addData("Testing", "Name", ()-> getDist(focalPointRed), 0, 0);
     }
 
     public void setVoltage(double volts) {
@@ -93,7 +91,7 @@ public class Swerve extends SwerveBase {
     }
 
     public double getDist(Translation2d aimPoint) {
-        return Swerve.getInstance().getPose().getTranslation().getDistance(aimPoint) + distanceOffset;
+        return getPose().getTranslation().getDistance(aimPoint) - distanceOffset + robotLength / 2.0;
     }
 
     public double getTurnAngle(Translation2d aimPoint) {
@@ -104,16 +102,22 @@ public class Swerve extends SwerveBase {
     public Command turnInPlace(DoubleSupplier setpoint) {
         return new NAR_PIDCommand(
             TURN_CONTROLLER, 
-            ()-> Swerve.getInstance().getYaw(), //measurement
+            ()-> getYaw(), //measurement
             setpoint, //setpoint
             (double output) -> {
                 final double x = RobotContainer.controller.getLeftX();
                 final double y = RobotContainer.controller.getLeftY();
-                final Translation2d translation2d = new Translation2d(x,y).times(maxAttainableSpeed);
+                Translation2d translation = new Translation2d(x,y).times(maxAttainableSpeed);
+                if (Robot.getAlliance() == Alliance.Red || !fieldRelative) {
+                    translation = translation.rotateBy(Rotation2d.fromDegrees(90));
+                }
+                else {
+                    translation = translation.rotateBy(Rotation2d.fromDegrees(-90));
+                }
 
-                Swerve.getInstance().drive(translation2d, Units.degreesToRadians(output), false);
+                Swerve.getInstance().drive(translation, Units.degreesToRadians(output), true);
             },
-            Swerve.getInstance()).beforeStarting(runOnce(()-> CmdSwerveDrive.disableTurn()));
+            Swerve.getInstance()).deadlineWith(waitUntil(()-> TURN_CONTROLLER.atSetpoint())).beforeStarting(runOnce(()-> CmdSwerveDrive.disableTurn()));
     }
 
     public Pigeon2 getGyro() {

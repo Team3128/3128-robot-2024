@@ -4,8 +4,10 @@ import java.util.HashMap;
 
 import com.pathplanner.lib.path.PathConstraints;
 
+import common.core.controllers.Controller;
 import common.core.controllers.PIDFFConfig;
 import common.core.controllers.TrapController;
+import common.core.controllers.Controller.Type;
 import common.core.swerve.SwerveConversions;
 import common.core.swerve.SwerveModuleConfig;
 import common.core.swerve.SwerveModuleConfig.SwerveMotorConfig;
@@ -159,16 +161,16 @@ public class Constants {
             canCoderInvert,
             maxSpeed);
 
-        public static final double turnkP = 0.1;
+        public static final double turnkP = 5;
         public static final double turnkI = 0;
         public static final double turnkD = 0;
-        public static final double turnkS = 0;
-        public static final double turnkV = 0;
-        public static final double turnkA = 0;
-        public static final Constraints constraints = new Constraints(maxAngularVelocity, maxAngularAcceleration);
+        public static final double turnkS = 0.05748; //0.05748
+        public static final double turnkV = 0.01723; //0.01723
+        public static final double turnkA = 0.0064; //0.0064
+        public static final Constraints constraints = new Constraints(Units.radiansToDegrees(maxAngularVelocity), Units.radiansToDegrees(maxAngularAcceleration));
         public static final PIDFFConfig config = new PIDFFConfig(turnkP, turnkI, turnkD, turnkS, turnkV, turnkA, 0);
 
-        public static final TrapController TURN_CONTROLLER = new TrapController(config, constraints);
+        public static final Controller TURN_CONTROLLER = new Controller(config, Type.POSITION);
         public static final double TURN_TOLERANCE = 0.5;
 
         static {
@@ -270,12 +272,12 @@ public class Constants {
 
     public static class FocalAimConstants {
         public static final double speakerLength = 1.043;
-        public static final double focalPointX = 1.4583577128;
-        public static final double focalPointY = FieldConstants.FIELD_Y_LENGTH - speakerLength / 2;
+        public static final double focalPointX = 0.75;//1.4583577128;
+        public static final double focalPointY = 6.15 - speakerLength / 2 + 0.1;
         public static final Translation2d focalPointBlue = new Translation2d(focalPointX, focalPointY);
         public static final Translation2d focalPointRed = new Translation2d(FieldConstants.FIELD_X_LENGTH - focalPointX, focalPointY);
         public static final Translation2d focalPoint = new Translation2d(0,0);
-        public static final double distanceOffset = 0;
+        public static final double distanceOffset = Units.inchesToMeters(66) - focalPointX;
         //testing: kV: drivetrain spinning consistently (ie. v1 = vel at  vel at 1 rad/sec v2=2 rad/sec). 1/(v2-v1) = kV
         //kS: plug kV into 1= kS + kV(v1)
     }
