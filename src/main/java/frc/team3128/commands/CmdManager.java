@@ -39,10 +39,11 @@ public class CmdManager {
         return sequence(
             parallel(
                 rampUp(),
-                runOnce(()-> CmdSwerveDrive.setTurnSetpoint(swerve.getTurnAngle(Robot.getAlliance() == Alliance.Red ? focalPointRed : focalPointBlue))),
-                waitUntil(()-> CmdSwerveDrive.rController.atSetpoint())
+                swerve.turnInPlace()
+                // runOnce(()-> CmdSwerveDrive.setTurnSetpoint(swerve.getTurnAngle(Robot.getAlliance() == Alliance.Red ? focalPointRed : focalPointBlue))),
+                // waitUntil(()-> CmdSwerveDrive.rController.atSetpoint())
             ),
-            intake.outtake(),
+            intake.outtakeNoRequirements(),
             waitSeconds(1),
             neutral()
         );
@@ -51,7 +52,7 @@ public class CmdManager {
     public static Command shoot(double rpm, double height){
         return sequence(
             rampUp(rpm, height),
-            intake.outtake(),
+            intake.outtakeNoRequirements(),
             waitSeconds(1),
             neutral()
         );
@@ -61,16 +62,11 @@ public class CmdManager {
         return rampUp(ShooterConstants.MAX_RPM, ()-> climber.interpolate(swerve.getDist()));
     }
 
-    public static Command rampUp(double rpm, DoubleSupplier height) {
-        return sequence(
-            climber.climbTo(height),
-            shooter.shoot(rpm),
-            waitUntil(climber::atSetpoint),
-            waitUntil(shooter::atSetpoint)
-        );
+    public static Command rampUp(double rpm, double height){
+        return rampUp(rpm, ()-> height);
     }
 
-    public static Command rampUp(double rpm, double height){
+    public static Command rampUp(double rpm, DoubleSupplier height) {
         return sequence(
             climber.climbTo(height),
             shooter.shoot(rpm),
@@ -96,7 +92,7 @@ public class CmdManager {
     public static Command neutral(){
         return sequence(
             vibrateController(),
-            intake.setRoller(0),
+            intake.stopRollersNoRequirements(),
             shooter.setShooter(0),
             climber.climbTo(Climber.State.RETRACTED),
             waitUntil(()-> climber.atSetpoint()),

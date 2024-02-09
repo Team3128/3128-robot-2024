@@ -11,6 +11,7 @@ import common.core.controllers.Controller.Type;
 import common.core.swerve.SwerveConversions;
 import common.core.swerve.SwerveModuleConfig;
 import common.core.swerve.SwerveModuleConfig.SwerveMotorConfig;
+import common.hardware.motorcontroller.NAR_CANSparkMax;
 import common.hardware.motorcontroller.NAR_Motor.MotorConfig;
 import common.hardware.motorcontroller.NAR_Motor.Neutral;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -278,6 +279,7 @@ public class Constants {
         public static final Translation2d focalPointRed = new Translation2d(FieldConstants.FIELD_X_LENGTH - focalPointX, focalPointY);
         public static final Translation2d focalPoint = new Translation2d(0,0);
         public static final double distanceOffset = Units.inchesToMeters(66) - focalPointX;
+        public static final double angleOffset = 5;
         //testing: kV: drivetrain spinning consistently (ie. v1 = vel at  vel at 1 rad/sec v2=2 rad/sec). 1/(v2-v1) = kV
         //kS: plug kV into 1= kS + kV(v1)
     }
@@ -327,18 +329,22 @@ public class Constants {
     public static class IntakeConstants {
         public static final PIDFFConfig PIDConstants = new PIDFFConfig(0.25, 0, 0, 0.11, 0, 0, 0.25);
         public static final int PIVOT_MOTOR_ID = 31;
-        public static final int INTAKE_MOTOR_ID = 32;
+        public static final NAR_CANSparkMax PIVOT_MOTOR = new NAR_CANSparkMax(PIVOT_MOTOR_ID);
         public static final double GEAR_RATIO = 1.0 / 80.0;
-        public static final double ANGLE_TOLERANCE = 1;
-        public static final int CURRENT_LIMIT = 80;
+        public static final double MAX_VELOCITY = 1000000;
+        public static final double MAX_ACCELERATION = 100000;
+        public static final Constraints TRAP_CONSTRAINTS = new Constraints(MAX_VELOCITY, MAX_ACCELERATION);
         public static final double POSITION_MINIMUM = 0;
         public static final double POSITION_MAXIMUM = 220;
-        public static final double MAX_VELCOTIY = 1000000;
-        public static final double MAX_ACCELERATION = 100000;
-        public static final Constraints TRAP_CONSTRAINTS = new Constraints(MAX_VELCOTIY, MAX_ACCELERATION);
+
+        public static final int ROLLER_MOTOR_ID = 32;
+        public static final NAR_CANSparkMax ROLLER_MOTOR = new NAR_CANSparkMax(ROLLER_MOTOR_ID);
+        public static final double ANGLE_TOLERANCE = 1;
+        public static final int CURRENT_LIMIT = 80;
         public static final double STALL_CURRENT = 25;
         public static final double STALL_POWER = 0.05;
         public static final double OUTTAKE_POWER = -0.5;
+        public static final double INTAKE_POWER = 0.5;
     }
 
     public static class LedConstants{

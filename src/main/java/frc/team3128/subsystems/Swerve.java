@@ -23,7 +23,6 @@ import frc.team3128.RobotContainer;
 import frc.team3128.commands.CmdSwerveDrive;
 
 import static frc.team3128.Constants.SwerveConstants.*;
-import static edu.wpi.first.wpilibj2.command.Commands.waitUntil;
 import static frc.team3128.Constants.FocalAimConstants.*;
 
 public class Swerve extends SwerveBase {
@@ -96,7 +95,11 @@ public class Swerve extends SwerveBase {
 
     public double getTurnAngle(Translation2d aimPoint) {
         Translation2d pos = Swerve.getInstance().getPose().getTranslation();
-        return Math.toDegrees(Math.atan2(aimPoint.getY() - pos.getY(), aimPoint.getX() - pos.getX()));
+        return Math.toDegrees(Math.atan2(aimPoint.getY() - pos.getY(), aimPoint.getX() - pos.getX())) + angleOffset;
+    }
+
+    public Command turnInPlace() {
+        return turnInPlace(()-> getTurnAngle(Robot.getAlliance() == Alliance.Red ? focalPointRed : focalPointBlue));
     }
 
     public Command turnInPlace(DoubleSupplier setpoint) {
@@ -117,7 +120,7 @@ public class Swerve extends SwerveBase {
 
                 Swerve.getInstance().drive(translation, Units.degreesToRadians(output), true);
             },
-            Swerve.getInstance()).deadlineWith(waitUntil(()-> TURN_CONTROLLER.atSetpoint())).beforeStarting(runOnce(()-> CmdSwerveDrive.disableTurn()));
+            Swerve.getInstance()).beforeStarting(runOnce(()-> CmdSwerveDrive.disableTurn()));
     }
 
     public Pigeon2 getGyro() {

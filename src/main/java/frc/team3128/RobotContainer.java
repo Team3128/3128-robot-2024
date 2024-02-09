@@ -73,7 +73,7 @@ public class RobotContainer {
         controller.getButton(XboxButton.kB).onTrue(runOnce(()-> swerve.resetEncoders()));
         controller.getButton(XboxButton.kRightTrigger).onTrue(rampUpContinuous()).onFalse(autoShoot());
         controller.getButton(XboxButton.kRightBumper).onTrue(rampUp(ShooterConstants.MAX_RPM, 0.25)).onFalse(shoot(ShooterConstants.MAX_RPM, 0.25));
-        controller.getButton(XboxButton.kY).onTrue(intake.pivotTo(Intake.State.AMP)).onFalse(intake.outtake(Intake.State.AMP)); //TODO: AMP 
+        // controller.getButton(XboxButton.kY).onTrue(intake.pivotTo(Intake.State.AMP)).onFalse(intake.outtake()); //TODO: AMP 
         controller.getButton(XboxButton.kB).onTrue(climber.climbTo(Climber.State.EXTENDED));
         controller.getButton(XboxButton.kStart).onTrue(climber.climbTo(Climber.State.RETRACTED)); 
         controller.getButton(XboxButton.kLeftTrigger).onTrue(intake.intake(Intake.State.EXTENDED)); 
@@ -118,10 +118,10 @@ public class RobotContainer {
 
 
         buttonPad.getButton(1).onTrue(shooter.setShooter(-0.8)).onFalse(shooter.setShooter(0));
-        buttonPad.getButton(2).onTrue(intake.setPivot(0.2)).onFalse(intake.setPivot(0));
+        buttonPad.getButton(2).onTrue(intake.runPivot(0.2)).onFalse(intake.runPivot(0));
         buttonPad.getButton(3).onTrue(climber.setClimber(-0.2)).onFalse(climber.setClimber(0));
         buttonPad.getButton(4).onTrue(shooter.setShooter(0.8)).onFalse(shooter.setShooter(0));
-        buttonPad.getButton(5).onTrue(intake.setPivot(-0.2)).onFalse(intake.setPivot(0));
+        buttonPad.getButton(5).onTrue(intake.runPivot(-0.2)).onFalse(intake.runPivot(0));
         buttonPad.getButton(6).onTrue(climber.setClimber(0.2)).onFalse(climber.setClimber(0));
         buttonPad.getButton(7).onTrue(shooter.shoot(0));
         buttonPad.getButton(8).onTrue(intake.pivotTo(0));
@@ -132,8 +132,8 @@ public class RobotContainer {
 
         buttonPad.getButton(13).onTrue(neutral());
         buttonPad.getButton(14).onTrue(runOnce(()-> swerve.zeroGyro(0)));
-        buttonPad.getButton(15).onTrue(intake.setRoller(0.5)).onFalse(intake.setRoller(0));
-        buttonPad.getButton(16).onTrue(intake.setRoller(IntakeConstants.OUTTAKE_POWER)).onFalse(intake.setRoller(0));
+        buttonPad.getButton(15).onTrue(intake.runRollers(0.5)).onFalse(intake.runRollers(0));
+        buttonPad.getButton(16).onTrue(intake.runRollers(IntakeConstants.OUTTAKE_POWER)).onFalse(intake.runRollers(0));
     }
 
     public void initDashboard() {

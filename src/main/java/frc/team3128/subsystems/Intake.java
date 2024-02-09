@@ -1,46 +1,73 @@
 package frc.team3128.subsystems;
 
 import common.core.controllers.TrapController;
-import common.core.subsystems.NAR_PIDSubsystem;
-import common.hardware.motorcontroller.NAR_CANSparkMax;
+import common.core.subsystems.ManipulatorTemplate;
+import common.core.subsystems.PivotTemplate;
 import common.hardware.motorcontroller.NAR_Motor.Neutral;
-import common.utility.shuffleboard.NAR_Shuffleboard;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+
 import static edu.wpi.first.wpilibj2.command.Commands.*;
 import static frc.team3128.Constants.IntakeConstants.*;
 
-import java.util.function.DoubleSupplier;
-
-public class Intake extends NAR_PIDSubsystem{
-
-    public DoubleSupplier power;
+public class Intake {
 
     public enum State {
-        EXTENDED(-195, 0.5),
-        AMP(-89, -0.25);
+        EXTENDED(-195),
+        AMP(-89);
 
-        public final double setpoint, power;
-        private State(double setpoint, double power) {
-            this.setpoint = setpoint;
-            this.power = power;
+        public final double angle;
+        private State(double angle) {
+            this.angle = angle;
+        }
+    }
+
+    private class IntakePivot extends PivotTemplate {
+        
+        private IntakePivot() {
+            super(new TrapController(PIDConstants, TRAP_CONSTRAINTS), PIVOT_MOTOR);
+            setkG_Function(()-> Math.cos(Units.degreesToRadians(getSetpoint())));
+            setTolerance(ANGLE_TOLERANCE);
+            setConstraints(-POSITION_MAXIMUM, POSITION_MINIMUM);
+            setSafetyThresh(5);
+            initShuffleboard();
+        }
+
+        @Override
+        protected void configMotors() {
+            PIVOT_MOTOR.setInverted(true);
+            PIVOT_MOTOR.setUnitConversionFactor(360 * GEAR_RATIO);
+            PIVOT_MOTOR.setNeutralMode(Neutral.COAST);
+        }
+    }
+
+    private class IntakeRollers extends ManipulatorTemplate {
+
+        private IntakeRollers() {
+            super(STALL_CURRENT, INTAKE_POWER, OUTTAKE_POWER, STALL_POWER, 0.2, ROLLER_MOTOR);
+            initShuffleboard();
+        }
+
+        @Override
+        protected void configMotors() {
+            ROLLER_MOTOR.setInverted(false);
+            ROLLER_MOTOR.setNeutralMode(Neutral.BRAKE);
+            ROLLER_MOTOR.setCurrentLimit(CURRENT_LIMIT);
+        }
+
+        private Command runRollersNoRequirements(double power) {
+            return new InstantCommand(()-> setPower(power));
         }
     }
     
     private static Intake instance;
-    private NAR_CANSparkMax pivotMotor;
-    private NAR_CANSparkMax rollerMotor;
 
-    private Intake(){
-        super(new TrapController(PIDConstants, TRAP_CONSTRAINTS));
-        setkG_Function(()-> Math.cos(Units.degreesToRadians(getSetpoint())));
-        configMotors();
-        setTolerance(ANGLE_TOLERANCE);
-        setConstraints(-POSITION_MAXIMUM, POSITION_MINIMUM);
-        setSafetyThresh(5);
-        initShuffleboard();
-    }
-    
+    private IntakePivot intakePivot;
+    private IntakeRollers intakeRollers;
+
+    public boolean isRetracting = false;
+
     public static synchronized Intake getInstance(){
         if(instance == null){
             instance = new Intake();
@@ -48,113 +75,65 @@ public class Intake extends NAR_PIDSubsystem{
         return instance;
     }
 
-    @Override
-    public void initShuffleboard() {
-        super.initShuffleboard();
-        NAR_Shuffleboard.addData("Intake", "Current", ()-> rollerMotor.getStallCurrent(), 4, 0);
-        NAR_Shuffleboard.addData("Intake", "Object", ()-> hasObjectPresent(), 4, 1);
-    }
-    
-    private void configMotors(){
-        pivotMotor = new NAR_CANSparkMax(PIVOT_MOTOR_ID);
-        rollerMotor = new NAR_CANSparkMax(INTAKE_MOTOR_ID);
-        rollerMotor.setCurrentLimit(CURRENT_LIMIT);
-        pivotMotor.setInverted(true);
-        rollerMotor.setInverted(false);
-        pivotMotor.setUnitConversionFactor(360 * GEAR_RATIO);
-        pivotMotor.setNeutralMode(Neutral.COAST);
-        rollerMotor.setNeutralMode(Neutral.BRAKE);
-    }
-    
-    private void setPivotPower(double power){
-        disable();
-        pivotMotor.set(power);
-    }
-
-    private void setRollerPower(double power){
-        rollerMotor.set(power);
-    }
-
-    public boolean hasObjectPresent(){
-        return Math.abs(rollerMotor.getStallCurrent()) > STALL_CURRENT;
-    }
-    
-    public Command reset() {
-        return runOnce(()-> pivotMotor.resetPosition(POSITION_MINIMUM));
-    }
-
-    @Override
-    protected void useOutput(double output, double setpoint) {
-        pivotMotor.setVolts(output);
-    }
-    
-    @Override
-    public double getMeasurement() {
-        return pivotMotor.getPosition();
-    }
-
-    public Command setState(State setpoint){
-        return sequence(
-            pivotTo(setpoint),
-            waitUntil(()-> atSetpoint()),
-            setRoller(setpoint)
-        );
-    }
-    
-    public Command pivotTo(double setpoint){
-        return runOnce(() -> startPID(setpoint));
-    }
-
-    public Command pivotTo(State setpoint){
-        return runOnce(() -> startPID(setpoint.setpoint));
-    }
-
-    public Command setPivot(double power){
-        return runOnce(() -> setPivotPower(power));
-    }
-
-    public Command setRoller(double power){
-        return runOnce(() -> setRollerPower(power));
-    }
-
-    public Command setRoller(State setpoint){
-        return runOnce(() -> setRollerPower(setpoint.power));
+    private Intake(){
+        intakePivot = new IntakePivot();
+        intakeRollers = new IntakeRollers();
     }
 
     public Command retract(){
         return sequence(
-            setRoller(STALL_POWER),
-            pivotTo(0),
-            waitUntil(() -> atSetpoint()),
-            setPivot(0.5),
+            runOnce(()-> isRetracting = true),
+            intakeRollers.runManipulator(STALL_POWER),
+            intakePivot.pivotTo(0),
+            waitUntil(() -> intakePivot.atSetpoint()),
+            intakePivot.runPivot(0.5),
             waitSeconds(0.1),
-            setPivot(0),
+            intakePivot.runPivot(0),
             waitSeconds(0.5),
-            reset()
-            
+            intakePivot.reset(0),
+            runOnce(()-> isRetracting = false)
         );
     }
     
     public Command intake(State setpoint) {
         return sequence(
-            pivotTo(setpoint),
-            setRoller(setpoint),
-            waitSeconds(0.2),
-            waitUntil(() -> hasObjectPresent()),
-            waitSeconds(0.2),
+            runOnce(()-> isRetracting = true),
+            intakePivot.pivotTo(setpoint.angle),
+            intakeRollers.intake(),
             retract()
         );
     }
 
-    public Command outtake(State state){
-        return sequence(
-            setRoller(state.power),
-            waitSeconds(0.3),
-            retract()
-        );
+    public Command reset() {
+        return intakePivot.reset(0);
     }
 
-    public Command outtake(){
-        return setRoller(OUTTAKE_POWER);
+    public Command pivotTo(double setpoint) {
+        return intakePivot.pivotTo(setpoint);
+    }
+
+    public Command runPivot(double power) {
+        return intakePivot.runPivot(power);
+    }
+
+    public Command runRollers(double power) {
+        return intakeRollers.runManipulator(power);
+    }
+
+    public Command outtakeNoRequirements() {
+        return intakeRollers.runRollersNoRequirements(OUTTAKE_POWER);
+    }
+
+    public Command stopRollersNoRequirements() {
+        return intakeRollers.runRollersNoRequirements(0);
+    
+    }
+
+    public Command stopRollers() {
+        return intakeRollers.runManipulator(0);
+    }
+
+    public Command outtake() {
+        return intakeRollers.outtake();
     }
 }

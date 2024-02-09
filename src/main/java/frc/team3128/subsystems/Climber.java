@@ -70,6 +70,7 @@ public class Climber extends NAR_PIDSubsystem {
 
     @Override
     protected void useOutput(double output, double setpoint) {
+        if (Intake.getInstance().isRetracting) leftMotor.setVolts(0);
         leftMotor.setVolts(output);
     }
 
