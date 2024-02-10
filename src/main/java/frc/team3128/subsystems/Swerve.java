@@ -86,16 +86,20 @@ public class Swerve extends SwerveBase {
     }
 
     public double getDist() {
-        return getDist(Robot.getAlliance() == Alliance.Red ? focalPointRed : focalPointBlue);
+        return getDist(Robot.getAlliance() == Alliance.Red ? speakerMidpointRed : speakerMidpointBlue);
     }
 
-    public double getDist(Translation2d aimPoint) {
-        return getPose().getTranslation().getDistance(aimPoint) - distanceOffset + robotLength / 2.0;
+    public double getDist(Translation2d point) {
+        return getPose().getTranslation().getDistance(point) + robotLength / 2.0;
     }
 
-    public double getTurnAngle(Translation2d aimPoint) {
+    public double getTurnAngle() {
+        return getTurnAngle(Robot.getAlliance() == Alliance.Red ? focalPointRed : focalPointBlue);
+    }
+
+    public double getTurnAngle(Translation2d point) {
         Translation2d pos = Swerve.getInstance().getPose().getTranslation();
-        return Math.toDegrees(Math.atan2(aimPoint.getY() - pos.getY(), aimPoint.getX() - pos.getX())) + angleOffset;
+        return Math.toDegrees(Math.atan2(point.getY() - pos.getY(), point.getX() - pos.getX())) + angleOffset;
     }
 
     public Command turnInPlace() {

@@ -5,7 +5,6 @@ import java.util.function.DoubleSupplier;
 import common.core.controllers.ControllerBase;
 import common.utility.shuffleboard.NAR_Shuffleboard;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;

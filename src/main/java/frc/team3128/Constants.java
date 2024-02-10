@@ -64,7 +64,7 @@ public class Constants {
         public static final double bumperLength = Units.inchesToMeters(5);
         public static final double trackWidth = Units.inchesToMeters(20.75); //Hand measure later
         public static final double wheelBase = Units.inchesToMeters(20.75); //Hand measure later
-        public static final double robotLength = bumperLength + trackWidth;
+        public static final double robotLength = Units.inchesToMeters(26.5 + bumperLength); // bumperLength + trackWidth;
         public static final double wheelDiameter = Units.inchesToMeters(4);
         public static final double wheelCircumference = wheelDiameter * Math.PI;
 
@@ -273,13 +273,13 @@ public class Constants {
 
     public static class FocalAimConstants {
         public static final double speakerLength = 1.043;
-        public static final double focalPointX = 0.75;//1.4583577128;
-        public static final double focalPointY = 6.15 - speakerLength / 2 + 0.1;
-        public static final Translation2d focalPointBlue = new Translation2d(focalPointX, focalPointY);
-        public static final Translation2d focalPointRed = new Translation2d(FieldConstants.FIELD_X_LENGTH - focalPointX, focalPointY);
-        public static final Translation2d focalPoint = new Translation2d(0,0);
-        public static final double distanceOffset = Units.inchesToMeters(66) - focalPointX;
-        public static final double angleOffset = 5;
+        public static final double speakerMidpointY = 6.151 - speakerLength / 2;
+        public static final double focalPointX = 0.2; //1.4583577128;
+        public static final Translation2d speakerMidpointBlue = new Translation2d(0, speakerMidpointY);
+        public static final Translation2d speakerMidpointRed = new Translation2d(FieldConstants.FIELD_X_LENGTH, speakerMidpointY);
+        public static final Translation2d focalPointBlue = new Translation2d(focalPointX, speakerMidpointY);
+        public static final Translation2d focalPointRed = new Translation2d(FieldConstants.FIELD_X_LENGTH - focalPointX, speakerMidpointY);
+        public static final double angleOffset = 3;
         //testing: kV: drivetrain spinning consistently (ie. v1 = vel at  vel at 1 rad/sec v2=2 rad/sec). 1/(v2-v1) = kV
         //kS: plug kV into 1= kS + kV(v1)
     }

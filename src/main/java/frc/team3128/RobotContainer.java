@@ -98,9 +98,9 @@ public class RobotContainer {
         rightStick.getButton(1).onTrue(runOnce(()-> swerve.zeroGyro(0)));
         rightStick.getButton(2).onTrue(new CmdSetSpeed());
         rightStick.getButton(3).onTrue(new CmdSysId("Rotation", (Double radiansPerSec) -> swerve.drive(new Translation2d(), radiansPerSec, true), ()-> Units.radiansToDegrees(swerve.getRobotVelocity().omegaRadiansPerSecond), swerve));
-        rightStick.getButton(4).onTrue(runOnce(()-> swerve.resetOdometry(new Pose2d(1.35, FocalAimConstants.focalPointY, Rotation2d.fromDegrees(180)))));
-        rightStick.getButton(5).onTrue(runOnce(()-> swerve.resetOdometry(new Pose2d(FIELD_X_LENGTH - 1.35, FocalAimConstants.focalPointY, Rotation2d.fromDegrees(0)))));
-        rightStick.getButton(6).onTrue(swerve.turnInPlace(()-> 0));
+        rightStick.getButton(4).onTrue(runOnce(()-> swerve.resetOdometry(new Pose2d(1.35, FocalAimConstants.speakerMidpointY, Rotation2d.fromDegrees(180)))));
+        rightStick.getButton(5).onTrue(runOnce(()-> swerve.resetOdometry(new Pose2d(FIELD_X_LENGTH - 1.35, FocalAimConstants.speakerMidpointY, Rotation2d.fromDegrees(0)))));
+        rightStick.getButton(6).onTrue(swerve.turnInPlace(()-> 0)); 
         
         // rightStick.getButton(2).onTrue(shooter.setShooter(0.8)).onFalse(shooter.setShooter(0));
         // rightStick.getButton(3).onTrue(shooter.shoot(0));
