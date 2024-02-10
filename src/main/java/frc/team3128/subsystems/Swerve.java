@@ -130,6 +130,13 @@ public class Swerve extends SwerveBase {
     public Pigeon2 getGyro() {
         return gyro;
     }
+
+    @Override
+    public void initShuffleboard(){
+        super.initShuffleboard();
+        NAR_Shuffleboard.addSendable("Commands", "Swerve Commands", this, 0, 0);
+    }
+
 }
     
 

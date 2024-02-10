@@ -8,8 +8,10 @@ import static frc.team3128.Constants.ClimberConstants.*;
 import java.util.function.DoubleSupplier;
 
 import common.core.controllers.TrapController;
+import common.core.controllers.Controller;
+import common.core.controllers.Controller.Type;
 import common.core.subsystems.NAR_PIDSubsystem;
-import common.hardware.motorcontroller.NAR_CANSparkMax;
+import common.hardware.motorcontroller.NAR_CANSpark;
 import common.hardware.motorcontroller.NAR_Motor.Neutral;
 import common.utility.shuffleboard.NAR_Shuffleboard;
 
@@ -27,8 +29,8 @@ public class Climber extends NAR_PIDSubsystem {
     
     private static Climber instance;
     
-    private NAR_CANSparkMax leftMotor;
-    private NAR_CANSparkMax rightMotor;
+    private NAR_CANSpark leftMotor;
+    private NAR_CANSpark rightMotor;
     
     private Climber() {
         super(new TrapController(PIDConstants, TRAP_CONSTRAINTS));
@@ -49,11 +51,12 @@ public class Climber extends NAR_PIDSubsystem {
     public void initShuffleboard() {
         super.initShuffleboard();
         NAR_Shuffleboard.addData("Climber", "angle", ()-> getAngle(), 4, 0);
+        NAR_Shuffleboard.addSendable("Commands", "Climber", this, 0, 1);
     }
     
     private void configMotors() {
-        leftMotor = new NAR_CANSparkMax(LEFT_MOTOR_ID);
-        rightMotor = new NAR_CANSparkMax(RIGHT_MOTOR_ID);
+        leftMotor = new NAR_CANSpark(LEFT_MOTOR_ID);
+        rightMotor = new NAR_CANSpark(RIGHT_MOTOR_ID);
 
         leftMotor.setInverted(false);
         rightMotor.follow(leftMotor, true);

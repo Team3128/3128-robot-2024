@@ -11,7 +11,7 @@ import common.core.controllers.Controller.Type;
 import common.core.swerve.SwerveConversions;
 import common.core.swerve.SwerveModuleConfig;
 import common.core.swerve.SwerveModuleConfig.SwerveMotorConfig;
-import common.hardware.motorcontroller.NAR_CANSparkMax;
+import common.hardware.motorcontroller.NAR_CANSpark;
 import common.hardware.motorcontroller.NAR_Motor.MotorConfig;
 import common.hardware.motorcontroller.NAR_Motor.Neutral;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -128,8 +128,8 @@ public class Constants {
 
         public static final SwerveModuleConfig Mod0 = new SwerveModuleConfig(
             0, 
-            new SwerveMotorConfig(1, driveMotorConfig, drivePIDConfig),
-            new SwerveMotorConfig(2, angleMotorConfig, anglePIDConfig),
+            new SwerveMotorConfig(new NAR_CANSpark(1), driveMotorConfig, drivePIDConfig),
+            new SwerveMotorConfig(new NAR_CANSpark(2), angleMotorConfig, anglePIDConfig),
             20,
             -8.525390625,
             canCoderInvert,
@@ -137,8 +137,8 @@ public class Constants {
 
         public static final SwerveModuleConfig Mod1 = new SwerveModuleConfig(
             1, 
-            new SwerveMotorConfig(3, driveMotorConfig, drivePIDConfig),
-            new SwerveMotorConfig(4, angleMotorConfig, anglePIDConfig),
+            new SwerveMotorConfig(new NAR_CANSpark(3), driveMotorConfig, drivePIDConfig),
+            new SwerveMotorConfig(new NAR_CANSpark(4), angleMotorConfig, anglePIDConfig),
             21,
             -66.533203125,
             canCoderInvert,
@@ -146,8 +146,8 @@ public class Constants {
         
         public static final SwerveModuleConfig Mod2 = new SwerveModuleConfig(
             2, 
-            new SwerveMotorConfig(5, driveMotorConfig, drivePIDConfig),
-            new SwerveMotorConfig(6, angleMotorConfig, anglePIDConfig),
+            new SwerveMotorConfig(new NAR_CANSpark(5), driveMotorConfig, drivePIDConfig),
+            new SwerveMotorConfig(new NAR_CANSpark(6), angleMotorConfig, anglePIDConfig),
             22,
             111.00585937500001-180,
             canCoderInvert,
@@ -155,8 +155,8 @@ public class Constants {
         
         public static final SwerveModuleConfig Mod3 = new SwerveModuleConfig(
             3, 
-            new SwerveMotorConfig(7, driveMotorConfig, drivePIDConfig),
-            new SwerveMotorConfig(8, angleMotorConfig, anglePIDConfig),
+            new SwerveMotorConfig(new NAR_CANSpark(7), driveMotorConfig, drivePIDConfig),
+            new SwerveMotorConfig(new NAR_CANSpark(8), angleMotorConfig, anglePIDConfig),
             23,
             69.521484375-180,
             canCoderInvert,
@@ -329,7 +329,7 @@ public class Constants {
     public static class IntakeConstants {
         public static final PIDFFConfig PIDConstants = new PIDFFConfig(0.25, 0, 0, 0.11, 0, 0, 0.25);
         public static final int PIVOT_MOTOR_ID = 31;
-        public static final NAR_CANSparkMax PIVOT_MOTOR = new NAR_CANSparkMax(PIVOT_MOTOR_ID);
+        public static final NAR_CANSpark PIVOT_MOTOR = new NAR_CANSpark(PIVOT_MOTOR_ID);
         public static final double GEAR_RATIO = 1.0 / 80.0;
         public static final double MAX_VELOCITY = 1000000;
         public static final double MAX_ACCELERATION = 100000;
@@ -338,7 +338,7 @@ public class Constants {
         public static final double POSITION_MAXIMUM = 220;
 
         public static final int ROLLER_MOTOR_ID = 32;
-        public static final NAR_CANSparkMax ROLLER_MOTOR = new NAR_CANSparkMax(ROLLER_MOTOR_ID);
+        public static final NAR_CANSpark ROLLER_MOTOR = new NAR_CANSpark(ROLLER_MOTOR_ID);
         public static final double ANGLE_TOLERANCE = 1;
         public static final int CURRENT_LIMIT = 80;
         public static final double STALL_CURRENT = 25;

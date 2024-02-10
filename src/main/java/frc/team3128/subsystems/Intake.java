@@ -1,9 +1,12 @@
 package frc.team3128.subsystems;
 
+import common.core.controllers.Controller;
 import common.core.controllers.TrapController;
+import common.core.controllers.Controller.Type;
 import common.core.subsystems.ManipulatorTemplate;
 import common.core.subsystems.PivotTemplate;
 import common.hardware.motorcontroller.NAR_Motor.Neutral;
+import common.utility.shuffleboard.NAR_Shuffleboard;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -40,6 +43,12 @@ public class Intake {
             PIVOT_MOTOR.setUnitConversionFactor(360 * GEAR_RATIO);
             PIVOT_MOTOR.setNeutralMode(Neutral.COAST);
         }
+
+        @Override
+    public void initShuffleboard(){
+        super.initShuffleboard();
+        NAR_Shuffleboard.addSendable("Commands", "Intake Commands", this, 0, 3);
+    }
     }
 
     private class IntakeRollers extends ManipulatorTemplate {
