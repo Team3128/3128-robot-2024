@@ -50,7 +50,7 @@ public class Swerve extends SwerveBase {
         pitch = gyro.getPitch().asSupplier();
         roll = gyro.getRoll().asSupplier();
         initShuffleboard();
-        NAR_Shuffleboard.addData("Testing", "Name", ()-> getDist(focalPointRed), 0, 0);
+        NAR_Shuffleboard.addData("Testing", "Name", ()-> getDist(speakerMidpointRed), 0, 0);
     }
 
     public void setVoltage(double volts) {
@@ -90,7 +90,7 @@ public class Swerve extends SwerveBase {
     }
 
     public double getDist(Translation2d point) {
-        return getPose().getTranslation().getDistance(point) + robotLength / 2.0;
+        return getPose().getTranslation().getDistance(point) - robotLength / 2.0;
     }
 
     public double getTurnAngle() {
@@ -124,7 +124,8 @@ public class Swerve extends SwerveBase {
 
                 Swerve.getInstance().drive(translation, Units.degreesToRadians(output), true);
             },
-            Swerve.getInstance()).beforeStarting(runOnce(()-> CmdSwerveDrive.disableTurn()));
+            Swerve.getInstance()
+        ).beforeStarting(runOnce(()-> CmdSwerveDrive.disableTurn()));
     }
 
     public Pigeon2 getGyro() {

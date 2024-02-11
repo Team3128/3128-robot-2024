@@ -64,7 +64,7 @@ public class Constants {
         public static final double bumperLength = Units.inchesToMeters(5);
         public static final double trackWidth = Units.inchesToMeters(20.75); //Hand measure later
         public static final double wheelBase = Units.inchesToMeters(20.75); //Hand measure later
-        public static final double robotLength = Units.inchesToMeters(26.5 + bumperLength); // bumperLength + trackWidth;
+        public static final double robotLength = Units.inchesToMeters(26.5) + bumperLength; // bumperLength + trackWidth;
         public static final double wheelDiameter = Units.inchesToMeters(4);
         public static final double wheelCircumference = wheelDiameter * Math.PI;
 
@@ -279,7 +279,7 @@ public class Constants {
         public static final Translation2d speakerMidpointRed = new Translation2d(FieldConstants.FIELD_X_LENGTH, speakerMidpointY);
         public static final Translation2d focalPointBlue = new Translation2d(focalPointX, speakerMidpointY);
         public static final Translation2d focalPointRed = new Translation2d(FieldConstants.FIELD_X_LENGTH - focalPointX, speakerMidpointY);
-        public static final double angleOffset = 3;
+        public static final double angleOffset = 0;
         //testing: kV: drivetrain spinning consistently (ie. v1 = vel at  vel at 1 rad/sec v2=2 rad/sec). 1/(v2-v1) = kV
         //kS: plug kV into 1= kS + kV(v1)
     }
@@ -295,7 +295,7 @@ public class Constants {
     }
 
     public static class ClimberConstants {
-        public static final PIDFFConfig PIDConstants = new PIDFFConfig(100, 0, 0, 0.19, 0, 0, 0.205);//240
+        public static final PIDFFConfig PIDConstants = new PIDFFConfig(1, 0, 0, 0.19, 0, 0, 0.205);//240
         public static final double MAX_VELOCTIY = 10000000;
         public static final double MAX_ACCELERATION = 100000;
         public static final Constraints TRAP_CONSTRAINTS = new Constraints(MAX_VELOCTIY, MAX_ACCELERATION);
@@ -303,34 +303,34 @@ public class Constants {
         public static final int RIGHT_MOTOR_ID = 22;
         public static final double GEAR_RATIO = 1.0 / 12.0;
         public static final double WHEEL_CIRCUMFERENCE = Units.inchesToMeters(1.751) * Math.PI;
-        public static final double POSITION_TOLERANCE = 0.05;
+        public static final double POSITION_TOLERANCE = 0.5;
         public static final double PIVOT_CLIMBER_DIST = 0.28;
         public static final double POSITION_MINIMUM = 0;
-        public static final double POSITION_MAXIMUM = 0.25;
+        public static final double POSITION_MAXIMUM = 30;
         public static final double HEIGHT_OFFSET = 0.07; // 14 degrees ish
         public static final InterpolatingDoubleTreeMap climberHeightMap = new InterpolatingDoubleTreeMap();
         static {
-            climberHeightMap.put(0.0, 0.25);
-            climberHeightMap.put(0.25, 0.25);
-            climberHeightMap.put(0.5, 0.2);
-            climberHeightMap.put(0.75, 0.17);
-            climberHeightMap.put(1.0, 0.15);
-            climberHeightMap.put(1.25, 0.14);
-            climberHeightMap.put(1.5, 0.13);
-            climberHeightMap.put(1.75, 0.12);
-            climberHeightMap.put(2.0, 0.1125);
-            climberHeightMap.put(2.25, 0.1);
-            climberHeightMap.put(2.5, 0.097);
-            climberHeightMap.put(2.75, 0.095);
-            climberHeightMap.put(3.0, 0.095);
+            climberHeightMap.put(0.0 + 0.93, 25.0);
+            climberHeightMap.put(0.25 + 0.93, 25.0);
+            climberHeightMap.put(0.5 + 0.93, 20.0);
+            climberHeightMap.put(0.75 + 0.93, 17.0);
+            climberHeightMap.put(1.0 + 0.93, 15.0);
+            climberHeightMap.put(1.25 + 0.93, 14.0);
+            climberHeightMap.put(1.5 + 0.93, 13.0);
+            climberHeightMap.put(1.75 + 0.93, 12.0);
+            climberHeightMap.put(2.0 + 0.93, 11.25);
+            climberHeightMap.put(2.25 + 0.93, 10.0);
+            climberHeightMap.put(2.5 + 0.93, 9.7);
+            climberHeightMap.put(2.75 + 0.93, 9.5);
+            climberHeightMap.put(3.0 + 0.93, 9.5);
         }
     }
 
     public static class IntakeConstants {
-        public static final PIDFFConfig PIDConstants = new PIDFFConfig(0.25, 0, 0, 0.11, 0, 0, 0.25);
+        public static final PIDFFConfig PIDConstants = new PIDFFConfig(0.25, 0, 0, 0.11, 0, 0, -0.25);
         public static final int PIVOT_MOTOR_ID = 31;
         public static final NAR_CANSpark PIVOT_MOTOR = new NAR_CANSpark(PIVOT_MOTOR_ID);
-        public static final double GEAR_RATIO = 1.0 / 80.0;
+        public static final double GEAR_RATIO = 1.0 / 60.0;
         public static final double MAX_VELOCITY = 1000000;
         public static final double MAX_ACCELERATION = 100000;
         public static final Constraints TRAP_CONSTRAINTS = new Constraints(MAX_VELOCITY, MAX_ACCELERATION);
@@ -342,7 +342,7 @@ public class Constants {
         public static final double ANGLE_TOLERANCE = 1;
         public static final int CURRENT_LIMIT = 80;
         public static final double STALL_CURRENT = 25;
-        public static final double STALL_POWER = 0.05;
+        public static final double STALL_POWER = 0.1;
         public static final double OUTTAKE_POWER = -0.5;
         public static final double INTAKE_POWER = 0.5;
     }

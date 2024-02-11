@@ -17,8 +17,8 @@ import static frc.team3128.Constants.IntakeConstants.*;
 public class Intake {
 
     public enum State {
-        EXTENDED(-195),
-        AMP(-89);
+        EXTENDED(-197),
+        AMP(-90);
 
         public final double angle;
         private State(double angle) {

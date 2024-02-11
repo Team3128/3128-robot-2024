@@ -18,7 +18,7 @@ import common.utility.shuffleboard.NAR_Shuffleboard;
 public class Climber extends NAR_PIDSubsystem {
 
     public enum State {
-        EXTENDED(180),
+        EXTENDED(30),
         RETRACTED(0);
 
         public final double setpoint;
@@ -60,7 +60,7 @@ public class Climber extends NAR_PIDSubsystem {
 
         leftMotor.setInverted(false);
         rightMotor.follow(leftMotor, true);
-        leftMotor.setUnitConversionFactor(GEAR_RATIO * WHEEL_CIRCUMFERENCE);
+        leftMotor.setUnitConversionFactor(GEAR_RATIO * WHEEL_CIRCUMFERENCE * 100);
 
         leftMotor.setNeutralMode(Neutral.COAST);
         rightMotor.setNeutralMode(Neutral.COAST);

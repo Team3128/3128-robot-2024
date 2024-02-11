@@ -99,8 +99,13 @@ public class CmdManager {
             climber.setClimber(-0.5),
             waitSeconds(0.1),
             climber.setClimber(0),
-            waitSeconds(0.5),
-            climber.reset()
+            parallel(
+                intake.retract(),
+                sequence(
+                    waitSeconds(0.5),
+                    climber.reset()
+                )
+            )
         );
     }
 }
