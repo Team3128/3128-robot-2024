@@ -8,8 +8,6 @@ import static frc.team3128.Constants.ClimberConstants.*;
 import java.util.function.DoubleSupplier;
 
 import common.core.controllers.TrapController;
-import common.core.controllers.Controller;
-import common.core.controllers.Controller.Type;
 import common.core.subsystems.NAR_PIDSubsystem;
 import common.hardware.motorcontroller.NAR_CANSpark;
 import common.hardware.motorcontroller.NAR_Motor.Neutral;
@@ -73,7 +71,7 @@ public class Climber extends NAR_PIDSubsystem {
 
     @Override
     protected void useOutput(double output, double setpoint) {
-        if (Intake.getInstance().isRetracting) leftMotor.setVolts(0);
+        if (Intake.getInstance().isRetracting && !isNeutral()) leftMotor.setVolts(0);
         leftMotor.setVolts(output);
     }
 
@@ -117,5 +115,9 @@ public class Climber extends NAR_PIDSubsystem {
 
     public Command setAngle(double angle){
         return climbTo(Math.tan(Units.degreesToRadians(angle)) * PIVOT_CLIMBER_DIST - HEIGHT_OFFSET);
+    }
+
+    public boolean isNeutral() {
+        return getMeasurement() < NEUTRAL_THRESHOLD;
     }
 }

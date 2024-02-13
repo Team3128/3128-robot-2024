@@ -4,11 +4,14 @@ import common.core.controllers.Controller;
 import common.core.controllers.Controller.Type;
 import common.core.subsystems.NAR_PIDSubsystem;
 import common.hardware.motorcontroller.NAR_CANSpark;
+import common.hardware.motorcontroller.NAR_CANSpark.ControllerType;
 import common.hardware.motorcontroller.NAR_Motor.Neutral;
 import common.utility.shuffleboard.NAR_Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 import static frc.team3128.Constants.ShooterConstants.*;
+
+import com.revrobotics.CANSparkLowLevel.MotorType;
 
 public class Shooter extends NAR_PIDSubsystem {
 
@@ -33,8 +36,8 @@ public class Shooter extends NAR_PIDSubsystem {
     }
 
     private void configMotors(){
-        leftMotor = new NAR_CANSpark(LEFT_MOTOR_ID);
-        rightMotor = new NAR_CANSpark(RIGHT_MOTOR_ID);
+        leftMotor = new NAR_CANSpark(LEFT_MOTOR_ID, ControllerType.CAN_SPARK_FLEX);
+        rightMotor = new NAR_CANSpark(RIGHT_MOTOR_ID, ControllerType.CAN_SPARK_FLEX);
         
         leftMotor.setInverted(true);
         rightMotor.follow(leftMotor, false);
@@ -79,6 +82,7 @@ public class Shooter extends NAR_PIDSubsystem {
     public void initShuffleboard(){
         super.initShuffleboard();
         NAR_Shuffleboard.addSendable("Commands", "Shooter Commands", this, 0, 3);
+        NAR_Shuffleboard.addData(getSubsystem(), "left Voltge", leftMotor.getAppliedOutput());
     }
 
 }

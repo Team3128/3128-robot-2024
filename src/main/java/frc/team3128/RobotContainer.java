@@ -77,7 +77,7 @@ public class RobotContainer {
         controller.getButton(XboxButton.kA).onTrue(climber.climbTo(Climber.State.EXTENDED)); 
         controller.getButton(XboxButton.kBack).onTrue(climber.climbTo(Climber.State.RETRACTED)); 
         controller.getButton(XboxButton.kLeftTrigger).onTrue(intake.intake(Intake.State.EXTENDED)); 
-        controller.getButton(XboxButton.kLeftBumper).onTrue(intake.retract());
+        controller.getButton(XboxButton.kLeftBumper).onTrue(intake.retract(false));
 
         controller.getButton(XboxButton.kRightStick).onTrue(runOnce(()-> CmdSwerveDrive.setTurnSetpoint()));
         controller.getUpPOVButton().onTrue(runOnce(()-> {
@@ -130,7 +130,7 @@ public class RobotContainer {
         buttonPad.getButton(11).onTrue(intake.reset());
         buttonPad.getButton(12).onTrue(climber.reset());
 
-        buttonPad.getButton(13).onTrue(neutral());
+        buttonPad.getButton(13).onTrue(neutral(false));
         buttonPad.getButton(14).onTrue(runOnce(()-> swerve.zeroGyro(0)));
         buttonPad.getButton(15).onTrue(intake.runRollers(0.5)).onFalse(intake.runRollers(0));
         buttonPad.getButton(16).onTrue(intake.runRollers(IntakeConstants.OUTTAKE_POWER)).onFalse(intake.runRollers(0));

@@ -54,9 +54,9 @@ public class Intake {
     private class IntakeRollers extends ManipulatorTemplate {
 
         private IntakeRollers() {
-            super(STALL_CURRENT, INTAKE_POWER, OUTTAKE_POWER, STALL_POWER, 0.2, ROLLER_MOTOR);
+            super(STALL_CURRENT, INTAKE_POWER, OUTTAKE_POWER, STALL_POWER, 0.3, ROLLER_MOTOR);
             initShuffleboard();
-            // NAR_Shuffleboard.addData(getSubsystem(), "Current", ROLLER_MOTOR.getStallCurrent());
+            NAR_Shuffleboard.addData(getSubsystem(), "Current", ()-> ROLLER_MOTOR.getStallCurrent());
         }
 
         @Override
@@ -90,10 +90,11 @@ public class Intake {
         intakeRollers = new IntakeRollers();
     }
 
-    public Command retract(){
+    public Command retract(boolean shouldStall){
         return sequence(
             runOnce(()-> isRetracting = true),
-            intakeRollers.runManipulator(STALL_POWER),
+            waitUntil(()-> Climber.getInstance().isNeutral()),
+            intakeRollers.runManipulator(shouldStall ? STALL_POWER : 0),
             intakePivot.pivotTo(0),
             waitUntil(() -> intakePivot.atSetpoint()),
             intakePivot.runPivot(0.5),
@@ -110,7 +111,7 @@ public class Intake {
             runOnce(()-> isRetracting = true),
             intakePivot.pivotTo(setpoint.angle),
             intakeRollers.intake(),
-            retract()
+            retract(true)
         );
     }
 

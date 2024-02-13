@@ -289,7 +289,7 @@ public class Constants {
         public static final int LEFT_MOTOR_ID = 11;
         public static final int RIGHT_MOTOR_ID = 12;
         public static final double GEAR_RATIO = 1;
-        public static final double MAX_RPM = 5500;
+        public static final double MAX_RPM = 6250;
         public static final double MIN_RPM = 0;
         public static final double TOLERANCE = 80;
     }
@@ -308,6 +308,7 @@ public class Constants {
         public static final double POSITION_MINIMUM = 0;
         public static final double POSITION_MAXIMUM = 30;
         public static final double HEIGHT_OFFSET = 0.07; // 14 degrees ish
+        public static final double NEUTRAL_THRESHOLD = 1;
         public static final InterpolatingDoubleTreeMap climberHeightMap = new InterpolatingDoubleTreeMap();
         static {
             climberHeightMap.put(0.0 + 0.93, 25.0);
@@ -342,7 +343,7 @@ public class Constants {
         public static final double ANGLE_TOLERANCE = 1;
         public static final int CURRENT_LIMIT = 80;
         public static final double STALL_CURRENT = 25;
-        public static final double STALL_POWER = 0.1;
+        public static final double STALL_POWER = 0.08;
         public static final double OUTTAKE_POWER = -0.5;
         public static final double INTAKE_POWER = 0.5;
     }

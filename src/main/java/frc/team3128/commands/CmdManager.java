@@ -45,7 +45,7 @@ public class CmdManager {
             ),
             intake.outtakeNoRequirements(),
             waitSeconds(1),
-            neutral()
+            neutral(false)
         );
     }
 
@@ -54,7 +54,7 @@ public class CmdManager {
             rampUp(rpm, height),
             intake.outtakeNoRequirements(),
             waitSeconds(0.1),
-            neutral()
+            neutral(false)
         );
     }
 
@@ -66,7 +66,7 @@ public class CmdManager {
             rampUp(rpm, height),
             intake.outtakeNoRequirements(),
             waitSeconds(0.1),
-            neutral()
+            neutral(false)
         );
     }
 
@@ -82,8 +82,7 @@ public class CmdManager {
         return sequence(
             climber.climbTo(height),
             shooter.shoot(rpm),
-            waitUntil(climber::atSetpoint),
-            waitUntil(shooter::atSetpoint)
+            waitUntil(()-> climber.atSetpoint() && shooter.atSetpoint())
         );
     }
 
@@ -101,7 +100,7 @@ public class CmdManager {
         );
     }
 
-    public static Command neutral(){
+    public static Command neutral(boolean shouldStall){
         return sequence(
             vibrateController(),
             intake.stopRollersNoRequirements(),
@@ -112,7 +111,7 @@ public class CmdManager {
             waitSeconds(0.1),
             climber.setClimber(0),
             parallel(
-                intake.retract(),
+                intake.retract(shouldStall),
                 sequence(
                     waitSeconds(0.5),
                     climber.reset()
