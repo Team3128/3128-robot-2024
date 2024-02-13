@@ -53,7 +53,19 @@ public class CmdManager {
         return sequence(
             rampUp(rpm, height),
             intake.outtakeNoRequirements(),
-            waitSeconds(1),
+            waitSeconds(0.1),
+            neutral()
+        );
+    }
+
+    public static Command feed(double rpm, double height,double angle){
+        return sequence(
+            runOnce(()-> {
+                CmdSwerveDrive.setTurnSetpoint(angle);
+            }),
+            rampUp(rpm, height),
+            intake.outtakeNoRequirements(),
+            waitSeconds(0.1),
             neutral()
         );
     }

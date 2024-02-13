@@ -71,10 +71,10 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
         controller.getButton(XboxButton.kB).onTrue(runOnce(()-> swerve.resetEncoders()));
-        controller.getButton(XboxButton.kRightTrigger).onTrue(rampUpContinuous()).onFalse(autoShoot());
+        //controller.getButton(XboxButton.kRightTrigger).onTrue(rampUpContinuous()).onFalse(feed(ShooterConstants.MAX_RPM, 6,180));
         controller.getButton(XboxButton.kRightBumper).onTrue(rampUp(ShooterConstants.MAX_RPM, 25)).onFalse(shoot(ShooterConstants.MAX_RPM, 25));
-        controller.getButton(XboxButton.kY).onTrue(intake.pivotTo(Intake.State.AMP.angle)).onFalse(sequence(intake.outtake(), waitSeconds(0.4), intake.retract())); //TODO: AMP 
-        controller.getButton(XboxButton.kA).onTrue(climber.climbTo(Climber.State.EXTENDED));
+        controller.getButton(XboxButton.kY).onTrue(rampUp(3500, 15)).onFalse(feed(3500, 15,155));
+        controller.getButton(XboxButton.kA).onTrue(climber.climbTo(Climber.State.EXTENDED)); 
         controller.getButton(XboxButton.kBack).onTrue(climber.climbTo(Climber.State.RETRACTED)); 
         controller.getButton(XboxButton.kLeftTrigger).onTrue(intake.intake(Intake.State.EXTENDED)); 
         controller.getButton(XboxButton.kLeftBumper).onTrue(intake.retract());

@@ -17,7 +17,7 @@ import static frc.team3128.Constants.IntakeConstants.*;
 public class Intake {
 
     public enum State {
-        EXTENDED(-197),
+        EXTENDED(-195),
         AMP(-90);
 
         public final double angle;
@@ -56,6 +56,7 @@ public class Intake {
         private IntakeRollers() {
             super(STALL_CURRENT, INTAKE_POWER, OUTTAKE_POWER, STALL_POWER, 0.2, ROLLER_MOTOR);
             initShuffleboard();
+            // NAR_Shuffleboard.addData(getSubsystem(), "Current", ROLLER_MOTOR.getStallCurrent());
         }
 
         @Override
