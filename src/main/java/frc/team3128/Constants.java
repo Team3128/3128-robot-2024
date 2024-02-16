@@ -12,6 +12,7 @@ import common.core.swerve.SwerveConversions;
 import common.core.swerve.SwerveModuleConfig;
 import common.core.swerve.SwerveModuleConfig.SwerveMotorConfig;
 import common.hardware.motorcontroller.NAR_CANSpark;
+import common.hardware.motorcontroller.NAR_CANSpark.ControllerType;
 import common.hardware.motorcontroller.NAR_Motor.MotorConfig;
 import common.hardware.motorcontroller.NAR_Motor.Neutral;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -22,7 +23,7 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-
+import frc.team3128.subsystems.Swerve;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
@@ -128,37 +129,37 @@ public class Constants {
 
         public static final SwerveModuleConfig Mod0 = new SwerveModuleConfig(
             0, 
-            new SwerveMotorConfig(new NAR_CANSpark(1), driveMotorConfig, drivePIDConfig),
-            new SwerveMotorConfig(new NAR_CANSpark(2), angleMotorConfig, anglePIDConfig),
-            20,
-            -8.525390625,
+            new SwerveMotorConfig(new NAR_CANSpark(1, ControllerType.CAN_SPARK_FLEX), driveMotorConfig, drivePIDConfig),
+            new SwerveMotorConfig(new NAR_CANSpark(2, ControllerType.CAN_SPARK_FLEX), angleMotorConfig, anglePIDConfig),
+            10,
+            21.533203125,
             canCoderInvert,
             maxSpeed);
 
         public static final SwerveModuleConfig Mod1 = new SwerveModuleConfig(
             1, 
-            new SwerveMotorConfig(new NAR_CANSpark(3), driveMotorConfig, drivePIDConfig),
-            new SwerveMotorConfig(new NAR_CANSpark(4), angleMotorConfig, anglePIDConfig),
-            21,
-            -66.533203125,
+            new SwerveMotorConfig(new NAR_CANSpark(3, ControllerType.CAN_SPARK_FLEX), driveMotorConfig, drivePIDConfig),
+            new SwerveMotorConfig(new NAR_CANSpark(4, ControllerType.CAN_SPARK_FLEX), angleMotorConfig, anglePIDConfig),
+            11,
+            153.544921875,
             canCoderInvert,
             maxSpeed);
         
         public static final SwerveModuleConfig Mod2 = new SwerveModuleConfig(
             2, 
-            new SwerveMotorConfig(new NAR_CANSpark(5), driveMotorConfig, drivePIDConfig),
-            new SwerveMotorConfig(new NAR_CANSpark(6), angleMotorConfig, anglePIDConfig),
-            22,
-            111.00585937500001-180,
+            new SwerveMotorConfig(new NAR_CANSpark(5, ControllerType.CAN_SPARK_FLEX), driveMotorConfig, drivePIDConfig),
+            new SwerveMotorConfig(new NAR_CANSpark(6, ControllerType.CAN_SPARK_FLEX), angleMotorConfig, anglePIDConfig),
+            12,
+            17.9296875,
             canCoderInvert,
             maxSpeed);
         
         public static final SwerveModuleConfig Mod3 = new SwerveModuleConfig(
             3, 
-            new SwerveMotorConfig(new NAR_CANSpark(7), driveMotorConfig, drivePIDConfig),
-            new SwerveMotorConfig(new NAR_CANSpark(8), angleMotorConfig, anglePIDConfig),
-            23,
-            69.521484375-180,
+            new SwerveMotorConfig(new NAR_CANSpark(7, ControllerType.CAN_SPARK_FLEX), driveMotorConfig, drivePIDConfig),
+            new SwerveMotorConfig(new NAR_CANSpark(8, ControllerType.CAN_SPARK_FLEX), angleMotorConfig, anglePIDConfig),
+            13,
+            -120.76171875,
             canCoderInvert,
             maxSpeed);
 
@@ -176,6 +177,7 @@ public class Constants {
 
         static {
             TURN_CONTROLLER.enableContinuousInput(0, 360);
+            TURN_CONTROLLER.setMeasurementSource(()-> Swerve.getInstance().getYaw());
             TURN_CONTROLLER.setTolerance(TURN_TOLERANCE);
         }
     }
@@ -285,13 +287,14 @@ public class Constants {
     }
 
     public static class ShooterConstants {
-        public static final PIDFFConfig PIDConstants = new PIDFFConfig(0, 0, 0, 0, 0.002, 0);
+        public static final PIDFFConfig PIDConstants = new PIDFFConfig(0, 0, 0, 0, 0.00179, 0); //Retune later
         public static final int LEFT_MOTOR_ID = 11;
         public static final int RIGHT_MOTOR_ID = 12;
         public static final double GEAR_RATIO = 1;
         public static final double MAX_RPM = 6250;
         public static final double MIN_RPM = 0;
         public static final double TOLERANCE = 80;
+        public static final double AMP_POWER = 0.4;
     }
 
     public static class ClimberConstants {

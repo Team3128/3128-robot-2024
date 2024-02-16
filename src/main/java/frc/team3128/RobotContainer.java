@@ -1,5 +1,6 @@
 package frc.team3128;
 
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -13,11 +14,14 @@ import static edu.wpi.first.wpilibj2.command.Commands.*;
 import static frc.team3128.Constants.FieldConstants.FIELD_X_LENGTH;
 import static frc.team3128.commands.CmdManager.*;
 
+import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+
 import frc.team3128.Constants.FocalAimConstants;
 import frc.team3128.Constants.IntakeConstants;
 import frc.team3128.Constants.ShooterConstants;
 import frc.team3128.commands.CmdSetSpeed;
 import frc.team3128.commands.CmdSwerveDrive;
+import common.hardware.camera.Camera;
 import common.hardware.input.NAR_ButtonBoard;
 import common.hardware.input.NAR_Joystick;
 import common.hardware.input.NAR_XboxController;
@@ -71,9 +75,9 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
         controller.getButton(XboxButton.kB).onTrue(runOnce(()-> swerve.resetEncoders()));
-        //controller.getButton(XboxButton.kRightTrigger).onTrue(rampUpContinuous()).onFalse(feed(ShooterConstants.MAX_RPM, 6,180));
         controller.getButton(XboxButton.kRightBumper).onTrue(rampUp(ShooterConstants.MAX_RPM, 25)).onFalse(shoot(ShooterConstants.MAX_RPM, 25));
-        controller.getButton(XboxButton.kY).onTrue(rampUp(3500, 15)).onFalse(feed(3500, 15,155));
+        controller.getButton(XboxButton.kY).onTrue(rampUp(3500, 15)).onFalse(feed(3500, 15,155));   //Ask driveteam later what they want
+        controller.getButton(XboxButton.kX).onTrue(rampUpAmp()).onFalse(ampShoot());
         controller.getButton(XboxButton.kA).onTrue(climber.climbTo(Climber.State.EXTENDED)); 
         controller.getButton(XboxButton.kBack).onTrue(climber.climbTo(Climber.State.RETRACTED)); 
         controller.getButton(XboxButton.kLeftTrigger).onTrue(intake.intake(Intake.State.EXTENDED)); 
@@ -136,11 +140,18 @@ public class RobotContainer {
         buttonPad.getButton(16).onTrue(intake.runRollers(IntakeConstants.OUTTAKE_POWER)).onFalse(intake.runRollers(0));
     }
 
+    @SuppressWarnings("unused")
+    public void initCameras() {
+        Camera.configCameras(AprilTagFields.k2024Crescendo, PoseStrategy.LOWEST_AMBIGUITY, (pose, time) -> swerve.addVisionMeasurement(pose, time), () -> swerve.getPose());
+        final Camera camera = new Camera("FRONT_LEFT", 10.055, 9.79, 30, -28.125, 0);
+        final Camera camera2 = new Camera("FRONT_LEFT", 10.055, 9.79, -30, -28.125, 0);
+    }
+
     public void initDashboard() {
         dashboard = NarwhalDashboard.getInstance();
         dashboard.addUpdate("time", ()-> Timer.getMatchTime());
         dashboard.addUpdate("voltage",()-> RobotController.getBatteryVoltage());
-        dashboard.addUpdate("x", ()-> swerve.getPose().getX());
-        dashboard.addUpdate("y", ()-> swerve.getPose().getY());
+        dashboard.addUpdate("robotX", ()-> swerve.getPose().getX());
+        dashboard.addUpdate("robotY", ()-> swerve.getPose().getY());
     }
 }

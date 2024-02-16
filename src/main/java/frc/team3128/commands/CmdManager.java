@@ -1,9 +1,7 @@
 package frc.team3128.commands;
 
 import common.hardware.input.NAR_XboxController;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.team3128.Robot;
 import frc.team3128.RobotContainer;
 import frc.team3128.Constants.ShooterConstants;
 import frc.team3128.subsystems.Climber;
@@ -11,12 +9,10 @@ import frc.team3128.subsystems.Intake;
 import frc.team3128.subsystems.Shooter;
 import frc.team3128.subsystems.Swerve;
 
-import static frc.team3128.Constants.FocalAimConstants.focalPointBlue;
-import static frc.team3128.Constants.FocalAimConstants.focalPointRed;
-
 import java.util.function.DoubleSupplier;
 
 import static edu.wpi.first.wpilibj2.command.Commands.*;
+import static frc.team3128.Constants.ShooterConstants.AMP_POWER;
 
 
 public class CmdManager {
@@ -44,7 +40,18 @@ public class CmdManager {
                 // waitUntil(()-> CmdSwerveDrive.rController.atSetpoint())
             ),
             intake.outtakeNoRequirements(),
-            waitSeconds(1),
+            waitSeconds(0.1),
+            neutral(false)
+        );
+    }
+
+    public static Command ampShoot() {
+        return sequence (
+            shooter.runBottomRollers(AMP_POWER),
+            climber.climbTo(Climber.State.AMP),
+            waitUntil(() -> climber.atSetpoint()),
+            intake.outtake(),
+            waitSeconds(0.1),
             neutral(false)
         );
     }
@@ -58,7 +65,7 @@ public class CmdManager {
         );
     }
 
-    public static Command feed(double rpm, double height,double angle){
+    public static Command feed(double rpm, double height, double angle){
         return sequence(
             runOnce(()-> {
                 CmdSwerveDrive.setTurnSetpoint(angle);
@@ -83,6 +90,13 @@ public class CmdManager {
             climber.climbTo(height),
             shooter.shoot(rpm),
             waitUntil(()-> climber.atSetpoint() && shooter.atSetpoint())
+        );
+    }
+
+    public static Command rampUpAmp() {
+        return sequence(
+            climber.climbTo(Climber.State.AMP),
+            shooter.runBottomRollers(AMP_POWER)
         );
     }
 

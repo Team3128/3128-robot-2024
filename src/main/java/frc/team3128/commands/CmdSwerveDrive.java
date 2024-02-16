@@ -3,7 +3,6 @@ package frc.team3128.commands;
 import java.util.function.DoubleSupplier;
 
 import common.core.controllers.ControllerBase;
-import common.utility.shuffleboard.NAR_Shuffleboard;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -40,16 +39,10 @@ public class CmdSwerveDrive extends Command {
         this.yAxis = yAxis;
         this.zAxis = zAxis;
 
+        rController = TURN_CONTROLLER;
+
         accelLimiter = new SlewRateLimiter(maxAcceleration);
         // rController = new PIDController(turnkP, 0, 0);
-        rController = TURN_CONTROLLER;
-        rController.enableContinuousInput(0, 360);
-        rController.setMeasurementSource(()-> swerve.getYaw());
-        rController.setTolerance(0.5);
-
-        rController.setkV(NAR_Shuffleboard.debug("Test", "kV", rController.getkV(), 3, 1));
-        rController.setkA(NAR_Shuffleboard.debug("Test", "kA", rController.getkA(), 3, 2));
-        NAR_Shuffleboard.addSendable("Test", "ADASD", TURN_CONTROLLER, 1, 0);
         swerve.fieldRelative = fieldRelative;
     }
 
@@ -79,8 +72,8 @@ public class CmdSwerveDrive extends Command {
             }
         }
 
-        Rotation2d driveAngle = translation.getAngle();
-        double slowedDist = accelLimiter.calculate(translation.getNorm());
+        // Rotation2d driveAngle = translation.getAngle();
+        // double slowedDist = accelLimiter.calculate(translation.getNorm());
         // translation = new Translation2d(slowedDist, driveAngle);
 
         SmartDashboard.putBoolean("fieldOriented",swerve.fieldRelative);

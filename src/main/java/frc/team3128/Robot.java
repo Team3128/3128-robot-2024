@@ -7,14 +7,14 @@ package frc.team3128;
 import java.util.Optional;
 
 import common.core.misc.NAR_Robot;
+import common.hardware.camera.Camera;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.MatchType;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
+import static edu.wpi.first.wpilibj2.command.Commands.*;
 import frc.team3128.autonomous.AutoPrograms;
 import frc.team3128.subsystems.Swerve;
 
@@ -51,16 +51,14 @@ public class Robot extends NAR_Robot {
     @Override
     public void robotInit(){
         m_robotContainer.initDashboard();
-        new Trigger(this::isEnabled).negate().debounce(2).onTrue(new InstantCommand(()-> Swerve.getInstance().setBrakeMode(false)).ignoringDisable(true));
         LiveWindow.disableAllTelemetry();
 
-        addReceiver(true, LoggingState.SESSION);
-        
+        addReceiver(true, LoggingState.NONE);
     }
 
     @Override
     public void robotPeriodic(){
-      
+        Camera.updateAll();
     }
 
     @Override
@@ -109,6 +107,16 @@ public class Robot extends NAR_Robot {
     @Override
     public void disabledInit() {
         Swerve.getInstance().setBrakeMode(true);
+        CommandScheduler.getInstance().cancelAll();
+        sequence(
+            waitSeconds(3.0).ignoringDisable(true),
+            runOnce(()->Swerve.getInstance().setBrakeMode(false)).ignoringDisable(true)
+        ).schedule();
+    }
+
+    @Override
+    public void disabledExit() {
+        Swerve.getInstance().setBrakeMode(false);
     }
     
     @Override
