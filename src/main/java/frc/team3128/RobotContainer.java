@@ -71,6 +71,7 @@ public class RobotContainer {
         configureButtonBindings();
         
         DriverStation.silenceJoystickConnectionWarning(true);
+        initCameras();
     }   
 
     private void configureButtonBindings() {

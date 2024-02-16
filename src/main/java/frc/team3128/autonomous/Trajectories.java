@@ -16,6 +16,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 
+import static edu.wpi.first.wpilibj2.command.Commands.none;
 import static edu.wpi.first.wpilibj2.command.Commands.parallel;
 import static edu.wpi.first.wpilibj2.command.Commands.runOnce;
 import static edu.wpi.first.wpilibj2.command.Commands.sequence;
@@ -50,7 +51,7 @@ public class Trajectories {
     public static void initTrajectories() {
 
         // TODO: add commands
-        NamedCommands.registerCommand("Intake", Intake.getInstance().intake(Intake.State.EXTENDED));
+        NamedCommands.registerCommand("Intake", none());
         NamedCommands.registerCommand("Shoot", autoShoot());
         NamedCommands.registerCommand("Amp", null);
         NamedCommands.registerCommand("Drop", null);
@@ -102,15 +103,16 @@ public class Trajectories {
         return sequence(
             runOnce(()->{turning = true;}),
             parallel(
-                rampUp(),
+                // rampUp(),
                 turnInPlace()
                 // runOnce(()-> CmdSwerveDrive.setTurnSetpoint(swerve.getTurnAngle(Robot.getAlliance() == Alliance.Red ? focalPointRed : focalPointBlue))),
                 // waitUntil(()-> CmdSwerveDrive.rController.atSetpoint())
             ),
-            runOnce(()->{turning = false;}),
-            intake.outtakeNoRequirements(),
             waitSeconds(1),
-            neutral(false)
+            runOnce(()->{turning = false;})
+            // intake.outtakeNoRequirements(),
+            // waitSeconds(1),
+            // neutral(false)
         );
     }
 
