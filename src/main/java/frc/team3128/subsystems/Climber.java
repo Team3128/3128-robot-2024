@@ -114,7 +114,6 @@ public class Climber extends NAR_PIDSubsystem {
         return runOnce(() -> setPower(power));
     }
 
-
     public Command setAngle(double angle){
         return climbTo(Math.tan(Units.degreesToRadians(angle)) * PIVOT_CLIMBER_DIST - HEIGHT_OFFSET);
     }

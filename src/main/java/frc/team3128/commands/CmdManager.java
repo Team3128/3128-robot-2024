@@ -37,11 +37,11 @@ public class CmdManager {
 
     public static Command autoShoot() {
         return sequence(
+            runOnce(() -> swerve.toggleReorient(true)),
             parallel(
                 rampUp(),
-                swerve.turnInPlace()
-                // runOnce(()-> CmdSwerveDrive.setTurnSetpoint(swerve.getTurnAngle(Robot.getAlliance() == Alliance.Red ? focalPointRed : focalPointBlue))),
-                // waitUntil(()-> CmdSwerveDrive.rController.atSetpoint())
+                swerve.reorientSpeaker(0.1),
+                shoot(5700, 10)
             ),
             intake.outtakeNoRequirements(),
             waitSeconds(1),
@@ -59,7 +59,7 @@ public class CmdManager {
     }
 
     public static Command rampUp() {
-        return rampUp(ShooterConstants.MAX_RPM, ()-> climber.interpolate(swerve.getDist()));
+        return rampUp(ShooterConstants.MAX_RPM, climber.interpolate(swerve.getSpeakerDist()));
     }
 
     public static Command rampUp(double rpm, double height){
@@ -76,7 +76,7 @@ public class CmdManager {
     }
 
     public static Command rampUpContinuous() {
-        return rampUpContinuous(ShooterConstants.MAX_RPM, ()-> climber.interpolate(swerve.getDist()));
+        return rampUpContinuous(ShooterConstants.MAX_RPM, ()-> climber.interpolate(swerve.getSpeakerDist()));
     }
 
     public static Command rampUpContinuous(double rpm, DoubleSupplier height) {
@@ -91,6 +91,7 @@ public class CmdManager {
 
     public static Command neutral(){
         return sequence(
+            runOnce(() -> swerve.toggleReorient(false)),
             vibrateController(),
             intake.stopRollersNoRequirements(),
             shooter.setShooter(0),
