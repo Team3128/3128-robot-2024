@@ -16,6 +16,12 @@
           "data": {
             "pathName": "lady-sourceleave"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
         }
       ]
     }
