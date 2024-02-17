@@ -144,8 +144,8 @@ public class RobotContainer {
     @SuppressWarnings("unused")
     public void initCameras() {
         Camera.configCameras(AprilTagFields.k2024Crescendo, PoseStrategy.LOWEST_AMBIGUITY, (pose, time) -> swerve.addVisionMeasurement(pose, time), () -> swerve.getPose());
-        final Camera camera = new Camera("FRONT_LEFT", 10.055, 9.79, 30, -28.125, 0);
-        final Camera camera2 = new Camera("FRONT_LEFT", 10.055, 9.79, -30, -28.125, 0);
+        final Camera camera = new Camera("FRONT_LEFT", Units.inchesToMeters(10.055), Units.inchesToMeters(9.79), Units.degreesToRadians(30), Units.degreesToRadians(-28.125), 0);
+        final Camera camera2 = new Camera("FRONT_RIGHT", Units.inchesToMeters(10.055), Units.inchesToMeters(9.79), Units.degreesToRadians(-30), Units.degreesToRadians(-28.125), 0);
     }
 
     public void initDashboard() {
@@ -154,5 +154,6 @@ public class RobotContainer {
         dashboard.addUpdate("voltage",()-> RobotController.getBatteryVoltage());
         dashboard.addUpdate("robotX", ()-> swerve.getPose().getX());
         dashboard.addUpdate("robotY", ()-> swerve.getPose().getY());
+        dashboard.addUpdate("robotYaw", ()-> swerve.getPose().getRotation().getDegrees());
     }
 }

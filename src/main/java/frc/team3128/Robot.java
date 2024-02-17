@@ -39,7 +39,7 @@ public class Robot extends NAR_Robot {
     public static Robot instance;
 
     public static RobotContainer m_robotContainer = new RobotContainer();
-    public static AutoPrograms autoPrograms = new AutoPrograms();
+    public static AutoPrograms autoPrograms;
 
     public static synchronized Robot getInstance() {
         if (instance == null) {
@@ -50,6 +50,7 @@ public class Robot extends NAR_Robot {
 
     @Override
     public void robotInit(){
+        autoPrograms = new AutoPrograms();
         m_robotContainer.initDashboard();
         LiveWindow.disableAllTelemetry();
 

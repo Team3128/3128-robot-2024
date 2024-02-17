@@ -95,7 +95,8 @@ public class Trajectories {
                 // }
 
                 Swerve.getInstance().drive(new Translation2d(), Units.degreesToRadians(output), true);
-            }
+            },
+            Swerve.getInstance()
         ).beforeStarting(runOnce(()-> CmdSwerveDrive.disableTurn()));
     }
  
