@@ -18,9 +18,15 @@
           }
         },
         {
+          "type": "wait",
+          "data": {
+            "waitTime": 8.0
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "lady-speaker-note11"
+            "pathName": "top-note1.1"
           }
         },
         {
@@ -32,31 +38,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "lady-note11-note12"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "lady-note12-note13"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "note13-rush"
+            "pathName": "note1.1-leave"
           }
         }
       ]

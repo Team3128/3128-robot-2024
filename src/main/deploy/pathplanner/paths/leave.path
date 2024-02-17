@@ -12,7 +12,7 @@
         "y": 2.303950560447418
       },
       "isLocked": false,
-      "linkedName": "source"
+      "linkedName": null
     },
     {
       "anchor": {
@@ -39,9 +39,9 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 5.5,
-    "maxAcceleration": 3.0,
-    "maxAngularVelocity": 572.0,
-    "maxAngularAcceleration": 360.0
+    "maxAcceleration": 2.5,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,

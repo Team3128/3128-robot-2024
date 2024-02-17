@@ -20,7 +20,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "lady-middle1-note13"
+            "pathName": "bottom-note1.3"
           }
         },
         {
@@ -32,7 +32,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "note13-rushbottom"
+            "pathName": "note1.3-note1.2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": null
           }
         }
       ]

@@ -18,9 +18,15 @@
           }
         },
         {
+          "type": "wait",
+          "data": {
+            "waitTime": 8.0
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "lady-middle1-note13"
+            "pathName": "bottom-note1.3"
           }
         },
         {
@@ -32,19 +38,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "lady-note13-note12"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "note12-rushtop"
+            "pathName": "note1.3-leave"
           }
         }
       ]
