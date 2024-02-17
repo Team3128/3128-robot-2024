@@ -51,6 +51,7 @@ public class Swerve extends SwerveBase {
         roll = gyro.getRoll().asSupplier();
         initShuffleboard();
         NAR_Shuffleboard.addData("Testing", "Name", ()-> getDist(speakerMidpointRed), 0, 0);
+        initStateCheck();
     }
 
     public void setVoltage(double volts) {

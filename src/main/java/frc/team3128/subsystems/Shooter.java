@@ -6,6 +6,7 @@ import common.core.subsystems.NAR_PIDSubsystem;
 import common.hardware.motorcontroller.NAR_CANSpark;
 import common.hardware.motorcontroller.NAR_CANSpark.ControllerType;
 import common.hardware.motorcontroller.NAR_Motor.Neutral;
+import common.utility.narwhaldashboard.NarwhalDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 import static frc.team3128.Constants.ShooterConstants.*;
@@ -76,4 +77,13 @@ public class Shooter extends NAR_PIDSubsystem {
         return runOnce(()-> rightMotor.set(power));
     }
 
+    public NarwhalDashboard.State getRunningState() {
+        if (rightMotor.getVelocity() != 0 && leftMotor.getVelocity() != 0) {
+            return NarwhalDashboard.State.RUNNING; 
+        }
+        if (rightMotor.getVelocity() != 0 || leftMotor.getVelocity() != 0) {
+            return NarwhalDashboard.State.PARTIALLY_RUNNING; 
+        }
+        return NarwhalDashboard.State.DISCONNECTED;
+    }
 }

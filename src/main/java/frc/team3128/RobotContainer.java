@@ -155,5 +155,8 @@ public class RobotContainer {
         dashboard.addUpdate("robotX", ()-> swerve.getPose().getX());
         dashboard.addUpdate("robotY", ()-> swerve.getPose().getY());
         dashboard.addUpdate("robotYaw", ()-> swerve.getPose().getRotation().getDegrees());
+        dashboard.checkState("intakeState", ()-> intake.getRunningState());
+        dashboard.checkState("climberState", ()-> climber.getRunningState());
+        dashboard.checkState("shooterState", ()-> shooter.getRunningState());
     }
 }

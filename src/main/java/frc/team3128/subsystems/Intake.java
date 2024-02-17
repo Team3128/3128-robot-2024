@@ -4,6 +4,7 @@ import common.core.controllers.TrapController;
 import common.core.subsystems.ManipulatorTemplate;
 import common.core.subsystems.PivotTemplate;
 import common.hardware.motorcontroller.NAR_Motor.Neutral;
+import common.utility.narwhaldashboard.NarwhalDashboard;
 import common.utility.shuffleboard.NAR_Shuffleboard;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -138,5 +139,15 @@ public class Intake {
 
     public Command outtake() {
         return intakeRollers.outtake();
+    }
+
+    public NarwhalDashboard.State getRunningState() {
+        if (ROLLER_MOTOR.getVelocity() != 0 && PIVOT_MOTOR.getVelocity() != 0) {
+            return NarwhalDashboard.State.RUNNING; 
+        }
+        if (ROLLER_MOTOR.getVelocity() != 0 || PIVOT_MOTOR.getVelocity() != 0) {
+            return NarwhalDashboard.State.PARTIALLY_RUNNING; 
+        }
+        return NarwhalDashboard.State.DISCONNECTED;
     }
 }
