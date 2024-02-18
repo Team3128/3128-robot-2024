@@ -124,6 +124,10 @@ public class Climber extends NAR_PIDSubsystem {
         return getMeasurement() < NEUTRAL_THRESHOLD;
     }
 
+    public boolean isClimbed() {
+        return getMeasurement() < -1.0;
+    }
+
     public NarwhalDashboard.State getRunningState() {
         if (rightMotor.getVelocity() != 0 && leftMotor.getVelocity() != 0) {
             return NarwhalDashboard.State.RUNNING; 

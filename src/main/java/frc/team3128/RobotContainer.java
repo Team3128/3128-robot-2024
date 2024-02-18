@@ -80,7 +80,7 @@ public class RobotContainer {
         controller.getButton(XboxButton.kY).onTrue(rampUp(3500, 15)).onFalse(feed(3500, 15,155));   //Ask driveteam later what they want
         controller.getButton(XboxButton.kX).onTrue(rampUpAmp()).onFalse(ampShoot());
         controller.getButton(XboxButton.kA).onTrue(climber.climbTo(Climber.State.EXTENDED)); 
-        controller.getButton(XboxButton.kBack).onTrue(climber.climbTo(Climber.State.RETRACTED)); 
+        controller.getButton(XboxButton.kBack).onTrue(sequence(climber.setClimber(-1), waitUntil(()->climber.isClimbed()), climber.setClimber(0))); 
         controller.getButton(XboxButton.kLeftTrigger).onTrue(intake.intake(Intake.State.EXTENDED)); 
         controller.getButton(XboxButton.kLeftBumper).onTrue(intake.retract(false));
 

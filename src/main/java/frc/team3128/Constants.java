@@ -288,8 +288,8 @@ public class Constants {
 
     public static class ShooterConstants {
         public static final PIDFFConfig PIDConstants = new PIDFFConfig(0, 0, 0, 0, 0.00179, 0); //Retune later
-        public static final int LEFT_MOTOR_ID = 11;
-        public static final int RIGHT_MOTOR_ID = 12;
+        public static final int LEFT_MOTOR_ID = 41;
+        public static final int RIGHT_MOTOR_ID = 42;
         public static final double GEAR_RATIO = 1;
         public static final double MAX_RPM = 6250;
         public static final double MIN_RPM = 0;
