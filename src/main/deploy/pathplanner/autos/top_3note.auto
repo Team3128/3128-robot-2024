@@ -3,7 +3,7 @@
   "startingPose": {
     "position": {
       "x": 1.46467552335423,
-      "y": 6.985631203756621
+      "y": 7.0
     },
     "rotation": 180.0
   },
@@ -20,19 +20,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "top-note1.1"
+            "pathName": "top-note2.1"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "Shoot"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "note1.1-note2.1"
           }
         },
         {
@@ -50,31 +44,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "wing-note2.2"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "note2.2-wing"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "wing-note2.3"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": null
+            "pathName": "wing-note1.1"
           }
         },
         {
