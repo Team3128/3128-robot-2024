@@ -13,7 +13,6 @@ import common.hardware.motorcontroller.NAR_CANSpark;
 import common.hardware.motorcontroller.NAR_Motor.Neutral;
 import common.utility.narwhaldashboard.NarwhalDashboard;
 import common.utility.shuffleboard.NAR_Shuffleboard;
-import common.utility.narwhaldashboard.NarwhalDashboard.State;
 
 public class Climber extends NAR_PIDSubsystem {
 
@@ -132,10 +131,10 @@ public class Climber extends NAR_PIDSubsystem {
     }
 
     public NarwhalDashboard.State getRunningState() {
-        if (rightMotor.getVelocity() != 0 && leftMotor.getVelocity() != 0) {
+        if (rightMotor.getTemperature() != 0 && leftMotor.getTemperature() != 0) {
             return NarwhalDashboard.State.RUNNING; 
         }
-        if (rightMotor.getVelocity() != 0 || leftMotor.getVelocity() != 0) {
+        if (rightMotor.getTemperature() != 0 || leftMotor.getTemperature() != 0) {
             return NarwhalDashboard.State.PARTIALLY_RUNNING; 
         }
         return NarwhalDashboard.State.DISCONNECTED;

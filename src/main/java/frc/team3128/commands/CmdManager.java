@@ -39,7 +39,7 @@ public class CmdManager {
                 // runOnce(()-> CmdSwerveDrive.setTurnSetpoint(swerve.getTurnAngle(Robot.getAlliance() == Alliance.Red ? focalPointRed : focalPointBlue))),
                 // waitUntil(()-> CmdSwerveDrive.rController.atSetpoint())
             ),
-            intake.outtakeNoRequirements(),
+            intake.intakeRollers.outtakeNoRequirements(),
             waitSeconds(0.1),
             neutral(false)
         );
@@ -50,7 +50,7 @@ public class CmdManager {
             shooter.runBottomRollers(AMP_POWER),
             climber.climbTo(Climber.State.AMP),
             waitUntil(() -> climber.atSetpoint()),
-            intake.outtake(),
+            intake.intakeRollers.outtake(),
             waitSeconds(0.1),
             neutral(false)
         );
@@ -59,7 +59,7 @@ public class CmdManager {
     public static Command shoot(double rpm, double height){
         return sequence(
             rampUp(rpm, height),
-            intake.outtakeNoRequirements(),
+            intake.intakeRollers.outtakeNoRequirements(),
             waitSeconds(0.1),
             neutral(false)
         );
@@ -71,7 +71,7 @@ public class CmdManager {
                 CmdSwerveDrive.setTurnSetpoint(angle);
             }),
             rampUp(rpm, height),
-            intake.outtakeNoRequirements(),
+            intake.intakeRollers.outtakeNoRequirements(),
             waitSeconds(0.1),
             neutral(false)
         );
@@ -117,7 +117,7 @@ public class CmdManager {
     public static Command neutral(boolean shouldStall){
         return sequence(
             vibrateController(),
-            intake.stopRollersNoRequirements(),
+            intake.intakeRollers.runNoRequirements(0),
             shooter.setShooter(0),
             climber.climbTo(Climber.State.RETRACTED),
             waitUntil(()-> climber.atSetpoint()),

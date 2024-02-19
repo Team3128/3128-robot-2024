@@ -20,19 +20,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "top-note1.1"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "note1.1-note2.1"
+            "pathName": "top-note2.1"
           }
         },
         {
@@ -68,13 +56,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "wing-note2.3"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "note2.3-wing"
+            "pathName": "wing-note1.1"
           }
         },
         {

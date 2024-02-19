@@ -3,9 +3,9 @@
   "startingPose": {
     "position": {
       "x": 1.3,
-      "y": 4.9
+      "y": 4.85
     },
-    "rotation": 180.0
+    "rotation": 0
   },
   "command": {
     "type": "sequential",
@@ -20,7 +20,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "bottom-note2.3"
+            "pathName": "midBottom-note2.3"
           }
         },
         {

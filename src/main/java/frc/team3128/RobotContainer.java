@@ -52,8 +52,6 @@ public class RobotContainer {
 
     public static NAR_XboxController controller;
 
-    public static Camera[] cameras = new Camera[2];
-
     private NarwhalDashboard dashboard;
 
     public RobotContainer() {
@@ -126,31 +124,30 @@ public class RobotContainer {
 
 
         buttonPad.getButton(1).onTrue(shooter.setShooter(-0.8)).onFalse(shooter.setShooter(0));
-        buttonPad.getButton(2).onTrue(intake.runPivot(0.2)).onFalse(intake.runPivot(0));
+        buttonPad.getButton(2).onTrue(intake.intakePivot.runPivot(0.2)).onFalse(intake.intakePivot.runPivot(0));
         buttonPad.getButton(3).onTrue(climber.setClimber(-0.2)).onFalse(climber.setClimber(0));
         buttonPad.getButton(4).onTrue(shooter.setShooter(0.8)).onFalse(shooter.setShooter(0));
-        buttonPad.getButton(5).onTrue(intake.runPivot(-0.2)).onFalse(intake.runPivot(0));
+        buttonPad.getButton(5).onTrue(intake.intakePivot.runPivot(-0.2)).onFalse(intake.intakePivot.runPivot(0));
         buttonPad.getButton(6).onTrue(climber.setClimber(0.2)).onFalse(climber.setClimber(0));
         buttonPad.getButton(7).onTrue(shooter.shoot(0));
-        buttonPad.getButton(8).onTrue(intake.pivotTo(0));
+        buttonPad.getButton(8).onTrue(intake.intakePivot.pivotTo(0));
         buttonPad.getButton(9).onTrue(climber.climbTo(0));
         
-        buttonPad.getButton(11).onTrue(intake.reset());
+        buttonPad.getButton(11).onTrue(intake.intakePivot.reset(0));
         buttonPad.getButton(12).onTrue(climber.reset());
 
         buttonPad.getButton(13).onTrue(neutral(false));
         buttonPad.getButton(14).onTrue(runOnce(()-> swerve.zeroGyro(0)));
-        buttonPad.getButton(15).onTrue(intake.runRollers(0.5)).onFalse(intake.runRollers(0));
-        buttonPad.getButton(16).onTrue(intake.runRollers(IntakeConstants.OUTTAKE_POWER)).onFalse(intake.runRollers(0));
+        buttonPad.getButton(15).onTrue(intake.intakeRollers.runManipulator(IntakeConstants.INTAKE_POWER)).onFalse(intake.intakeRollers.runManipulator(0));
+        buttonPad.getButton(16).onTrue(intake.intakeRollers.runManipulator(IntakeConstants.OUTTAKE_POWER)).onFalse(intake.intakeRollers.runManipulator(0));
     }
 
     @SuppressWarnings("unused")
     public void initCameras() {
         Camera.configCameras(AprilTagFields.k2024Crescendo, PoseStrategy.LOWEST_AMBIGUITY, (pose, time) -> swerve.addVisionMeasurement(pose, time), () -> swerve.getPose());
+        Camera.setAmbiguityThreshold(0.3);
         final Camera camera = new Camera("FRONT_LEFT", Units.inchesToMeters(10.055), Units.inchesToMeters(9.79), Units.degreesToRadians(30), Units.degreesToRadians(-28.125), 0);
         final Camera camera2 = new Camera("FRONT_RIGHT", Units.inchesToMeters(10.055), -Units.inchesToMeters(9.79), Units.degreesToRadians(-30), Units.degreesToRadians(-28.125), 0);
-        cameras[0] = camera;
-        cameras[1] = camera2;
     }
 
     public void initDashboard() {

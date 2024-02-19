@@ -25,7 +25,7 @@ public class Intake {
         }
     }
 
-    private class IntakePivot extends PivotTemplate {
+    public class IntakePivot extends PivotTemplate {
         
         private IntakePivot() {
             super(new TrapController(PIDConstants, TRAP_CONSTRAINTS), PIVOT_MOTOR);
@@ -44,7 +44,7 @@ public class Intake {
         }
     }
 
-    private class IntakeRollers extends ManipulatorTemplate {
+    public class IntakeRollers extends ManipulatorTemplate {
 
         private IntakeRollers() {
             super(STALL_CURRENT, INTAKE_POWER, OUTTAKE_POWER, STALL_POWER, 0.3, ROLLER_MOTOR);
@@ -59,15 +59,23 @@ public class Intake {
             ROLLER_MOTOR.setCurrentLimit(CURRENT_LIMIT);
         }
 
-        private Command runRollersNoRequirements(double power) {
+        public Command runNoRequirements(double power) {
             return new InstantCommand(()-> setPower(power));
+        }
+
+        public Command outtakeNoRequirements() {
+            return runNoRequirements(OUTTAKE_POWER);
+        }
+
+        public Command intakeNoRequirements() {
+            return runNoRequirements(INTAKE_POWER);
         }
     }
     
     private static Intake instance;
 
-    private IntakePivot intakePivot;
-    private IntakeRollers intakeRollers;
+    public IntakePivot intakePivot;
+    public IntakeRollers intakeRollers;
 
     public boolean isRetracting = false;
 
@@ -84,19 +92,19 @@ public class Intake {
         NAR_Shuffleboard.addData("IsRetracting", "Boolean", ()-> isRetracting,0, 0);
     }
 
-    public Command retract(boolean shouldStall){
+    public Command retract(boolean shouldStall) {
         return sequence(
             runOnce(()-> isRetracting = true),
             waitUntil(()-> Climber.getInstance().isNeutral()),
             intakeRollers.runManipulator(shouldStall ? STALL_POWER : 0),
             intakePivot.pivotTo(0),
             waitUntil(() -> intakePivot.atSetpoint()),
-            // intakePivot.runPivot(0.5),
-            // waitSeconds(0.1),
+            intakePivot.runPivot(0.5),
+            waitSeconds(0.1),
             intakePivot.runPivot(0),
-            // waitSeconds(0.1),
-            runOnce(()-> isRetracting = false)
-            // intakePivot.reset(0)
+            waitSeconds(0.1),
+            runOnce(()-> isRetracting = false),
+            intakePivot.reset(0)
         );
     }
     
@@ -109,44 +117,29 @@ public class Intake {
         );
     }
 
-    public Command reset() {
-        return intakePivot.reset(0);
+    public Command intakeAuto() {
+        return sequence(
+            intakePivot.pivotTo(State.EXTENDED.angle),
+            intakeRollers.intake(),
+            retractAuto()
+        );
     }
 
-    public Command pivotTo(double setpoint) {
-        return intakePivot.pivotTo(setpoint);
-    }
-
-    public Command runPivot(double power) {
-        return intakePivot.runPivot(power);
-    }
-
-    public Command runRollers(double power) {
-        return intakeRollers.runManipulator(power);
-    }
-
-    public Command outtakeNoRequirements() {
-        return intakeRollers.runRollersNoRequirements(OUTTAKE_POWER);
-    }
-
-    public Command stopRollersNoRequirements() {
-        return intakeRollers.runRollersNoRequirements(0);
-    
-    }
-
-    public Command stopRollers() {
-        return intakeRollers.runManipulator(0);
-    }
-
-    public Command outtake() {
-        return intakeRollers.outtake();
+    public Command retractAuto() {
+        return sequence(
+            waitUntil(()-> Climber.getInstance().isNeutral()),
+            intakeRollers.runManipulator(STALL_POWER),
+            intakePivot.pivotTo(0),
+            waitUntil(() -> intakePivot.atSetpoint()),
+            intakePivot.runPivot(0)
+        );
     }
 
     public NarwhalDashboard.State getRunningState() {
-        if (ROLLER_MOTOR.getVelocity() != 0 && PIVOT_MOTOR.getVelocity() != 0) {
+        if (ROLLER_MOTOR.getTemperature() != 0 && PIVOT_MOTOR.getTemperature() != 0) {
             return NarwhalDashboard.State.RUNNING; 
         }
-        if (ROLLER_MOTOR.getVelocity() != 0 || PIVOT_MOTOR.getVelocity() != 0) {
+        if (ROLLER_MOTOR.getTemperature() != 0 || PIVOT_MOTOR.getTemperature() != 0) {
             return NarwhalDashboard.State.PARTIALLY_RUNNING; 
         }
         return NarwhalDashboard.State.DISCONNECTED;

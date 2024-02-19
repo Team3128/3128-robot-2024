@@ -17,18 +17,14 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 
-import static edu.wpi.first.wpilibj2.command.Commands.none;
-import static edu.wpi.first.wpilibj2.command.Commands.parallel;
-import static edu.wpi.first.wpilibj2.command.Commands.runOnce;
-import static edu.wpi.first.wpilibj2.command.Commands.sequence;
-import static edu.wpi.first.wpilibj2.command.Commands.waitSeconds;
+import static edu.wpi.first.wpilibj2.command.Commands.*;
 import static frc.team3128.Constants.AutoConstants.*;
 import static frc.team3128.Constants.FocalAimConstants.focalPointBlue;
 import static frc.team3128.Constants.FocalAimConstants.focalPointRed;
 import static frc.team3128.Constants.SwerveConstants.*;
 
+import frc.team3128.Constants.ShooterConstants;
 import frc.team3128.Robot;
-import frc.team3128.RobotContainer;
 import frc.team3128.commands.CmdSwerveDrive;
 
 import static frc.team3128.commands.CmdManager.*;
@@ -53,16 +49,14 @@ public class Trajectories {
     public static void initTrajectories() {
 
         // TODO: add commands
-        NamedCommands.registerCommand("Intake", intake.intake(Intake.State.EXTENDED));
+        NamedCommands.registerCommand("Intake", intake.intakeAuto());
         NamedCommands.registerCommand("Shoot", autoShoot());
+        NamedCommands.registerCommand("ShootFast", autoShootNoTurn());
+        NamedCommands.registerCommand("RampUp", rampUpAuto());
         NamedCommands.registerCommand("Amp", null);
         NamedCommands.registerCommand("Drop", null);
-        NamedCommands.registerCommand("Disable", runOnce(()-> {for (Camera camera : RobotContainer.cameras) {
-            camera.disable();
-        }}));
-        NamedCommands.registerCommand("Enable", runOnce(()-> {for (Camera camera : RobotContainer.cameras) {
-            camera.enable();
-        }}));
+        NamedCommands.registerCommand("Disable", runOnce(()-> Camera.disableAll()));
+        NamedCommands.registerCommand("Enable", runOnce(()-> Camera.enableAll()));
 
         AutoBuilder.configureHolonomic(
             swerve::getPose,
@@ -92,24 +86,30 @@ public class Trajectories {
             ()-> swerve.getYaw(), //measurement
             setpoint, //setpoint
             (double output) -> {
-                // final double x = RobotContainer.controller.getLeftX();
-                // final double y = RobotContainer.controller.getLeftY();
-                // Translation2d translation = new Translation2d(x,y).times(maxAttainableSpeed);
-                // if (Robot.getAlliance() == Alliance.Red || !swerve.fieldRelative) {
-                //     translation = translation.rotateBy(Rotation2d.fromDegrees(90));
-                // }
-                // else {
-                //     translation = translation.rotateBy(Rotation2d.fromDegrees(-90));
-                // }
-
                 Swerve.getInstance().drive(new Translation2d(), Units.degreesToRadians(output), true);
             }
         ).beforeStarting(runOnce(()-> CmdSwerveDrive.disableTurn()));
     }
+
+    public static Command rampUpAuto() {
+        return sequence(
+            either(intake.retractAuto(), none(), ()-> intake.intakePivot.isEnabled()),
+            rampUp(ShooterConstants.MAX_RPM, 25)
+        );
+    }
+
+    public static Command autoShootNoTurn() {
+        return sequence(
+            rampUpAuto(),
+            intake.intakeRollers.outtakeNoRequirements(),
+            waitSeconds(0.1),
+            neutral(false)
+        );
+    }
  
     public static Command autoShoot() {
         return sequence(
-            intake.retract(true),
+            either(intake.retractAuto(), none(), ()-> intake.intakePivot.isEnabled()),
             runOnce(()->{turning = true;}),
             parallel(
                 rampUp(),
@@ -119,7 +119,7 @@ public class Trajectories {
             ),
             // waitSeconds(1),
             runOnce(()->{turning = false;}),
-            intake.outtakeNoRequirements(),
+            intake.intakeRollers.outtakeNoRequirements(),
             waitSeconds(0.1),
             neutral(false)
         );
@@ -132,8 +132,9 @@ public class Trajectories {
     // TODO: make new
     public static Command resetAuto() {
         return sequence(
-            Intake.getInstance().reset(),
-            Climber.getInstance().reset()
+            Intake.getInstance().intakePivot.reset(0),
+            Climber.getInstance().reset(),
+            runOnce(()-> Intake.getInstance().isRetracting = false)
         );
         
     }

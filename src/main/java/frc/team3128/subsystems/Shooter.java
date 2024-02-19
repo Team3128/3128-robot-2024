@@ -78,10 +78,10 @@ public class Shooter extends NAR_PIDSubsystem {
     }
 
     public NarwhalDashboard.State getRunningState() {
-        if (rightMotor.getVelocity() != 0 && leftMotor.getVelocity() != 0) {
+        if (rightMotor.getTemperature() != 0 && leftMotor.getTemperature() != 0) {
             return NarwhalDashboard.State.RUNNING; 
         }
-        if (rightMotor.getVelocity() != 0 || leftMotor.getVelocity() != 0) {
+        if (rightMotor.getTemperature() != 0) {
             return NarwhalDashboard.State.PARTIALLY_RUNNING; 
         }
         return NarwhalDashboard.State.DISCONNECTED;
