@@ -97,12 +97,13 @@ public class Swerve extends SwerveBase {
         gyro.setYaw(reset);
     }
     
-    public double getDesiredAngle(Translation2d point){
-        return Math.toDegrees(Math.atan2(point.getY() - location.getAsPose2d().getY(), point.getX() - location.getAsPose2d().getX())) + angleOffset;
-    }
-    
     public boolean atAngleSetpoint(Translation2d point){
         return getYaw() == getDesiredAngle(point);
+    }
+    
+    //my code starts here
+    public double getDesiredAngle(Translation2d point){
+        return Math.toDegrees(Math.atan2(point.getY() - location.getAsPose2d().getY(), point.getX() - location.getAsPose2d().getX())) + angleOffset;
     }
     
     public void toggleReorient(boolean newReorient){
@@ -116,7 +117,6 @@ public class Swerve extends SwerveBase {
     public Command reorientSpeaker(double timeInterval){
         return reorient(focalPoint, timeInterval);
     }
-
     
     public Command reorientInPlace(Translation2d point){
         return sequence(
@@ -155,7 +155,8 @@ public class Swerve extends SwerveBase {
     public double getSpeakerDist() {
         return getDist(speakerMidpoint);
     }
-
+    
+    //my code ends here
     public double getDist(Translation2d point) {
         return getPose().getTranslation().getDistance(point) - robotLength / 2.0;
     }
