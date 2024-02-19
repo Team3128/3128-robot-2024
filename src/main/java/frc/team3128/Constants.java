@@ -98,16 +98,16 @@ public class Constants {
         public static final double driveKF = 0.0;
 
         /* Drive Motor Characterization Values */
-        public static final double driveKS = 0.26134;//0.60094; // 0.19225;
-        public static final double driveKV = 2.35409;//1.1559;  // 2.4366
-        public static final double driveKA = 0.13906; //0.12348; // 0.34415
+        public static final double driveKS = 0.29808;//0.60094; // 0.19225;
+        public static final double driveKV = 1.98988;//1.1559;  // 2.4366
+        public static final double driveKA = 0.45610; //0.12348; // 0.34415
 
         /* Swerve Profiling Values */
         // Theoretical: v = 4.96824, omega = 11.5
         // Real: v = 4.5, omega = 10
         // For safety, use less than theoretical and real values
         public static final double maxSpeed = 6.0;//4.8; //meters per second - 16.3 ft/sec
-        public static final double maxAttainableSpeed = maxSpeed * 0.85; //Stole from citrus.
+        public static final double maxAttainableSpeed = maxSpeed; //Stole from citrus.
         public static final double maxAcceleration = 3;
         public static final double maxAngularVelocity = 8; //3; //11.5; // citrus: 10 - Mason look at this later wtf
         public static final double maxAngularAcceleration = 2 * Math.PI; //I stole from citrus.
@@ -166,14 +166,14 @@ public class Constants {
         public static final double turnkP = 5;
         public static final double turnkI = 0;
         public static final double turnkD = 0;
-        public static final double turnkS = 0.05748; //0.05748
+        public static final double turnkS = 0.1; //0.05748
         public static final double turnkV = 0.01723; //0.01723
         public static final double turnkA = 0.0064; //0.0064
         public static final Constraints constraints = new Constraints(Units.radiansToDegrees(maxAngularVelocity), Units.radiansToDegrees(maxAngularAcceleration));
         public static final PIDFFConfig config = new PIDFFConfig(turnkP, turnkI, turnkD, turnkS, turnkV, turnkA, 0);
 
         public static final Controller TURN_CONTROLLER = new Controller(config, Type.POSITION);
-        public static final double TURN_TOLERANCE = 0.5;
+        public static final double TURN_TOLERANCE = 1;
 
         static {
             TURN_CONTROLLER.enableContinuousInput(0, 360);
@@ -276,7 +276,7 @@ public class Constants {
     public static class FocalAimConstants {
         public static final double speakerLength = 1.043;
         public static final double speakerMidpointY = 6.151 - speakerLength / 2;
-        public static final double focalPointX = 0.2; //1.4583577128;
+        public static final double focalPointX = 0.05; //1.4583577128;
         public static final Translation2d speakerMidpointBlue = new Translation2d(0, speakerMidpointY);
         public static final Translation2d speakerMidpointRed = new Translation2d(FieldConstants.FIELD_X_LENGTH, speakerMidpointY);
         public static final Translation2d focalPointBlue = new Translation2d(focalPointX, speakerMidpointY);
@@ -293,7 +293,7 @@ public class Constants {
         public static final double GEAR_RATIO = 1;
         public static final double MAX_RPM = 6250;
         public static final double MIN_RPM = 0;
-        public static final double TOLERANCE = 80;
+        public static final double TOLERANCE = 100;
         public static final double AMP_POWER = 0.4;
     }
 
@@ -306,7 +306,7 @@ public class Constants {
         public static final int RIGHT_MOTOR_ID = 22;
         public static final double GEAR_RATIO = 1.0 / 12.0;
         public static final double WHEEL_CIRCUMFERENCE = Units.inchesToMeters(1.751) * Math.PI;
-        public static final double POSITION_TOLERANCE = 0.5;
+        public static final double POSITION_TOLERANCE = 0.25;
         public static final double PIVOT_CLIMBER_DIST = 0.28;
         public static final double POSITION_MINIMUM = 0;
         public static final double POSITION_MAXIMUM = 30;
@@ -345,10 +345,10 @@ public class Constants {
         public static final NAR_CANSpark ROLLER_MOTOR = new NAR_CANSpark(ROLLER_MOTOR_ID);
         public static final double ANGLE_TOLERANCE = 1;
         public static final int CURRENT_LIMIT = 80;
-        public static final double STALL_CURRENT = 25;
-        public static final double STALL_POWER = 0.08;
+        public static final double STALL_CURRENT = 50;
+        public static final double STALL_POWER = 0.05;
         public static final double OUTTAKE_POWER = -0.5;
-        public static final double INTAKE_POWER = 0.5;
+        public static final double INTAKE_POWER = 0.4;
     }
 
     public static class LedConstants{

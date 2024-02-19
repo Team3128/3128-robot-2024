@@ -52,6 +52,8 @@ public class RobotContainer {
 
     public static NAR_XboxController controller;
 
+    public static Camera[] cameras = new Camera[2];
+
     private NarwhalDashboard dashboard;
 
     public RobotContainer() {
@@ -77,6 +79,7 @@ public class RobotContainer {
     private void configureButtonBindings() {
         controller.getButton(XboxButton.kB).onTrue(runOnce(()-> swerve.resetEncoders()));
         controller.getButton(XboxButton.kRightBumper).onTrue(rampUp(ShooterConstants.MAX_RPM, 25)).onFalse(shoot(ShooterConstants.MAX_RPM, 25));
+        controller.getButton(XboxButton.kRightTrigger).onTrue(rampUpContinuous()).onFalse(autoShoot());
         controller.getButton(XboxButton.kY).onTrue(rampUp(3500, 15)).onFalse(feed(3500, 15,155));   //Ask driveteam later what they want
         controller.getButton(XboxButton.kX).onTrue(rampUpAmp()).onFalse(ampShoot());
         controller.getButton(XboxButton.kA).onTrue(climber.climbTo(Climber.State.EXTENDED)); 
@@ -119,7 +122,7 @@ public class RobotContainer {
         // rightStick.getButton(11).onTrue(intake.reset());
         // rightStick.getButton(12).onTrue(intake.setRoller(0.5)).onFalse(intake.setRoller(0));
         // rightStick.getButton(13).onTrue(intake.setRoller(IntakeConstants.OUTTAKE_POWER)).onFalse(intake.setRoller(0));
-        rightStick.getButton(14).onTrue(new CmdSysId("Swerve", (Double volts)-> swerve.setVoltage(volts), ()-> swerve.getVelocity(), swerve)).onFalse(runOnce(()-> swerve.stop(), swerve));
+        rightStick.getButton(7).onTrue(new CmdSysId("Swerve", (Double volts)-> swerve.setVoltage(volts), ()-> swerve.getVelocity(), swerve)).onFalse(runOnce(()-> swerve.stop(), swerve));
 
 
         buttonPad.getButton(1).onTrue(shooter.setShooter(-0.8)).onFalse(shooter.setShooter(0));
@@ -145,7 +148,9 @@ public class RobotContainer {
     public void initCameras() {
         Camera.configCameras(AprilTagFields.k2024Crescendo, PoseStrategy.LOWEST_AMBIGUITY, (pose, time) -> swerve.addVisionMeasurement(pose, time), () -> swerve.getPose());
         final Camera camera = new Camera("FRONT_LEFT", Units.inchesToMeters(10.055), Units.inchesToMeters(9.79), Units.degreesToRadians(30), Units.degreesToRadians(-28.125), 0);
-        final Camera camera2 = new Camera("FRONT_RIGHT", Units.inchesToMeters(10.055), Units.inchesToMeters(9.79), Units.degreesToRadians(-30), Units.degreesToRadians(-28.125), 0);
+        final Camera camera2 = new Camera("FRONT_RIGHT", Units.inchesToMeters(10.055), -Units.inchesToMeters(9.79), Units.degreesToRadians(-30), Units.degreesToRadians(-28.125), 0);
+        cameras[0] = camera;
+        cameras[1] = camera2;
     }
 
     public void initDashboard() {

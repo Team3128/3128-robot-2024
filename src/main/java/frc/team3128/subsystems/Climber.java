@@ -74,7 +74,10 @@ public class Climber extends NAR_PIDSubsystem {
 
     @Override
     protected void useOutput(double output, double setpoint) {
-        if (Intake.getInstance().isRetracting && !isNeutral()) leftMotor.setVolts(0);
+        if (Intake.getInstance().isRetracting && isNeutral()) {
+            leftMotor.setVolts(0);
+            return;
+        }
         leftMotor.setVolts(output);
     }
 
@@ -91,7 +94,7 @@ public class Climber extends NAR_PIDSubsystem {
     }
 
     public double interpolate(double dist){
-        return climberHeightMap.get(dist);
+        return 45.1 - 27 * dist + 6.86 * Math.pow(dist, 2) - 0.621 * Math.pow(dist, 3);
     }
 
     @Override

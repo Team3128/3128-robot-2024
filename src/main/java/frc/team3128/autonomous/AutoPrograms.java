@@ -19,20 +19,14 @@ public class AutoPrograms {
 
     private void initAutoSelector() {
         final String[] autoStrings = new String[] {
-            "lady-amp_3note",
-            "lady-amp_4note",
-            "lady-amp_5note",
-            "lady-middle_1note_leave",
-            "lady-middle_2note",
-            "lady-source_1note_leave",
-            "lady-source_3note",
-            "lady-source_leave",
-            "ram-amp_3note",
-            "ram-amp_4note",
-            "ram-middle_1note_leave",
-            "ram-middle_2note",
-            "ram-source_3note",
-            "ram-source_leave"
+            "bottom_2note",
+            "bottom_3note_mid",
+            "bottom_4note",
+            "leave",
+            "middle_2note",
+            "top_2note",
+            "top_4note",
+            "top_5note"
         };
         NarwhalDashboard.getInstance().addAutos(autoStrings);
     }

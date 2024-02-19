@@ -81,6 +81,7 @@ public class Intake {
     private Intake(){
         intakePivot = new IntakePivot();
         intakeRollers = new IntakeRollers();
+        NAR_Shuffleboard.addData("IsRetracting", "Boolean", ()-> isRetracting,0, 0);
     }
 
     public Command retract(boolean shouldStall){
@@ -90,12 +91,12 @@ public class Intake {
             intakeRollers.runManipulator(shouldStall ? STALL_POWER : 0),
             intakePivot.pivotTo(0),
             waitUntil(() -> intakePivot.atSetpoint()),
-            intakePivot.runPivot(0.5),
-            waitSeconds(0.1),
+            // intakePivot.runPivot(0.5),
+            // waitSeconds(0.1),
             intakePivot.runPivot(0),
-            waitSeconds(0.5),
-            intakePivot.reset(0),
+            // waitSeconds(0.1),
             runOnce(()-> isRetracting = false)
+            // intakePivot.reset(0)
         );
     }
     

@@ -5,6 +5,7 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import common.core.commands.NAR_PIDCommand;
+import common.hardware.camera.Camera;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -27,6 +28,7 @@ import static frc.team3128.Constants.FocalAimConstants.focalPointRed;
 import static frc.team3128.Constants.SwerveConstants.*;
 
 import frc.team3128.Robot;
+import frc.team3128.RobotContainer;
 import frc.team3128.commands.CmdSwerveDrive;
 
 import static frc.team3128.commands.CmdManager.*;
@@ -51,10 +53,16 @@ public class Trajectories {
     public static void initTrajectories() {
 
         // TODO: add commands
-        NamedCommands.registerCommand("Intake", none());
+        NamedCommands.registerCommand("Intake", intake.intake(Intake.State.EXTENDED));
         NamedCommands.registerCommand("Shoot", autoShoot());
         NamedCommands.registerCommand("Amp", null);
         NamedCommands.registerCommand("Drop", null);
+        NamedCommands.registerCommand("Disable", runOnce(()-> {for (Camera camera : RobotContainer.cameras) {
+            camera.disable();
+        }}));
+        NamedCommands.registerCommand("Enable", runOnce(()-> {for (Camera camera : RobotContainer.cameras) {
+            camera.enable();
+        }}));
 
         AutoBuilder.configureHolonomic(
             swerve::getPose,
@@ -95,25 +103,25 @@ public class Trajectories {
                 // }
 
                 Swerve.getInstance().drive(new Translation2d(), Units.degreesToRadians(output), true);
-            },
-            Swerve.getInstance()
+            }
         ).beforeStarting(runOnce(()-> CmdSwerveDrive.disableTurn()));
     }
  
     public static Command autoShoot() {
         return sequence(
+            intake.retract(true),
             runOnce(()->{turning = true;}),
             parallel(
-                // rampUp(),
-                turnInPlace()
+                rampUp(),
+                turnInPlace().withTimeout(0.5)
                 // runOnce(()-> CmdSwerveDrive.setTurnSetpoint(swerve.getTurnAngle(Robot.getAlliance() == Alliance.Red ? focalPointRed : focalPointBlue))),
                 // waitUntil(()-> CmdSwerveDrive.rController.atSetpoint())
             ),
-            waitSeconds(1),
-            runOnce(()->{turning = false;})
-            // intake.outtakeNoRequirements(),
             // waitSeconds(1),
-            // neutral(false)
+            runOnce(()->{turning = false;}),
+            intake.outtakeNoRequirements(),
+            waitSeconds(0.1),
+            neutral(false)
         );
     }
 

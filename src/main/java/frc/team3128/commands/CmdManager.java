@@ -35,7 +35,7 @@ public class CmdManager {
         return sequence(
             parallel(
                 rampUp(),
-                swerve.turnInPlace()
+                swerve.turnInPlace().asProxy()
                 // runOnce(()-> CmdSwerveDrive.setTurnSetpoint(swerve.getTurnAngle(Robot.getAlliance() == Alliance.Red ? focalPointRed : focalPointBlue))),
                 // waitUntil(()-> CmdSwerveDrive.rController.atSetpoint())
             ),
