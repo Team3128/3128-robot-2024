@@ -24,6 +24,7 @@ public class Shooter extends NAR_PIDSubsystem {
         setTolerance(TOLERANCE);
         configMotors();
         initShuffleboard();
+        NarwhalDashboard.getInstance().checkState(getName(), ()-> getRunningState());
     }
 
     public static synchronized Shooter getInstance(){

@@ -26,6 +26,7 @@ import common.hardware.input.NAR_ButtonBoard;
 import common.hardware.input.NAR_Joystick;
 import common.hardware.input.NAR_XboxController;
 import common.hardware.input.NAR_XboxController.XboxButton;
+import common.hardware.motorcontroller.NAR_CANSpark;
 import common.utility.narwhaldashboard.NarwhalDashboard;
 import common.utility.shuffleboard.NAR_Shuffleboard;
 import common.utility.sysid.CmdSysId;
@@ -78,10 +79,10 @@ public class RobotContainer {
         controller.getButton(XboxButton.kB).onTrue(runOnce(()-> swerve.resetEncoders()));
         controller.getButton(XboxButton.kRightBumper).onTrue(rampUp(ShooterConstants.MAX_RPM, 25)).onFalse(shoot(ShooterConstants.MAX_RPM, 25));
         controller.getButton(XboxButton.kRightTrigger).onTrue(rampUpContinuous()).onFalse(autoShoot());
-        controller.getButton(XboxButton.kY).onTrue(rampUp(3500, 15)).onFalse(feed(3500, 15,155));   //Ask driveteam later what they want
+        controller.getButton(XboxButton.kY).onTrue(rampUp(5000, 15)).onFalse(feed(5000, 15,155));   //Ask driveteam later what they want
         controller.getButton(XboxButton.kX).onTrue(rampUpAmp()).onFalse(ampShoot());
-        controller.getButton(XboxButton.kA).onTrue(climber.climbTo(Climber.State.EXTENDED)); 
-        controller.getButton(XboxButton.kBack).onTrue(sequence(climber.setClimber(-1), waitUntil(()->climber.isClimbed()), climber.setClimber(0))); 
+        controller.getButton(XboxButton.kA).onTrue(sequence(intake.intakePivot.pivotTo(-150), climber.climbTo(Climber.State.EXTENDED))); 
+        controller.getButton(XboxButton.kBack).onTrue(sequence(climber.setClimber(-0.75), waitUntil(()->climber.isClimbed()), climber.setClimber(0))); 
         controller.getButton(XboxButton.kLeftTrigger).onTrue(intake.intake(Intake.State.EXTENDED)); 
         controller.getButton(XboxButton.kLeftBumper).onTrue(intake.retract(false));
 
@@ -121,6 +122,7 @@ public class RobotContainer {
         // rightStick.getButton(12).onTrue(intake.setRoller(0.5)).onFalse(intake.setRoller(0));
         // rightStick.getButton(13).onTrue(intake.setRoller(IntakeConstants.OUTTAKE_POWER)).onFalse(intake.setRoller(0));
         rightStick.getButton(7).onTrue(new CmdSysId("Swerve", (Double volts)-> swerve.setVoltage(volts), ()-> swerve.getVelocity(), swerve)).onFalse(runOnce(()-> swerve.stop(), swerve));
+        rightStick.getButton(8).onTrue(runOnce(()-> NAR_CANSpark.burnFlashAll()));
 
 
         buttonPad.getButton(1).onTrue(shooter.setShooter(-0.8)).onFalse(shooter.setShooter(0));
@@ -145,7 +147,7 @@ public class RobotContainer {
     @SuppressWarnings("unused")
     public void initCameras() {
         Camera.configCameras(AprilTagFields.k2024Crescendo, PoseStrategy.LOWEST_AMBIGUITY, (pose, time) -> swerve.addVisionMeasurement(pose, time), () -> swerve.getPose());
-        Camera.setAmbiguityThreshold(0.3);
+        Camera.setAmbiguityThreshold(0.5);
         final Camera camera = new Camera("FRONT_LEFT", Units.inchesToMeters(10.055), Units.inchesToMeters(9.79), Units.degreesToRadians(30), Units.degreesToRadians(-28.125), 0);
         final Camera camera2 = new Camera("FRONT_RIGHT", Units.inchesToMeters(10.055), -Units.inchesToMeters(9.79), Units.degreesToRadians(-30), Units.degreesToRadians(-28.125), 0);
     }

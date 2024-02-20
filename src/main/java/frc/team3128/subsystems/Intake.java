@@ -7,8 +7,11 @@ import common.hardware.motorcontroller.NAR_Motor.Neutral;
 import common.utility.narwhaldashboard.NarwhalDashboard;
 import common.utility.shuffleboard.NAR_Shuffleboard;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DigitalSource;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.team3128.commands.CmdManager;
 
 import static edu.wpi.first.wpilibj2.command.Commands.*;
 import static frc.team3128.Constants.IntakeConstants.*;
@@ -45,11 +48,20 @@ public class Intake {
     }
 
     public class IntakeRollers extends ManipulatorTemplate {
+        private DigitalInput limitSwitch;
 
         private IntakeRollers() {
             super(STALL_CURRENT, INTAKE_POWER, OUTTAKE_POWER, STALL_POWER, 0.3, ROLLER_MOTOR);
+            limitSwitch = new DigitalInput(9);
             initShuffleboard();
             NAR_Shuffleboard.addData(getSubsystem(), "Current", ()-> ROLLER_MOTOR.getStallCurrent());
+        }
+
+        @Override
+        public void periodic() {
+            if (ROLLER_MOTOR.getStallCurrent() > STALL_CURRENT) {
+                runManipulator(0).schedule();
+            }
         }
 
         @Override
@@ -69,6 +81,11 @@ public class Intake {
 
         public Command intakeNoRequirements() {
             return runNoRequirements(INTAKE_POWER);
+        }
+
+        @Override
+        public boolean hasObjectPresent() {
+            return !limitSwitch.get();
         }
     }
     
@@ -90,10 +107,12 @@ public class Intake {
         intakePivot = new IntakePivot();
         intakeRollers = new IntakeRollers();
         NAR_Shuffleboard.addData("IsRetracting", "Boolean", ()-> isRetracting,0, 0);
+        NarwhalDashboard.getInstance().checkState("Intake", ()-> getRunningState());
     }
 
     public Command retract(boolean shouldStall) {
         return sequence(
+            CmdManager.vibrateController(),
             runOnce(()-> isRetracting = true),
             waitUntil(()-> Climber.getInstance().isNeutral()),
             intakeRollers.runManipulator(shouldStall ? STALL_POWER : 0),

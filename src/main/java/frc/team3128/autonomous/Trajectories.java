@@ -16,6 +16,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 
 import static edu.wpi.first.wpilibj2.command.Commands.*;
 import static frc.team3128.Constants.AutoConstants.*;
@@ -34,6 +35,7 @@ import java.util.function.DoubleSupplier;
 
 import frc.team3128.subsystems.Climber;
 import frc.team3128.subsystems.Intake;
+import frc.team3128.subsystems.Shooter;
 import frc.team3128.subsystems.Swerve;
 
 /**
@@ -53,6 +55,7 @@ public class Trajectories {
         NamedCommands.registerCommand("Shoot", autoShoot());
         NamedCommands.registerCommand("ShootFast", autoShootNoTurn());
         NamedCommands.registerCommand("RampUp", rampUpAuto());
+        NamedCommands.registerCommand("Retract", intake.retractAuto());
         NamedCommands.registerCommand("Amp", null);
         NamedCommands.registerCommand("Drop", null);
         NamedCommands.registerCommand("Disable", runOnce(()-> Camera.disableAll()));
@@ -103,7 +106,7 @@ public class Trajectories {
             rampUpAuto(),
             intake.intakeRollers.outtakeNoRequirements(),
             waitSeconds(0.1),
-            neutral(false)
+            neutralAuto()
         );
     }
  
@@ -121,7 +124,15 @@ public class Trajectories {
             runOnce(()->{turning = false;}),
             intake.intakeRollers.outtakeNoRequirements(),
             waitSeconds(0.1),
-            neutral(false)
+            neutralAuto()
+        );
+    }
+
+    public static Command neutralAuto() {
+        return sequence(
+            intake.intakeRollers.runNoRequirements(0),
+            Shooter.getInstance().setShooter(0),
+            Climber.getInstance().climbTo(Climber.State.RETRACTED)
         );
     }
 

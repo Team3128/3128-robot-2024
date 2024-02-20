@@ -38,6 +38,7 @@ public class Climber extends NAR_PIDSubsystem {
         setTolerance(POSITION_TOLERANCE);
         setConstraints(POSITION_MINIMUM, POSITION_MAXIMUM);
         initShuffleboard();
+        NarwhalDashboard.getInstance().checkState(getName(), ()-> getRunningState());
     }
     
     public static synchronized Climber getInstance(){

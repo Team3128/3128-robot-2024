@@ -106,7 +106,7 @@ public class Constants {
         // Theoretical: v = 4.96824, omega = 11.5
         // Real: v = 4.5, omega = 10
         // For safety, use less than theoretical and real values
-        public static final double maxSpeed = 6.0;//4.8; //meters per second - 16.3 ft/sec
+        public static final double maxSpeed = 5.5;//4.8; //meters per second - 16.3 ft/sec
         public static final double maxAttainableSpeed = maxSpeed; //Stole from citrus.
         public static final double maxAcceleration = 3;
         public static final double maxAngularVelocity = 8; //3; //11.5; // citrus: 10 - Mason look at this later wtf
@@ -189,7 +189,7 @@ public class Constants {
 
         public static final Matrix<N3,N1> SVR_STATE_STD = VecBuilder.fill(0.1,0.1,Units.degreesToRadians(3));
  
-        public static final Matrix<N3,N1> SVR_VISION_MEASUREMENT_STD = VecBuilder.fill(1,1,Units.degreesToRadians(10));
+        public static final Matrix<N3,N1> SVR_VISION_MEASUREMENT_STD = VecBuilder.fill(0.1,0.1,Units.degreesToRadians(3));
 
         public static final HashMap<Integer,Pose2d> APRIL_TAG_POS = new HashMap<Integer,Pose2d>();
 
@@ -345,10 +345,10 @@ public class Constants {
         public static final NAR_CANSpark ROLLER_MOTOR = new NAR_CANSpark(ROLLER_MOTOR_ID);
         public static final double ANGLE_TOLERANCE = 1;
         public static final int CURRENT_LIMIT = 80;
-        public static final double STALL_CURRENT = 50;
-        public static final double STALL_POWER = 0.05;
+        public static final double STALL_CURRENT = 50 * 2;
+        public static final double STALL_POWER = 0.03;
         public static final double OUTTAKE_POWER = -0.5;
-        public static final double INTAKE_POWER = 0.4;
+        public static final double INTAKE_POWER = 0.7;
     }
 
     public static class LedConstants{

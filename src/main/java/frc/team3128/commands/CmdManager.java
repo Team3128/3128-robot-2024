@@ -2,6 +2,8 @@ package frc.team3128.commands;
 
 import common.hardware.input.NAR_XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ScheduleCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.team3128.RobotContainer;
 import frc.team3128.Constants.ShooterConstants;
 import frc.team3128.subsystems.Climber;
@@ -28,7 +30,7 @@ public class CmdManager {
     public static boolean climb = false;
 
     public static Command vibrateController(){
-        return startEnd(()-> controller.startVibrate(), ()-> controller.stopVibrate()).withTimeout(0.5);
+        return new ScheduleCommand(new StartEndCommand(()-> controller.startVibrate(), ()-> controller.stopVibrate()).withTimeout(1));
     }
 
     public static Command autoShoot() {
@@ -116,7 +118,6 @@ public class CmdManager {
 
     public static Command neutral(boolean shouldStall){
         return sequence(
-            vibrateController(),
             intake.intakeRollers.runNoRequirements(0),
             shooter.setShooter(0),
             climber.climbTo(Climber.State.RETRACTED),
