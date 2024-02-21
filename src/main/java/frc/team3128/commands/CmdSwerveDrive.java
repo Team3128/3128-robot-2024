@@ -13,7 +13,15 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.team3128.Robot;
+import frc.team3128.RobotContainer;
 import frc.team3128.subsystems.Swerve;
+
+import static edu.wpi.first.wpilibj2.command.Commands.deadline;
+import static edu.wpi.first.wpilibj2.command.Commands.race;
+import static edu.wpi.first.wpilibj2.command.Commands.repeatingSequence;
+import static edu.wpi.first.wpilibj2.command.Commands.runOnce;
+import static edu.wpi.first.wpilibj2.command.Commands.waitSeconds;
+import static edu.wpi.first.wpilibj2.command.Commands.waitUntil;
 import static frc.team3128.Constants.SwerveConstants.*;
 
 public class CmdSwerveDrive extends Command {
@@ -89,7 +97,24 @@ public class CmdSwerveDrive extends Command {
         swerve.drive(translation, rotation, swerve.fieldRelative);
 
     }
-
+    
+    
+    
+    /**
+     * Automatically reorients the robot to desired point while moving.
+     * @param point Desired point to reorient to
+     * @param timeInterval Time between reorientations (in seconds)
+     */
+    public Command reorient(Translation2d point, double timeInterval){
+        return deadline(
+            waitUntil(() -> !swerve.getReorient()), //deadline command...idk if this will work
+                runOnce(() -> setTurnSetpoint(swerve.getDesiredAngle(swerve.getDesiredTranslation(timeInterval), point))),
+                race(
+                    waitUntil(() -> swerve.atAngleSetpoint(point)),//not sure if necessary  
+                    waitSeconds(timeInterval) 
+                )
+        );
+    }
     public static void setTurnSetpoint() {
         final double currentRotation = MathUtil.inputModulus(Swerve.getInstance().getYaw(), 0, 360);
         if (currentRotation <= 45) {

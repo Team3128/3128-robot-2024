@@ -1,7 +1,9 @@
 package frc.team3128.subsystems;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.team3128.subsystems.random.Pose2dSupplier;
 
 import static frc.team3128.Constants.ClimberConstants.*;
 
@@ -32,12 +34,15 @@ public class Climber extends NAR_PIDSubsystem {
     private NAR_CANSpark leftMotor;
     private NAR_CANSpark rightMotor;
     
+    public Pose2dSupplier location;
+    
     private Climber() {
         super(new TrapController(PIDConstants, TRAP_CONSTRAINTS));
         configMotors();
         setTolerance(POSITION_TOLERANCE);
         setConstraints(POSITION_MINIMUM, POSITION_MAXIMUM);
         initShuffleboard();
+        location = () -> Swerve.getInstance().getPose();
     }
     
     public static synchronized Climber getInstance(){
@@ -92,7 +97,7 @@ public class Climber extends NAR_PIDSubsystem {
     public double interpolate(double dist){
         return climberHeightMap.get(dist);
     }
-
+    
     @Override
     public double getMeasurement() {
         return leftMotor.getPosition();

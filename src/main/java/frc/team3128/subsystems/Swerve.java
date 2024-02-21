@@ -9,12 +9,16 @@ import java.util.function.Supplier;
 import com.ctre.phoenix6.hardware.Pigeon2;
 
 import common.core.commands.NAR_PIDCommand;
+import common.core.controllers.ControllerBase;
 import common.core.swerve.SwerveBase;
 import common.core.swerve.SwerveModule;
 import common.hardware.motorcontroller.NAR_Motor.Control;
 import common.utility.shuffleboard.NAR_Shuffleboard;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+
 import static edu.wpi.first.wpilibj2.command.Commands.*;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -25,6 +29,7 @@ import frc.team3128.commands.CmdSwerveDrive;
 import frc.team3128.subsystems.random.Pose2dSupplier;
 
 import static frc.team3128.Constants.SwerveConstants.*;
+import static frc.team3128.Constants.FieldConstants.SPEAKER_HEIGHT;
 import static frc.team3128.Constants.FocalAimConstants.*;
 
 public class Swerve extends SwerveBase {
@@ -44,6 +49,7 @@ public class Swerve extends SwerveBase {
     public final Translation2d focalPoint = Robot.getAlliance() == Alliance.Red ? focalPointRed : focalPointBlue;
     public final Translation2d speakerMidpoint = Robot.getAlliance() == Alliance.Red ? speakerMidpointRed : speakerMidpointBlue;
     
+    public static ControllerBase rController;
 
     public static synchronized Swerve getInstance() {
         if (instance == null) {
@@ -63,6 +69,13 @@ public class Swerve extends SwerveBase {
         reorient = false;
         initShuffleboard();
         NAR_Shuffleboard.addData("Testing", "Name", ()-> getDist(speakerMidpointRed), 0, 0);
+        rController = TURN_CONTROLLER;
+        rController.enableContinuousInput(0, 360);
+        rController.setMeasurementSource(()-> getYaw());
+        rController.setTolerance(0.5);
+
+        rController.setkV(NAR_Shuffleboard.debug("Test", "kV", rController.getkV(), 3, 1));
+        rController.setkA(NAR_Shuffleboard.debug("Test", "kA", rController.getkA(), 3, 2));
     }
 
     public void setVoltage(double volts) {
@@ -98,12 +111,12 @@ public class Swerve extends SwerveBase {
     }
     
     public boolean atAngleSetpoint(Translation2d point){
-        return getYaw() == getDesiredAngle(point);
+        return getYaw() == getDesiredAngle(point, location.getAsPose2d().getTranslation());
     }
     
     //my code starts here
-    public double getDesiredAngle(Translation2d point){
-        return Math.toDegrees(Math.atan2(point.getY() - location.getAsPose2d().getY(), point.getX() - location.getAsPose2d().getX())) + angleOffset;
+    public double getDesiredAngle(Translation2d point1, Translation2d point2){
+        return Math.toDegrees(Math.atan2(point1.getY() - point2.getY(), point1.getX() - point2.getX())) + angleOffset;
     }
     
     public void toggleReorient(boolean newReorient){
@@ -115,19 +128,25 @@ public class Swerve extends SwerveBase {
     }
     
     public Command reorientSpeaker(double timeInterval){
-        return reorient(focalPoint, timeInterval);
+        return newReorient(focalPoint, timeInterval);
+    }
+    
+    public Translation2d getDesiredTranslation(ChassisSpeeds velocity, double time){
+        Translation2d translation = new Translation2d(velocity.vxMetersPerSecond * time , velocity.vyMetersPerSecond * time);
+        Translation2d desiredTranslation = new Translation2d(location.getAsPose2d().getX() + translation.getX(), location.getAsPose2d().getY() + translation.getY());
+        return desiredTranslation;
     }
     
     public Command reorientInPlace(Translation2d point){
         return sequence(
-            runOnce(() -> drive(new Translation2d(0,0), getDesiredAngle(point), false)),
+            runOnce(() -> drive(new Translation2d(0,0), getDesiredAngle(point, location.getAsPose2d().getTranslation()), false)),
             waitUntil(() -> atAngleSetpoint(point))
         );
     }
     
-    public Translation2d calculateTarget(double timeInterval){
-        double predX = getRobotVelocity().vxMetersPerSecond * timeInterval;
-        double predY = getRobotVelocity().vyMetersPerSecond * timeInterval;
+    public Translation2d calculateTarget(ChassisSpeeds velocity, double timeInterval){
+        double predX = velocity.vxMetersPerSecond * timeInterval;
+        double predY = velocity.vyMetersPerSecond * timeInterval;
         Translation2d target = new Translation2d(focalPoint.getX() - predX, focalPoint.getY() - predY);
         return target;
     }
@@ -143,10 +162,34 @@ public class Swerve extends SwerveBase {
             repeatingSequence(
                 runOnce(() -> drive(new Translation2d(
                     RobotContainer.controller.getLeftX(),RobotContainer.controller.getLeftY()).times(maxAttainableSpeed), 
-                    getDesiredAngle(calculateTarget(timeInterval)), false)),
+                    getDesiredAngle(getDesiredTranslation(getFieldVelocity(), timeInterval), point), false)),
                 race(
                     waitUntil(() -> atAngleSetpoint(point)),//not sure if necessary  
                     waitSeconds(timeInterval) 
+                )
+            )
+        );
+    }
+    
+    public double calcRotation(double setpoint, double timeInterval){
+        return Units.degreesToRadians(rController.calculate(getGyroRotation2d().getDegrees(), setpoint));
+    }
+    
+    public Command newReorient(Translation2d point, double timeInterval){
+        Translation2d shootingPoint = getDesiredTranslation(getFieldVelocity(), timeInterval);
+        Translation2d targetPoint = calculateTarget(getFieldVelocity(), timeInterval);
+        double robotAngle = getDesiredAngle(shootingPoint, targetPoint);
+        // double climberAngle1 = Math.atan2(SPEAKER_HEIGHT, shootingPoint.getDistance(targetPoint));
+        double climberAngle2 = Climber.getInstance().interpolate(shootingPoint.getDistance(targetPoint));
+        return deadline(
+            waitSeconds(timeInterval),
+            // waitUntil(() -> !getReorient()), 
+            repeatingSequence(
+                parallel(
+                    runOnce(() -> Climber.getInstance().setAngle(climberAngle2)),
+                    runOnce(() -> drive(new Translation2d(
+                    RobotContainer.controller.getLeftX(),RobotContainer.controller.getLeftY()).times(maxAttainableSpeed), 
+                    calcRotation(robotAngle, timeInterval), true))
                 )
             )
         );
@@ -162,11 +205,11 @@ public class Swerve extends SwerveBase {
     }
 
     public double getTurnAngle() {
-        return getDesiredAngle(focalPoint);
+        return getDesiredAngle(location.getAsPose2d().getTranslation(), focalPoint);
     }
 
     public Command turnInPlace() {
-        return turnInPlace(()-> getDesiredAngle(focalPoint));
+        return turnInPlace(()-> getDesiredAngle(location.getAsPose2d().getTranslation(), focalPoint));
     }
     //legit have no clue what this is...
     public Command turnInPlace(DoubleSupplier setpoint) {

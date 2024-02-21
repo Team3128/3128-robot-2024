@@ -232,7 +232,7 @@ public class Constants {
         public static final double FIELD_X_LENGTH = Units.inchesToMeters(651.25); // meters
         public static final double FIELD_Y_LENGTH = Units.inchesToMeters(315.5); // meters
         public static final Pose2d SPEAKER = new Pose2d(Units.inchesToMeters(324.5), Units.inchesToMeters(315.5), Rotation2d.fromDegrees(0));
-
+        public static final double SPEAKER_HEIGHT = 0;
 
         public static Pose2d allianceFlip(Pose2d pose) {
             if (Robot.getAlliance() == Alliance.Red) {
@@ -273,6 +273,7 @@ public class Constants {
 
     public static class FocalAimConstants {
         public static final double speakerLength = 1.043;
+        
         public static final double speakerMidpointY = 6.151 - speakerLength / 2;
         public static final double focalPointX = 0.2; //1.4583577128;
         public static final Translation2d speakerMidpointBlue = new Translation2d(0, speakerMidpointY);

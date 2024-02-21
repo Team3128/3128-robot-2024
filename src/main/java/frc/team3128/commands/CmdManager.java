@@ -41,7 +41,7 @@ public class CmdManager {
             parallel(
                 rampUp(),
                 swerve.reorientSpeaker(0.1),
-                shoot(5700, 10)//lolololololololo i just guessed this values 
+                shoot(5700, 10)
             ),
             intake.outtakeNoRequirements(),
             waitSeconds(1),
