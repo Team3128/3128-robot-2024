@@ -82,7 +82,7 @@ public class RobotContainer {
         controller.getButton(XboxButton.kY).onTrue(rampUp(5000, 15)).onFalse(feed(5000, 15,155));   //Ask driveteam later what they want
         controller.getButton(XboxButton.kX).onTrue(rampUpAmp()).onFalse(ampShoot());
         controller.getButton(XboxButton.kA).onTrue(sequence(intake.intakePivot.pivotTo(-150), climber.climbTo(Climber.State.EXTENDED))); 
-        controller.getButton(XboxButton.kBack).onTrue(sequence(climber.setClimber(-0.75), waitUntil(()->climber.isClimbed()), climber.setClimber(0))); 
+        controller.getButton(XboxButton.kBack).onTrue(sequence(climber.setClimber(-0.25), waitSeconds(1), climber.setClimber(-0.75), waitUntil(()->climber.isClimbed()), climber.setClimber(0))); 
         controller.getButton(XboxButton.kLeftTrigger).onTrue(intake.intake(Intake.State.EXTENDED)); 
         controller.getButton(XboxButton.kLeftBumper).onTrue(intake.retract(false));
 
@@ -147,7 +147,8 @@ public class RobotContainer {
     @SuppressWarnings("unused")
     public void initCameras() {
         Camera.configCameras(AprilTagFields.k2024Crescendo, PoseStrategy.LOWEST_AMBIGUITY, (pose, time) -> swerve.addVisionMeasurement(pose, time), () -> swerve.getPose());
-        Camera.setAmbiguityThreshold(0.5);
+        Camera.setDistanceThreshold(4.0);
+        Camera.setAmbiguityThreshold(0.3);
         final Camera camera = new Camera("FRONT_LEFT", Units.inchesToMeters(10.055), Units.inchesToMeters(9.79), Units.degreesToRadians(30), Units.degreesToRadians(-28.125), 0);
         final Camera camera2 = new Camera("FRONT_RIGHT", Units.inchesToMeters(10.055), -Units.inchesToMeters(9.79), Units.degreesToRadians(-30), Units.degreesToRadians(-28.125), 0);
     }

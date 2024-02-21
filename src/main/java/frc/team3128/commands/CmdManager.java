@@ -37,7 +37,7 @@ public class CmdManager {
         return sequence(
             parallel(
                 rampUp(),
-                swerve.turnInPlace().asProxy()
+                swerve.turnInPlace().asProxy().withTimeout(1)
                 // runOnce(()-> CmdSwerveDrive.setTurnSetpoint(swerve.getTurnAngle(Robot.getAlliance() == Alliance.Red ? focalPointRed : focalPointBlue))),
                 // waitUntil(()-> CmdSwerveDrive.rController.atSetpoint())
             ),
@@ -126,7 +126,7 @@ public class CmdManager {
             waitSeconds(0.1),
             climber.setClimber(0),
             parallel(
-                intake.retract(shouldStall),
+                // intake.retract(shouldStall),
                 sequence(
                     waitSeconds(0.5),
                     climber.reset()

@@ -121,7 +121,7 @@ public class Intake {
             intakePivot.runPivot(0.5),
             waitSeconds(0.1),
             intakePivot.runPivot(0),
-            waitSeconds(0.1),
+            waitSeconds(0.25),
             runOnce(()-> isRetracting = false),
             intakePivot.reset(0)
         );

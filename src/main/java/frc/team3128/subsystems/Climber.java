@@ -94,7 +94,8 @@ public class Climber extends NAR_PIDSubsystem {
     }
 
     public double interpolate(double dist){
-        return 45.1 - 27 * dist + 6.86 * Math.pow(dist, 2) - 0.621 * Math.pow(dist, 3);
+        return 25 * Math.pow(dist, -0.911);
+        // return 45.1 - 27 * dist + 6.86 * Math.pow(dist, 2) - 0.621 * Math.pow(dist, 3);
     }
 
     @Override

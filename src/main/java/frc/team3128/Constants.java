@@ -189,7 +189,7 @@ public class Constants {
 
         public static final Matrix<N3,N1> SVR_STATE_STD = VecBuilder.fill(0.1,0.1,Units.degreesToRadians(3));
  
-        public static final Matrix<N3,N1> SVR_VISION_MEASUREMENT_STD = VecBuilder.fill(0.1,0.1,Units.degreesToRadians(3));
+        public static final Matrix<N3,N1> SVR_VISION_MEASUREMENT_STD = VecBuilder.fill(1,1,Units.degreesToRadians(10));
 
         public static final HashMap<Integer,Pose2d> APRIL_TAG_POS = new HashMap<Integer,Pose2d>();
 
@@ -276,7 +276,7 @@ public class Constants {
     public static class FocalAimConstants {
         public static final double speakerLength = 1.043;
         public static final double speakerMidpointY = 6.151 - speakerLength / 2;
-        public static final double focalPointX = 0.05; //1.4583577128;
+        public static final double focalPointX = 0; //1.4583577128;
         public static final Translation2d speakerMidpointBlue = new Translation2d(0, speakerMidpointY);
         public static final Translation2d speakerMidpointRed = new Translation2d(FieldConstants.FIELD_X_LENGTH, speakerMidpointY);
         public static final Translation2d focalPointBlue = new Translation2d(focalPointX, speakerMidpointY);
@@ -374,6 +374,7 @@ public class Constants {
             CONE(255,255,0,false),
             CUBE(255,0,255,false),
             HOLDING(255,0,0,false),
+            BLACK(0, 0, 0, false),
     
             AUTO(0,0,0,true),
             SHELF(255, 105, 180, false),

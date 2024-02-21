@@ -58,6 +58,12 @@
           "data": {
             "name": "Shoot"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "note1.3-midLine"
+          }
         }
       ]
     }

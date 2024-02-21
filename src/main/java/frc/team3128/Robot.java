@@ -15,7 +15,10 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import static edu.wpi.first.wpilibj2.command.Commands.*;
+
+import frc.team3128.Constants.LedConstants.Colors;
 import frc.team3128.autonomous.AutoPrograms;
+import frc.team3128.subsystems.Leds;
 import frc.team3128.subsystems.Swerve;
 
 import org.littletonrobotics.junction.Logger;
@@ -53,8 +56,9 @@ public class Robot extends NAR_Robot {
         autoPrograms = new AutoPrograms();
         m_robotContainer.initDashboard();
         LiveWindow.disableAllTelemetry();
+        Leds.getInstance().setPivotLeds(Colors.AUTO);
 
-        addReceiver(true, LoggingState.NONE);
+        // addReceiver(true, LoggingState.NONE);
     }
 
     @Override
@@ -69,9 +73,9 @@ public class Robot extends NAR_Robot {
             m_autonomousCommand.schedule();
         }
 
-        if(DriverStation.getMatchType() != MatchType.None)
-            addReceiver(true, LoggingState.FULLMATCH);
-        Logger.start();
+        // if(DriverStation.getMatchType() != MatchType.None)
+        //     addReceiver(true, LoggingState.FULLMATCH);
+        //Logger.start();
 
     }
 
@@ -84,9 +88,9 @@ public class Robot extends NAR_Robot {
     public void teleopInit() {
         CommandScheduler.getInstance().cancelAll();
 
-        if(DriverStation.getMatchType() != MatchType.None)
-            addReceiver(true, LoggingState.FULLMATCH);
-        Logger.start();
+        // if(DriverStation.getMatchType() != MatchType.None)
+        //     addReceiver(true, LoggingState.FULLMATCH);
+        // Logger.start();
         
     }
 
