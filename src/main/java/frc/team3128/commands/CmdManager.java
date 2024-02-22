@@ -1,18 +1,13 @@
 package frc.team3128.commands;
 
 import common.hardware.input.NAR_XboxController;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.team3128.Robot;
 import frc.team3128.RobotContainer;
 import frc.team3128.Constants.ShooterConstants;
 import frc.team3128.subsystems.Climber;
 import frc.team3128.subsystems.Intake;
 import frc.team3128.subsystems.Shooter;
 import frc.team3128.subsystems.Swerve;
-
-import static frc.team3128.Constants.FocalAimConstants.focalPointBlue;
-import static frc.team3128.Constants.FocalAimConstants.focalPointRed;
 
 import java.util.function.DoubleSupplier;
 
@@ -37,12 +32,7 @@ public class CmdManager {
 
     public static Command autoShoot() {
         return sequence(
-            runOnce(() -> swerve.toggleReorient(true)),
-            parallel(
-                rampUp(),
-                swerve.reorientSpeaker(0.1),
-                shoot(5700, 10)
-            ),
+            swerve.reorientSpeaker(1),
             intake.outtakeNoRequirements(),
             waitSeconds(1),
             neutral()
@@ -91,7 +81,6 @@ public class CmdManager {
 
     public static Command neutral(){
         return sequence(
-            runOnce(() -> swerve.toggleReorient(false)),
             vibrateController(),
             intake.stopRollersNoRequirements(),
             shooter.setShooter(0),

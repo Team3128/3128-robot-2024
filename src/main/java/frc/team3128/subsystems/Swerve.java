@@ -15,12 +15,12 @@ import common.core.swerve.SwerveModule;
 import common.hardware.motorcontroller.NAR_Motor.Control;
 import common.utility.shuffleboard.NAR_Shuffleboard;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 
 import static edu.wpi.first.wpilibj2.command.Commands.*;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Tracer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.team3128.Robot;
@@ -29,7 +29,7 @@ import frc.team3128.commands.CmdSwerveDrive;
 import frc.team3128.subsystems.random.Pose2dSupplier;
 
 import static frc.team3128.Constants.SwerveConstants.*;
-import static frc.team3128.Constants.FieldConstants.SPEAKER_HEIGHT;
+import static frc.team3128.Constants.FieldConstants.PROJECTILE_SPEED;
 import static frc.team3128.Constants.FocalAimConstants.*;
 
 public class Swerve extends SwerveBase {
@@ -45,7 +45,6 @@ public class Swerve extends SwerveBase {
     public Pose2dSupplier location;
     public boolean reorient;
     
-    //how are these different
     public final Translation2d focalPoint = Robot.getAlliance() == Alliance.Red ? focalPointRed : focalPointBlue;
     public final Translation2d speakerMidpoint = Robot.getAlliance() == Alliance.Red ? speakerMidpointRed : speakerMidpointBlue;
     
@@ -128,78 +127,77 @@ public class Swerve extends SwerveBase {
     }
     
     public Command reorientSpeaker(double timeInterval){
-        return newReorient(focalPoint, timeInterval);
+        return reorient(focalPoint, timeInterval);
     }
     
-    public Translation2d getDesiredTranslation(ChassisSpeeds velocity, double time){
+    public Translation2d getDesiredPosition(ChassisSpeeds velocity, double time){
         Translation2d translation = new Translation2d(velocity.vxMetersPerSecond * time , velocity.vyMetersPerSecond * time);
-        Translation2d desiredTranslation = new Translation2d(location.getAsPose2d().getX() + translation.getX(), location.getAsPose2d().getY() + translation.getY());
-        return desiredTranslation;
+        Translation2d desiredPosition = new Translation2d(location.getAsPose2d().getX() + translation.getX(), location.getAsPose2d().getY() + translation.getY());
+        return desiredPosition;
     }
     
-    public Command reorientInPlace(Translation2d point){
-        return sequence(
-            runOnce(() -> drive(new Translation2d(0,0), getDesiredAngle(point, location.getAsPose2d().getTranslation()), false)),
-            waitUntil(() -> atAngleSetpoint(point))
-        );
+    public double getProjectileTime(Translation2d position){
+        return position.getDistance(focalPoint)/PROJECTILE_SPEED;
     }
     
-    public Translation2d calculateTarget(ChassisSpeeds velocity, double timeInterval){
-        double predX = velocity.vxMetersPerSecond * timeInterval;
-        double predY = velocity.vyMetersPerSecond * timeInterval;
+    public Translation2d calculateTarget(ChassisSpeeds velocity, Translation2d position){
+        double predX = velocity.vxMetersPerSecond * getProjectileTime(position);
+        double predY = velocity.vyMetersPerSecond * getProjectileTime(position);
         Translation2d target = new Translation2d(focalPoint.getX() - predX, focalPoint.getY() - predY);
         return target;
     }
     
-    /**
-     * Automatically reorients the robot to desired point while moving.
-     * @param point Desired point to reorient to
-     * @param timeInterval Time between reorientations (in seconds)
-     */
-    public Command reorient(Translation2d point, double timeInterval){
-        return deadline(
-            waitUntil(() -> !getReorient()), //deadline command...idk if this will work
-            repeatingSequence(
-                runOnce(() -> drive(new Translation2d(
-                    RobotContainer.controller.getLeftX(),RobotContainer.controller.getLeftY()).times(maxAttainableSpeed), 
-                    getDesiredAngle(getDesiredTranslation(getFieldVelocity(), timeInterval), point), false)),
-                race(
-                    waitUntil(() -> atAngleSetpoint(point)),//not sure if necessary  
-                    waitSeconds(timeInterval) 
-                )
-            )
-        );
-    }
-    
-    public double calcRotation(double setpoint, double timeInterval){
+    public double calculateRotation(double setpoint, double timeInterval){
         return Units.degreesToRadians(rController.calculate(getGyroRotation2d().getDegrees(), setpoint));
     }
     
-    public Command newReorient(Translation2d point, double timeInterval){
-        Translation2d shootingPoint = getDesiredTranslation(getFieldVelocity(), timeInterval);
-        Translation2d targetPoint = calculateTarget(getFieldVelocity(), timeInterval);
+    public Command reorient(Translation2d point, double timeInterval){
+        Translation2d shootingPoint = getDesiredPosition(getFieldVelocity(), timeInterval);
+        Translation2d targetPoint = calculateTarget(getFieldVelocity(), shootingPoint);
         double robotAngle = getDesiredAngle(shootingPoint, targetPoint);
-        // double climberAngle1 = Math.atan2(SPEAKER_HEIGHT, shootingPoint.getDistance(targetPoint));
-        double climberAngle2 = Climber.getInstance().interpolate(shootingPoint.getDistance(targetPoint));
+        double climberAngle = Climber.getInstance().interpolate(shootingPoint.getDistance(targetPoint));
         return deadline(
             waitSeconds(timeInterval),
-            // waitUntil(() -> !getReorient()), 
             repeatingSequence(
                 parallel(
-                    runOnce(() -> Climber.getInstance().setAngle(climberAngle2)),
+                    Climber.getInstance().setAngle(climberAngle),
                     runOnce(() -> drive(new Translation2d(
                     RobotContainer.controller.getLeftX(),RobotContainer.controller.getLeftY()).times(maxAttainableSpeed), 
-                    calcRotation(robotAngle, timeInterval), true))
+                    calculateRotation(robotAngle, timeInterval), true))
                 )
             )
         );
     }
+    
+    public double calculateAngleCurrent(){
+        Translation2d targetPoint = calculateTarget(getFieldVelocity(), location.getAsPose2d().getTranslation());
+        double climberAngle = Climber.getInstance().interpolate(location.getAsPose2d().getTranslation().getDistance(targetPoint));
+        return climberAngle;
+    }
+    
+    //kind of scuffed
+    public Command reorientNonConstant(Translation2d point, double timeInterval){
+        Translation2d shootingPoint = getDesiredPosition(getFieldVelocity(), timeInterval);
+        Translation2d targetPoint = calculateTarget(getFieldVelocity(), shootingPoint);
+        double robotAngle = getDesiredAngle(shootingPoint, targetPoint);
+        return sequence (
+            deadline(
+                waitSeconds(timeInterval),
+                repeatingSequence(
+                    runOnce(() -> drive(new Translation2d(
+                     RobotContainer.controller.getLeftX(),RobotContainer.controller.getLeftY()).times(maxAttainableSpeed), 
+                     calculateRotation(robotAngle, timeInterval), true))
+                )
+        ),
+        runOnce(() -> Climber.getInstance().setAngle(calculateAngleCurrent()))
+        );
+    }
+
 
     public double getSpeakerDist() {
         return getDist(speakerMidpoint);
     }
     
-    //my code ends here
     public double getDist(Translation2d point) {
         return getPose().getTranslation().getDistance(point) - robotLength / 2.0;
     }
@@ -220,7 +218,7 @@ public class Swerve extends SwerveBase {
             (double output) -> {
                 final double x = RobotContainer.controller.getLeftX();
                 final double y = RobotContainer.controller.getLeftY();
-                Translation2d translation = new Translation2d(x,y).times(maxAttainableSpeed);//why the heck are you setting your translation2d to your x and y values from your controller? you're turning in PLACE.
+                Translation2d translation = new Translation2d(x,y).times(maxAttainableSpeed);//why the heck are you setting your translation2d to your x and y values from your controller? you're turning in place...right
                 if (Robot.getAlliance() == Alliance.Red || !fieldRelative) {
                     translation = translation.rotateBy(Rotation2d.fromDegrees(90));
                 }

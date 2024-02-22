@@ -98,23 +98,6 @@ public class CmdSwerveDrive extends Command {
 
     }
     
-    
-    
-    /**
-     * Automatically reorients the robot to desired point while moving.
-     * @param point Desired point to reorient to
-     * @param timeInterval Time between reorientations (in seconds)
-     */
-    public Command reorient(Translation2d point, double timeInterval){
-        return deadline(
-            waitUntil(() -> !swerve.getReorient()), //deadline command...idk if this will work
-                runOnce(() -> setTurnSetpoint(swerve.getDesiredAngle(swerve.getDesiredTranslation(timeInterval), point))),
-                race(
-                    waitUntil(() -> swerve.atAngleSetpoint(point)),//not sure if necessary  
-                    waitSeconds(timeInterval) 
-                )
-        );
-    }
     public static void setTurnSetpoint() {
         final double currentRotation = MathUtil.inputModulus(Swerve.getInstance().getYaw(), 0, 360);
         if (currentRotation <= 45) {

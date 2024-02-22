@@ -233,6 +233,7 @@ public class Constants {
         public static final double FIELD_Y_LENGTH = Units.inchesToMeters(315.5); // meters
         public static final Pose2d SPEAKER = new Pose2d(Units.inchesToMeters(324.5), Units.inchesToMeters(315.5), Rotation2d.fromDegrees(0));
         public static final double SPEAKER_HEIGHT = 0;
+        public static final double PROJECTILE_SPEED = 0;
 
         public static Pose2d allianceFlip(Pose2d pose) {
             if (Robot.getAlliance() == Alliance.Red) {
