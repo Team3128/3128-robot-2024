@@ -371,14 +371,14 @@ public class Constants {
 
         public enum Colors {
             OFF(0,0,0,false),
-            CONE(255,255,0,false),
-            CUBE(255,0,255,false),
-            HOLDING(255,0,0,false),
-            BLACK(0, 0, 0, false),
+            ERROR(255, 0, 0, false),
+            CONFIGURED(255,0,0,false),
+            BLUE(0, 0, 255, false),
+            RED(255, 0, 0, false),
+            GREEN(0, 255, 0, false),
+            ORANGE(255, 165, 0, false),
     
-            AUTO(0,0,0,true),
-            SHELF(255, 105, 180, false),
-            CHUTE(0,0,225,false);
+            AMP(0,0,0,true);
     
             public final int r;
             public final int b;

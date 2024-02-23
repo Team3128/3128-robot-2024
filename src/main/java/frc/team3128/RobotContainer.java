@@ -19,6 +19,7 @@ import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import frc.team3128.Constants.FocalAimConstants;
 import frc.team3128.Constants.IntakeConstants;
 import frc.team3128.Constants.ShooterConstants;
+import frc.team3128.Constants.LedConstants.Colors;
 import frc.team3128.commands.CmdSetSpeed;
 import frc.team3128.commands.CmdSwerveDrive;
 import common.hardware.camera.Camera;
@@ -32,6 +33,7 @@ import common.utility.shuffleboard.NAR_Shuffleboard;
 import common.utility.sysid.CmdSysId;
 import frc.team3128.subsystems.Climber;
 import frc.team3128.subsystems.Intake;
+import frc.team3128.subsystems.Leds;
 import frc.team3128.subsystems.Shooter;
 import frc.team3128.subsystems.Swerve;
 
@@ -47,6 +49,7 @@ public class RobotContainer {
     private Shooter shooter;
     private Climber climber;
     private Intake intake;
+    private Leds leds;
 
     private NAR_Joystick rightStick;
     private NAR_ButtonBoard buttonPad;
@@ -62,6 +65,7 @@ public class RobotContainer {
         shooter = Shooter.getInstance();
         climber = Climber.getInstance();
         intake = Intake.getInstance();
+        leds = Leds.getInstance();
 
         rightStick = new NAR_Joystick(1);
         controller = new NAR_XboxController(2);
@@ -82,6 +86,7 @@ public class RobotContainer {
         controller.getButton(XboxButton.kY).onTrue(rampUp(5000, 15)).onFalse(feed(5000, 15,155));   //Ask driveteam later what they want
         controller.getButton(XboxButton.kX).onTrue(rampUpAmp()).onFalse(ampShoot());
         controller.getButton(XboxButton.kA).onTrue(sequence(intake.intakePivot.pivotTo(-150), climber.climbTo(Climber.State.EXTENDED))); 
+        controller.getButton(XboxButton.kStart).onTrue(startEnd(()-> leds.setLedColor(Colors.AMP), ()-> leds.setDefaultColor()).withTimeout(1));
         controller.getButton(XboxButton.kBack).onTrue(sequence(climber.setClimber(-0.25), waitSeconds(1), climber.setClimber(-0.75), waitUntil(()->climber.isClimbed()), climber.setClimber(0))); 
         controller.getButton(XboxButton.kLeftTrigger).onTrue(intake.intake(Intake.State.EXTENDED)); 
         controller.getButton(XboxButton.kLeftBumper).onTrue(intake.retract(false));

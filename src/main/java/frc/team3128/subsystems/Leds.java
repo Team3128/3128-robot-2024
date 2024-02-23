@@ -5,7 +5,10 @@ import com.ctre.phoenix.led.CANdle.LEDStripType;
 import com.ctre.phoenix.led.CANdleConfiguration;
 import com.ctre.phoenix.led.RainbowAnimation;
 import com.ctre.phoenix.led.SingleFadeAnimation;
+
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.team3128.Robot;
 import frc.team3128.Constants.LedConstants;
 import frc.team3128.Constants.LedConstants.Colors;;
 
@@ -33,19 +36,23 @@ public class Leds extends SubsystemBase {
         m_candle.configAllSettings(config);
     }
 
+    public void setDefaultColor() {
+        setLedColor(Robot.getAlliance() == Alliance.Red ? Colors.GREEN : Colors.ORANGE);
+    }
+
     //Set Elevator Leds
-    public void setPivotLeds(Colors color) {
+    public void setLedColor(Colors color) {
 
         switch (color) {
-            case AUTO :
+            case AMP:
                 m_candle.animate(new RainbowAnimation(LedConstants.RainbowAnimation.BRIGHTNESS,LedConstants.RainbowAnimation.SPEED,LedConstants.PIVOT_COUNT_FRONT,false,LedConstants.STARTING_ID),0);
                 m_candle.animate(new RainbowAnimation(LedConstants.RainbowAnimation.BRIGHTNESS,LedConstants.RainbowAnimation.SPEED,LedConstants.PIVOT_COUNT_BACK,true,LedConstants.STARTING_ID+LedConstants.PIVOT_COUNT_FRONT),1);
                 break;
-            case HOLDING:
+            case ERROR:
                 resetAnimationSlot(1,1);
                 m_candle.animate(new SingleFadeAnimation(color.r, color.g, color.b,LedConstants.WHITE_VALUE,LedConstants.HOLDING_SPEED,LedConstants.PIVOT_COUNT),0);
                 break;
-            default :
+            default:
                 resetAnimationSlot(2);
                 m_candle.setLEDs(color.r,color.g,color.b,LedConstants.WHITE_VALUE,LedConstants.STARTING_ID,LedConstants.PIVOT_COUNT);
                 break;

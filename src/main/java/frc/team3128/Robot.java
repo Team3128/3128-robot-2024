@@ -8,6 +8,7 @@ import java.util.Optional;
 
 import common.core.misc.NAR_Robot;
 import common.hardware.camera.Camera;
+import common.hardware.motorcontroller.NAR_CANSpark;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.MatchType;
@@ -56,7 +57,12 @@ public class Robot extends NAR_Robot {
         autoPrograms = new AutoPrograms();
         m_robotContainer.initDashboard();
         LiveWindow.disableAllTelemetry();
-        Leds.getInstance().setPivotLeds(Colors.AUTO);
+        if (NAR_CANSpark.getNumFailedConfigs() > 0) {
+            Leds.getInstance().setLedColor(Colors.ERROR);
+        }
+        else {
+            Leds.getInstance().setLedColor(Colors.CONFIGURED);
+        }
 
         // addReceiver(true, LoggingState.NONE);
     }
@@ -68,6 +74,7 @@ public class Robot extends NAR_Robot {
 
     @Override
     public void autonomousInit() {
+        Leds.getInstance().setDefaultColor();
         Command m_autonomousCommand = autoPrograms.getAutonomousCommand();
         if (m_autonomousCommand != null) {
             m_autonomousCommand.schedule();
