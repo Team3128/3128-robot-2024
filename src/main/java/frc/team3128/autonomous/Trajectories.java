@@ -132,7 +132,7 @@ public class Trajectories {
         return sequence(
             intake.intakeRollers.runNoRequirements(0),
             Shooter.getInstance().setShooter(0),
-            Climber.getInstance().climbTo(Climber.State.RETRACTED)
+            Climber.getInstance().climbTo(Climber.Setpoint.RETRACTED)
         );
     }
 

@@ -50,7 +50,7 @@ public class CmdManager {
     public static Command ampShoot() {
         return sequence (
             shooter.runBottomRollers(AMP_POWER),
-            climber.climbTo(Climber.State.AMP),
+            climber.climbTo(Climber.Setpoint.AMP),
             waitUntil(() -> climber.atSetpoint()),
             intake.intakeRollers.outtake(),
             waitSeconds(0.1),
@@ -97,7 +97,7 @@ public class CmdManager {
 
     public static Command rampUpAmp() {
         return sequence(
-            climber.climbTo(Climber.State.AMP),
+            climber.climbTo(Climber.Setpoint.AMP),
             shooter.runBottomRollers(AMP_POWER)
         );
     }
@@ -120,7 +120,7 @@ public class CmdManager {
         return sequence(
             intake.intakeRollers.runNoRequirements(0),
             shooter.setShooter(0),
-            climber.climbTo(Climber.State.RETRACTED),
+            climber.climbTo(Climber.Setpoint.RETRACTED),
             waitUntil(()-> climber.atSetpoint()),
             climber.setClimber(-0.5),
             waitSeconds(0.1),

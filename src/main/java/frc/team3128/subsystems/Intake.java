@@ -5,6 +5,7 @@ import common.core.subsystems.ManipulatorTemplate;
 import common.core.subsystems.PivotTemplate;
 import common.hardware.motorcontroller.NAR_Motor.Neutral;
 import common.utility.narwhaldashboard.NarwhalDashboard;
+import common.utility.narwhaldashboard.NarwhalDashboard.State;
 import common.utility.shuffleboard.NAR_Shuffleboard;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -18,12 +19,12 @@ import static frc.team3128.Constants.IntakeConstants.*;
 
 public class Intake {
 
-    public enum State {
+    public enum Setpoint {
         EXTENDED(-195),
         AMP(-90);
 
         public final double angle;
-        private State(double angle) {
+        private Setpoint(double angle) {
             this.angle = angle;
         }
     }
@@ -127,7 +128,7 @@ public class Intake {
         );
     }
     
-    public Command intake(State setpoint) {
+    public Command intake(Setpoint setpoint) {
         return sequence(
             runOnce(()-> isRetracting = true),
             intakePivot.pivotTo(setpoint.angle),
@@ -138,7 +139,7 @@ public class Intake {
 
     public Command intakeAuto() {
         return sequence(
-            intakePivot.pivotTo(State.EXTENDED.angle),
+            intakePivot.pivotTo(Setpoint.EXTENDED.angle),
             intakeRollers.intake(),
             retractAuto()
         );
@@ -154,13 +155,13 @@ public class Intake {
         );
     }
 
-    public NarwhalDashboard.State getRunningState() {
-        if (ROLLER_MOTOR.getTemperature() != 0 && PIVOT_MOTOR.getTemperature() != 0) {
-            return NarwhalDashboard.State.RUNNING; 
+    public State getRunningState() {
+        if (ROLLER_MOTOR.getState() != State.DISCONNECTED && PIVOT_MOTOR.getState() != State.DISCONNECTED) {
+            return State.RUNNING; 
         }
-        if (ROLLER_MOTOR.getTemperature() != 0 || PIVOT_MOTOR.getTemperature() != 0) {
-            return NarwhalDashboard.State.PARTIALLY_RUNNING; 
+        if (ROLLER_MOTOR.getState() != State.DISCONNECTED || PIVOT_MOTOR.getState() != State.DISCONNECTED) {
+            return State.PARTIALLY_RUNNING; 
         }
-        return NarwhalDashboard.State.DISCONNECTED;
+        return State.DISCONNECTED;
     }
 }

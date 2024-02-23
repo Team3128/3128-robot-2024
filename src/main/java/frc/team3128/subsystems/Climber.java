@@ -12,17 +12,18 @@ import common.core.subsystems.NAR_PIDSubsystem;
 import common.hardware.motorcontroller.NAR_CANSpark;
 import common.hardware.motorcontroller.NAR_Motor.Neutral;
 import common.utility.narwhaldashboard.NarwhalDashboard;
+import common.utility.narwhaldashboard.NarwhalDashboard.State;
 import common.utility.shuffleboard.NAR_Shuffleboard;
 
 public class Climber extends NAR_PIDSubsystem {
 
-    public enum State {
+    public enum Setpoint {
         EXTENDED(30),
         AMP(14),
         RETRACTED(0);
 
         public final double setpoint;
-        private State(double setpoint) {
+        private Setpoint(double setpoint) {
             this.setpoint = setpoint;
         }
     }
@@ -111,7 +112,7 @@ public class Climber extends NAR_PIDSubsystem {
         return climbTo(()-> setpoint);
     }
 
-    public Command climbTo(State state) {
+    public Command climbTo(Setpoint state) {
         return climbTo(state.setpoint);
     }
 
@@ -132,13 +133,13 @@ public class Climber extends NAR_PIDSubsystem {
         return getMeasurement() < -1.0;
     }
 
-    public NarwhalDashboard.State getRunningState() {
-        if (rightMotor.getTemperature() != 0 && leftMotor.getTemperature() != 0) {
-            return NarwhalDashboard.State.RUNNING; 
+    public State getRunningState() {
+        if (rightMotor.getState() != State.DISCONNECTED && leftMotor.getState() != State.DISCONNECTED) {
+            return State.RUNNING; 
         }
-        if (rightMotor.getTemperature() != 0 || leftMotor.getTemperature() != 0) {
-            return NarwhalDashboard.State.PARTIALLY_RUNNING; 
+        if (rightMotor.getState() != State.DISCONNECTED || leftMotor.getState() != State.DISCONNECTED) {
+            return State.PARTIALLY_RUNNING; 
         }
-        return NarwhalDashboard.State.DISCONNECTED;
+        return State.DISCONNECTED;
     }
 }
