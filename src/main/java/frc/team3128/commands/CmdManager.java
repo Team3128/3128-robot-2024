@@ -1,6 +1,7 @@
 package frc.team3128.commands;
 
 import common.hardware.input.NAR_XboxController;
+import common.utility.shuffleboard.NAR_Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
@@ -49,10 +50,9 @@ public class CmdManager {
 
     public static Command ampShoot() {
         return sequence (
-            shooter.runBottomRollers(AMP_POWER),
-            climber.climbTo(Climber.Setpoint.AMP),
-            waitUntil(() -> climber.atSetpoint()),
-            intake.intakeRollers.outtake(),
+            intake.intakePivot.pivotTo(-75),
+            waitUntil(()-> intake.intakePivot.getMeasurement() < -55),
+            intake.intakeRollers.runNoRequirements(-0.2),
             waitSeconds(0.1),
             neutral(false)
         );

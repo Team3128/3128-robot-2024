@@ -61,13 +61,13 @@ public class Leds extends SubsystemBase {
 
     public void resetAnimationSlot(int slots) {
         for (int i = 0; i < slots; i++) {
-         m_candle.animate(null,i);
+         m_candle.animate(null, i);
         }
      }
 
     public void resetAnimationSlot(int slots, int offset) {
        for (int i = 0; i < slots; i++) {
-        m_candle.animate(null,i+offset);
+        m_candle.animate(null, i+offset);
        }
     }
 

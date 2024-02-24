@@ -20,14 +20,15 @@ import frc.team3128.Constants.FocalAimConstants;
 import frc.team3128.Constants.IntakeConstants;
 import frc.team3128.Constants.ShooterConstants;
 import frc.team3128.Constants.LedConstants.Colors;
-import frc.team3128.commands.CmdSetSpeed;
 import frc.team3128.commands.CmdSwerveDrive;
+import common.core.misc.NAR_Robot;
 import common.hardware.camera.Camera;
 import common.hardware.input.NAR_ButtonBoard;
 import common.hardware.input.NAR_Joystick;
 import common.hardware.input.NAR_XboxController;
 import common.hardware.input.NAR_XboxController.XboxButton;
 import common.hardware.motorcontroller.NAR_CANSpark;
+import common.utility.Log;
 import common.utility.narwhaldashboard.NarwhalDashboard;
 import common.utility.shuffleboard.NAR_Shuffleboard;
 import common.utility.sysid.CmdSysId;
@@ -59,6 +60,7 @@ public class RobotContainer {
     private NarwhalDashboard dashboard;
 
     public RobotContainer() {
+        NAR_Robot.logWithAdvantageKit = true;
         NAR_Shuffleboard.WINDOW_WIDTH = 10;
 
         swerve = Swerve.getInstance();
@@ -85,7 +87,7 @@ public class RobotContainer {
         controller.getButton(XboxButton.kRightBumper).onTrue(rampUp(ShooterConstants.MAX_RPM, 25)).onFalse(shoot(ShooterConstants.MAX_RPM, 25)); //Ram Shot
         controller.getButton(XboxButton.kRightTrigger).onTrue(rampUpContinuous()).onFalse(autoShoot());     //Auto Shoot
         controller.getButton(XboxButton.kY).onTrue(rampUp(5000, 15)).onFalse(feed(5000, 15,155));   //Feed Shot
-        controller.getButton(XboxButton.kX).onTrue(rampUpAmp()).onFalse(ampShoot()); //Amp Shot
+        controller.getButton(XboxButton.kX).onTrue(intake.intakePivot.pivotTo(-55)).onFalse(ampShoot()); //Amp Shot
 
         controller.getButton(XboxButton.kA).onTrue(sequence(intake.intakePivot.pivotTo(-150), climber.climbTo(Climber.Setpoint.EXTENDED))); //Extend Climber
         controller.getButton(XboxButton.kBack).onTrue(sequence(climber.setClimber(-0.25), waitSeconds(1), climber.setClimber(-0.75), waitUntil(()->climber.isClimbed()), climber.setClimber(0)));   //Retract Climber
@@ -112,7 +114,6 @@ public class RobotContainer {
         }));
 
         rightStick.getButton(1).onTrue(runOnce(()-> swerve.zeroGyro(0)));
-        rightStick.getButton(2).onTrue(new CmdSetSpeed());
         rightStick.getButton(3).onTrue(new CmdSysId("Rotation", (Double radiansPerSec) -> swerve.drive(new Translation2d(), radiansPerSec, true), ()-> Units.radiansToDegrees(swerve.getRobotVelocity().omegaRadiansPerSecond), swerve));
         rightStick.getButton(4).onTrue(runOnce(()-> swerve.resetOdometry(new Pose2d(1.35, FocalAimConstants.speakerMidpointY, Rotation2d.fromDegrees(180)))));
         rightStick.getButton(5).onTrue(runOnce(()-> swerve.resetOdometry(new Pose2d(FIELD_X_LENGTH - 1.35, FocalAimConstants.speakerMidpointY, Rotation2d.fromDegrees(0)))));
@@ -140,7 +141,8 @@ public class RobotContainer {
         buttonPad.getButton(4).onTrue(shooter.setShooter(0.8)).onFalse(shooter.setShooter(0));
         buttonPad.getButton(5).onTrue(intake.intakePivot.runPivot(-0.2)).onFalse(intake.intakePivot.runPivot(0));
         buttonPad.getButton(6).onTrue(climber.setClimber(0.2)).onFalse(climber.setClimber(0));
-        buttonPad.getButton(7).onTrue(shooter.shoot(0));
+        buttonPad.getButton(7).onTrue(shooter.runBottomRollers(NAR_Shuffleboard.debug("test", "amp", 0.4, 0, 0).getAsDouble())
+        );
         buttonPad.getButton(8).onTrue(intake.intakePivot.pivotTo(0));
         buttonPad.getButton(9).onTrue(climber.climbTo(0));
         
@@ -172,5 +174,14 @@ public class RobotContainer {
         dashboard.checkState("intakeState", ()-> intake.getRunningState());
         dashboard.checkState("climberState", ()-> climber.getRunningState());
         dashboard.checkState("shooterState", ()-> shooter.getRunningState());
+
+        if (NAR_CANSpark.getNumFailedConfigs() > 0) {
+            Log.info("Colors", "Errors configuring: " + NAR_CANSpark.getNumFailedConfigs());
+            Leds.getInstance().setLedColor(Colors.ERROR);
+        }
+        else {
+            Log.info("Colors", "Errors configuring: " + NAR_CANSpark.getNumFailedConfigs());
+            Leds.getInstance().setLedColor(Colors.CONFIGURED);
+        }
     }
 }

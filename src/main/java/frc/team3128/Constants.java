@@ -306,7 +306,7 @@ public class Constants {
         public static final int RIGHT_MOTOR_ID = 22;
         public static final double GEAR_RATIO = 1.0 / 12.0;
         public static final double WHEEL_CIRCUMFERENCE = Units.inchesToMeters(1.751) * Math.PI;
-        public static final double POSITION_TOLERANCE = 0.25;
+        public static final double POSITION_TOLERANCE = 0.5;
         public static final double PIVOT_CLIMBER_DIST = 0.28;
         public static final double POSITION_MINIMUM = 0;
         public static final double POSITION_MAXIMUM = 30;
@@ -372,7 +372,7 @@ public class Constants {
         public enum Colors {
             OFF(0,0,0,false),
             ERROR(255, 0, 0, false),
-            CONFIGURED(255,0,0,false),
+            CONFIGURED(0,255,0,false),
             BLUE(0, 0, 255, false),
             RED(255, 0, 0, false),
             GREEN(0, 255, 0, false),

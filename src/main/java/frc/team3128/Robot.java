@@ -6,23 +6,21 @@ package frc.team3128;
 
 import java.util.Optional;
 
+import org.littletonrobotics.junction.Logger;
+
 import common.core.misc.NAR_Robot;
 import common.hardware.camera.Camera;
-import common.hardware.motorcontroller.NAR_CANSpark;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.MatchType;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import static edu.wpi.first.wpilibj2.command.Commands.*;
 
-import frc.team3128.Constants.LedConstants.Colors;
 import frc.team3128.autonomous.AutoPrograms;
 import frc.team3128.subsystems.Leds;
 import frc.team3128.subsystems.Swerve;
-
-import org.littletonrobotics.junction.Logger;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -57,14 +55,8 @@ public class Robot extends NAR_Robot {
         autoPrograms = new AutoPrograms();
         m_robotContainer.initDashboard();
         LiveWindow.disableAllTelemetry();
-        if (NAR_CANSpark.getNumFailedConfigs() > 0) {
-            Leds.getInstance().setLedColor(Colors.ERROR);
-        }
-        else {
-            Leds.getInstance().setLedColor(Colors.CONFIGURED);
-        }
 
-        // addReceiver(true, LoggingState.NONE);
+        addReceiver(true, LoggingState.SESSION);
     }
 
     @Override
@@ -80,9 +72,9 @@ public class Robot extends NAR_Robot {
             m_autonomousCommand.schedule();
         }
 
-        // if(DriverStation.getMatchType() != MatchType.None)
-        //     addReceiver(true, LoggingState.FULLMATCH);
-        //Logger.start();
+        if(DriverStation.getMatchType() != MatchType.None)
+            addReceiver(true, LoggingState.FULLMATCH);
+        Logger.start();
 
     }
 
@@ -95,9 +87,9 @@ public class Robot extends NAR_Robot {
     public void teleopInit() {
         CommandScheduler.getInstance().cancelAll();
 
-        // if(DriverStation.getMatchType() != MatchType.None)
-        //     addReceiver(true, LoggingState.FULLMATCH);
-        // Logger.start();
+        if(DriverStation.getMatchType() != MatchType.None)
+            addReceiver(true, LoggingState.FULLMATCH);
+        Logger.start();
         
     }
 

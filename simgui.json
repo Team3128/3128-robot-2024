@@ -1,0 +1,14 @@
+{
+  "NTProvider": {
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/Shuffleboard/Climber/PID_Controller": "ProfiledPIDController",
+      "/Shuffleboard/Commands/Climber": "Subsystem",
+      "/Shuffleboard/IntakePivot/PID_Controller": "ProfiledPIDController",
+      "/Shuffleboard/Shooter/PID_Controller": "PIDController"
+    }
+  },
+  "NetworkTables Info": {
+    "visible": true
+  }
+}
