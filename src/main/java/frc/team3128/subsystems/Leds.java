@@ -37,7 +37,7 @@ public class Leds extends SubsystemBase {
     }
 
     public void setDefaultColor() {
-        setLedColor(Robot.getAlliance() == Alliance.Red ? Colors.GREEN : Colors.ORANGE);
+        setLedColor(Robot.getAlliance() == Alliance.Red ? Colors.RED : Colors.BLUE);
     }
 
     //Set Elevator Leds
@@ -48,6 +48,7 @@ public class Leds extends SubsystemBase {
                 m_candle.animate(new RainbowAnimation(LedConstants.RainbowAnimation.BRIGHTNESS,LedConstants.RainbowAnimation.SPEED,LedConstants.PIVOT_COUNT_FRONT,false,LedConstants.STARTING_ID),0);
                 m_candle.animate(new RainbowAnimation(LedConstants.RainbowAnimation.BRIGHTNESS,LedConstants.RainbowAnimation.SPEED,LedConstants.PIVOT_COUNT_BACK,true,LedConstants.STARTING_ID+LedConstants.PIVOT_COUNT_FRONT),1);
                 break;
+            case PIECE:
             case ERROR:
                 resetAnimationSlot(1,1);
                 m_candle.animate(new SingleFadeAnimation(color.r, color.g, color.b,LedConstants.WHITE_VALUE,LedConstants.HOLDING_SPEED,LedConstants.PIVOT_COUNT),0);

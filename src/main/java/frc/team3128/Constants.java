@@ -275,8 +275,9 @@ public class Constants {
 
     public static class FocalAimConstants {
         public static final double speakerLength = 1.043;
-        public static final double speakerMidpointY = 6.151 - speakerLength / 2;
-        public static final double focalPointX = 0; //1.4583577128;
+        public static final double speakerMidpointY = 5.5
+        ; //6.151 - speakerLength / 2;
+        public static final double focalPointX = -0.1; //1.4583577128;
         public static final Translation2d speakerMidpointBlue = new Translation2d(0, speakerMidpointY);
         public static final Translation2d speakerMidpointRed = new Translation2d(FieldConstants.FIELD_X_LENGTH, speakerMidpointY);
         public static final Translation2d focalPointBlue = new Translation2d(focalPointX, speakerMidpointY);
@@ -372,11 +373,13 @@ public class Constants {
         public enum Colors {
             OFF(0,0,0,false),
             ERROR(255, 0, 0, false),
+            PIECE(0, 255, 0, false),
             CONFIGURED(0,255,0,false),
-            BLUE(0, 0, 255, false),
-            RED(255, 0, 0, false),
+            BLUE(48, 122, 171, false),
+            RED(171, 48, 97, false),
+            PURPLE(255, 0, 255, false),
             GREEN(0, 255, 0, false),
-            ORANGE(255, 165, 0, false),
+            ORANGE(255, 105, 0, false),
     
             AMP(0,0,0,true);
     

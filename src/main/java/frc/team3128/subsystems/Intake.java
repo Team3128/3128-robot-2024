@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DigitalSource;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.team3128.Constants.LedConstants.Colors;
 import frc.team3128.commands.CmdManager;
 
 import static edu.wpi.first.wpilibj2.command.Commands.*;
@@ -55,12 +56,11 @@ public class Intake {
             super(STALL_CURRENT, INTAKE_POWER, OUTTAKE_POWER, STALL_POWER, 0.3, ROLLER_MOTOR);
             limitSwitch = new DigitalInput(9);
             initShuffleboard();
-            NAR_Shuffleboard.addData(getSubsystem(), "Current", ()-> ROLLER_MOTOR.getStallCurrent());
         }
 
         @Override
         public void periodic() {
-            if (ROLLER_MOTOR.getStallCurrent() > STALL_CURRENT) {
+            if (Math.abs(ROLLER_MOTOR.getStallCurrent()) > STALL_CURRENT) {
                 runManipulator(0).schedule();
             }
         }
@@ -113,24 +113,27 @@ public class Intake {
 
     public Command retract(boolean shouldStall) {
         return sequence(
+            runOnce(()-> Leds.getInstance().setLedColor(Colors.PIECE)),
             CmdManager.vibrateController(),
             runOnce(()-> isRetracting = true),
             waitUntil(()-> Climber.getInstance().isNeutral()),
             intakeRollers.runManipulator(shouldStall ? STALL_POWER : 0),
-            intakePivot.pivotTo(0),
+            intakePivot.pivotTo(-5),
             waitUntil(() -> intakePivot.atSetpoint()),
             intakePivot.runPivot(0.5),
             waitSeconds(0.1),
             intakePivot.runPivot(0),
             waitSeconds(0.25),
             runOnce(()-> isRetracting = false),
-            intakePivot.reset(0)
+            intakePivot.reset(0),
+            runOnce(()-> Leds.getInstance().setDefaultColor())
         );
     }
     
     public Command intake(Setpoint setpoint) {
         return sequence(
             runOnce(()-> isRetracting = true),
+            intakeRollers.runManipulator(INTAKE_POWER),
             intakePivot.pivotTo(setpoint.angle),
             intakeRollers.intake(),
             retract(true)

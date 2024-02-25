@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.45,
-        "y": 5.55
+        "x": 2.35,
+        "y": 4.1
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.5207106781186548,
-        "y": 5.479289321881345
+        "x": 2.35,
+        "y": 1.5999999999999996
       },
       "isLocked": false,
-      "linkedName": "middle"
+      "linkedName": "note1.3"
     },
     {
       "anchor": {
-        "x": 2.5202357965343594,
-        "y": 4.461828723942754
+        "x": 7.8,
+        "y": 2.45
       },
       "prevControl": {
-        "x": 2.4495251184157047,
-        "y": 4.532539402061409
+        "x": 6.782980299198829,
+        "y": 1.955709703145511
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "note2.4"
     }
   ],
   "rotationTargets": [],
@@ -33,7 +33,7 @@
   "eventMarkers": [
     {
       "name": "Intake",
-      "waypointRelativePos": 0,
+      "waypointRelativePos": 0.45,
       "command": {
         "type": "parallel",
         "data": {
@@ -42,6 +42,23 @@
               "type": "named",
               "data": {
                 "name": "Intake"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Disable",
+      "waypointRelativePos": 0.3,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Disable"
               }
             }
           ]
@@ -56,8 +73,8 @@
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
-    "velocity": 0.0,
-    "rotation": 135.0,
+    "velocity": 0,
+    "rotation": 180.0,
     "rotateFast": true
   },
   "reversed": false,

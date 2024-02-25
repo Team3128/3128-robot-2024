@@ -145,6 +145,7 @@ public class Trajectories {
         return sequence(
             Intake.getInstance().intakePivot.reset(0),
             Climber.getInstance().reset(),
+            runOnce(()-> swerve.resetEncoders()),
             runOnce(()-> Intake.getInstance().isRetracting = false)
         );
         
