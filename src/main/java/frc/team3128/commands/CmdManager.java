@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.team3128.RobotContainer;
+import frc.team3128.Constants.IntakeConstants;
 import frc.team3128.Constants.ShooterConstants;
 import frc.team3128.subsystems.Climber;
 import frc.team3128.subsystems.Intake;
@@ -50,11 +51,11 @@ public class CmdManager {
 
     public static Command ampShoot() {
         return sequence (
-            intake.intakePivot.pivotTo(-75),
+            intake.intakePivot.pivotNoRequirements(-75),
             waitUntil(()-> intake.intakePivot.getMeasurement() < -55),
-            intake.intakeRollers.runNoRequirements(-0.2),
-            waitSeconds(0.1),
-            neutral(false)
+            intake.intakeRollers.runNoRequirements(IntakeConstants.AMP_POWER),
+            waitSeconds(0.25),
+            intake.retract(false)
         );
     }
 

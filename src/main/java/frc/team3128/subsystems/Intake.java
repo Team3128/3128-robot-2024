@@ -47,6 +47,10 @@ public class Intake {
             PIVOT_MOTOR.setUnitConversionFactor(360 * GEAR_RATIO);
             PIVOT_MOTOR.setNeutralMode(Neutral.COAST);
         }
+
+        public Command pivotNoRequirements(double setpoint) {
+            return new InstantCommand(()-> startPID(setpoint));
+        }
     }
 
     public class IntakeRollers extends ManipulatorTemplate {
@@ -70,6 +74,7 @@ public class Intake {
             ROLLER_MOTOR.setInverted(false);
             ROLLER_MOTOR.setNeutralMode(Neutral.BRAKE);
             ROLLER_MOTOR.setCurrentLimit(CURRENT_LIMIT);
+            ROLLER_MOTOR.enableVoltageCompensation(9);
         }
 
         public Command runNoRequirements(double power) {
@@ -118,12 +123,12 @@ public class Intake {
             runOnce(()-> isRetracting = true),
             waitUntil(()-> Climber.getInstance().isNeutral()),
             intakeRollers.runManipulator(shouldStall ? STALL_POWER : 0),
-            intakePivot.pivotTo(-5),
+            intakePivot.pivotTo(-10),
             waitUntil(() -> intakePivot.atSetpoint()),
-            intakePivot.runPivot(0.5),
+            intakePivot.runPivot(0.2),
             waitSeconds(0.1),
             intakePivot.runPivot(0),
-            waitSeconds(0.25),
+            waitSeconds(0.5),
             runOnce(()-> isRetracting = false),
             intakePivot.reset(0),
             runOnce(()-> Leds.getInstance().setDefaultColor())

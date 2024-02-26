@@ -159,7 +159,7 @@ public class Constants {
             new SwerveMotorConfig(new NAR_CANSpark(7, ControllerType.CAN_SPARK_FLEX), driveMotorConfig, drivePIDConfig),
             new SwerveMotorConfig(new NAR_CANSpark(8, ControllerType.CAN_SPARK_FLEX), angleMotorConfig, anglePIDConfig),
             13,
-            -120.76171875,
+            -140.009765625,
             canCoderInvert,
             maxSpeed);
 
@@ -189,7 +189,7 @@ public class Constants {
 
         public static final Matrix<N3,N1> SVR_STATE_STD = VecBuilder.fill(0.1,0.1,Units.degreesToRadians(3));
  
-        public static final Matrix<N3,N1> SVR_VISION_MEASUREMENT_STD = VecBuilder.fill(1,1,Units.degreesToRadians(10));
+        public static final Matrix<N3,N1> SVR_VISION_MEASUREMENT_STD = VecBuilder.fill(3,3,Units.degreesToRadians(10));
 
         public static final HashMap<Integer,Pose2d> APRIL_TAG_POS = new HashMap<Integer,Pose2d>();
 
@@ -295,7 +295,7 @@ public class Constants {
         public static final double MAX_RPM = 6250;
         public static final double MIN_RPM = 0;
         public static final double TOLERANCE = 100;
-        public static final double AMP_POWER = 0.4;
+        public static final double AMP_POWER = 0.30;
     }
 
     public static class ClimberConstants {
@@ -345,11 +345,12 @@ public class Constants {
         public static final int ROLLER_MOTOR_ID = 32;
         public static final NAR_CANSpark ROLLER_MOTOR = new NAR_CANSpark(ROLLER_MOTOR_ID);
         public static final double ANGLE_TOLERANCE = 1;
-        public static final int CURRENT_LIMIT = 80;
-        public static final double STALL_CURRENT = 50 * 2;
+        public static final int CURRENT_LIMIT = 20;
+        public static final double STALL_CURRENT = 200;
         public static final double STALL_POWER = 0.03;
-        public static final double OUTTAKE_POWER = -0.5;
-        public static final double INTAKE_POWER = 0.7;
+        public static final double OUTTAKE_POWER = -0.5 / 0.75;
+        public static final double INTAKE_POWER = 0.7 /0.75;
+        public static final double AMP_POWER = -0.18 / 0.75;
     }
 
     public static class LedConstants{
@@ -359,7 +360,7 @@ public class Constants {
         
         public static final int STARTING_ID = 8;
         public static final int PIVOT_COUNT = 200;
-        public static final int PIVOT_COUNT_FRONT = 50; //change
+        public static final int PIVOT_COUNT_FRONT = 40; //change
         public static final int PIVOT_COUNT_BACK = 50; //change
 
         public static final double HOLDING_SPEED = 2;
@@ -381,6 +382,7 @@ public class Constants {
             GREEN(0, 255, 0, false),
             ORANGE(255, 105, 0, false),
     
+            FLAME(0,0,0,true),
             AMP(0,0,0,true);
     
             public final int r;

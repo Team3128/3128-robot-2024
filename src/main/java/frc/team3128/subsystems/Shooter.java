@@ -49,7 +49,7 @@ public class Shooter extends NAR_PIDSubsystem {
 
     private void setPower(double power){
         disable();
-        leftMotor.set(power);
+        rightMotor.set(power);
     }
 
     @Override

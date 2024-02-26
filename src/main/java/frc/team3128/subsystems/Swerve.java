@@ -49,7 +49,7 @@ public class Swerve extends SwerveBase {
         yaw = gyro.getYaw().asSupplier();
         pitch = gyro.getPitch().asSupplier();
         roll = gyro.getRoll().asSupplier();
-        // initShuffleboard();
+        initShuffleboard();
         // NAR_Shuffleboard.addData("Testing", "Name", ()-> getDist(speakerMidpointRed), 0, 0);
         // NAR_Shuffleboard.addData("Auto", "Setpoint", ()-> TURN_CONTROLLER.atSetpoint());
         initStateCheck();

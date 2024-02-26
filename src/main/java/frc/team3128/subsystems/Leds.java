@@ -3,6 +3,7 @@ package frc.team3128.subsystems;
 import com.ctre.phoenix.led.CANdle;
 import com.ctre.phoenix.led.CANdle.LEDStripType;
 import com.ctre.phoenix.led.CANdleConfiguration;
+import com.ctre.phoenix.led.FireAnimation;
 import com.ctre.phoenix.led.RainbowAnimation;
 import com.ctre.phoenix.led.SingleFadeAnimation;
 
@@ -32,12 +33,14 @@ public class Leds extends SubsystemBase {
     private void configCandle() {
         CANdleConfiguration config = new CANdleConfiguration();
         config.stripType = LEDStripType.RGB;
+        config.statusLedOffWhenActive = true;
         config.brightnessScalar = 1;
         m_candle.configAllSettings(config);
     }
 
     public void setDefaultColor() {
-        setLedColor(Robot.getAlliance() == Alliance.Red ? Colors.RED : Colors.BLUE);
+        setLedColor(Colors.FLAME);
+        //setLedColor(Robot.getAlliance() == Alliance.Red ? Colors.RED : Colors.BLUE);
     }
 
     //Set Elevator Leds
@@ -47,6 +50,10 @@ public class Leds extends SubsystemBase {
             case AMP:
                 m_candle.animate(new RainbowAnimation(LedConstants.RainbowAnimation.BRIGHTNESS,LedConstants.RainbowAnimation.SPEED,LedConstants.PIVOT_COUNT_FRONT,false,LedConstants.STARTING_ID),0);
                 m_candle.animate(new RainbowAnimation(LedConstants.RainbowAnimation.BRIGHTNESS,LedConstants.RainbowAnimation.SPEED,LedConstants.PIVOT_COUNT_BACK,true,LedConstants.STARTING_ID+LedConstants.PIVOT_COUNT_FRONT),1);
+                break;
+            case FLAME:
+                m_candle.animate(new FireAnimation(LedConstants.RainbowAnimation.BRIGHTNESS,0.75,LedConstants.PIVOT_COUNT_FRONT,1,0.3),0);
+                m_candle.animate(new FireAnimation(LedConstants.RainbowAnimation.BRIGHTNESS,0.75,LedConstants.PIVOT_COUNT_FRONT,1,0.3, true, 55),1);
                 break;
             case PIECE:
             case ERROR:
