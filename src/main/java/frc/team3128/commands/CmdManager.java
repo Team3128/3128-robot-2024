@@ -1,7 +1,6 @@
 package frc.team3128.commands;
 
 import common.hardware.input.NAR_XboxController;
-import common.utility.shuffleboard.NAR_Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
@@ -16,11 +15,8 @@ import frc.team3128.subsystems.Swerve;
 import java.util.function.DoubleSupplier;
 
 import static edu.wpi.first.wpilibj2.command.Commands.*;
-import static frc.team3128.Constants.ShooterConstants.AMP_POWER;
-
 
 public class CmdManager {
-    
 
     private static Swerve swerve = Swerve.getInstance();
     private static Intake intake = Intake.getInstance();
@@ -99,7 +95,7 @@ public class CmdManager {
     public static Command rampUpAmp() {
         return sequence(
             climber.climbTo(Climber.Setpoint.AMP),
-            shooter.runBottomRollers(AMP_POWER)
+            shooter.runBottomRollers(ShooterConstants.AMP_POWER)
         );
     }
 

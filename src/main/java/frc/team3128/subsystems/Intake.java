@@ -61,7 +61,7 @@ public class Intake {
         public SetpointTest getPivotTest() {
             return new SetpointTest
             (
-                "intakePivotTest",
+                "testIntakePivot",
                 Setpoint.EXTENDED.angle,
                 SETPOINT_TEST_PLATEAU,
                 SETPOINT_TEST_TIMEOUT
@@ -144,6 +144,7 @@ public class Intake {
         intakeRollers = new IntakeRollers();
         NAR_Shuffleboard.addData("IsRetracting", "Boolean", ()-> isRetracting,0, 0);
         NarwhalDashboard.getInstance().checkState("Intake", ()-> getRunningState());
+        addIntakeTests();
     }
 
     public Command retract(boolean shouldStall) {
@@ -212,9 +213,8 @@ public class Intake {
     }
 
     public void addIntakeTests() {
-        Tester.getInstance().addTest("Intake", intakeRollers.getRollersTest());
         Tester.getInstance().addTest("Intake", intakePivot.getPivotTest());
+        Tester.getInstance().addTest("Intake", intakeRollers.getRollersTest());
         Tester.getInstance().addTest("Intake", getIntakeTest());
     }
-
 }

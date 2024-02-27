@@ -4,6 +4,8 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 
 import static frc.team3128.Constants.ClimberConstants.*;
+import static frc.team3128.Constants.IntakeConstants.SETPOINT_TEST_PLATEAU;
+import static frc.team3128.Constants.IntakeConstants.SETPOINT_TEST_TIMEOUT;
 
 import java.util.function.DoubleSupplier;
 
@@ -14,6 +16,8 @@ import common.hardware.motorcontroller.NAR_Motor.Neutral;
 import common.utility.narwhaldashboard.NarwhalDashboard;
 import common.utility.narwhaldashboard.NarwhalDashboard.State;
 import common.utility.shuffleboard.NAR_Shuffleboard;
+import common.utility.tester.Tester;
+import common.utility.tester.Tester.UnitTest;
 
 public class Climber extends NAR_PIDSubsystem {
 
@@ -40,6 +44,7 @@ public class Climber extends NAR_PIDSubsystem {
         setConstraints(POSITION_MINIMUM, POSITION_MAXIMUM);
         initShuffleboard();
         NarwhalDashboard.getInstance().checkState(getName(), ()-> getRunningState());
+        addClimberTests();
     }
     
     public static synchronized Climber getInstance(){
@@ -141,5 +146,17 @@ public class Climber extends NAR_PIDSubsystem {
             return State.PARTIALLY_RUNNING; 
         }
         return State.DISCONNECTED;
+    }
+
+    public UnitTest getClimberTest() {
+        return new UnitTest
+        (
+            "testClimber",
+            climbTo(Setpoint.EXTENDED).withTimeout(CLIMBER_TEST_TIMEOUT)
+        );
+    }
+
+    public void addClimberTests() {
+        Tester.getInstance().addTest("Climber", getClimberTest());
     }
 }

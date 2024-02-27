@@ -297,6 +297,14 @@ public class Constants {
         public static final double MIN_RPM = 0;
         public static final double TOLERANCE = 100;
         public static final double AMP_POWER = 0.30;
+
+        public static final double CURRENT_TEST_POWER = 0;
+        public static final double CURRENT_TEST_PLATEAU = 0;
+        public static final double CURRENT_TEST_TIMEOUT = 0;
+        public static final double CURRENT_TEST_TOLERANCE = 0;
+        public static final double CURRENT_TEST_EXPECTED_CURRENT = 0;
+
+        public static final double SHOOTER_TEST_TIMEOUT = 0;
     }
 
     public static class ClimberConstants {
@@ -330,6 +338,8 @@ public class Constants {
             climberHeightMap.put(2.75 + 0.93, 9.5);
             climberHeightMap.put(3.0 + 0.93, 9.5);
         }
+
+        public static final double CLIMBER_TEST_TIMEOUT = 0;
     }
 
     public static class IntakeConstants {

@@ -8,6 +8,9 @@ import common.hardware.motorcontroller.NAR_CANSpark.ControllerType;
 import common.hardware.motorcontroller.NAR_Motor.Neutral;
 import common.utility.narwhaldashboard.NarwhalDashboard;
 import common.utility.narwhaldashboard.NarwhalDashboard.State;
+import common.utility.tester.CurrentTest;
+import common.utility.tester.Tester;
+import common.utility.tester.Tester.UnitTest;
 import edu.wpi.first.wpilibj2.command.Command;
 
 import static frc.team3128.Constants.ShooterConstants.*;
@@ -26,6 +29,7 @@ public class Shooter extends NAR_PIDSubsystem {
         configMotors();
         initShuffleboard();
         NarwhalDashboard.getInstance().checkState(getName(), ()-> getRunningState());
+        addShooterTests();
     }
 
     public static synchronized Shooter getInstance(){
@@ -83,5 +87,47 @@ public class Shooter extends NAR_PIDSubsystem {
             return State.PARTIALLY_RUNNING; 
         }
         return State.DISCONNECTED;
+    }
+
+    public CurrentTest getLeftMotorTest() {
+        return new CurrentTest
+        (
+            "testLeftMotor", 
+            leftMotor, 
+            CURRENT_TEST_POWER, 
+            CURRENT_TEST_TIMEOUT,
+            CURRENT_TEST_PLATEAU,
+            CURRENT_TEST_EXPECTED_CURRENT,
+            CURRENT_TEST_TOLERANCE, 
+            this
+        );
+    }
+
+    public CurrentTest getRightMotorTest() {
+        return new CurrentTest
+        (
+            "testRightMotor", 
+            rightMotor, 
+            CURRENT_TEST_POWER, 
+            CURRENT_TEST_TIMEOUT,
+            CURRENT_TEST_PLATEAU,
+            CURRENT_TEST_EXPECTED_CURRENT,
+            CURRENT_TEST_TOLERANCE, 
+            this
+        );
+    }
+
+    public UnitTest getShooterTest() {
+        return new UnitTest
+        (
+            "testShooter",
+            shoot(MAX_RPM).withTimeout(SHOOTER_TEST_TIMEOUT)
+        );
+    }
+
+    public void addShooterTests() {
+        Tester.getInstance().addTest("Shooter", getLeftMotorTest());
+        Tester.getInstance().addTest("Shooter", getRightMotorTest());
+        Tester.getInstance().addTest("Shooter", getShooterTest());
     }
 }

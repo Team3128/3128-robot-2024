@@ -134,7 +134,6 @@ public class RobotContainer {
         rightStick.getButton(7).onTrue(new CmdSysId("Swerve", (Double volts)-> swerve.setVoltage(volts), ()-> swerve.getVelocity(), swerve)).onFalse(runOnce(()-> swerve.stop(), swerve));
         rightStick.getButton(8).onTrue(runOnce(()-> NAR_CANSpark.burnFlashAll()));
 
-
         buttonPad.getButton(1).onTrue(shooter.setShooter(-0.8)).onFalse(shooter.setShooter(0));
         buttonPad.getButton(2).onTrue(intake.intakePivot.runPivot(0.2)).onFalse(intake.intakePivot.runPivot(0));
         buttonPad.getButton(3).onTrue(climber.setClimber(-0.2)).onFalse(climber.setClimber(0));
