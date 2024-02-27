@@ -7,11 +7,17 @@ import common.hardware.motorcontroller.NAR_Motor.Neutral;
 import common.utility.narwhaldashboard.NarwhalDashboard;
 import common.utility.narwhaldashboard.NarwhalDashboard.State;
 import common.utility.shuffleboard.NAR_Shuffleboard;
+import common.utility.tester.CurrentTest;
+import common.utility.tester.Tester;
+import common.utility.tester.Tester.*;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.Unit;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DigitalSource;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team3128.Constants.LedConstants.Colors;
 import frc.team3128.commands.CmdManager;
 
@@ -50,6 +56,16 @@ public class Intake {
 
         public Command pivotNoRequirements(double setpoint) {
             return new InstantCommand(()-> startPID(setpoint));
+        }
+
+        public SetpointTest getPivotTest() {
+            return new SetpointTest
+            (
+                "intakePivotTest",
+                Setpoint.EXTENDED.angle,
+                SETPOINT_TEST_PLATEAU,
+                SETPOINT_TEST_TIMEOUT
+            );
         }
     }
 
@@ -92,6 +108,20 @@ public class Intake {
         @Override
         public boolean hasObjectPresent() {
             return !limitSwitch.get();
+        }
+
+        public CurrentTest getRollersTest() {
+            return new CurrentTest
+            (
+                "testRollers", 
+                ROLLER_MOTOR, 
+                CURRENT_TEST_POWER, 
+                CURRENT_TEST_TIMEOUT,
+                CURRENT_TEST_PLATEAU,
+                CURRENT_TEST_EXPECTED_CURRENT,
+                CURRENT_TEST_TOLERANCE, 
+                this
+            );
         }
     }
     
@@ -172,4 +202,19 @@ public class Intake {
         }
         return State.DISCONNECTED;
     }
+
+    public UnitTest getIntakeTest() {
+        return new UnitTest
+        (
+            "testIntakeExtend",
+            intake(Setpoint.EXTENDED).withTimeout(INTAKE_TEST_TIMEOUT)
+        );
+    }
+
+    public void addIntakeTests() {
+        Tester.getInstance().addTest("Intake", intakeRollers.getRollersTest());
+        Tester.getInstance().addTest("Intake", intakePivot.getPivotTest());
+        Tester.getInstance().addTest("Intake", getIntakeTest());
+    }
+
 }
