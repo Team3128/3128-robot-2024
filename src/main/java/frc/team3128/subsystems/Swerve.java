@@ -130,6 +130,14 @@ public class Swerve extends SwerveBase {
         ).beforeStarting(runOnce(()-> CmdSwerveDrive.disableTurn()));
     }
 
+    public boolean isConfigured() {
+        for (final SwerveModule module : modules) {
+            final double CANCoderAngle = module.getCanCoder().getDegrees();
+            if (CANCoderAngle == 0) return false;
+        }
+        return true;
+    }
+
     public Pigeon2 getGyro() {
         return gyro;
     }

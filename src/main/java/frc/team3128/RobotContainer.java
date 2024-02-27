@@ -175,7 +175,7 @@ public class RobotContainer {
         dashboard.checkState("climberState", ()-> climber.getRunningState());
         dashboard.checkState("shooterState", ()-> shooter.getRunningState());
 
-        if (NAR_CANSpark.getNumFailedConfigs() > 0) {
+        if (NAR_CANSpark.getNumFailedConfigs() > 0 || !swerve.isConfigured()) {
             Log.info("Colors", "Errors configuring: " + NAR_CANSpark.getNumFailedConfigs());
             Leds.getInstance().setLedColor(Colors.ERROR);
         }
