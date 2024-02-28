@@ -43,7 +43,6 @@ public class Climber extends NAR_PIDSubsystem {
         setTolerance(POSITION_TOLERANCE);
         setConstraints(POSITION_MINIMUM, POSITION_MAXIMUM);
         initShuffleboard();
-        NarwhalDashboard.getInstance().checkState(getName(), ()-> getRunningState());
         addClimberTests();
     }
     
@@ -57,8 +56,12 @@ public class Climber extends NAR_PIDSubsystem {
     @Override
     public void initShuffleboard() {
         super.initShuffleboard();
-        NAR_Shuffleboard.addData("Climber", "angle", ()-> getAngle(), 4, 0);
+        // NAR_Shuffleboard.addData("Climber", "angle", ()-> getAngle(), 4, 0);
         NAR_Shuffleboard.addSendable("Commands", "Climber", this, 0, 1);
+        NAR_Shuffleboard.addSendable("Commands", "Shooter", Shooter.getInstance(), 0, 2);
+        NAR_Shuffleboard.addSendable("Commands", "IntakePivot", Intake.getInstance().intakePivot, 0, 3);
+        NAR_Shuffleboard.addSendable("Commands", "IntakeRollers", Intake.getInstance().intakeRollers, 0, 4);
+
     }
     
     private void configMotors() {
@@ -148,15 +151,29 @@ public class Climber extends NAR_PIDSubsystem {
         return State.DISCONNECTED;
     }
 
-    public UnitTest getClimberTest() {
-        return new UnitTest
+    public UnitTest getClimberTestExtend() {
+        return new SetpointTest
         (
             "testClimber",
-            climbTo(Setpoint.EXTENDED).withTimeout(CLIMBER_TEST_TIMEOUT)
+            Setpoint.EXTENDED.setpoint,
+            0.02,
+            100
+        );
+    }
+
+    public UnitTest getClimberTestRetract() {
+        return new SetpointTest
+        (
+            "testClimber",
+            0,
+            0.02,
+            100
         );
     }
 
     public void addClimberTests() {
-        Tester.getInstance().addTest("Climber", getClimberTest());
+        Tester.getInstance().addTest("Climber", getClimberTestExtend());
+        Tester.getInstance().addTest("Climber", getClimberTestRetract());
+        Tester.getInstance().getTest("Climber").setTimeBetweenTests(1);
     }
 }

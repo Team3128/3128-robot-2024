@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import static edu.wpi.first.wpilibj2.command.Commands.*;
 
+import frc.team3128.Constants.LedConstants.Colors;
 import frc.team3128.autonomous.AutoPrograms;
 import frc.team3128.subsystems.Leds;
 import frc.team3128.subsystems.Swerve;
@@ -27,6 +28,8 @@ import frc.team3128.subsystems.Swerve;
  * each mode, as described in the TimedRobot documentation.
  */
 public class Robot extends NAR_Robot {
+
+    private boolean hasInitialized = false;
 
     public static Alliance alliance;
 
@@ -116,10 +119,16 @@ public class Robot extends NAR_Robot {
             waitSeconds(3.0).ignoringDisable(true),
             runOnce(()->Swerve.getInstance().setBrakeMode(false)).ignoringDisable(true)
         ).schedule();
+
+        if (hasInitialized) {
+            Leds.getInstance().setLedColor(Colors.AMP);
+        }
+        hasInitialized = true;
     }
 
     @Override
     public void disabledExit() {
+        Leds.getInstance().setDefaultColor();
         Swerve.getInstance().setBrakeMode(false);
     }
     

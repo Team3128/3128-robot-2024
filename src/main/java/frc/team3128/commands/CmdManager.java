@@ -47,7 +47,7 @@ public class CmdManager {
 
     public static Command ampShoot() {
         return sequence (
-            intake.intakePivot.pivotNoRequirements(-75),
+            intake.intakePivot.pivotNoRequirements(-72.5),
             waitUntil(()-> intake.intakePivot.getMeasurement() < -55),
             intake.intakeRollers.runNoRequirements(IntakeConstants.AMP_POWER),
             waitSeconds(0.25),

@@ -28,7 +28,6 @@ public class Shooter extends NAR_PIDSubsystem {
         setTolerance(TOLERANCE);
         configMotors();
         initShuffleboard();
-        NarwhalDashboard.getInstance().checkState(getName(), ()-> getRunningState());
         addShooterTests();
     }
 
@@ -83,9 +82,6 @@ public class Shooter extends NAR_PIDSubsystem {
         if (rightMotor.getState() != State.DISCONNECTED && leftMotor.getState() != State.DISCONNECTED) {
             return State.RUNNING; 
         }
-        if (rightMotor.getState() != State.DISCONNECTED) {
-            return State.PARTIALLY_RUNNING; 
-        }
         return State.DISCONNECTED;
     }
 
@@ -118,16 +114,18 @@ public class Shooter extends NAR_PIDSubsystem {
     }
 
     public UnitTest getShooterTest() {
-        return new UnitTest
+        return new SetpointTest
         (
             "testShooter",
-            shoot(MAX_RPM).withTimeout(SHOOTER_TEST_TIMEOUT)
+            MAX_RPM,
+            SHOOTER_TEST_PLATEAU,
+            SHOOTER_TEST_TIMEOUT
         );
     }
 
     public void addShooterTests() {
-        Tester.getInstance().addTest("Shooter", getLeftMotorTest());
-        Tester.getInstance().addTest("Shooter", getRightMotorTest());
+        // Tester.getInstance().addTest("Shooter", getLeftMotorTest());
+        // Tester.getInstance().addTest("Shooter", getRightMotorTest());
         Tester.getInstance().addTest("Shooter", getShooterTest());
     }
 }

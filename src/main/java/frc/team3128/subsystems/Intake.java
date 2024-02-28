@@ -142,9 +142,7 @@ public class Intake {
     private Intake(){
         intakePivot = new IntakePivot();
         intakeRollers = new IntakeRollers();
-        NAR_Shuffleboard.addData("IsRetracting", "Boolean", ()-> isRetracting,0, 0);
-        NarwhalDashboard.getInstance().checkState("Intake", ()-> getRunningState());
-        addIntakeTests();
+        // NAR_Shuffleboard.addData("IsRetracting", "Boolean", ()-> isRetracting,0, 0);
     }
 
     public Command retract(boolean shouldStall) {
@@ -198,9 +196,6 @@ public class Intake {
         if (ROLLER_MOTOR.getState() != State.DISCONNECTED && PIVOT_MOTOR.getState() != State.DISCONNECTED) {
             return State.RUNNING; 
         }
-        if (ROLLER_MOTOR.getState() != State.DISCONNECTED || PIVOT_MOTOR.getState() != State.DISCONNECTED) {
-            return State.PARTIALLY_RUNNING; 
-        }
         return State.DISCONNECTED;
     }
 
@@ -213,8 +208,9 @@ public class Intake {
     }
 
     public void addIntakeTests() {
-        Tester.getInstance().addTest("Intake", intakePivot.getPivotTest());
         Tester.getInstance().addTest("Intake", intakeRollers.getRollersTest());
+        Tester.getInstance().addTest("Intake", intakePivot.getPivotTest());
         Tester.getInstance().addTest("Intake", getIntakeTest());
+        Tester.getInstance().getTest("Intake").setTimeBetweenTests(1);
     }
 }

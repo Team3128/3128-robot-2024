@@ -304,7 +304,8 @@ public class Constants {
         public static final double CURRENT_TEST_TOLERANCE = 0;
         public static final double CURRENT_TEST_EXPECTED_CURRENT = 0;
 
-        public static final double SHOOTER_TEST_TIMEOUT = 0;
+        public static final double SHOOTER_TEST_PLATEAU = 1;
+        public static final double SHOOTER_TEST_TIMEOUT = 100;
     }
 
     public static class ClimberConstants {
@@ -356,23 +357,23 @@ public class Constants {
         public static final int ROLLER_MOTOR_ID = 32;
         public static final NAR_CANSpark ROLLER_MOTOR = new NAR_CANSpark(ROLLER_MOTOR_ID);
         public static final double ANGLE_TOLERANCE = 1;
-        public static final int CURRENT_LIMIT = 20;
+        public static final int CURRENT_LIMIT = 40;
         public static final double STALL_CURRENT = 200;
         public static final double STALL_POWER = 0.03;
         public static final double OUTTAKE_POWER = -0.5 / 0.75;
         public static final double INTAKE_POWER = 0.7 /0.75;
         public static final double AMP_POWER = -0.18 / 0.75;
 
-        public static final double CURRENT_TEST_POWER = 0;
-        public static final double CURRENT_TEST_PLATEAU = 0;
-        public static final double CURRENT_TEST_TIMEOUT = 0;
-        public static final double CURRENT_TEST_TOLERANCE = 0;
+        public static final double CURRENT_TEST_POWER = OUTTAKE_POWER;
+        public static final double CURRENT_TEST_PLATEAU = 1;
+        public static final double CURRENT_TEST_TIMEOUT = 5;
+        public static final double CURRENT_TEST_TOLERANCE = 0.5;
         public static final double CURRENT_TEST_EXPECTED_CURRENT = 0;
 
-        public static final double SETPOINT_TEST_PLATEAU = 0;
-        public static final double SETPOINT_TEST_TIMEOUT = 0;
+        public static final double SETPOINT_TEST_PLATEAU = 1;
+        public static final double SETPOINT_TEST_TIMEOUT = 100;
 
-        public static final double INTAKE_TEST_TIMEOUT = 0;
+        public static final double INTAKE_TEST_TIMEOUT = 30;
     }
 
     public static class LedConstants{
