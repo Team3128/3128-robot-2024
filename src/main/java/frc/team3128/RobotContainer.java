@@ -32,6 +32,8 @@ import common.utility.Log;
 import common.utility.narwhaldashboard.NarwhalDashboard;
 import common.utility.shuffleboard.NAR_Shuffleboard;
 import common.utility.sysid.CmdSysId;
+import common.utility.tester.Tester;
+import common.utility.tester.Tester.UnitTest;
 import frc.team3128.subsystems.Climber;
 import frc.team3128.subsystems.Intake;
 import frc.team3128.subsystems.Leds;
@@ -60,6 +62,7 @@ public class RobotContainer {
     private NarwhalDashboard dashboard;
 
     public RobotContainer() {
+        NAR_CANSpark.maximumRetries = 3;
         NAR_Robot.logWithAdvantageKit = true;
         NAR_Shuffleboard.WINDOW_WIDTH = 10;
 
@@ -68,6 +71,11 @@ public class RobotContainer {
         climber = Climber.getInstance();
         intake = Intake.getInstance();
         leds = Leds.getInstance();
+
+        shooter.addShooterTests();
+        climber.addClimberTests();
+        intake.addIntakeTests();
+        
 
         rightStick = new NAR_Joystick(1);
         controller = new NAR_XboxController(2);
@@ -79,6 +87,7 @@ public class RobotContainer {
         
         DriverStation.silenceJoystickConnectionWarning(true);
         initCameras();
+        initRobotTest();
     }   
 
     private void configureButtonBindings() {
@@ -90,7 +99,7 @@ public class RobotContainer {
         controller.getButton(XboxButton.kX).onTrue(intake.intakePivot.pivotTo(-55)).onFalse(ampShoot()); //Amp Shot
 
         controller.getButton(XboxButton.kA).onTrue(sequence(intake.intakePivot.pivotTo(-150), climber.climbTo(Climber.Setpoint.EXTENDED))); //Extend Climber
-        controller.getButton(XboxButton.kBack).onTrue(sequence(climber.setClimber(-0.25), waitSeconds(1), climber.setClimber(-0.75), waitUntil(()->climber.isClimbed()), climber.setClimber(0)));   //Retract Climber
+        controller.getButton(XboxButton.kBack).onTrue(sequence(climber.setClimber(-0.25), waitSeconds(1), climber.setClimber(-1), waitUntil(()->climber.isClimbed()), climber.setClimber(0)));   //Retract Climber
 
         controller.getButton(XboxButton.kLeftTrigger).onTrue(intake.intake(Intake.Setpoint.EXTENDED));  //Extend Intake
         controller.getButton(XboxButton.kLeftBumper).onTrue(intake.retract(false));         //Retract Intake
@@ -170,9 +179,9 @@ public class RobotContainer {
         dashboard.addUpdate("robotX", ()-> swerve.getPose().getX());
         dashboard.addUpdate("robotY", ()-> swerve.getPose().getY());
         dashboard.addUpdate("robotYaw", ()-> swerve.getPose().getRotation().getDegrees());
-        dashboard.checkState("intakeState", ()-> intake.getRunningState());
-        dashboard.checkState("climberState", ()-> climber.getRunningState());
-        dashboard.checkState("shooterState", ()-> shooter.getRunningState());
+        dashboard.checkState("IntakeState", ()-> intake.getRunningState());
+        dashboard.checkState("ClimberState", ()-> climber.getRunningState());
+        dashboard.checkState("ShooterState", ()-> shooter.getRunningState());
 
         if (NAR_CANSpark.getNumFailedConfigs() > 0 || !swerve.isConfigured()) {
             Log.info("Colors", "Errors configuring: " + NAR_CANSpark.getNumFailedConfigs());
@@ -182,5 +191,14 @@ public class RobotContainer {
             Log.info("Colors", "Errors configuring: " + NAR_CANSpark.getNumFailedConfigs());
             Leds.getInstance().setLedColor(Colors.CONFIGURED);
         }
+    }
+
+    private void initRobotTest() {
+        Tester tester = Tester.getInstance();
+        tester.addTest("Robot", tester.getTest("Intake"));
+        tester.addTest("Robot", tester.getTest("Shooter"));
+        tester.addTest("Robot", tester.getTest("Climber"));
+        tester.addTest("Robot", new UnitTest("Shoot", shoot(2500, 25)));
+        tester.getTest("Robot").setTimeBetweenTests(1);
     }
 }
