@@ -24,7 +24,6 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.team3128.subsystems.Swerve;
-import frc.team3128.subsystems.Climber.Setpoint;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
@@ -367,8 +366,8 @@ public class Constants {
         public static final double CURRENT_TEST_POWER = OUTTAKE_POWER;
         public static final double CURRENT_TEST_PLATEAU = 1;
         public static final double CURRENT_TEST_TIMEOUT = 5;
-        public static final double CURRENT_TEST_TOLERANCE = 0.5;
-        public static final double CURRENT_TEST_EXPECTED_CURRENT = 0;
+        public static final double CURRENT_TEST_TOLERANCE = 5;
+        public static final double CURRENT_TEST_EXPECTED_CURRENT = 13;
 
         public static final double SETPOINT_TEST_PLATEAU = 1;
         public static final double SETPOINT_TEST_TIMEOUT = 100;

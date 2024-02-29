@@ -1,9 +1,6 @@
 package frc.team3128;
 
 import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -11,20 +8,16 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import static edu.wpi.first.wpilibj2.command.Commands.*;
-import static frc.team3128.Constants.FieldConstants.FIELD_X_LENGTH;
 import static frc.team3128.commands.CmdManager.*;
 
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
-import frc.team3128.Constants.FocalAimConstants;
-import frc.team3128.Constants.IntakeConstants;
 import frc.team3128.Constants.ShooterConstants;
 import frc.team3128.Constants.LedConstants.Colors;
 import frc.team3128.commands.CmdSwerveDrive;
 import common.core.misc.NAR_Robot;
 import common.hardware.camera.Camera;
 import common.hardware.input.NAR_ButtonBoard;
-import common.hardware.input.NAR_Joystick;
 import common.hardware.input.NAR_XboxController;
 import common.hardware.input.NAR_XboxController.XboxButton;
 import common.hardware.motorcontroller.NAR_CANSpark;
@@ -32,6 +25,8 @@ import common.utility.Log;
 import common.utility.narwhaldashboard.NarwhalDashboard;
 import common.utility.shuffleboard.NAR_Shuffleboard;
 import common.utility.sysid.CmdSysId;
+import common.utility.tester.Tester;
+import common.utility.tester.Tester.UnitTest;
 import frc.team3128.subsystems.Climber;
 import frc.team3128.subsystems.Intake;
 import frc.team3128.subsystems.Leds;
@@ -52,7 +47,7 @@ public class RobotContainer {
     private Intake intake;
     private Leds leds;
 
-    private NAR_Joystick rightStick;
+    // private NAR_Joystick rightStick;
     private NAR_ButtonBoard buttonPad;
 
     public static NAR_XboxController controller;
@@ -60,6 +55,8 @@ public class RobotContainer {
     private NarwhalDashboard dashboard;
 
     public RobotContainer() {
+        NAR_CANSpark.maximumRetries = 3;
+
         NAR_Robot.logWithAdvantageKit = true;
         NAR_Shuffleboard.WINDOW_WIDTH = 10;
 
@@ -69,13 +66,19 @@ public class RobotContainer {
         intake = Intake.getInstance();
         leds = Leds.getInstance();
 
-        rightStick = new NAR_Joystick(1);
+        shooter.addShooterTests();
+        climber.addClimberTests();
+        intake.addIntakeTests();
+
+        // rightStick = new NAR_Joystick(1);
         controller = new NAR_XboxController(2);
         buttonPad = new NAR_ButtonBoard(3);
 
         //uncomment line below to enable driving
         CommandScheduler.getInstance().setDefaultCommand(swerve, new CmdSwerveDrive(controller::getLeftX,controller::getLeftY, controller::getRightX, true));
         configureButtonBindings();
+
+        initRobotTest();
         
         DriverStation.silenceJoystickConnectionWarning(true);
         initCameras();
@@ -113,11 +116,11 @@ public class RobotContainer {
             CmdSwerveDrive.setTurnSetpoint(Robot.getAlliance() == Alliance.Red ? 270 : 90);
         }));
 
-        rightStick.getButton(1).onTrue(runOnce(()-> swerve.zeroGyro(0)));
-        rightStick.getButton(3).onTrue(new CmdSysId("Rotation", (Double radiansPerSec) -> swerve.drive(new Translation2d(), radiansPerSec, true), ()-> Units.radiansToDegrees(swerve.getRobotVelocity().omegaRadiansPerSecond), swerve));
-        rightStick.getButton(4).onTrue(runOnce(()-> swerve.resetOdometry(new Pose2d(1.35, FocalAimConstants.speakerMidpointY, Rotation2d.fromDegrees(180)))));
-        rightStick.getButton(5).onTrue(runOnce(()-> swerve.resetOdometry(new Pose2d(FIELD_X_LENGTH - 1.35, FocalAimConstants.speakerMidpointY, Rotation2d.fromDegrees(0)))));
-        rightStick.getButton(6).onTrue(swerve.turnInPlace(()-> 0)); 
+        // rightStick.getButton(1).onTrue(runOnce(()-> swerve.zeroGyro(0)));
+        // rightStick.getButton(3).onTrue(new CmdSysId("Rotation", (Double radiansPerSec) -> swerve.drive(new Translation2d(), radiansPerSec, true), ()-> Units.radiansToDegrees(swerve.getRobotVelocity().omegaRadiansPerSecond), swerve));
+        // rightStick.getButton(4).onTrue(runOnce(()-> swerve.resetOdometry(new Pose2d(1.35, FocalAimConstants.speakerMidpointY, Rotation2d.fromDegrees(180)))));
+        // rightStick.getButton(5).onTrue(runOnce(()-> swerve.resetOdometry(new Pose2d(FIELD_X_LENGTH - 1.35, FocalAimConstants.speakerMidpointY, Rotation2d.fromDegrees(0)))));
+        // rightStick.getButton(6).onTrue(swerve.turnInPlace(()-> 0)); 
         
         // rightStick.getButton(2).onTrue(shooter.setShooter(0.8)).onFalse(shooter.setShooter(0));
         // rightStick.getButton(3).onTrue(shooter.shoot(0));
@@ -131,8 +134,8 @@ public class RobotContainer {
         // rightStick.getButton(11).onTrue(intake.reset());
         // rightStick.getButton(12).onTrue(intake.setRoller(0.5)).onFalse(intake.setRoller(0));
         // rightStick.getButton(13).onTrue(intake.setRoller(IntakeConstants.OUTTAKE_POWER)).onFalse(intake.setRoller(0));
-        rightStick.getButton(7).onTrue(new CmdSysId("Swerve", (Double volts)-> swerve.setVoltage(volts), ()-> swerve.getVelocity(), swerve)).onFalse(runOnce(()-> swerve.stop(), swerve));
-        rightStick.getButton(8).onTrue(runOnce(()-> NAR_CANSpark.burnFlashAll()));
+        // rightStick.getButton(7).onTrue(new CmdSysId("Swerve", (Double volts)-> swerve.setVoltage(volts), ()-> swerve.getVelocity(), swerve)).onFalse(runOnce(()-> swerve.stop(), swerve));
+        // rightStick.getButton(8).onTrue(runOnce(()-> NAR_CANSpark.burnFlashAll()));
 
         buttonPad.getButton(1).onTrue(shooter.setShooter(-0.8)).onFalse(shooter.setShooter(0));
         buttonPad.getButton(2).onTrue(intake.intakePivot.runPivot(0.2)).onFalse(intake.intakePivot.runPivot(0));
@@ -150,8 +153,8 @@ public class RobotContainer {
 
         buttonPad.getButton(13).onTrue(neutral(false));
         buttonPad.getButton(14).onTrue(runOnce(()-> swerve.zeroGyro(0)));
-        buttonPad.getButton(15).onTrue(intake.intakeRollers.runManipulator(IntakeConstants.INTAKE_POWER)).onFalse(intake.intakeRollers.runManipulator(0));
-        buttonPad.getButton(16).onTrue(intake.intakeRollers.runManipulator(IntakeConstants.OUTTAKE_POWER)).onFalse(intake.intakeRollers.runManipulator(0));
+        buttonPad.getButton(15).onTrue(intake.intakeRollers.miniOuttake());
+        buttonPad.getButton(16).onTrue(intake.outtake());
     }
 
     @SuppressWarnings("unused")
@@ -170,9 +173,9 @@ public class RobotContainer {
         dashboard.addUpdate("robotX", ()-> swerve.getPose().getX());
         dashboard.addUpdate("robotY", ()-> swerve.getPose().getY());
         dashboard.addUpdate("robotYaw", ()-> swerve.getPose().getRotation().getDegrees());
-        dashboard.checkState("intakeState", ()-> intake.getRunningState());
-        dashboard.checkState("climberState", ()-> climber.getRunningState());
-        dashboard.checkState("shooterState", ()-> shooter.getRunningState());
+        dashboard.checkState("IntakeState", ()-> intake.getRunningState());
+        dashboard.checkState("ClimberState", ()-> climber.getRunningState());
+        dashboard.checkState("ShooterState", ()-> shooter.getRunningState());
 
         if (NAR_CANSpark.getNumFailedConfigs() > 0 || !swerve.isConfigured()) {
             Log.info("Colors", "Errors configuring: " + NAR_CANSpark.getNumFailedConfigs());
@@ -182,5 +185,14 @@ public class RobotContainer {
             Log.info("Colors", "Errors configuring: " + NAR_CANSpark.getNumFailedConfigs());
             Leds.getInstance().setLedColor(Colors.CONFIGURED);
         }
+    }
+
+    private void initRobotTest() {
+        Tester tester = Tester.getInstance();
+        tester.addTest("Robot", tester.getTest("Intake"));
+        tester.addTest("Robot", tester.getTest("Shooter"));
+        tester.addTest("Robot", tester.getTest("Climber"));
+        tester.addTest("Robot", new UnitTest("Shoot", shoot(2500, 25)));
+        tester.getTest("Robot").setTimeBetweenTests(1);
     }
 }

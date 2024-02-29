@@ -4,20 +4,14 @@ import common.core.controllers.TrapController;
 import common.core.subsystems.ManipulatorTemplate;
 import common.core.subsystems.PivotTemplate;
 import common.hardware.motorcontroller.NAR_Motor.Neutral;
-import common.utility.narwhaldashboard.NarwhalDashboard;
 import common.utility.narwhaldashboard.NarwhalDashboard.State;
-import common.utility.shuffleboard.NAR_Shuffleboard;
 import common.utility.tester.CurrentTest;
 import common.utility.tester.Tester;
 import common.utility.tester.Tester.*;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.units.Unit;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.DigitalSource;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.Subsystem;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team3128.Constants.LedConstants.Colors;
 import frc.team3128.commands.CmdManager;
 
@@ -105,6 +99,14 @@ public class Intake {
             return runNoRequirements(INTAKE_POWER);
         }
 
+        public Command miniOuttake() {
+            return sequence(
+                runManipulator(-0.2),
+                waitSeconds(0.5),
+                runManipulator(0)
+            );
+        }
+
         @Override
         public boolean hasObjectPresent() {
             return !limitSwitch.get();
@@ -171,6 +173,16 @@ public class Intake {
             intakePivot.pivotTo(setpoint.angle),
             intakeRollers.intake(),
             retract(true)
+        );
+    }
+
+    public Command outtake() {
+        return sequence (
+            intakePivot.pivotTo(Setpoint.EXTENDED.angle),
+            waitUntil(()-> intakePivot.atSetpoint()),
+            intakeRollers.outtake(),
+            waitSeconds(0.5),
+            retract(false)
         );
     }
 

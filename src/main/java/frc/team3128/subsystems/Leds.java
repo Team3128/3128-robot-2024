@@ -7,9 +7,7 @@ import com.ctre.phoenix.led.FireAnimation;
 import com.ctre.phoenix.led.RainbowAnimation;
 import com.ctre.phoenix.led.SingleFadeAnimation;
 
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.team3128.Robot;
 import frc.team3128.Constants.LedConstants;
 import frc.team3128.Constants.LedConstants.Colors;;
 
@@ -52,8 +50,8 @@ public class Leds extends SubsystemBase {
                 m_candle.animate(new RainbowAnimation(LedConstants.RainbowAnimation.BRIGHTNESS,LedConstants.RainbowAnimation.SPEED,LedConstants.PIVOT_COUNT_BACK,true,LedConstants.STARTING_ID+LedConstants.PIVOT_COUNT_FRONT),1);
                 break;
             case FLAME:
-                m_candle.animate(new FireAnimation(LedConstants.RainbowAnimation.BRIGHTNESS,0.75,LedConstants.PIVOT_COUNT_FRONT - 5,1,0.3),0);
-                m_candle.animate(new FireAnimation(LedConstants.RainbowAnimation.BRIGHTNESS,0.75,LedConstants.PIVOT_COUNT_FRONT - 10,1,0.3, true, 55),1);
+                m_candle.animate(new FireAnimation(LedConstants.RainbowAnimation.BRIGHTNESS,0.75,LedConstants.PIVOT_COUNT_FRONT - 10,1,0.3, false, 5),0);
+                m_candle.animate(new FireAnimation(LedConstants.RainbowAnimation.BRIGHTNESS,0.75,LedConstants.PIVOT_COUNT_FRONT - 10,1,0.3, true, 55 + 5),1);
                 break;
             case PIECE:
             case ERROR:

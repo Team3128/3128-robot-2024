@@ -4,16 +4,12 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 
 import static frc.team3128.Constants.ClimberConstants.*;
-import static frc.team3128.Constants.IntakeConstants.SETPOINT_TEST_PLATEAU;
-import static frc.team3128.Constants.IntakeConstants.SETPOINT_TEST_TIMEOUT;
-
 import java.util.function.DoubleSupplier;
 
 import common.core.controllers.TrapController;
 import common.core.subsystems.NAR_PIDSubsystem;
 import common.hardware.motorcontroller.NAR_CANSpark;
 import common.hardware.motorcontroller.NAR_Motor.Neutral;
-import common.utility.narwhaldashboard.NarwhalDashboard;
 import common.utility.narwhaldashboard.NarwhalDashboard.State;
 import common.utility.shuffleboard.NAR_Shuffleboard;
 import common.utility.tester.Tester;

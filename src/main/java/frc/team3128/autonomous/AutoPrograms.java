@@ -24,7 +24,7 @@ public class AutoPrograms {
         final String[] autoStrings = new String[] {
             "bottom_2note",
             "bottom_3note_mid",
-            "bottom_3.5note",
+            "bottomRush_4note",
             "bottom_4note",
             "leave",
             "middle_2note",

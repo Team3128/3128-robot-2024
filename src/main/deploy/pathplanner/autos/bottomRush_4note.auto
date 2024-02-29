@@ -52,6 +52,18 @@
           "data": {
             "pathName": "bottom-note2.5"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "note2.5-bottom"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
         }
       ]
     }
