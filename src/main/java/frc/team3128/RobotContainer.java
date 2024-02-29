@@ -96,7 +96,7 @@ public class RobotContainer {
         controller.getButton(XboxButton.kBack).onTrue(sequence(climber.setClimber(-0.25), waitSeconds(1), climber.setClimber(-0.75), waitUntil(()->climber.isClimbed()), climber.setClimber(0)));   //Retract Climber
 
         controller.getButton(XboxButton.kLeftTrigger).onTrue(intake.intake(Intake.Setpoint.EXTENDED));  //Extend Intake
-        controller.getButton(XboxButton.kLeftBumper).onTrue(intake.retract(false));         //Retract Intake
+        controller.getButton(XboxButton.kLeftBumper).onTrue(intake.retractAuto());         //Retract Intake
 
         controller.getButton(XboxButton.kStart).onTrue(startEnd(()-> leds.setLedColor(Colors.AMP), ()-> leds.setDefaultColor()).withTimeout(1)); //Amp LED
 
