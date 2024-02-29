@@ -367,8 +367,8 @@ public class Constants {
         public static final double CURRENT_TEST_POWER = OUTTAKE_POWER;
         public static final double CURRENT_TEST_PLATEAU = 1;
         public static final double CURRENT_TEST_TIMEOUT = 5;
-        public static final double CURRENT_TEST_TOLERANCE = 1.5;
-        public static final double CURRENT_TEST_EXPECTED_CURRENT = 13;
+        public static final double CURRENT_TEST_TOLERANCE = 0.5;
+        public static final double CURRENT_TEST_EXPECTED_CURRENT = 0;
 
         public static final double SETPOINT_TEST_PLATEAU = 1;
         public static final double SETPOINT_TEST_TIMEOUT = 100;

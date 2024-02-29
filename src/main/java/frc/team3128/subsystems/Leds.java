@@ -53,7 +53,7 @@ public class Leds extends SubsystemBase {
                 break;
             case FLAME:
                 m_candle.animate(new FireAnimation(LedConstants.RainbowAnimation.BRIGHTNESS,0.75,LedConstants.PIVOT_COUNT_FRONT - 5,1,0.3),0);
-                m_candle.animate(new FireAnimation(LedConstants.RainbowAnimation.BRIGHTNESS,0.75,LedConstants.PIVOT_COUNT_FRONT - 10,1,0.3, true, 55 + 5),1);
+                m_candle.animate(new FireAnimation(LedConstants.RainbowAnimation.BRIGHTNESS,0.75,LedConstants.PIVOT_COUNT_FRONT - 10,1,0.3, true, 55),1);
                 break;
             case PIECE:
             case ERROR:
