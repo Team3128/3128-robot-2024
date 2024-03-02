@@ -27,7 +27,6 @@ public class Shooter extends NAR_PIDSubsystem {
         setTolerance(TOLERANCE);
         configMotors();
         initShuffleboard();
-        addShooterTests();
     }
 
     public static synchronized Shooter getInstance(){

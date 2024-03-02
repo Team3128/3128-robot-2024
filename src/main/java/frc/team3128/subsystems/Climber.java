@@ -4,6 +4,9 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 
 import static frc.team3128.Constants.ClimberConstants.*;
+import static frc.team3128.Constants.ClimberConstants.SETPOINT_TEST_TIMEOUT_EXTEND;
+import static frc.team3128.Constants.ClimberConstants.SETPOINT_TEST_TIMEOUT_RETRACT;
+
 import java.util.function.DoubleSupplier;
 
 import common.core.controllers.TrapController;
@@ -39,7 +42,6 @@ public class Climber extends NAR_PIDSubsystem {
         setTolerance(POSITION_TOLERANCE);
         setConstraints(POSITION_MINIMUM, POSITION_MAXIMUM);
         initShuffleboard();
-        addClimberTests();
     }
     
     public static synchronized Climber getInstance(){
@@ -99,7 +101,7 @@ public class Climber extends NAR_PIDSubsystem {
     }
 
     public double interpolate(double dist){
-        return 25 * Math.pow(dist, -0.911);
+        return 25 * Math.pow(dist, -0.75);
         // return 45.1 - 27 * dist + 6.86 * Math.pow(dist, 2) - 0.621 * Math.pow(dist, 3);
     }
 
@@ -153,7 +155,7 @@ public class Climber extends NAR_PIDSubsystem {
             "testClimber",
             Setpoint.EXTENDED.setpoint,
             0.02,
-            100
+            SETPOINT_TEST_TIMEOUT_EXTEND
         );
     }
 
@@ -163,7 +165,7 @@ public class Climber extends NAR_PIDSubsystem {
             "testClimber",
             0,
             0.02,
-            100
+            SETPOINT_TEST_TIMEOUT_RETRACT
         );
     }
 

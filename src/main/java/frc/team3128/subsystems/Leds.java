@@ -56,7 +56,7 @@ public class Leds extends SubsystemBase {
             case PIECE:
             case ERROR:
                 resetAnimationSlot(1,1);
-                m_candle.animate(new SingleFadeAnimation(color.r, color.g, color.b,LedConstants.WHITE_VALUE,LedConstants.HOLDING_SPEED,LedConstants.PIVOT_COUNT),0);
+                m_candle.animate(new SingleFadeAnimation(color.r, color.g, color.b,LedConstants.WHITE_VALUE,LedConstants.HOLDING_SPEED,LedConstants.PIVOT_COUNT), 0);
                 break;
             default:
                 resetAnimationSlot(2);

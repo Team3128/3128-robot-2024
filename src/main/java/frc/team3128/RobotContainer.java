@@ -32,6 +32,7 @@ import frc.team3128.subsystems.Intake;
 import frc.team3128.subsystems.Leds;
 import frc.team3128.subsystems.Shooter;
 import frc.team3128.subsystems.Swerve;
+import java.util.LinkedList;
 
 /**
  * Command-based is a "declarative" paradigm, very little robot logic should
@@ -92,11 +93,11 @@ public class RobotContainer {
         controller.getButton(XboxButton.kY).onTrue(rampUp(5000, 15)).onFalse(feed(5000, 15,155));   //Feed Shot
         controller.getButton(XboxButton.kX).onTrue(intake.intakePivot.pivotTo(-55)).onFalse(ampShoot()); //Amp Shot
 
-        controller.getButton(XboxButton.kA).onTrue(sequence(intake.intakePivot.pivotTo(-150), climber.climbTo(Climber.Setpoint.EXTENDED))); //Extend Climber
-        controller.getButton(XboxButton.kBack).onTrue(sequence(climber.setClimber(-0.25), waitSeconds(1), climber.setClimber(-0.75), waitUntil(()->climber.isClimbed()), climber.setClimber(0)));   //Retract Climber
+        controller.getButton(XboxButton.kA).onTrue(sequence(runOnce(()-> intake.isRetracting = false), intake.intakePivot.pivotTo(-150), climber.climbTo(Climber.Setpoint.EXTENDED))); //Extend Climber
+        controller.getButton(XboxButton.kBack).onTrue(sequence(climber.setClimber(-0.25), waitSeconds(1), climber.setClimber(-1), waitUntil(()->climber.isClimbed()), climber.setClimber(0)));   //Retract Climber
 
         controller.getButton(XboxButton.kLeftTrigger).onTrue(intake.intake(Intake.Setpoint.EXTENDED));  //Extend Intake
-        controller.getButton(XboxButton.kLeftBumper).onTrue(intake.retractAuto());         //Retract Intake
+        controller.getButton(XboxButton.kLeftBumper).onTrue(intake.retract(false));         //Retract Intake
 
         controller.getButton(XboxButton.kStart).onTrue(startEnd(()-> leds.setLedColor(Colors.AMP), ()-> leds.setDefaultColor()).withTimeout(1)); //Amp LED
 
@@ -147,13 +148,14 @@ public class RobotContainer {
         );
         buttonPad.getButton(8).onTrue(intake.intakePivot.pivotTo(0));
         buttonPad.getButton(9).onTrue(climber.climbTo(0));
+        buttonPad.getButton(10).onTrue(neutral(false));
         
         buttonPad.getButton(11).onTrue(intake.intakePivot.reset(0));
         buttonPad.getButton(12).onTrue(climber.reset());
 
-        buttonPad.getButton(13).onTrue(neutral(false));
+        buttonPad.getButton(13).onTrue(runOnce(()-> CommandScheduler.getInstance().cancelAll()));
         buttonPad.getButton(14).onTrue(runOnce(()-> swerve.zeroGyro(0)));
-        buttonPad.getButton(15).onTrue(intake.intakeRollers.miniOuttake());
+        buttonPad.getButton(15).onTrue(intake.intakeRollers.serialize());
         buttonPad.getButton(16).onTrue(intake.outtake());
     }
 
@@ -162,6 +164,14 @@ public class RobotContainer {
         Camera.configCameras(AprilTagFields.k2024Crescendo, PoseStrategy.LOWEST_AMBIGUITY, (pose, time) -> swerve.addVisionMeasurement(pose, time), () -> swerve.getPose());
         Camera.setDistanceThreshold(4.0);
         Camera.setAmbiguityThreshold(0.3);
+
+        final LinkedList<Double> blacklist = new LinkedList<Double>();
+        blacklist.add(1.0);
+        blacklist.add(2.0);
+        blacklist.add(9.0);
+        blacklist.add(10.0);
+        // Camera.setIgnoredTags(blacklist);
+
         final Camera camera = new Camera("FRONT_LEFT", Units.inchesToMeters(10.055), Units.inchesToMeters(9.79), Units.degreesToRadians(30), Units.degreesToRadians(-28.125), 0);
         final Camera camera2 = new Camera("FRONT_RIGHT", Units.inchesToMeters(10.055), -Units.inchesToMeters(9.79), Units.degreesToRadians(-30), Units.degreesToRadians(-28.125), 0);
     }

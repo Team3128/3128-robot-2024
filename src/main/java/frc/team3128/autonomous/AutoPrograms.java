@@ -3,6 +3,11 @@ package frc.team3128.autonomous;
 import edu.wpi.first.wpilibj2.command.Command;
 
 import common.utility.narwhaldashboard.NarwhalDashboard;
+
+import static edu.wpi.first.wpilibj2.command.Commands.sequence;
+import static edu.wpi.first.wpilibj2.command.Commands.waitSeconds;
+import static frc.team3128.commands.CmdManager.autoShoot;
+
 import java.util.HashMap;
 
 /**
@@ -24,6 +29,7 @@ public class AutoPrograms {
         final String[] autoStrings = new String[] {
             "bottom_2note",
             "bottom_3note_mid",
+            "bottomRush_3note",
             "bottomRush_4note",
             "bottom_4note",
             "leave",
@@ -44,7 +50,17 @@ public class AutoPrograms {
     public Command getAutonomousCommand() {
         String selectedAutoName = NarwhalDashboard.getInstance().getSelectedAuto();
         // String selectedAutoName = "Test";
-        final Command autoCommand = autoMap.get(selectedAutoName);
+        final Command autoCommand;
+        if (selectedAutoName == null) {
+            autoCommand = sequence(
+                Trajectories.resetAuto(),
+                waitSeconds(5),
+                autoShoot()
+            );
+        }
+        else {
+            autoCommand = autoMap.get(selectedAutoName);
+        }
 
         return autoCommand.beforeStarting(Trajectories.resetAuto());
     }

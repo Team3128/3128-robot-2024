@@ -73,13 +73,6 @@ public class Intake {
         }
 
         @Override
-        public void periodic() {
-            if (Math.abs(ROLLER_MOTOR.getStallCurrent()) > STALL_CURRENT) {
-                runManipulator(0).schedule();
-            }
-        }
-
-        @Override
         protected void configMotors() {
             ROLLER_MOTOR.setInverted(false);
             ROLLER_MOTOR.setNeutralMode(Neutral.BRAKE);
@@ -101,8 +94,18 @@ public class Intake {
 
         public Command miniOuttake() {
             return sequence(
-                runManipulator(-0.2),
-                waitSeconds(0.5),
+                runManipulator(-0.1),
+                waitSeconds(0.25),
+                runManipulator(0)
+            );
+        }
+
+        public Command serialize() {
+            return sequence(
+                runManipulator(-0.1),
+                waitUntil(()-> !hasObjectPresent()),
+                runManipulator(0.1),
+                waitUntil(()-> hasObjectPresent()),
                 runManipulator(0)
             );
         }
@@ -150,19 +153,24 @@ public class Intake {
     public Command retract(boolean shouldStall) {
         return sequence(
             runOnce(()-> Leds.getInstance().setLedColor(Colors.PIECE)),
-            CmdManager.vibrateController(),
+            // CmdManager.vibrateController(),
             runOnce(()-> isRetracting = true),
             waitUntil(()-> Climber.getInstance().isNeutral()),
-            intakeRollers.runManipulator(shouldStall ? STALL_POWER : 0),
+            //intakeRollers.runManipulator(shouldStall ? STALL_POWER : 0),
             intakePivot.pivotTo(-10),
             waitUntil(() -> intakePivot.atSetpoint()),
             intakePivot.runPivot(0.2),
             waitSeconds(0.1),
             intakePivot.runPivot(0),
-            waitSeconds(0.5),
-            runOnce(()-> isRetracting = false),
-            intakePivot.reset(0),
-            runOnce(()-> Leds.getInstance().setDefaultColor())
+            parallel(
+                either(intakeRollers.serialize().withTimeout(0.5), intakeRollers.runManipulator(0), ()-> shouldStall).withTimeout(0.5),
+                sequence(
+                    waitSeconds(0.5),
+                    runOnce(()-> isRetracting = false),
+                    intakePivot.reset(0),
+                    runOnce(()-> Leds.getInstance().setDefaultColor())
+                )
+            )
         );
     }
     
