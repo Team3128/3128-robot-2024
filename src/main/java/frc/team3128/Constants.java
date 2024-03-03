@@ -304,7 +304,7 @@ public class Constants {
         public static final double CURRENT_TEST_EXPECTED_CURRENT = 0;
 
         public static final double SHOOTER_TEST_PLATEAU = 1;
-        public static final double SHOOTER_TEST_TIMEOUT = 1.7;
+        public static final double SHOOTER_TEST_TIMEOUT = 1.8;
     }
 
     public static class ClimberConstants {

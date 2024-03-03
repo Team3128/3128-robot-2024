@@ -2,6 +2,7 @@ package frc.team3128.subsystems;
 
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 import static frc.team3128.Constants.ClimberConstants.*;
 import static frc.team3128.Constants.ClimberConstants.SETPOINT_TEST_TIMEOUT_EXTEND;
@@ -59,6 +60,7 @@ public class Climber extends NAR_PIDSubsystem {
         NAR_Shuffleboard.addSendable("Commands", "Shooter", Shooter.getInstance(), 0, 2);
         NAR_Shuffleboard.addSendable("Commands", "IntakePivot", Intake.getInstance().intakePivot, 0, 3);
         NAR_Shuffleboard.addSendable("Commands", "IntakeRollers", Intake.getInstance().intakeRollers, 0, 4);
+        NAR_Shuffleboard.addSendable("Commands", "CommandScheduler", CommandScheduler.getInstance(), 3, 0);
 
     }
     
@@ -136,7 +138,7 @@ public class Climber extends NAR_PIDSubsystem {
     }
 
     public boolean isClimbed() {
-        return getMeasurement() < -1.0;
+        return getMeasurement() < -5.0;
     }
 
     public State getRunningState() {

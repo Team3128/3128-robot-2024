@@ -4,17 +4,18 @@ import common.core.controllers.TrapController;
 import common.core.subsystems.ManipulatorTemplate;
 import common.core.subsystems.PivotTemplate;
 import common.hardware.motorcontroller.NAR_Motor.Neutral;
+import common.utility.Log;
 import common.utility.narwhaldashboard.NarwhalDashboard.State;
 import common.utility.tester.CurrentTest;
 import common.utility.tester.Tester;
 import common.utility.tester.Tester.*;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.team3128.Constants.LedConstants.Colors;
-import frc.team3128.commands.CmdManager;
-
 import static edu.wpi.first.wpilibj2.command.Commands.*;
 import static frc.team3128.Constants.IntakeConstants.*;
 
@@ -46,6 +47,11 @@ public class Intake {
             PIVOT_MOTOR.setInverted(true);
             PIVOT_MOTOR.setUnitConversionFactor(360 * GEAR_RATIO);
             PIVOT_MOTOR.setNeutralMode(Neutral.COAST);
+        }
+
+        @Override
+        public void useOutput(double output, double setpoint) {
+            PIVOT_MOTOR.setVolts(MathUtil.clamp(output, -12, 12));
         }
 
         public Command pivotNoRequirements(double setpoint) {
@@ -102,11 +108,13 @@ public class Intake {
 
         public Command serialize() {
             return sequence(
+                runOnce(()-> DriverStation.reportWarning("Serialize: CommandStarting", false)),
                 runManipulator(-0.1),
                 waitUntil(()-> !hasObjectPresent()),
                 runManipulator(0.1),
                 waitUntil(()-> hasObjectPresent()),
-                runManipulator(0)
+                runManipulator(0),
+                runOnce(()-> DriverStation.reportWarning("Serialize: CommandEnding", false))
             );
         }
 
@@ -152,6 +160,7 @@ public class Intake {
 
     public Command retract(boolean shouldStall) {
         return sequence(
+            runOnce(()-> DriverStation.reportWarning("Retract: CommandStarting", false)),
             runOnce(()-> Leds.getInstance().setLedColor(Colors.PIECE)),
             // CmdManager.vibrateController(),
             runOnce(()-> isRetracting = true),
@@ -170,27 +179,32 @@ public class Intake {
                     intakePivot.reset(0),
                     runOnce(()-> Leds.getInstance().setDefaultColor())
                 )
-            )
+            ),
+            runOnce(()-> DriverStation.reportWarning("Retract: CommandEnding", false))
         );
     }
     
     public Command intake(Setpoint setpoint) {
         return sequence(
+            runOnce(()-> DriverStation.reportWarning("Intake: CommandStarting", false)),
             runOnce(()-> isRetracting = true),
             intakeRollers.runManipulator(INTAKE_POWER),
             intakePivot.pivotTo(setpoint.angle),
             intakeRollers.intake(),
-            retract(true)
+            retract(true),
+            runOnce(()-> DriverStation.reportWarning("Intake: CommandEnding", false))
         );
     }
 
     public Command outtake() {
         return sequence (
+            runOnce(()-> DriverStation.reportWarning("Outtake: CommandStarting", false)),
             intakePivot.pivotTo(Setpoint.EXTENDED.angle),
             waitUntil(()-> intakePivot.atSetpoint()),
             intakeRollers.outtake(),
             waitSeconds(0.5),
-            retract(false)
+            retract(false),
+            runOnce(()-> DriverStation.reportWarning("Outtake: CommanedEnding", false))
         );
     }
 

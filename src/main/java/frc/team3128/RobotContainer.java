@@ -1,6 +1,8 @@
 package frc.team3128;
 
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -48,7 +50,7 @@ public class RobotContainer {
     private Intake intake;
     private Leds leds;
 
-    // private NAR_Joystick rightStick;
+    private NAR_ButtonBoard judgePad;
     private NAR_ButtonBoard buttonPad;
 
     public static NAR_XboxController controller;
@@ -71,7 +73,7 @@ public class RobotContainer {
         climber.addClimberTests();
         intake.addIntakeTests();
 
-        // rightStick = new NAR_Joystick(1);
+        // judgePad = new NAR_ButtonBoard(1);
         controller = new NAR_XboxController(2);
         buttonPad = new NAR_ButtonBoard(3);
 
@@ -88,13 +90,13 @@ public class RobotContainer {
     private void configureButtonBindings() {
         controller.getButton(XboxButton.kB).onTrue(runOnce(()-> swerve.resetEncoders()));
 
-        controller.getButton(XboxButton.kRightBumper).onTrue(rampUp(ShooterConstants.MAX_RPM, 25)).onFalse(shoot(ShooterConstants.MAX_RPM, 25)); //Ram Shot
+        controller.getButton(XboxButton.kRightBumper).onTrue(rampUp(ShooterConstants.MAX_RPM, 27)).onFalse(shoot(ShooterConstants.MAX_RPM, 25)); //Ram Shot
         controller.getButton(XboxButton.kRightTrigger).onTrue(rampUpContinuous()).onFalse(autoShoot());     //Auto Shoot
         controller.getButton(XboxButton.kY).onTrue(rampUp(5000, 15)).onFalse(feed(5000, 15,155));   //Feed Shot
         controller.getButton(XboxButton.kX).onTrue(intake.intakePivot.pivotTo(-55)).onFalse(ampShoot()); //Amp Shot
 
         controller.getButton(XboxButton.kA).onTrue(sequence(runOnce(()-> intake.isRetracting = false), intake.intakePivot.pivotTo(-150), climber.climbTo(Climber.Setpoint.EXTENDED))); //Extend Climber
-        controller.getButton(XboxButton.kBack).onTrue(sequence(climber.setClimber(-0.25), waitSeconds(1), climber.setClimber(-1), waitUntil(()->climber.isClimbed()), climber.setClimber(0)));   //Retract Climber
+        controller.getButton(XboxButton.kBack).onTrue(sequence(climber.setClimber(-0.35), waitSeconds(1), climber.setClimber(-1), waitUntil(()->climber.isClimbed()), climber.setClimber(0)));   //Retract Climber
 
         controller.getButton(XboxButton.kLeftTrigger).onTrue(intake.intake(Intake.Setpoint.EXTENDED));  //Extend Intake
         controller.getButton(XboxButton.kLeftBumper).onTrue(intake.retract(false));         //Retract Intake
@@ -116,6 +118,8 @@ public class RobotContainer {
         controller.getLeftPOVButton().onTrue(runOnce(()-> {
             CmdSwerveDrive.setTurnSetpoint(Robot.getAlliance() == Alliance.Red ? 270 : 90);
         }));
+
+        // judgePad.getButton(1).onTrue(runOnce(()-> swerve.resetOdometry(new Pose2d(5, 5, Rotation2d.fromDegrees(180)))));
 
         // rightStick.getButton(1).onTrue(runOnce(()-> swerve.zeroGyro(0)));
         // rightStick.getButton(3).onTrue(new CmdSysId("Rotation", (Double radiansPerSec) -> swerve.drive(new Translation2d(), radiansPerSec, true), ()-> Units.radiansToDegrees(swerve.getRobotVelocity().omegaRadiansPerSecond), swerve));
@@ -192,7 +196,7 @@ public class RobotContainer {
             Leds.getInstance().setLedColor(Colors.ERROR);
         }
         else {
-            Log.info("Colors", "Errors configuring: " + NAR_CANSpark.getNumFailedConfigs());
+            Log.recoverable("Colors", "Errors configuring: " + NAR_CANSpark.getNumFailedConfigs());
             Leds.getInstance().setLedColor(Colors.CONFIGURED);
         }
     }

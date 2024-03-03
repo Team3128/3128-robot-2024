@@ -1,6 +1,8 @@
 package frc.team3128.commands;
 
 import common.hardware.input.NAR_XboxController;
+import common.utility.Log;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
@@ -33,6 +35,7 @@ public class CmdManager {
 
     public static Command autoShoot() {
         return sequence(
+            runOnce(()-> DriverStation.reportWarning("AutoShoot: CommandStarting", false)),
             parallel(
                 rampUp(),
                 swerve.turnInPlace().asProxy().withTimeout(1)
@@ -41,7 +44,8 @@ public class CmdManager {
             ),
             intake.intakeRollers.outtakeNoRequirements(),
             waitSeconds(0.1),
-            neutral(false)
+            neutral(false),
+            runOnce(()-> DriverStation.reportWarning("AutoShoot: CommandEnding", false))
         );
     }
 
@@ -57,10 +61,12 @@ public class CmdManager {
 
     public static Command shoot(double rpm, double height){
         return sequence(
+            runOnce(()-> DriverStation.reportWarning("Shoot: CommandStarting", false)),
             rampUp(rpm, height),
             intake.intakeRollers.outtakeNoRequirements(),
             waitSeconds(0.1),
-            neutral(false)
+            neutral(false),
+            runOnce(()-> DriverStation.reportWarning("Shoot: CommandEnding", false))
         );
     }
 
@@ -115,6 +121,7 @@ public class CmdManager {
 
     public static Command neutral(boolean shouldStall){
         return sequence(
+            runOnce(()-> DriverStation.reportWarning("Neutral: CommandStarting", false)),
             intake.intakeRollers.runNoRequirements(0),
             shooter.setShooter(0),
             climber.climbTo(Climber.Setpoint.RETRACTED),
@@ -128,7 +135,8 @@ public class CmdManager {
                     waitSeconds(0.5),
                     climber.reset()
                 )
-            )
+            ),
+            runOnce(()-> DriverStation.reportWarning("Neutral: CommandEnding", false))
         );
     }
 }
