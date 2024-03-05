@@ -21,6 +21,7 @@ import static edu.wpi.first.wpilibj2.command.Commands.*;
 import static frc.team3128.Constants.AutoConstants.*;
 import static frc.team3128.Constants.FocalAimConstants.focalPointBlue;
 import static frc.team3128.Constants.FocalAimConstants.focalPointRed;
+import static frc.team3128.Constants.ShooterConstants.MAX_RPM;
 import static frc.team3128.Constants.SwerveConstants.*;
 
 import frc.team3128.Constants.ShooterConstants;
@@ -53,6 +54,7 @@ public class Trajectories {
         NamedCommands.registerCommand("Intake", intake.intakeAuto());
         NamedCommands.registerCommand("Shoot", autoShoot());
         NamedCommands.registerCommand("ShootFast", autoShootNoTurn());
+        NamedCommands.registerCommand("Shoot2", autoShoot2());
         NamedCommands.registerCommand("RampUp", rampUpAuto());
         NamedCommands.registerCommand("Retract", intake.retractAuto());
         NamedCommands.registerCommand("Amp", null);
@@ -93,6 +95,18 @@ public class Trajectories {
         ).beforeStarting(runOnce(()-> CmdSwerveDrive.disableTurn()));
     }
 
+    public static Command turnInPlace2() {
+        DoubleSupplier setpoint = ()-> Robot.getAlliance() == Alliance.Red ? 305 - 10 : -125 + 10;
+        return new NAR_PIDCommand(
+            TURN_CONTROLLER, 
+            ()-> swerve.getYaw(), //measurement
+            setpoint, //setpoint
+            (double output) -> {
+                Swerve.getInstance().drive(new Translation2d(), Units.degreesToRadians(output), true);
+            }
+        ).beforeStarting(runOnce(()-> CmdSwerveDrive.disableTurn()));
+    }
+
     public static Command rampUpAuto() {
         return sequence(
             either(intake.retractAuto(), none(), ()-> intake.intakePivot.isEnabled()),
@@ -116,6 +130,23 @@ public class Trajectories {
             parallel(
                 rampUp(),
                 turnInPlace().withTimeout(0.5)
+                // runOnce(()-> CmdSwerveDrive.setTurnSetpoint(swerve.getTurnAngle(Robot.getAlliance() == Alliance.Red ? focalPointRed : focalPointBlue))),
+                // waitUntil(()-> CmdSwerveDrive.rController.atSetpoint())
+            ),
+            // waitSeconds(1),
+            runOnce(()->{turning = false;}),
+            intake.intakeRollers.outtakeNoRequirements(),
+            waitSeconds(0.1),
+            neutralAuto()
+        );
+    }
+
+    public static Command autoShoot2() {
+        return sequence(
+            runOnce(()-> turning = true),
+            parallel(
+                rampUp(MAX_RPM, 12.94),
+                turnInPlace2().withTimeout(0.75)
                 // runOnce(()-> CmdSwerveDrive.setTurnSetpoint(swerve.getTurnAngle(Robot.getAlliance() == Alliance.Red ? focalPointRed : focalPointBlue))),
                 // waitUntil(()-> CmdSwerveDrive.rController.atSetpoint())
             ),

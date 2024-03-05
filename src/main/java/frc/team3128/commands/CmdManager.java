@@ -3,9 +3,11 @@ package frc.team3128.commands;
 import common.hardware.input.NAR_XboxController;
 import common.utility.Log;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import frc.team3128.Robot;
 import frc.team3128.RobotContainer;
 import frc.team3128.Constants.IntakeConstants;
 import frc.team3128.Constants.ShooterConstants;
@@ -49,6 +51,16 @@ public class CmdManager {
         );
     }
 
+    public static Command ampShootAlt() {
+        return sequence(
+            intake.intakePivot.pivotNoRequirements(-87),
+            waitUntil(()-> intake.intakePivot.atSetpoint()),
+            intake.intakeRollers.runManipulator(-0.2875),
+            waitSeconds(0.2),
+            intake.retract(false)
+        );
+    }
+
     public static Command ampShoot() {
         return sequence (
             intake.intakePivot.pivotNoRequirements(-72.5),
@@ -70,12 +82,12 @@ public class CmdManager {
         );
     }
 
-    public static Command feed(double rpm, double height, double angle){
+    public static Command feed(double rpm, double height){
         return sequence(
-            runOnce(()-> {
-                CmdSwerveDrive.setTurnSetpoint(angle);
-            }),
-            rampUp(rpm, height),
+            parallel(
+                swerve.turnInPlace(()-> Robot.getAlliance() == Alliance.Blue ? 155 : 35).asProxy().withTimeout(1),
+                rampUp(rpm, height)
+            ),
             intake.intakeRollers.outtakeNoRequirements(),
             waitSeconds(0.1),
             neutral(false)

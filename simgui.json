@@ -4,6 +4,7 @@
       "/FMSInfo": "FMSInfo",
       "/Shuffleboard/Climber/PID_Controller": "ProfiledPIDController",
       "/Shuffleboard/Commands/Climber": "Subsystem",
+      "/Shuffleboard/Commands/CommandScheduler": "Scheduler",
       "/Shuffleboard/Commands/IntakePivot": "Subsystem",
       "/Shuffleboard/Commands/IntakeRollers": "Subsystem",
       "/Shuffleboard/Commands/Shooter": "Subsystem",

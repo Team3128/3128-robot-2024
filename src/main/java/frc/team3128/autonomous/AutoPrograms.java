@@ -27,6 +27,8 @@ public class AutoPrograms {
 
     private void initAutoSelector() {
         final String[] autoStrings = new String[] {
+            "fu",
+            "su",
             "bottom_2note",
             "bottom_3note_mid",
             "bottomRush_3note",
