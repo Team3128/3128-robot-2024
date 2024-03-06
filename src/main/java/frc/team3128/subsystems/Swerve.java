@@ -118,22 +118,21 @@ public class Swerve extends SwerveBase {
         return Math.toDegrees(Math.atan2(point1.getY() - point2.getY(), point1.getX() - point2.getX())) + angleOffset;
     }
     
-    public void toggleReorient(boolean newReorient){
-        reorient = newReorient;
-    }
+    // public void toggleReorient(boolean newReorient){
+    //     reorient = newReorient;
+    // }
     
-    public boolean getReorient(){
-        return reorient;
-    }
+    // public boolean getReorient(){
+    //     return reorient;
+    // }
     
     public Command reorientSpeaker(double timeInterval){
-        return reorient(focalPoint, timeInterval);
+        return reorient(timeInterval);
     }
     
     public Translation2d getDesiredPosition(ChassisSpeeds velocity, double time){
-        Translation2d translation = new Translation2d(velocity.vxMetersPerSecond * time , velocity.vyMetersPerSecond * time);
-        Translation2d desiredPosition = new Translation2d(location.getAsPose2d().getX() + translation.getX(), location.getAsPose2d().getY() + translation.getY());
-        return desiredPosition;
+        final Translation2d translation = new Translation2d(velocity.vxMetersPerSecond * time , velocity.vyMetersPerSecond * time);
+        return location.getAsPose2d().getTranslation().plus(translation);
     }
     
     public double getProjectileTime(Translation2d position){
@@ -141,9 +140,9 @@ public class Swerve extends SwerveBase {
     }
     
     public Translation2d calculateTarget(ChassisSpeeds velocity, Translation2d position){
-        double predX = velocity.vxMetersPerSecond * getProjectileTime(position);
+        // double predX = velocity.vxMetersPerSecond * getProjectileTime(position);
         double predY = velocity.vyMetersPerSecond * getProjectileTime(position);
-        Translation2d target = new Translation2d(focalPoint.getX() - predX, focalPoint.getY() - predY);
+        Translation2d target = new Translation2d(focalPoint.getX(), focalPoint.getY() - predY);
         return target;
     }
     
@@ -151,7 +150,7 @@ public class Swerve extends SwerveBase {
         return Units.degreesToRadians(rController.calculate(getGyroRotation2d().getDegrees(), setpoint));
     }
     
-    public Command reorient(Translation2d point, double timeInterval){
+    public Command reorient(double timeInterval){
         Translation2d shootingPoint = getDesiredPosition(getFieldVelocity(), timeInterval);
         Translation2d targetPoint = calculateTarget(getFieldVelocity(), shootingPoint);
         double robotAngle = getDesiredAngle(shootingPoint, targetPoint);
