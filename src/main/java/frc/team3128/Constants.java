@@ -59,6 +59,8 @@ public class Constants {
     }
 
     public static class SwerveConstants {
+        public static final double RAMP_TIME = 1;
+
         public static final int pigeonID = 30; 
 
         /* Drivetrain Constants */
@@ -106,7 +108,7 @@ public class Constants {
         // Theoretical: v = 4.96824, omega = 11.5
         // Real: v = 4.5, omega = 10
         // For safety, use less than theoretical and real values
-        public static final double maxSpeed = 5.5;//4.8; //meters per second - 16.3 ft/sec
+        public static final double maxSpeed = 5.9;//4.8; //meters per second - 16.3 ft/sec
         public static final double maxAttainableSpeed = maxSpeed; //Stole from citrus.
         public static final double maxAcceleration = 3;
         public static final double maxAngularVelocity = 8; //3; //11.5; // citrus: 10 - Mason look at this later wtf
@@ -305,6 +307,8 @@ public class Constants {
 
         public static final double SHOOTER_TEST_PLATEAU = 1;
         public static final double SHOOTER_TEST_TIMEOUT = 1.8;
+
+        public static final double PROJECTILE_SPEED = 100; // m/s
     }
 
     public static class ClimberConstants {
@@ -314,7 +318,7 @@ public class Constants {
         public static final Constraints TRAP_CONSTRAINTS = new Constraints(MAX_VELOCTIY, MAX_ACCELERATION);
         public static final int LEFT_MOTOR_ID = 21;
         public static final int RIGHT_MOTOR_ID = 22;
-        public static final double GEAR_RATIO = 1.0 / 12.0;
+        public static final double GEAR_RATIO = 1.0 / 20.0;
         public static final double WHEEL_CIRCUMFERENCE = Units.inchesToMeters(1.751) * Math.PI;
         public static final double POSITION_TOLERANCE = 0.5;
         public static final double PIVOT_CLIMBER_DIST = 0.28;
@@ -422,8 +426,6 @@ public class Constants {
     
         }
     }
-
-
 }
 
 

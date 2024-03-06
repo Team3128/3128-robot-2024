@@ -15,11 +15,13 @@ import common.hardware.motorcontroller.NAR_Motor.Control;
 import common.utility.shuffleboard.NAR_Shuffleboard;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.team3128.Robot;
 import frc.team3128.RobotContainer;
+import frc.team3128.Constants.ShooterConstants;
 import frc.team3128.commands.CmdSwerveDrive;
 
 import static frc.team3128.Constants.SwerveConstants.*;
@@ -87,25 +89,64 @@ public class Swerve extends SwerveBase {
         gyro.setYaw(reset);
     }
 
+    public double getPredictedDistance() {
+        final ChassisSpeeds velocity = getFieldVelocity();
+        final Translation2d predictedPos = getPredictedPosition(velocity, RAMP_TIME);
+        final double shotTime = getProjectileTime(getDist(predictedPos));
+        final Translation2d target = calculateTarget(Robot.getAlliance() == Alliance.Red ? speakerMidpointRed : speakerMidpointBlue, velocity, shotTime);
+        final double distance = getDist(predictedPos, target);
+        return distance;
+    }
+
+    public double getPredictedAngle() {
+        final ChassisSpeeds velocity = getFieldVelocity();
+        final Translation2d predictedPos = getPredictedPosition(velocity, RAMP_TIME);
+        final double shotTime = getProjectileTime(getDist(predictedPos));
+        final Translation2d target = calculateTarget(Robot.getAlliance() == Alliance.Red ? speakerMidpointRed : speakerMidpointBlue, velocity, shotTime);
+        final double angle = getTurnAngle(predictedPos, target);
+        return angle;
+    }
+
+    public Translation2d getPredictedPosition(ChassisSpeeds velocity, double time) {
+        final Translation2d currentPosition = getPose().getTranslation();
+        return currentPosition.plus(new Translation2d(velocity.vxMetersPerSecond * time, velocity.vyMetersPerSecond * time));
+    }
+
+    public double getProjectileTime(double distance) {
+        return distance / ShooterConstants.PROJECTILE_SPEED;
+    }
+
+    public Translation2d calculateTarget(Translation2d target, ChassisSpeeds velocity, double time) {
+        return target.minus(new Translation2d(0, velocity.vyMetersPerSecond * time));
+    }
+
     public double getDist() {
         return getDist(Robot.getAlliance() == Alliance.Red ? speakerMidpointRed : speakerMidpointBlue);
     }
 
     public double getDist(Translation2d point) {
-        return getPose().getTranslation().getDistance(point) - robotLength / 2.0;
+        return getDist(getPose().getTranslation(), point);
+    }
+
+    public double getDist(Translation2d point1, Translation2d point2) {
+        return point1.getDistance(point2) - robotLength / 2.0;
     }
 
     public double getTurnAngle() {
         return getTurnAngle(Robot.getAlliance() == Alliance.Red ? focalPointRed : focalPointBlue);
     }
 
-    public double getTurnAngle(Translation2d point) {
-        Translation2d pos = Swerve.getInstance().getPose().getTranslation();
-        return Math.toDegrees(Math.atan2(point.getY() - pos.getY(), point.getX() - pos.getX())) + angleOffset;
+    public double getTurnAngle(Translation2d target) {
+        final Translation2d robotPos = Swerve.getInstance().getPose().getTranslation();
+        return getTurnAngle(robotPos, target);
     }
 
-    public Command turnInPlace() {
-        return turnInPlace(()-> getTurnAngle(Robot.getAlliance() == Alliance.Red ? focalPointRed : focalPointBlue));
+    public double getTurnAngle(Translation2d robotPos, Translation2d targetPos) {
+        return Math.toDegrees(Math.atan2(targetPos.getY() - robotPos.getY(), targetPos.getX() - robotPos.getX())) + angleOffset;
+    }
+
+    public Command turnInPlace(boolean moving) {
+        return turnInPlace(()-> moving ? getPredictedAngle() : getTurnAngle());
     }
 
     public Command turnInPlace(DoubleSupplier setpoint) {
