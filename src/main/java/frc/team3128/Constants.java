@@ -12,6 +12,7 @@ import common.core.swerve.SwerveConversions;
 import common.core.swerve.SwerveModuleConfig;
 import common.core.swerve.SwerveModuleConfig.SwerveMotorConfig;
 import common.hardware.motorcontroller.NAR_CANSpark;
+import common.hardware.motorcontroller.NAR_TalonSRX;
 import common.hardware.motorcontroller.NAR_CANSpark.ControllerType;
 import common.hardware.motorcontroller.NAR_Motor.MotorConfig;
 import common.hardware.motorcontroller.NAR_Motor.Neutral;
@@ -311,6 +312,22 @@ public class Constants {
         public static final double PROJECTILE_SPEED = 100; // m/s
     }
 
+    public static class AmpWristConstants {
+        public static final PIDFFConfig PIDConstants = new PIDFFConfig(0, 0, 0, 0, 0, 0);
+        public static final double MAX_VELOCITY = 10000000;
+        public static final double MAX_ACCELERATION = 1000000;
+        public static final Constraints TRAP_CONSTRAINTS = new Constraints(MAX_VELOCITY, MAX_ACCELERATION);
+
+        public static final int WRIST_MOTOR_ID = 51;
+        public static final NAR_CANSpark WRIST_MOTOR = new NAR_CANSpark(WRIST_MOTOR_ID);
+        public static final double GEAR_RATIO = 1.0 / 1.0;
+        public static final double CURRENT_LIMIT = 20;
+        public static final double POSITION_TOLERANCE = 1;
+
+        public static final int ROLLER_MOTOR_ID = 52;
+        public static final NAR_TalonSRX ROLLER_MOTOR = new NAR_TalonSRX(ROLLER_MOTOR_ID);
+        public static final double AMP_POWER = 0.7;
+    }
     public static class ClimberConstants {
         public static final PIDFFConfig PIDConstants = new PIDFFConfig(1, 0, 0, 0.19, 0, 0, 0.205);//240
         public static final double MAX_VELOCTIY = 10000000;
