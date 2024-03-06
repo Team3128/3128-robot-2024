@@ -3,53 +3,58 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.27504718963431,
-        "y": 0.7768153999126292
+        "x": 1.4267641652687821,
+        "y": 6.288189056304328
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.27504718963431,
-        "y": 0.7768153999126293
+        "x": 1.634336227439816,
+        "y": 6.282030246786188
       },
       "isLocked": false,
-      "linkedName": "note2.5"
+      "linkedName": "midTop"
     },
     {
       "anchor": {
-        "x": 1.45,
-        "y": 4.1
+        "x": 4.80659217308018,
+        "y": 6.288189056304328
       },
       "prevControl": {
-        "x": 2.864213562373095,
-        "y": 2.6857864376269047
+        "x": 4.714284947334943,
+        "y": 6.292090733833251
+      },
+      "nextControl": {
+        "x": 4.918679722667605,
+        "y": 6.283451296394781
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.3,
+        "y": 7.39
+      },
+      "prevControl": {
+        "x": 8.15056361507399,
+        "y": 7.370359391977465
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "bottom"
+      "linkedName": "note2.1"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.95,
+      "rotationDegrees": 180.0,
+      "rotateFast": true
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "Retract",
-      "waypointRelativePos": 0,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "Retract"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "RampUp",
+      "name": "ShootOnMove",
       "waypointRelativePos": 0.5,
       "command": {
         "type": "parallel",
@@ -58,7 +63,24 @@
             {
               "type": "named",
               "data": {
-                "name": "RampUp"
+                "name": "ShootOnMove"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Intake",
+      "waypointRelativePos": 1.5,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Intake"
               }
             }
           ]
@@ -74,14 +96,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0,
+    "rotation": -162.4062974931889,
     "rotateFast": true
   },
   "reversed": false,
   "folder": null,
-  "previewStartingState": {
-    "rotation": 0,
-    "velocity": 0
-  },
+  "previewStartingState": null,
   "useDefaultConstraints": true
 }

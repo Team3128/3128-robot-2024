@@ -3,37 +3,53 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.3,
-        "y": 7.39
-      },
-      "prevControl": null,
-      "nextControl": {
-        "x": 8.334146393643735,
-        "y": 7.301219376526284
-      },
-      "isLocked": false,
-      "linkedName": "note2.1"
-    },
-    {
-      "anchor": {
         "x": 6.162186278871979,
         "y": 6.5759884853103046
       },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.035392280854007,
+        "y": 6.564894741189946
+      },
+      "isLocked": false,
+      "linkedName": "wing"
+    },
+    {
+      "anchor": {
+        "x": 4.229200185216053,
+        "y": 6.288189056304328
+      },
       "prevControl": {
-        "x": 6.1549506818824025,
-        "y": 6.582492374572887
+        "x": 4.338135723363461,
+        "y": 6.2945366895869785
+      },
+      "nextControl": {
+        "x": 4.114662373927563,
+        "y": 6.281514980649853
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.4267641652687821,
+        "y": 6.288189056304328
+      },
+      "prevControl": {
+        "x": 2.6307927726566325,
+        "y": 6.288189056304328
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "wing"
+      "linkedName": "midTop"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "Retract and Ramp Up",
-      "waypointRelativePos": 0.1,
+      "name": "Intake",
+      "waypointRelativePos": 0,
       "command": {
         "type": "parallel",
         "data": {
@@ -41,13 +57,7 @@
             {
               "type": "named",
               "data": {
-                "name": "Retract"
-              }
-            },
-            {
-              "type": "named",
-              "data": {
-                "name": "RampUpTop"
+                "name": "Intake"
               }
             }
           ]
@@ -63,11 +73,14 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -170.0,
+    "rotation": 180.0,
     "rotateFast": true
   },
   "reversed": false,
   "folder": null,
-  "previewStartingState": null,
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
   "useDefaultConstraints": true
 }

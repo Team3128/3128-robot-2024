@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.45,
-      "y": 4.1
+      "x": 1.4267641652687821,
+      "y": 6.288189056304328
     },
     "rotation": 180.0
   },
@@ -12,6 +12,60 @@
     "data": {
       "commands": [
         {
+          "type": "path",
+          "data": {
+            "pathName": "midTop-note2.1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "note2.1-wing"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "QuickShoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "wing-note2.2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "note2.2-wing"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "QuickShoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "wing-note2.3"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "note2.3-midTop"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "midTop-note1.1"
+          }
+        },
+        {
           "type": "named",
           "data": {
             "name": "Shoot"
@@ -20,43 +74,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "bottom-note2.4"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "note2.4-bottom"
+            "pathName": "note1.1-note1.2"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "Shoot"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "bottom-note2.5"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "note2.5-bottom"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "bottom-note2.4"
           }
         }
       ]

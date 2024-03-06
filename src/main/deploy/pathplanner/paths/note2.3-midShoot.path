@@ -3,37 +3,37 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.3,
-        "y": 7.39
+        "x": 8.279890727967219,
+        "y": 4.1
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.334146393643735,
-        "y": 7.301219376526284
+        "x": 7.765276842547319,
+        "y": 4.058037967710773
       },
       "isLocked": false,
-      "linkedName": "note2.1"
+      "linkedName": "note2.3"
     },
     {
       "anchor": {
-        "x": 6.162186278871979,
-        "y": 6.5759884853103046
+        "x": 3.8128864669911056,
+        "y": 4.881822699119936
       },
       "prevControl": {
-        "x": 6.1549506818824025,
-        "y": 6.582492374572887
+        "x": 4.58877584175886,
+        "y": 4.450310291643443
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "wing"
+      "linkedName": "midShoot"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "Retract and Ramp Up",
-      "waypointRelativePos": 0.1,
+      "name": "Retract",
+      "waypointRelativePos": 0,
       "command": {
         "type": "parallel",
         "data": {
@@ -42,12 +42,6 @@
               "type": "named",
               "data": {
                 "name": "Retract"
-              }
-            },
-            {
-              "type": "named",
-              "data": {
-                "name": "RampUpTop"
               }
             }
           ]
@@ -63,11 +57,14 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -170.0,
+    "rotation": 170.35752001430427,
     "rotateFast": true
   },
   "reversed": false,
   "folder": null,
-  "previewStartingState": null,
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
   "useDefaultConstraints": true
 }

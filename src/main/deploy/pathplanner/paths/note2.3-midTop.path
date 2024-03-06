@@ -3,37 +3,53 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.3,
-        "y": 7.39
+        "x": 8.279890727967219,
+        "y": 4.1
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.334146393643735,
-        "y": 7.301219376526284
+        "x": 7.780907924301381,
+        "y": 5.1668556512026225
       },
       "isLocked": false,
-      "linkedName": "note2.1"
+      "linkedName": "note2.3"
     },
     {
       "anchor": {
-        "x": 6.162186278871979,
-        "y": 6.5759884853103046
+        "x": 5.207145370164582,
+        "y": 6.288189056304328
       },
       "prevControl": {
-        "x": 6.1549506818824025,
-        "y": 6.582492374572887
+        "x": 6.929097477986622,
+        "y": 6.285178082762127
+      },
+      "nextControl": {
+        "x": 4.997576912081981,
+        "y": 6.288555503826126
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.4267641652687821,
+        "y": 6.288189056304328
+      },
+      "prevControl": {
+        "x": 1.581201591258796,
+        "y": 6.296451371837929
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "wing"
+      "linkedName": "midTop"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "Retract and Ramp Up",
-      "waypointRelativePos": 0.1,
+      "name": "ShootOnMove",
+      "waypointRelativePos": 1.25,
       "command": {
         "type": "parallel",
         "data": {
@@ -41,13 +57,7 @@
             {
               "type": "named",
               "data": {
-                "name": "Retract"
-              }
-            },
-            {
-              "type": "named",
-              "data": {
-                "name": "RampUpTop"
+                "name": "ShootOnMove"
               }
             }
           ]
@@ -62,12 +72,15 @@
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": -170.0,
+    "velocity": 0.0,
+    "rotation": 180.0,
     "rotateFast": true
   },
   "reversed": false,
   "folder": null,
-  "previewStartingState": null,
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
   "useDefaultConstraints": true
 }
