@@ -108,13 +108,13 @@ public class Intake {
 
         public Command serialize() {
             return sequence(
-                runOnce(()-> DriverStation.reportWarning("Serialize: CommandStarting", false)),
+                // runOnce(()-> DriverStation.reportWarning("Serialize: CommandStarting", false)),
                 runManipulator(-0.1),
                 waitUntil(()-> !hasObjectPresent()),
                 runManipulator(0.1),
                 waitUntil(()-> hasObjectPresent()),
-                runManipulator(0),
-                runOnce(()-> DriverStation.reportWarning("Serialize: CommandEnding", false))
+                runManipulator(0)
+                // runOnce(()-> DriverStation.reportWarning("Serialize: CommandEnding", false))
             );
         }
 
@@ -160,7 +160,7 @@ public class Intake {
 
     public Command retract(boolean shouldStall) {
         return sequence(
-            runOnce(()-> DriverStation.reportWarning("Retract: CommandStarting", false)),
+            // runOnce(()-> DriverStation.reportWarning("Retract: CommandStarting", false)),
             runOnce(()-> Leds.getInstance().setLedColor(Colors.PIECE)),
             // CmdManager.vibrateController(),
             runOnce(()-> isRetracting = true),
@@ -179,32 +179,32 @@ public class Intake {
                     intakePivot.reset(0),
                     runOnce(()-> Leds.getInstance().setDefaultColor())
                 )
-            ),
-            runOnce(()-> DriverStation.reportWarning("Retract: CommandEnding", false))
+            )
+            // runOnce(()-> DriverStation.reportWarning("Retract: CommandEnding", false))
         );
     }
     
     public Command intake(Setpoint setpoint) {
         return sequence(
-            runOnce(()-> DriverStation.reportWarning("Intake: CommandStarting", false)),
+            // runOnce(()-> DriverStation.reportWarning("Intake: CommandStarting", false)),
             runOnce(()-> isRetracting = true),
             intakeRollers.runManipulator(INTAKE_POWER),
             intakePivot.pivotTo(setpoint.angle),
             intakeRollers.intake(),
-            retract(true),
-            runOnce(()-> DriverStation.reportWarning("Intake: CommandEnding", false))
+            retract(true)
+            // runOnce(()-> DriverStation.reportWarning("Intake: CommandEnding", false))
         );
     }
 
     public Command outtake() {
         return sequence (
-            runOnce(()-> DriverStation.reportWarning("Outtake: CommandStarting", false)),
+            // runOnce(()-> DriverStation.reportWarning("Outtake: CommandStarting", false)),
             intakePivot.pivotTo(Setpoint.EXTENDED.angle),
             waitUntil(()-> intakePivot.atSetpoint()),
             intakeRollers.outtake(),
             waitSeconds(0.5),
-            retract(false),
-            runOnce(()-> DriverStation.reportWarning("Outtake: CommanedEnding", false))
+            retract(false)
+            // runOnce(()-> DriverStation.reportWarning("Outtake: CommanedEnding", false))
         );
     }
 
