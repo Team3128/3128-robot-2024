@@ -38,7 +38,7 @@ public class Shooter extends NAR_PIDSubsystem {
 
     @Override
     public boolean atSetpoint() {
-        return super.atSetpoint() && Math.abs(Math.abs(rightMotor.getVelocity()) - (getSetpoint() - 1500)) < TOLERANCE;
+        return super.atSetpoint() && Math.abs(Math.abs(rightMotor.getVelocity()) - (getSetpoint() - 2000)) < TOLERANCE;
     }
 
     private void configMotors(){
@@ -46,7 +46,7 @@ public class Shooter extends NAR_PIDSubsystem {
         rightMotor = new NAR_CANSpark(RIGHT_MOTOR_ID, ControllerType.CAN_SPARK_FLEX);
         
         leftMotor.setInverted(true);
-        rightMotor.setInverted(true);
+        rightMotor.setInverted(false);
         leftMotor.setUnitConversionFactor(GEAR_RATIO);
 
         leftMotor.setNeutralMode(Neutral.COAST);
@@ -55,13 +55,15 @@ public class Shooter extends NAR_PIDSubsystem {
 
     private void setPower(double power){
         disable();
+        leftMotor.set(power);
         rightMotor.set(power);
     }
 
     @Override
     protected void useOutput(double output, double setpoint) {
         leftMotor.setVolts(output);
-        rightMotor.setVolts(Math.max(0, (setpoint - 1500) * PIDConstants.kV));
+        rightMotor.setVolts(output);
+        rightMotor.setVolts(Math.max(0, (setpoint - 2000) * PIDConstants.kV + PIDConstants.kS));
     }
 
     @Override

@@ -174,7 +174,8 @@ public class Swerve extends SwerveBase {
     public boolean isConfigured() {
         for (final SwerveModule module : modules) {
             final double CANCoderAngle = module.getCanCoder().getDegrees();
-            if (CANCoderAngle == 0) return false;
+            final double AngleMotorAngle = module.getAngleMotor().getPosition();
+            if (CANCoderAngle == 0 || AngleMotorAngle == 0) return false;
         }
         return true;
     }

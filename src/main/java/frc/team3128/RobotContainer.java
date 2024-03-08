@@ -149,8 +149,7 @@ public class RobotContainer {
         buttonPad.getButton(4).onTrue(shooter.setShooter(0.8)).onFalse(shooter.setShooter(0));
         buttonPad.getButton(5).onTrue(intake.intakePivot.runPivot(-0.2)).onFalse(intake.intakePivot.runPivot(0));
         buttonPad.getButton(6).onTrue(climber.setClimber(0.2)).onFalse(climber.setClimber(0));
-        buttonPad.getButton(7).onTrue(shooter.runBottomRollers(NAR_Shuffleboard.debug("test", "amp", 0.4, 0, 0).getAsDouble())
-        );
+        buttonPad.getButton(7).onTrue(shooter.shoot(0));
         buttonPad.getButton(8).onTrue(intake.intakePivot.pivotTo(0));
         buttonPad.getButton(9).onTrue(climber.climbTo(0));
         buttonPad.getButton(10).onTrue(neutral(false));
@@ -161,7 +160,7 @@ public class RobotContainer {
         buttonPad.getButton(13).onTrue(runOnce(()-> CommandScheduler.getInstance().cancelAll()));
         buttonPad.getButton(14).onTrue(runOnce(()-> swerve.zeroGyro(0)));
         buttonPad.getButton(15).onTrue(intake.intakeRollers.serialize());
-        buttonPad.getButton(16).onTrue(intake.outtake());
+        buttonPad.getButton(16).onTrue(intake.intakeRollers.outtake()).onFalse(intake.intakeRollers.runManipulator(0));
     }
 
     @SuppressWarnings("unused")
@@ -192,12 +191,16 @@ public class RobotContainer {
         dashboard.checkState("ClimberState", ()-> climber.getRunningState());
         dashboard.checkState("ShooterState", ()-> shooter.getRunningState());
 
-        if (NAR_CANSpark.getNumFailedConfigs() > 0 || !swerve.isConfigured()) {
+        if (NAR_CANSpark.getNumFailedConfigs() > 0) {
             Log.info("Colors", "Errors configuring: " + NAR_CANSpark.getNumFailedConfigs());
             Leds.getInstance().setLedColor(Colors.ERROR);
         }
+        else if (!swerve.isConfigured()) {
+            Log.info("Colors", "Swerve Not Configured");
+            Leds.getInstance().setLedColor(Colors.RED);
+        }
         else {
-            Log.recoverable("Colors", "Errors configuring: " + NAR_CANSpark.getNumFailedConfigs());
+            Log.info("Colors", "Errors configuring: " + NAR_CANSpark.getNumFailedConfigs());
             Leds.getInstance().setLedColor(Colors.CONFIGURED);
         }
     }

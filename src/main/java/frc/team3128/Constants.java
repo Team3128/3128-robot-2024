@@ -291,7 +291,7 @@ public class Constants {
     }
 
     public static class ShooterConstants {
-        public static final PIDFFConfig PIDConstants = new PIDFFConfig(0, 0, 0, 0, 0.00179, 0); //Retune later
+        public static final PIDFFConfig PIDConstants = new PIDFFConfig(0.00000001, 0, 0, 0.144578, 0.00184723, 0); //Retune later
         public static final int LEFT_MOTOR_ID = 41;
         public static final int RIGHT_MOTOR_ID = 42;
         public static final double GEAR_RATIO = 1;
@@ -329,7 +329,7 @@ public class Constants {
         public static final double AMP_POWER = 0.7;
     }
     public static class ClimberConstants {
-        public static final PIDFFConfig PIDConstants = new PIDFFConfig(1, 0, 0, 0.19, 0, 0, 0.205);//240
+        public static final PIDFFConfig PIDConstants = new PIDFFConfig(3, 0, 0, 0.19, 0, 0, 0.24);//240
         public static final double MAX_VELOCTIY = 10000000;
         public static final double MAX_ACCELERATION = 100000;
         public static final Constraints TRAP_CONSTRAINTS = new Constraints(MAX_VELOCTIY, MAX_ACCELERATION);
