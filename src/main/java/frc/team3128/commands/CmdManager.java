@@ -2,6 +2,8 @@ package frc.team3128.commands;
 
 import common.hardware.input.NAR_XboxController;
 import common.utility.Log;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -18,7 +20,15 @@ import frc.team3128.subsystems.Swerve;
 
 import java.util.function.DoubleSupplier;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathConstraints;
+
 import static edu.wpi.first.wpilibj2.command.Commands.*;
+import static frc.team3128.Constants.SwerveConstants.RAMP_TIME;
+import static frc.team3128.Constants.SwerveConstants.maxAcceleration;
+import static frc.team3128.Constants.SwerveConstants.maxAngularAcceleration;
+import static frc.team3128.Constants.SwerveConstants.maxAngularVelocity;
+import static frc.team3128.Constants.SwerveConstants.maxAttainableSpeed;
 
 public class CmdManager {
 
@@ -38,9 +48,10 @@ public class CmdManager {
     public static Command autoShoot() {
         return sequence(
             // runOnce(()-> DriverStation.reportWarning("AutoShoot: CommandStarting", false)),
-            parallel(
+            deadline(
+                waitSeconds(RAMP_TIME),
                 rampUp(),
-                swerve.turnInPlace(true).asProxy().withTimeout(1)
+                swerve.turnInPlace(true).asProxy()
                 // runOnce(()-> CmdSwerveDrive.setTurnSetpoint(swerve.getTurnAngle(Robot.getAlliance() == Alliance.Red ? focalPointRed : focalPointBlue))),
                 // waitUntil(()-> CmdSwerveDrive.rController.atSetpoint())
             ),
@@ -74,7 +85,7 @@ public class CmdManager {
     public static Command shoot(double rpm, double height){
         return sequence(
             // runOnce(()-> DriverStation.reportWarning("Shoot: CommandStarting", false)),
-            rampUp(rpm, height),
+            rampUp(rpm, height).withTimeout(RAMP_TIME),
             intake.intakeRollers.outtakeNoRequirements(),
             waitSeconds(0.1),
             neutral(false)
@@ -150,5 +161,16 @@ public class CmdManager {
             )
             // runOnce(()-> DriverStation.reportWarning("Neutral: CommandEnding", false))
         );
+    }
+
+    public static Command autoAmpAlign(){
+        Pose2d ampPos = new Pose2d(Robot.getAlliance() == Alliance.Red ? 14.70 : 1.84, 7.8,  Rotation2d.fromDegrees(90));
+
+        return AutoBuilder.pathfindToPose(
+            ampPos,
+            new PathConstraints(maxAttainableSpeed, maxAcceleration, maxAngularVelocity, maxAngularAcceleration),
+            0.0, // Goal end velocity in meters/sec
+            0.0 // Rotation delay distance in meters. This is how far the robot should travel before attempting to rotate.
+            );
     }
 }

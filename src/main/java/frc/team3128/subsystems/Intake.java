@@ -172,7 +172,7 @@ public class Intake {
             waitSeconds(0.1),
             intakePivot.runPivot(0),
             parallel(
-                either(intakeRollers.serialize().withTimeout(0.5), intakeRollers.runManipulator(0), ()-> shouldStall).withTimeout(0.5),
+                either(intakeRollers.serialize().withTimeout(2), intakeRollers.runManipulator(0), ()-> shouldStall).withTimeout(0.5),
                 sequence(
                     waitSeconds(0.5),
                     runOnce(()-> isRetracting = false),

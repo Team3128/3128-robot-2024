@@ -10,6 +10,8 @@ import common.hardware.camera.Camera;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.pathfinding.LocalADStar;
+import com.pathplanner.lib.pathfinding.Pathfinding;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -66,6 +68,7 @@ public class Trajectories {
     private static boolean turning = false;
 
     public static void initTrajectories() {
+        Pathfinding.setPathfinder(new LocalADStar());
 
         // TODO: add commands
         NamedCommands.registerCommand("Intake", intake.intakeAuto());

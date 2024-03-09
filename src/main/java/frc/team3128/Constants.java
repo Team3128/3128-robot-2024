@@ -85,7 +85,7 @@ public class Constants {
 
         /* Swerve Current Limiting */
         public static final int angleLimit = 30; //30
-        public static final int driveLimit = 40; //40;
+        public static final int driveLimit = 60; //40;
 
         /* Angle Motor PID Values */
         // switched 364 pid values to SDS pid values
@@ -111,7 +111,7 @@ public class Constants {
         // For safety, use less than theoretical and real values
         public static final double maxSpeed = 5.9;//4.8; //meters per second - 16.3 ft/sec
         public static final double maxAttainableSpeed = maxSpeed; //Stole from citrus.
-        public static final double maxAcceleration = 3;
+        public static final double maxAcceleration = 8;
         public static final double maxAngularVelocity = 8; //3; //11.5; // citrus: 10 - Mason look at this later wtf
         public static final double maxAngularAcceleration = 2 * Math.PI; //I stole from citrus.
 
@@ -135,7 +135,7 @@ public class Constants {
             new SwerveMotorConfig(new NAR_CANSpark(1, ControllerType.CAN_SPARK_FLEX), driveMotorConfig, drivePIDConfig),
             new SwerveMotorConfig(new NAR_CANSpark(2, ControllerType.CAN_SPARK_FLEX), angleMotorConfig, anglePIDConfig),
             10,
-            21.533203125,
+            20.478515625,
             canCoderInvert,
             maxSpeed);
 
@@ -144,7 +144,7 @@ public class Constants {
             new SwerveMotorConfig(new NAR_CANSpark(3, ControllerType.CAN_SPARK_FLEX), driveMotorConfig, drivePIDConfig),
             new SwerveMotorConfig(new NAR_CANSpark(4, ControllerType.CAN_SPARK_FLEX), angleMotorConfig, anglePIDConfig),
             11,
-            153.544921875,
+            149.58984375,
             canCoderInvert,
             maxSpeed);
         
@@ -153,7 +153,7 @@ public class Constants {
             new SwerveMotorConfig(new NAR_CANSpark(5, ControllerType.CAN_SPARK_FLEX), driveMotorConfig, drivePIDConfig),
             new SwerveMotorConfig(new NAR_CANSpark(6, ControllerType.CAN_SPARK_FLEX), angleMotorConfig, anglePIDConfig),
             12,
-            17.9296875,
+            -70.83984375000001,
             canCoderInvert,
             maxSpeed);
         
@@ -162,7 +162,7 @@ public class Constants {
             new SwerveMotorConfig(new NAR_CANSpark(7, ControllerType.CAN_SPARK_FLEX), driveMotorConfig, drivePIDConfig),
             new SwerveMotorConfig(new NAR_CANSpark(8, ControllerType.CAN_SPARK_FLEX), angleMotorConfig, anglePIDConfig),
             13,
-            -140.009765625,
+            -155.7421875 + 13.974609375,
             canCoderInvert,
             maxSpeed);
 
@@ -278,7 +278,7 @@ public class Constants {
 
     public static class FocalAimConstants {
         public static final double speakerLength = 1.043;
-        public static final double speakerMidpointY = 5.4
+        public static final double speakerMidpointY = 5.6;//5.4;
         ; //6.151 - speakerLength / 2;
         public static final double focalPointX = 0; //1.4583577128;
         public static final Translation2d speakerMidpointBlue = new Translation2d(0, speakerMidpointY);
@@ -291,13 +291,14 @@ public class Constants {
     }
 
     public static class ShooterConstants {
-        public static final PIDFFConfig PIDConstants = new PIDFFConfig(0.00000001, 0, 0, 0.144578, 0.00184723, 0); //Retune later
+        public static final PIDFFConfig PIDConstants = new PIDFFConfig(0, 0, 0, 0, 0.00184723, 0); //Retune later
+        public static final double kF = 0.144578;
         public static final int LEFT_MOTOR_ID = 41;
         public static final int RIGHT_MOTOR_ID = 42;
         public static final double GEAR_RATIO = 1;
-        public static final double MAX_RPM = 6250;
+        public static final double MAX_RPM = 5800;
         public static final double MIN_RPM = 0;
-        public static final double TOLERANCE = 100;
+        public static final double TOLERANCE = 150;
         public static final double AMP_POWER = 0.30;
 
         public static final double CURRENT_TEST_POWER = 0;
@@ -329,13 +330,13 @@ public class Constants {
         public static final double AMP_POWER = 0.7;
     }
     public static class ClimberConstants {
-        public static final PIDFFConfig PIDConstants = new PIDFFConfig(3, 0, 0, 0.19, 0, 0, 0.24);//240
+        public static final PIDFFConfig PIDConstants = new PIDFFConfig(2, 0, 0, 0.18, 0, 0, 0.3);//240
         public static final double MAX_VELOCTIY = 10000000;
         public static final double MAX_ACCELERATION = 100000;
         public static final Constraints TRAP_CONSTRAINTS = new Constraints(MAX_VELOCTIY, MAX_ACCELERATION);
         public static final int LEFT_MOTOR_ID = 21;
         public static final int RIGHT_MOTOR_ID = 22;
-        public static final double GEAR_RATIO = 1.0 / 20.0;
+        public static final double GEAR_RATIO = 1.0 / 15.0;
         public static final double WHEEL_CIRCUMFERENCE = Units.inchesToMeters(1.751) * Math.PI;
         public static final double POSITION_TOLERANCE = 0.5;
         public static final double PIVOT_CLIMBER_DIST = 0.28;
