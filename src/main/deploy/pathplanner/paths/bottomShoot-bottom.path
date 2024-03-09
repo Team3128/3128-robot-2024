@@ -3,53 +3,37 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.291916992398798,
-        "y": 4.098194797590406
+        "x": 2.74,
+        "y": 2.972182553016727
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.792934188732961,
-        "y": 5.165050448793028
+        "x": 2.604128586801734,
+        "y": 2.9903773697159663
       },
       "isLocked": false,
-      "linkedName": "note2.3"
+      "linkedName": "bottomShoot"
     },
     {
       "anchor": {
-        "x": 5.207145370164582,
-        "y": 6.288189056304328
+        "x": 1.45,
+        "y": 4.1
       },
       "prevControl": {
-        "x": 6.929097477986622,
-        "y": 6.285178082762127
-      },
-      "nextControl": {
-        "x": 4.997576912081981,
-        "y": 6.288555503826126
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 1.4267641652687821,
-        "y": 6.288189056304328
-      },
-      "prevControl": {
-        "x": 1.581201591258796,
-        "y": 6.296451371837929
+        "x": 1.505941634857807,
+        "y": 4.090269766766386
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "midTop"
+      "linkedName": "bottom"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "ShootOnMove",
-      "waypointRelativePos": 1.5,
+      "name": "Intake",
+      "waypointRelativePos": 0,
       "command": {
         "type": "parallel",
         "data": {
@@ -57,7 +41,7 @@
             {
               "type": "named",
               "data": {
-                "name": "ShootOnMove"
+                "name": "Intake"
               }
             }
           ]
@@ -72,7 +56,7 @@
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
-    "velocity": 0.0,
+    "velocity": 0,
     "rotation": 180.0,
     "rotateFast": true
   },

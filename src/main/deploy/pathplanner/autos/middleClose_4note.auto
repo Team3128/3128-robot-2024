@@ -38,7 +38,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "note2.3-midShoot"
+            "pathName": "note2.3-middle"
           }
         },
         {
@@ -50,13 +50,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "midShoot-note2.4"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "note2.4-midShoot"
+            "pathName": "middle-note1.3"
           }
         },
         {
@@ -68,19 +62,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "midShoot-note2.5"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "note2.5-midShoot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
+            "pathName": "note1.3-midLine"
           }
         }
       ]

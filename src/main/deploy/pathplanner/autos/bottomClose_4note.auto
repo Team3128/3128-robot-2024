@@ -3,78 +3,60 @@
   "startingPose": {
     "position": {
       "x": 1.45,
-      "y": 5.55
+      "y": 4.1
     },
-    "rotation": 180.0
+    "rotation": -179.39251593013873
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "Shoot"
+            "pathName": "bottom-note2.5"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "middle-note1.2"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "note1.2-note2.3"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "note2.3-midShoot"
+            "pathName": "note2.5-bottomShoot"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Shoot"
+            "name": "QuickShoot"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "midShoot-note2.4"
+            "pathName": "bottomShoot-note2.4"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "note2.4-midShoot"
+            "pathName": "note2.4-bottomShoot"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Shoot"
+            "name": "QuickShoot"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "midShoot-note2.5"
+            "pathName": "bottomShoot-bottom"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "note2.5-midShoot"
+            "pathName": "bottom-note1.3"
           }
         },
         {

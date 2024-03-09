@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 1.45,
-        "y": 4.1
+        "x": 2.74,
+        "y": 2.972182553016727
       },
       "prevControl": {
-        "x": 3.571320343559643,
-        "y": 1.9786796564403573
+        "x": 4.339639354372748,
+        "y": 1.5302008790504855
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "bottom"
+      "linkedName": "bottomShoot"
     }
   ],
   "rotationTargets": [],
@@ -91,7 +91,7 @@
   },
   "goalEndState": {
     "velocity": 0.0,
-    "rotation": 180.0,
+    "rotation": 136.45382572438544,
     "rotateFast": true
   },
   "reversed": false,

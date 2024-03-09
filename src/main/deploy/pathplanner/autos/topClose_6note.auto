@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.45,
-      "y": 5.55
+      "x": 1.4267641652687821,
+      "y": 6.288189056304328
     },
     "rotation": 180.0
   },
@@ -12,51 +12,39 @@
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "Shoot"
+            "pathName": "midTop-note2.1"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "middle-note1.2"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "note1.2-note2.3"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "note2.3-midShoot"
+            "pathName": "note2.1-wing"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Shoot"
+            "name": "QuickShoot"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "midShoot-note2.4"
+            "pathName": "wing-note2.2"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "note2.4-midShoot"
+            "pathName": "note2.2-midTop"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "midTop-note1.1"
           }
         },
         {
@@ -68,13 +56,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "midShoot-note2.5"
+            "pathName": "note1.1-note1.2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "note2.5-midShoot"
+            "pathName": "note1.2-note1.3"
           }
         },
         {
