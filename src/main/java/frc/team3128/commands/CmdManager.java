@@ -51,7 +51,7 @@ public class CmdManager {
             deadline(
                 waitSeconds(RAMP_TIME),
                 rampUp(),
-                swerve.turnInPlace(true).asProxy()
+                swerve.turnInPlace(false).asProxy()
                 // runOnce(()-> CmdSwerveDrive.setTurnSetpoint(swerve.getTurnAngle(Robot.getAlliance() == Alliance.Red ? focalPointRed : focalPointBlue))),
                 // waitUntil(()-> CmdSwerveDrive.rController.atSetpoint())
             ),
@@ -106,7 +106,7 @@ public class CmdManager {
     }
 
     public static Command rampUp() {
-        return rampUp(ShooterConstants.MAX_RPM, ()-> climber.interpolate(swerve.getPredictedDistance()));
+        return rampUp(ShooterConstants.MAX_RPM, ()-> climber.interpolate(swerve.getDist()));
     }
 
     public static Command rampUp(double rpm, double height){

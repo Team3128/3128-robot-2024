@@ -48,8 +48,9 @@ public class Trajectories {
 
     public enum ShootPosition {
         // find values
-        TOP(25.0),
-        BOTTOM(25.0);
+        TOP(4),
+        TOP_PRELOAD(6.2),
+        BOTTOM(4);
 
         private final double height;
         ShootPosition(double height) {
@@ -77,9 +78,9 @@ public class Trajectories {
         NamedCommands.registerCommand("Shoot2", autoShoot2());
         NamedCommands.registerCommand("RampUpTop", rampUpAuto(ShootPosition.TOP));
         NamedCommands.registerCommand("RampUpBottom", rampUpAuto(ShootPosition.BOTTOM));
+        NamedCommands.registerCommand("RampUpTopPreload", rampUpAuto(ShootPosition.TOP_PRELOAD));
         NamedCommands.registerCommand("Retract", intake.retractAuto());
-        NamedCommands.registerCommand("Amp", null);
-        NamedCommands.registerCommand("Drop", null);
+        NamedCommands.registerCommand("Eject", eject());
         NamedCommands.registerCommand("Disable", runOnce(()-> Camera.disableAll()));
         NamedCommands.registerCommand("Enable", runOnce(()-> Camera.enableAll()));
 
@@ -141,7 +142,8 @@ public class Trajectories {
                 neutralAuto()
             ),
             none(),
-            ()->intake.intakeRollers.hasObjectPresent()
+            ()-> true
+            // ()->intake.intakeRollers.hasObjectPresent()
         );
     }
 
@@ -152,7 +154,8 @@ public class Trajectories {
                 rampUp(ShooterConstants.MAX_RPM, pos.getHeight())
             ),
             none(),
-            ()->intake.intakeRollers.hasObjectPresent()
+            ()-> true
+            // ()->intake.intakeRollers.hasObjectPresent()
         );
     }
  
@@ -163,7 +166,7 @@ public class Trajectories {
                 runOnce(()->{turning = true;}),
                 parallel(
                     rampUp(),
-                    turnInPlace().withTimeout(0.5)
+                    turnInPlace().withTimeout(0.75)
                     // runOnce(()-> CmdSwerveDrive.setTurnSetpoint(swerve.getTurnAngle(Robot.getAlliance() == Alliance.Red ? focalPointRed : focalPointBlue))),
                     // waitUntil(()-> CmdSwerveDrive.rController.atSetpoint())
                 ),
@@ -174,7 +177,8 @@ public class Trajectories {
                 neutralAuto()
             ),
             none(),
-            ()->intake.intakeRollers.hasObjectPresent()
+            ()-> true
+            // ()->intake.intakeRollers.hasObjectPresent()
         );
     }
 
@@ -204,6 +208,14 @@ public class Trajectories {
             intake.intakeRollers.runNoRequirements(0),
             Shooter.getInstance().setShooter(0),
             Climber.getInstance().climbTo(Climber.Setpoint.RETRACTED)
+        );
+    }
+
+    public static Command eject() {
+        return sequence(
+            intake.intakeRollers.outtakeNoRequirements(),
+            waitSeconds(0.1),
+            neutralAuto()
         );
     }
 

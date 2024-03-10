@@ -27,6 +27,9 @@ public class AutoPrograms {
 
     private void initAutoSelector() {
         final String[] autoStrings = new String[] {
+            // "top_6note",
+            "topClose_6note",
+            "top_6note"
         };
         
         NarwhalDashboard.getInstance().addAutos(autoStrings);

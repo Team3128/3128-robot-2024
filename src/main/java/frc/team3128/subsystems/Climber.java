@@ -18,6 +18,7 @@ import common.utility.narwhaldashboard.NarwhalDashboard.State;
 import common.utility.shuffleboard.NAR_Shuffleboard;
 import common.utility.tester.Tester;
 import common.utility.tester.Tester.UnitTest;
+import java.util.function.DoubleSupplier;
 
 public class Climber extends NAR_PIDSubsystem {
 
@@ -36,6 +37,8 @@ public class Climber extends NAR_PIDSubsystem {
     
     private NAR_CANSpark leftMotor;
     private NAR_CANSpark rightMotor;
+
+    private DoubleSupplier x;
     
     private Climber() {
         super(new TrapController(PIDConstants, TRAP_CONSTRAINTS));
@@ -61,6 +64,7 @@ public class Climber extends NAR_PIDSubsystem {
         NAR_Shuffleboard.addSendable("Commands", "IntakePivot", Intake.getInstance().intakePivot, 0, 3);
         NAR_Shuffleboard.addSendable("Commands", "IntakeRollers", Intake.getInstance().intakeRollers, 0, 4);
         NAR_Shuffleboard.addSendable("Commands", "CommandScheduler", CommandScheduler.getInstance(), 3, 0);
+        x = NAR_Shuffleboard.debug("ASDASJJDIOASJD", getName(), -0.95, 0, 0);
 
     }
     
@@ -103,7 +107,7 @@ public class Climber extends NAR_PIDSubsystem {
     }
 
     public double interpolate(double dist){
-        return 25 * Math.pow(dist, -0.92);
+        return 25 * Math.pow(dist + 0.07, x.getAsDouble());
         // return 45.1 - 27 * dist + 6.86 * Math.pow(dist, 2) - 0.621 * Math.pow(dist, 3);
     }
 

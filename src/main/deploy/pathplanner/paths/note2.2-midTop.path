@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.3,
-        "y": 5.7875434900537055
+        "x": 8.1,
+        "y": 5.85
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.850051753705938,
-        "y": 6.333582382080852
+        "x": 7.650051753705937,
+        "y": 6.396038892027146
       },
       "isLocked": false,
       "linkedName": "note2.2"
@@ -48,8 +48,8 @@
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "ShootOnMove",
-      "waypointRelativePos": 1.5,
+      "name": "Retract",
+      "waypointRelativePos": 0,
       "command": {
         "type": "parallel",
         "data": {
@@ -57,7 +57,7 @@
             {
               "type": "named",
               "data": {
-                "name": "ShootOnMove"
+                "name": "Retract"
               }
             }
           ]
@@ -67,7 +67,7 @@
   ],
   "globalConstraints": {
     "maxVelocity": 5.5,
-    "maxAcceleration": 8.0,
+    "maxAcceleration": 6.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },

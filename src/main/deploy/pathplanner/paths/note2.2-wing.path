@@ -3,24 +3,24 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.3,
-        "y": 5.7875434900537055
+        "x": 8.1,
+        "y": 5.85
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.209589838722609,
-        "y": 5.830275243326839
+        "x": 8.009589838722608,
+        "y": 5.892731753273133
       },
       "isLocked": false,
       "linkedName": "note2.2"
     },
     {
       "anchor": {
-        "x": 6.162186278871979,
+        "x": 5.7,
         "y": 6.5759884853103046
       },
       "prevControl": {
-        "x": 6.255487623043882,
+        "x": 5.793301344171903,
         "y": 6.540004333580465
       },
       "nextControl": null,
@@ -33,7 +33,7 @@
   "eventMarkers": [
     {
       "name": "Retract and Ramp Up",
-      "waypointRelativePos": 0.1,
+      "waypointRelativePos": 0.0,
       "command": {
         "type": "sequential",
         "data": {
@@ -57,7 +57,7 @@
   ],
   "globalConstraints": {
     "maxVelocity": 5.5,
-    "maxAcceleration": 8.0,
+    "maxAcceleration": 6.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },

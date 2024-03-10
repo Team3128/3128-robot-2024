@@ -8,36 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.634336227439816,
-        "y": 6.282030246786188
+        "x": 6.4245634658657025,
+        "y": 6.139857835878774
       },
       "isLocked": false,
       "linkedName": "midTop"
     },
     {
       "anchor": {
-        "x": 4.80659217308018,
-        "y": 6.288189056304328
+        "x": 8.1,
+        "y": 7.28
       },
       "prevControl": {
-        "x": 4.714284947334943,
-        "y": 6.292090733833251
-      },
-      "nextControl": {
-        "x": 4.918679722667605,
-        "y": 6.283451296394781
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 8.3,
-        "y": 7.39
-      },
-      "prevControl": {
-        "x": 8.15056361507399,
-        "y": 7.370359391977465
+        "x": 8.029289321881345,
+        "y": 7.209289321881346
       },
       "nextControl": null,
       "isLocked": false,
@@ -46,7 +30,7 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.95,
+      "waypointRelativePos": 0.2,
       "rotationDegrees": 180.0,
       "rotateFast": true
     }
@@ -54,25 +38,8 @@
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "ShootOnMove",
-      "waypointRelativePos": 0.5,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "ShootOnMove"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
       "name": "Intake",
-      "waypointRelativePos": 1.5,
+      "waypointRelativePos": 0.0,
       "command": {
         "type": "parallel",
         "data": {
@@ -90,13 +57,13 @@
   ],
   "globalConstraints": {
     "maxVelocity": 5.5,
-    "maxAcceleration": 8.0,
+    "maxAcceleration": 6.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -162.4062974931889,
+    "rotation": -150.0,
     "rotateFast": true
   },
   "reversed": false,

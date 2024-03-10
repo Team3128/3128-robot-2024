@@ -7,10 +7,12 @@ import common.hardware.motorcontroller.NAR_CANSpark;
 import common.hardware.motorcontroller.NAR_CANSpark.ControllerType;
 import common.hardware.motorcontroller.NAR_Motor.Neutral;
 import common.utility.narwhaldashboard.NarwhalDashboard.State;
+import common.utility.shuffleboard.NAR_Shuffleboard;
 import common.utility.tester.CurrentTest;
 import common.utility.tester.Tester;
 import common.utility.tester.Tester.UnitTest;
 import edu.wpi.first.wpilibj2.command.Command;
+import java.util.function.DoubleSupplier;
 
 import static frc.team3128.Constants.ShooterConstants.*;
 
@@ -21,12 +23,17 @@ public class Shooter extends NAR_PIDSubsystem {
 
     private static Shooter instance;
 
+    private DoubleSupplier x;
+
     private Shooter(){
         super(new Controller(PIDConstants, Type.VELOCITY));
         setConstraints(MIN_RPM, MAX_RPM);
         setTolerance(TOLERANCE);
         configMotors();
         initShuffleboard();
+        x = NAR_Shuffleboard.debug("ADADSA", getName(), 500, 0, 0);
+        NAR_Shuffleboard.addData("ADADSA", "ADSADA", ()-> rightMotor.getVelocity(), 1, 0);
+
     }
 
     public static synchronized Shooter getInstance(){
@@ -38,7 +45,7 @@ public class Shooter extends NAR_PIDSubsystem {
 
     @Override
     public boolean atSetpoint() {
-        return super.atSetpoint() && Math.abs(Math.abs(rightMotor.getVelocity()) - (getSetpoint() - 2000)) < TOLERANCE;
+        return super.atSetpoint() && Math.abs(Math.abs(rightMotor.getVelocity()) - (getSetpoint() - x.getAsDouble())) < TOLERANCE;
     }
 
     private void configMotors(){
@@ -63,7 +70,7 @@ public class Shooter extends NAR_PIDSubsystem {
     protected void useOutput(double output, double setpoint) {
         leftMotor.setVolts(output + kF);
         // rightMotor.setVolts(output);
-        rightMotor.setVolts(Math.max(0, (setpoint - 2000) * PIDConstants.kV + kF));
+        rightMotor.setVolts(Math.max(0, (setpoint - x.getAsDouble()) * PIDConstants.kV + kF));
     }
 
     @Override

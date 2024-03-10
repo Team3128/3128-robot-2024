@@ -162,7 +162,8 @@ public class RobotContainer {
         buttonPad.getButton(13).onTrue(runOnce(()-> CommandScheduler.getInstance().cancelAll()));
         buttonPad.getButton(14).onTrue(runOnce(()-> swerve.zeroGyro(0)));
         buttonPad.getButton(15).onTrue(intake.intakeRollers.serialize());
-        buttonPad.getButton(16).onTrue(intake.intakeRollers.outtake()).onFalse(intake.intakeRollers.runManipulator(0));
+        // buttonPad.getButton(16).onTrue(intake.intakeRollers.outtake()).onFalse(intake.intakeRollers.runManipulator(0));
+        buttonPad.getButton(16).onTrue(intake.outtake());
     }
 
     @SuppressWarnings("unused")

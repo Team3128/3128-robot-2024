@@ -22,7 +22,7 @@ import static frc.team3128.Constants.IntakeConstants.*;
 public class Intake {
 
     public enum Setpoint {
-        EXTENDED(-195),
+        EXTENDED(-200),
         AMP(-90);
 
         public final double angle;
@@ -172,7 +172,7 @@ public class Intake {
             waitSeconds(0.1),
             intakePivot.runPivot(0),
             parallel(
-                either(intakeRollers.serialize().withTimeout(2), intakeRollers.runManipulator(0), ()-> shouldStall).withTimeout(0.5),
+                either(intakeRollers.serialize().withTimeout(4), intakeRollers.runManipulator(0), ()-> shouldStall).withTimeout(0.5),
                 sequence(
                     waitSeconds(0.5),
                     runOnce(()-> isRetracting = false),

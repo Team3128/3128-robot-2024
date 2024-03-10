@@ -291,7 +291,7 @@ public class Constants {
     }
 
     public static class ShooterConstants {
-        public static final PIDFFConfig PIDConstants = new PIDFFConfig(0, 0, 0, 0, 0.00184723, 0); //Retune later
+        public static final PIDFFConfig PIDConstants = new PIDFFConfig(0, 0, 0, 0, 0.00180723, 0); //Retune later
         public static final double kF = 0.144578;
         public static final int LEFT_MOTOR_ID = 41;
         public static final int RIGHT_MOTOR_ID = 42;
@@ -382,7 +382,7 @@ public class Constants {
         public static final int CURRENT_LIMIT = 40;
         public static final double STALL_CURRENT = 200;
         public static final double STALL_POWER = 0.03;
-        public static final double OUTTAKE_POWER = -0.5 / 0.75;
+        public static final double OUTTAKE_POWER = -0.75 / 0.75;
         public static final double INTAKE_POWER = 0.7 /0.75;
         public static final double AMP_POWER = -0.18 / 0.75;
 
