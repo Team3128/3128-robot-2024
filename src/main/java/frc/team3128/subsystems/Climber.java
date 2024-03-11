@@ -58,13 +58,13 @@ public class Climber extends NAR_PIDSubsystem {
     @Override
     public void initShuffleboard() {
         super.initShuffleboard();
-        // NAR_Shuffleboard.addData("Climber", "angle", ()-> getAngle(), 4, 0);
+        NAR_Shuffleboard.addData("Climber", "angle", ()-> getAngle(), 4, 0);
         NAR_Shuffleboard.addSendable("Commands", "Climber", this, 0, 1);
         NAR_Shuffleboard.addSendable("Commands", "Shooter", Shooter.getInstance(), 0, 2);
         NAR_Shuffleboard.addSendable("Commands", "IntakePivot", Intake.getInstance().intakePivot, 0, 3);
         NAR_Shuffleboard.addSendable("Commands", "IntakeRollers", Intake.getInstance().intakeRollers, 0, 4);
         NAR_Shuffleboard.addSendable("Commands", "CommandScheduler", CommandScheduler.getInstance(), 3, 0);
-        x = NAR_Shuffleboard.debug("ASDASJJDIOASJD", getName(), -0.95, 0, 0);
+        x = NAR_Shuffleboard.debug("ASDASJJDIOASJD", getName(), -1, 0, 0);
 
     }
     
@@ -95,7 +95,7 @@ public class Climber extends NAR_PIDSubsystem {
     }
 
     public double getAngle(){
-        return Units.radiansToDegrees(Math.atan2((getMeasurement() + HEIGHT_OFFSET), PIVOT_CLIMBER_DIST));
+        return -(Units.radiansToDegrees(Math.atan2((getMeasurement() + HEIGHT_OFFSET), PIVOT_CLIMBER_DIST)) - ANGLE_OFFSET);
     }
 
     public double heightToAngle(double height){

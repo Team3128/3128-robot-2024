@@ -28,6 +28,7 @@ public class AutoPrograms {
     private void initAutoSelector() {
         final String[] autoStrings = new String[] {
             // "top_6note",
+            "fu",
             "topClose_6note",
             "top_6note"
         };

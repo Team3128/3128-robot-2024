@@ -13,10 +13,12 @@ import frc.team3128.Robot;
 import frc.team3128.RobotContainer;
 import frc.team3128.Constants.IntakeConstants;
 import frc.team3128.Constants.ShooterConstants;
+import frc.team3128.subsystems.AmpMechanism;
 import frc.team3128.subsystems.Climber;
 import frc.team3128.subsystems.Intake;
 import frc.team3128.subsystems.Shooter;
 import frc.team3128.subsystems.Swerve;
+import frc.team3128.subsystems.Climber.Setpoint;
 
 import java.util.function.DoubleSupplier;
 
@@ -36,6 +38,7 @@ public class CmdManager {
     private static Intake intake = Intake.getInstance();
     private static Shooter shooter = Shooter.getInstance();
     private static Climber climber = Climber.getInstance();
+    // private static AmpMechanism ampMechanism = AmpMechanism.getInstance();
 
     private static NAR_XboxController controller = RobotContainer.controller;
 
@@ -62,25 +65,20 @@ public class CmdManager {
         );
     }
 
-    public static Command ampShootAlt() {
-        return sequence(
-            intake.intakePivot.pivotNoRequirements(-87),
-            waitUntil(()-> intake.intakePivot.atSetpoint()),
-            intake.intakeRollers.runManipulator(-0.2875),
-            waitSeconds(0.2),
-            intake.retract(false)
-        );
-    }
-
-    public static Command ampShoot() {
-        return sequence (
-            intake.intakePivot.pivotNoRequirements(-72.5),
-            waitUntil(()-> intake.intakePivot.getMeasurement() < -55),
-            intake.intakeRollers.runNoRequirements(IntakeConstants.AMP_POWER),
-            waitSeconds(0.25),
-            intake.retract(false)
-        );
-    }
+    // public static Command ampShoot() {
+    //     return sequence (
+    //         climber.climbTo(Setpoint.AMP),
+    //         shooter.shoot(ShooterConstants.AMP_RPM),
+    //         waitUntil(()-> climber.atSetpoint()),
+    //         ampMechanism.extend(),
+    //         waitUntil(()-> ampMechanism.atSetpoint() && shooter.atSetpoint()),
+    //         intake.outtake(),
+    //         waitSeconds(0.25),
+    //         ampMechanism.retract(),
+    //         waitUntil(()-> ampMechanism.atSetpoint()),
+    //         neutral(false)
+    //     );
+    // }
 
     public static Command shoot(double rpm, double height){
         return sequence(
@@ -118,13 +116,6 @@ public class CmdManager {
             climber.climbTo(height),
             shooter.shoot(rpm),
             waitUntil(()-> climber.atSetpoint() && shooter.atSetpoint())
-        );
-    }
-
-    public static Command rampUpAmp() {
-        return sequence(
-            climber.climbTo(Climber.Setpoint.AMP),
-            shooter.runBottomRollers(ShooterConstants.AMP_POWER)
         );
     }
 

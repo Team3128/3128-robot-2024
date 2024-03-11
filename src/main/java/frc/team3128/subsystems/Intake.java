@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.team3128.Constants.LedConstants.Colors;
 import static edu.wpi.first.wpilibj2.command.Commands.*;
 import static frc.team3128.Constants.IntakeConstants.*;
+import java.util.function.DoubleSupplier;
 
 public class Intake {
 
@@ -52,6 +53,10 @@ public class Intake {
         @Override
         public void useOutput(double output, double setpoint) {
             PIVOT_MOTOR.setVolts(MathUtil.clamp(output, -12, 12));
+        }
+
+        public Command pivotTo(DoubleSupplier setpoint) {
+            return runOnce(()-> startPID(setpoint.getAsDouble()));
         }
 
         public Command pivotNoRequirements(double setpoint) {
@@ -218,9 +223,8 @@ public class Intake {
 
     public Command retractAuto() {
         return sequence(
-            waitUntil(()-> Climber.getInstance().isNeutral()),
             intakeRollers.runManipulator(STALL_POWER),
-            intakePivot.pivotTo(0),
+            intakePivot.pivotTo(()-> Climber.getInstance().getAngle()),
             waitUntil(() -> intakePivot.atSetpoint()),
             intakePivot.runPivot(0)
         );

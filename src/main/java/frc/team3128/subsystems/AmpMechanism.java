@@ -35,6 +35,7 @@ public class AmpMechanism extends PivotTemplate {
         super(new TrapController(PIDConstants, TRAP_CONSTRAINTS), WRIST_MOTOR);
         setkG_Function(()-> Math.cos(Units.degreesToRadians(getSetpoint())));
         setTolerance(POSITION_TOLERANCE);
+        initShuffleboard();
     }
 
     @Override
@@ -62,6 +63,10 @@ public class AmpMechanism extends PivotTemplate {
             pivotTo(Setpoint.AMP),
             runOnce(()-> ROLLER_MOTOR.set(AMP_POWER))
         );
+    }
+
+    public Command runRollers(double power) {
+        return runOnce(()-> ROLLER_MOTOR.set(power));
     }
     
 }

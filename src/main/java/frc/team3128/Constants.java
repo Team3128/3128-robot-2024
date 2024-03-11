@@ -299,7 +299,7 @@ public class Constants {
         public static final double MAX_RPM = 5800;
         public static final double MIN_RPM = 0;
         public static final double TOLERANCE = 150;
-        public static final double AMP_POWER = 0.30;
+        public static final double AMP_RPM = 1500;
 
         public static final double CURRENT_TEST_POWER = 0;
         public static final double CURRENT_TEST_PLATEAU = 0;
@@ -319,9 +319,9 @@ public class Constants {
         public static final double MAX_ACCELERATION = 1000000;
         public static final Constraints TRAP_CONSTRAINTS = new Constraints(MAX_VELOCITY, MAX_ACCELERATION);
 
-        public static final int WRIST_MOTOR_ID = 51;
+        public static final int WRIST_MOTOR_ID = 53;
         public static final NAR_CANSpark WRIST_MOTOR = new NAR_CANSpark(WRIST_MOTOR_ID);
-        public static final double GEAR_RATIO = 1.0 / 1.0;
+        public static final double GEAR_RATIO = 1.0 / 150;
         public static final double CURRENT_LIMIT = 20;
         public static final double POSITION_TOLERANCE = 1;
 
@@ -339,10 +339,12 @@ public class Constants {
         public static final double GEAR_RATIO = 1.0 / 15.0;
         public static final double WHEEL_CIRCUMFERENCE = Units.inchesToMeters(1.751) * Math.PI;
         public static final double POSITION_TOLERANCE = 0.5;
-        public static final double PIVOT_CLIMBER_DIST = 0.28;
+        public static final double PIVOT_CLIMBER_DIST = 28;
         public static final double POSITION_MINIMUM = 0;
         public static final double POSITION_MAXIMUM = 30;
-        public static final double HEIGHT_OFFSET = 0.07; // 14 degrees ish
+        public static final double HEIGHT_OFFSET = 7; // 14 degrees ish
+        public static final double ANGLE_OFFSET = 14;
+
         public static final double NEUTRAL_THRESHOLD = 1;
         public static final InterpolatingDoubleTreeMap climberHeightMap = new InterpolatingDoubleTreeMap();
         static {
@@ -378,7 +380,7 @@ public class Constants {
 
         public static final int ROLLER_MOTOR_ID = 32;
         public static final NAR_CANSpark ROLLER_MOTOR = new NAR_CANSpark(ROLLER_MOTOR_ID);
-        public static final double ANGLE_TOLERANCE = 1;
+        public static final double ANGLE_TOLERANCE = 3;
         public static final int CURRENT_LIMIT = 40;
         public static final double STALL_CURRENT = 200;
         public static final double STALL_POWER = 0.03;

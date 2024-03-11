@@ -31,7 +31,7 @@ public class Shooter extends NAR_PIDSubsystem {
         setTolerance(TOLERANCE);
         configMotors();
         initShuffleboard();
-        x = NAR_Shuffleboard.debug("ADADSA", getName(), 500, 0, 0);
+        x = NAR_Shuffleboard.debug("ADADSA", getName(), 750, 0, 0);
         NAR_Shuffleboard.addData("ADADSA", "ADSADA", ()-> rightMotor.getVelocity(), 1, 0);
 
     }

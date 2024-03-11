@@ -75,11 +75,11 @@ public class Trajectories {
         NamedCommands.registerCommand("Intake", intake.intakeAuto());
         NamedCommands.registerCommand("Shoot", autoShoot());
         NamedCommands.registerCommand("QuickShoot", quickShoot());
-        NamedCommands.registerCommand("Shoot2", autoShoot2());
         NamedCommands.registerCommand("RampUpTop", rampUpAuto(ShootPosition.TOP));
         NamedCommands.registerCommand("RampUpBottom", rampUpAuto(ShootPosition.BOTTOM));
         NamedCommands.registerCommand("RampUpTopPreload", rampUpAuto(ShootPosition.TOP_PRELOAD));
         NamedCommands.registerCommand("Retract", intake.retractAuto());
+        NamedCommands.registerCommand("Neutral", neutral(false));
         NamedCommands.registerCommand("Eject", eject());
         NamedCommands.registerCommand("Disable", runOnce(()-> Camera.disableAll()));
         NamedCommands.registerCommand("Enable", runOnce(()-> Camera.enableAll()));
@@ -139,7 +139,8 @@ public class Trajectories {
                 waitUntil(()-> climber.atSetpoint() && shooter.atSetpoint()),
                 intake.intakeRollers.outtakeNoRequirements(),
                 waitSeconds(0.1),
-                neutralAuto()
+                intake.intakeRollers.runManipulator(0),
+                shooter.setShooter(0)
             ),
             none(),
             ()-> true
@@ -150,6 +151,7 @@ public class Trajectories {
     public static Command rampUpAuto(ShootPosition pos) {
         return either(
             sequence(
+                shooter.shoot(MAX_RPM),
                 either(intake.retractAuto(), none(), ()-> intake.intakePivot.isEnabled()),
                 rampUp(ShooterConstants.MAX_RPM, pos.getHeight())
             ),
@@ -162,44 +164,26 @@ public class Trajectories {
     public static Command autoShoot() {
         return either(
             sequence(
-                either(intake.retractAuto(), none(), ()-> intake.intakePivot.isEnabled()),
-                runOnce(()->{turning = true;}),
+                shooter.shoot(MAX_RPM),
                 parallel(
-                    rampUp(),
+                    sequence(
+                        either(sequence(waitUntil(()-> intake.intakeRollers.hasObjectPresent()).withTimeout(0.5), intake.retractAuto()), none(), ()-> intake.intakePivot.isEnabled()),
+                        runOnce(()->{turning = true;}),
+                        rampUp()
+                    ),
                     turnInPlace().withTimeout(0.75)
-                    // runOnce(()-> CmdSwerveDrive.setTurnSetpoint(swerve.getTurnAngle(Robot.getAlliance() == Alliance.Red ? focalPointRed : focalPointBlue))),
-                    // waitUntil(()-> CmdSwerveDrive.rController.atSetpoint())
                 ),
                 // waitSeconds(1),
                 runOnce(()->{turning = false;}),
                 intake.intakeRollers.outtakeNoRequirements(),
                 waitSeconds(0.1),
-                neutralAuto()
+                intake.intakeRollers.runManipulator(0)
+                // shooter.setShooter(0)
+                // neutralAuto()
             ),
             none(),
             ()-> true
             // ()->intake.intakeRollers.hasObjectPresent()
-        );
-    }
-
-    public static Command autoShoot2() {
-        return either(
-            sequence(
-                runOnce(()-> turning = true),
-                parallel(
-                    rampUp(MAX_RPM, 12.94),
-                    turnInPlace2().withTimeout(0.75)
-                    // runOnce(()-> CmdSwerveDrive.setTurnSetpoint(swerve.getTurnAngle(Robot.getAlliance() == Alliance.Red ? focalPointRed : focalPointBlue))),
-                    // waitUntil(()-> CmdSwerveDrive.rController.atSetpoint())
-                ),
-                // waitSeconds(1),
-                runOnce(()->{turning = false;}),
-                intake.intakeRollers.outtakeNoRequirements(),
-                waitSeconds(0.1),
-                neutralAuto()
-            ),
-            none(),
-            ()->intake.intakeRollers.hasObjectPresent()
         );
     }
 
