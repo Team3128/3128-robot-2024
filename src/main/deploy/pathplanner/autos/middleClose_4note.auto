@@ -30,6 +30,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Neutral"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "note1.2-note2.3"
@@ -57,6 +63,12 @@
           "type": "named",
           "data": {
             "name": "Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "NeutralWait"
           }
         },
         {

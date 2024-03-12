@@ -34,7 +34,7 @@ import static frc.team3128.commands.CmdManager.*;
 
 import java.util.function.DoubleSupplier;
 
-
+import frc.team3128.subsystems.AmpMechanism;
 import frc.team3128.subsystems.Climber;
 import frc.team3128.subsystems.Intake;
 import frc.team3128.subsystems.Shooter;
@@ -74,15 +74,9 @@ public class Trajectories {
         // TODO: add commands
         NamedCommands.registerCommand("Intake", intake.intakeAuto());
         NamedCommands.registerCommand("Shoot", autoShoot());
-        NamedCommands.registerCommand("QuickShoot", quickShoot());
-        NamedCommands.registerCommand("RampUpTop", rampUpAuto(ShootPosition.TOP));
-        NamedCommands.registerCommand("RampUpBottom", rampUpAuto(ShootPosition.BOTTOM));
-        NamedCommands.registerCommand("RampUpTopPreload", rampUpAuto(ShootPosition.TOP_PRELOAD));
         NamedCommands.registerCommand("Retract", intake.retractAuto());
-        NamedCommands.registerCommand("Neutral", neutral(false));
-        NamedCommands.registerCommand("Eject", eject());
-        NamedCommands.registerCommand("Disable", runOnce(()-> Camera.disableAll()));
-        NamedCommands.registerCommand("Enable", runOnce(()-> Camera.enableAll()));
+        NamedCommands.registerCommand("Neutral", neutralAuto());
+        NamedCommands.registerCommand("NeutralWait", sequence(neutralAuto(), waitUntil(()-> climber.atSetpoint())));
 
         AutoBuilder.configureHolonomic(
             swerve::getPose,
@@ -119,33 +113,6 @@ public class Trajectories {
                 Swerve.getInstance().drive(new ChassisSpeeds(vx, vy, Units.degreesToRadians(output)));
             }
         ).beforeStarting(runOnce(()-> CmdSwerveDrive.disableTurn()));
-    }
-
-    public static Command turnInPlace2() {
-        DoubleSupplier setpoint = ()-> Robot.getAlliance() == Alliance.Red ? 305 - 10 : -125 + 10;
-        return new NAR_PIDCommand(
-            TURN_CONTROLLER, 
-            ()-> swerve.getYaw(), //measurement
-            setpoint, //setpoint
-            (double output) -> {
-                Swerve.getInstance().drive(new Translation2d(), Units.degreesToRadians(output), true);
-            }
-        ).beforeStarting(runOnce(()-> CmdSwerveDrive.disableTurn()));
-    }
-
-    public static Command quickShoot() {
-        return either(
-            sequence(
-                waitUntil(()-> climber.atSetpoint() && shooter.atSetpoint()),
-                intake.intakeRollers.outtakeNoRequirements(),
-                waitSeconds(0.1),
-                intake.intakeRollers.runManipulator(0),
-                shooter.setShooter(0)
-            ),
-            none(),
-            ()-> true
-            // ()->intake.intakeRollers.hasObjectPresent()
-        );
     }
 
     public static Command rampUpAuto(ShootPosition pos) {
@@ -195,14 +162,6 @@ public class Trajectories {
         );
     }
 
-    public static Command eject() {
-        return sequence(
-            intake.intakeRollers.outtakeNoRequirements(),
-            waitSeconds(0.1),
-            neutralAuto()
-        );
-    }
-
     public static Command getPathPlannerAuto(String name) {
         return new PathPlannerAuto(name);
     }
@@ -212,6 +171,7 @@ public class Trajectories {
         return sequence(
             Intake.getInstance().intakePivot.reset(0),
             Climber.getInstance().reset(),
+            AmpMechanism.getInstance().reset(-90),
             runOnce(()-> swerve.resetEncoders()),
             runOnce(()-> Intake.getInstance().isRetracting = false)
         );

@@ -8,32 +8,50 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.316038421472097,
-        "y": 6.556370299300205
+        "x": 6.3,
+        "y": 6.5759884853103046
       },
       "isLocked": false,
       "linkedName": "wing"
     },
     {
       "anchor": {
-        "x": 8.278595406221484,
-        "y": 4.119459508269422
+        "x": 8.291916992398798,
+        "y": 4.098194797590406
       },
       "prevControl": {
-        "x": 8.22278522544603,
-        "y": 4.196180877098445
+        "x": 8.236106811623344,
+        "y": 4.174916166419428
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "note2.3"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Intake",
+      "waypointRelativePos": 0.0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Intake"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 5.5,
-    "maxAcceleration": 6.0,
+    "maxAcceleration": 8.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },

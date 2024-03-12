@@ -36,6 +36,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "NeutralWait"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "note1.2-leave"

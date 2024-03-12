@@ -20,8 +20,8 @@
         "y": 6.5759884853103046
       },
       "prevControl": {
-        "x": 5.348185783365201,
-        "y": 6.573092569000532
+        "x": 6.3,
+        "y": 6.5759884853103046
       },
       "nextControl": null,
       "isLocked": false,
@@ -32,7 +32,7 @@
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "Retract and Ramp Up",
+      "name": "Retract",
       "waypointRelativePos": 0,
       "command": {
         "type": "sequential",
@@ -43,12 +43,6 @@
               "data": {
                 "name": "Retract"
               }
-            },
-            {
-              "type": "named",
-              "data": {
-                "name": "RampUpTop"
-              }
             }
           ]
         }
@@ -57,13 +51,13 @@
   ],
   "globalConstraints": {
     "maxVelocity": 5.5,
-    "maxAcceleration": 6.0,
+    "maxAcceleration": 8.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -165.0,
+    "rotation": -170.0,
     "rotateFast": true
   },
   "reversed": false,

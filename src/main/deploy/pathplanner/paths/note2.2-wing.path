@@ -32,7 +32,7 @@
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "Retract and Ramp Up",
+      "name": "Retract",
       "waypointRelativePos": 0.0,
       "command": {
         "type": "sequential",
@@ -43,12 +43,6 @@
               "data": {
                 "name": "Retract"
               }
-            },
-            {
-              "type": "named",
-              "data": {
-                "name": "RampUpTop"
-              }
             }
           ]
         }
@@ -57,7 +51,7 @@
   ],
   "globalConstraints": {
     "maxVelocity": 5.5,
-    "maxAcceleration": 6.0,
+    "maxAcceleration": 8.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },

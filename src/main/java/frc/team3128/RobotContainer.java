@@ -97,7 +97,7 @@ public class RobotContainer {
         controller.getButton(XboxButton.kRightBumper).onTrue(rampUp(MAX_RPM, 25)).onFalse(shoot(MAX_RPM, 25)); //Ram Shot
         controller.getButton(XboxButton.kRightTrigger).onTrue(rampUpContinuous()).onFalse(autoShoot());     //Auto Shoot
         controller.getButton(XboxButton.kY).onTrue(rampUp(5000, 15)).onFalse(feed(5000, 15));   //Feed Shot
-        // controller.getButton(XboxButton.kX).onTrue(intake.intakePivot.pivotTo(-55)).onFalse(ampShoot()); //Amp Shot
+        controller.getButton(XboxButton.kX).onTrue(rampUpAmp()).onFalse(ampShoot()); //Amp Shot
         // controller.getButton(XboxButton.kX).onTrue(intake.intakePivot.pivotTo(-87)).onFalse(ampShootAlt());
 
         controller.getButton(XboxButton.kA).onTrue(sequence(runOnce(()-> intake.isRetracting = false), intake.intakePivot.pivotTo(-150), climber.climbTo(Climber.Setpoint.EXTENDED))); //Extend Climber
@@ -149,24 +149,26 @@ public class RobotContainer {
 
 
         buttonPad.getButton(1).onTrue(shooter.setShooter(-0.8)).onFalse(shooter.setShooter(0));
-        buttonPad.getButton(2).onTrue(ampMechanism.runPivot(1)).onFalse(ampMechanism.runPivot(0));
+        buttonPad.getButton(2).onTrue(ampMechanism.runPivot(0.2)).onFalse(ampMechanism.runPivot(0));
         buttonPad.getButton(3).onTrue(climber.setClimber(-1)).onFalse(climber.setClimber(0));
         buttonPad.getButton(4).onTrue(shooter.setShooter(0.8)).onFalse(shooter.setShooter(0));
-        buttonPad.getButton(5).onTrue(ampMechanism.runPivot(-1)).onFalse(ampMechanism.runPivot(0));
+        buttonPad.getButton(5).onTrue(ampMechanism.runPivot(-0.2)).onFalse(ampMechanism.runPivot(0));
         buttonPad.getButton(6).onTrue(climber.setClimber(1)).onFalse(climber.setClimber(0));
         buttonPad.getButton(7).onTrue(shooter.shoot(0));
         buttonPad.getButton(8).onTrue(ampMechanism.pivotTo(0));
         buttonPad.getButton(9).onTrue(climber.climbTo(0));
         buttonPad.getButton(10).onTrue(neutral(false));
         
-        buttonPad.getButton(11).onTrue(ampMechanism.reset(0));
+        buttonPad.getButton(11).onTrue(ampMechanism.reset(-90));
         buttonPad.getButton(12).onTrue(climber.reset());
 
-        buttonPad.getButton(13).onTrue(runOnce(()-> CommandScheduler.getInstance().cancelAll()));
+        // buttonPad.getButton(13).onTrue(runOnce(()-> CommandScheduler.getInstance().cancelAll()));
         buttonPad.getButton(14).onTrue(runOnce(()-> swerve.zeroGyro(0)));
+        // buttonPad.getButton(15).onTrue(runOnce(()-> autoAmpAlign().schedule()));
         buttonPad.getButton(15).onTrue(ampMechanism.runRollers(0.5)).onFalse(ampMechanism.runRollers(0));
+        buttonPad.getButton(13).onTrue(intake.intakeRollers.outtake()).onFalse(intake.intakeRollers.runManipulator(0));
         // buttonPad.getButton(16).onTrue(intake.intakeRollers.outtake()).onFalse(intake.intakeRollers.runManipulator(0));
-        buttonPad.getButton(16).onTrue(intake.outtake());
+        // buttonPad.getButton(16).onTrue(intake.outtake());
     }
 
     @SuppressWarnings("unused")

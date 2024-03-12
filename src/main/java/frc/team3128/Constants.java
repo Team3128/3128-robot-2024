@@ -314,14 +314,14 @@ public class Constants {
     }
 
     public static class AmpWristConstants {
-        public static final PIDFFConfig PIDConstants = new PIDFFConfig(0, 0, 0, 0, 0, 0);
+        public static final PIDFFConfig PIDConstants = new PIDFFConfig(0.25, 0, 0, 0.08, 0, 0.22);
         public static final double MAX_VELOCITY = 10000000;
         public static final double MAX_ACCELERATION = 1000000;
         public static final Constraints TRAP_CONSTRAINTS = new Constraints(MAX_VELOCITY, MAX_ACCELERATION);
 
         public static final int WRIST_MOTOR_ID = 53;
         public static final NAR_CANSpark WRIST_MOTOR = new NAR_CANSpark(WRIST_MOTOR_ID);
-        public static final double GEAR_RATIO = 1.0 / 150;
+        public static final double GEAR_RATIO = 1.0 / 70.875;
         public static final double CURRENT_LIMIT = 20;
         public static final double POSITION_TOLERANCE = 1;
 

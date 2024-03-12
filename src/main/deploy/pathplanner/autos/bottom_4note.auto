@@ -12,6 +12,12 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "bottom-note2.5"
@@ -26,7 +32,13 @@
         {
           "type": "named",
           "data": {
-            "name": "QuickShoot"
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Neutral"
           }
         },
         {
@@ -48,6 +60,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "NeutralWait"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "midShoot-note2.3"
@@ -63,6 +81,12 @@
           "type": "named",
           "data": {
             "name": "Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Neutral"
           }
         }
       ]

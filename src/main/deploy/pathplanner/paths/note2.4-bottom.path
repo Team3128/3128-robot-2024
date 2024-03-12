@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.544917095542277,
-        "y": 1.430563621688586
+        "x": 6.6658719337410135,
+        "y": 0.9251560871167382
       },
       "isLocked": false,
       "linkedName": "note2.4"
@@ -35,7 +35,7 @@
       "name": "Retract",
       "waypointRelativePos": 0,
       "command": {
-        "type": "parallel",
+        "type": "sequential",
         "data": {
           "commands": [
             {
@@ -47,45 +47,11 @@
           ]
         }
       }
-    },
-    {
-      "name": "Enable",
-      "waypointRelativePos": 0.6,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "Enable"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "RampUp",
-      "waypointRelativePos": 0.5,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "RampUp"
-              }
-            }
-          ]
-        }
-      }
     }
   ],
   "globalConstraints": {
     "maxVelocity": 5.5,
-    "maxAcceleration": 6.0,
+    "maxAcceleration": 8.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },

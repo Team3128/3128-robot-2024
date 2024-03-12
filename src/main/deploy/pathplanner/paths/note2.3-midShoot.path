@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.7773031069788985,
-        "y": 4.056232765301179
+        "x": 7.773637134240806,
+        "y": 4.0559338389201285
       },
       "isLocked": false,
       "linkedName": "note2.3"
     },
     {
       "anchor": {
-        "x": 3.8128864669911056,
-        "y": 4.881822699119936
+        "x": 3.81,
+        "y": 5.5
       },
       "prevControl": {
-        "x": 4.58877584175886,
-        "y": 4.450310291643443
+        "x": 3.81,
+        "y": 4.0
       },
       "nextControl": null,
       "isLocked": false,
@@ -35,7 +35,7 @@
       "name": "Retract",
       "waypointRelativePos": 0,
       "command": {
-        "type": "parallel",
+        "type": "sequential",
         "data": {
           "commands": [
             {
@@ -51,13 +51,13 @@
   ],
   "globalConstraints": {
     "maxVelocity": 5.5,
-    "maxAcceleration": 6.0,
+    "maxAcceleration": 8.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 170.35752001430427,
+    "rotation": 180.0,
     "rotateFast": true
   },
   "reversed": false,

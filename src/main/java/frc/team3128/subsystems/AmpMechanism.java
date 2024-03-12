@@ -13,8 +13,8 @@ import static frc.team3128.Constants.IntakeConstants.CURRENT_LIMIT;
 public class AmpMechanism extends PivotTemplate {
 
     public enum Setpoint {
-        AMP(180),
-        RETRACTED(0);
+        AMP(45),
+        RETRACTED(-90);
 
         private double angle;
         private Setpoint(double angle) {
@@ -35,6 +35,7 @@ public class AmpMechanism extends PivotTemplate {
         super(new TrapController(PIDConstants, TRAP_CONSTRAINTS), WRIST_MOTOR);
         setkG_Function(()-> Math.cos(Units.degreesToRadians(getSetpoint())));
         setTolerance(POSITION_TOLERANCE);
+        setConstraints(-90, 90);
         initShuffleboard();
     }
 

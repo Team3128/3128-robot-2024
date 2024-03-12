@@ -20,6 +20,7 @@ import static edu.wpi.first.wpilibj2.command.Commands.*;
 
 import frc.team3128.Constants.LedConstants.Colors;
 import frc.team3128.autonomous.AutoPrograms;
+import frc.team3128.commands.CmdManager;
 import frc.team3128.subsystems.Leds;
 import frc.team3128.subsystems.Swerve;
 
@@ -94,6 +95,7 @@ public class Robot extends NAR_Robot {
             addReceiver(true, LoggingState.FULLMATCH);
         Logger.start();
         
+        CmdManager.neutral(false).schedule();
     }
 
     @Override

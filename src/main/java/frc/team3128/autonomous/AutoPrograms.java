@@ -27,10 +27,16 @@ public class AutoPrograms {
 
     private void initAutoSelector() {
         final String[] autoStrings = new String[] {
-            // "top_6note",
-            "fu",
-            "topClose_6note",
-            "top_6note"
+            "top_2note",
+            "top_4note",
+            "top_7note",
+            "middle_2note",
+            "middle_4note",
+            "middleClose_4note",
+            "bottom_2note",
+            "bottom_4note",
+            "bottomClose_4note",
+            "leave"
         };
         
         NarwhalDashboard.getInstance().addAutos(autoStrings);

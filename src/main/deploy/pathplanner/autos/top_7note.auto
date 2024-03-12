@@ -88,6 +88,30 @@
           "data": {
             "name": "Shoot"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "wing-note2.3"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "note2.3-wing"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Neutral"
+          }
         }
       ]
     }

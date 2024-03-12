@@ -38,7 +38,7 @@ public class CmdManager {
     private static Intake intake = Intake.getInstance();
     private static Shooter shooter = Shooter.getInstance();
     private static Climber climber = Climber.getInstance();
-    // private static AmpMechanism ampMechanism = AmpMechanism.getInstance();
+    private static AmpMechanism ampMechanism = AmpMechanism.getInstance();
 
     private static NAR_XboxController controller = RobotContainer.controller;
 
@@ -65,20 +65,29 @@ public class CmdManager {
         );
     }
 
-    // public static Command ampShoot() {
-    //     return sequence (
-    //         climber.climbTo(Setpoint.AMP),
-    //         shooter.shoot(ShooterConstants.AMP_RPM),
-    //         waitUntil(()-> climber.atSetpoint()),
-    //         ampMechanism.extend(),
-    //         waitUntil(()-> ampMechanism.atSetpoint() && shooter.atSetpoint()),
-    //         intake.outtake(),
-    //         waitSeconds(0.25),
-    //         ampMechanism.retract(),
-    //         waitUntil(()-> ampMechanism.atSetpoint()),
-    //         neutral(false)
-    //     );
-    // }
+    public static Command rampUpAmp() {
+        return sequence (
+            climber.climbTo(Setpoint.AMP),
+            shooter.shoot(ShooterConstants.AMP_RPM),
+            waitUntil(()-> climber.atSetpoint()),
+            ampMechanism.extend()
+        );
+    }
+
+    public static Command ampShoot() {
+        return sequence (
+            climber.climbTo(Setpoint.AMP),
+            shooter.shoot(ShooterConstants.AMP_RPM),
+            waitUntil(()-> climber.atSetpoint()),
+            ampMechanism.extend(),
+            waitUntil(()-> ampMechanism.atSetpoint() && shooter.atSetpoint()),
+            intake.intakeRollers.outtake(),
+            waitSeconds(1.5),
+            ampMechanism.retract(),
+            waitUntil(()-> ampMechanism.atSetpoint()),
+            neutral(false)
+        );
+    }
 
     public static Command shoot(double rpm, double height){
         return sequence(

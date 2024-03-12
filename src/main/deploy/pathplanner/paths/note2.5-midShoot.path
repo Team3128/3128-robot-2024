@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.1883033151917,
-        "y": 0.756498519579794
+        "x": 8.223413194329954,
+        "y": 2.2601914533358305
       },
       "isLocked": false,
       "linkedName": "note2.5"
     },
     {
       "anchor": {
-        "x": 3.8128864669911056,
-        "y": 4.881822699119936
+        "x": 3.81,
+        "y": 5.5
       },
       "prevControl": {
-        "x": 6.763205362203549,
-        "y": 4.475916557084851
+        "x": 4.628186374775031,
+        "y": 4.567226252854788
       },
       "nextControl": null,
       "isLocked": false,
@@ -32,7 +32,7 @@
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "Retract and Ramp Up",
+      "name": "Retract",
       "waypointRelativePos": 0,
       "command": {
         "type": "sequential",
@@ -43,12 +43,6 @@
               "data": {
                 "name": "Retract"
               }
-            },
-            {
-              "type": "named",
-              "data": {
-                "name": "RampUpBottom"
-              }
             }
           ]
         }
@@ -57,13 +51,13 @@
   ],
   "globalConstraints": {
     "maxVelocity": 5.5,
-    "maxAcceleration": 6.0,
+    "maxAcceleration": 8.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 170.1619168503439,
+    "rotation": 180.0,
     "rotateFast": true
   },
   "reversed": false,
