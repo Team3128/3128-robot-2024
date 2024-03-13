@@ -51,15 +51,14 @@ public class CmdManager {
     public static Command autoShoot() {
         return sequence(
             // runOnce(()-> DriverStation.reportWarning("AutoShoot: CommandStarting", false)),
-            deadline(
-                waitSeconds(RAMP_TIME),
-                rampUp(),
-                swerve.turnInPlace(false).asProxy()
+            parallel(
+                rampUp().withTimeout(RAMP_TIME),
+                swerve.turnInPlace(false).asProxy().withTimeout(RAMP_TIME)
                 // runOnce(()-> CmdSwerveDrive.setTurnSetpoint(swerve.getTurnAngle(Robot.getAlliance() == Alliance.Red ? focalPointRed : focalPointBlue))),
                 // waitUntil(()-> CmdSwerveDrive.rController.atSetpoint())
             ),
             intake.intakeRollers.outtakeNoRequirements(),
-            waitSeconds(0.1),
+            waitSeconds(0.35),
             neutral(false)
             // runOnce(()-> DriverStation.reportWarning("AutoShoot: CommandEnding", false))
         );
@@ -82,7 +81,7 @@ public class CmdManager {
             ampMechanism.extend(),
             waitUntil(()-> ampMechanism.atSetpoint() && shooter.atSetpoint()),
             intake.intakeRollers.outtake(),
-            waitSeconds(1.5),
+            waitSeconds(2.5),
             ampMechanism.retract(),
             waitUntil(()-> ampMechanism.atSetpoint()),
             neutral(false)
@@ -94,7 +93,7 @@ public class CmdManager {
             // runOnce(()-> DriverStation.reportWarning("Shoot: CommandStarting", false)),
             rampUp(rpm, height).withTimeout(RAMP_TIME),
             intake.intakeRollers.outtakeNoRequirements(),
-            waitSeconds(0.1),
+            waitSeconds(0.35),
             neutral(false)
             // runOnce(()-> DriverStation.reportWarning("Shoot: CommandEnding", false))
         );

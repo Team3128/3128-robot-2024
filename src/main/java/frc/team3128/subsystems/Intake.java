@@ -114,19 +114,19 @@ public class Intake {
         public Command serialize() {
             return sequence(
                 // runOnce(()-> DriverStation.reportWarning("Serialize: CommandStarting", false)),
-                runManipulator(-0.1),
-                waitUntil(()-> !hasObjectPresent()),
-                runManipulator(0.1),
-                waitUntil(()-> hasObjectPresent()),
+                // runManipulator(-0.1),
+                // waitUntil(()-> !hasObjectPresent()),
+                // runManipulator(0.1),
+                // waitUntil(()-> hasObjectPresent()),
                 runManipulator(0)
                 // runOnce(()-> DriverStation.reportWarning("Serialize: CommandEnding", false))
             );
         }
 
-        @Override
-        public boolean hasObjectPresent() {
-            return !limitSwitch.get();
-        }
+        // @Override
+        // public boolean hasObjectPresent() {
+        //     return !limitSwitch.get();
+        // }
 
         public CurrentTest getRollersTest() {
             return new CurrentTest
@@ -177,7 +177,7 @@ public class Intake {
             waitSeconds(0.1),
             intakePivot.runPivot(0),
             parallel(
-                either(intakeRollers.serialize().withTimeout(4), intakeRollers.runManipulator(0), ()-> shouldStall).withTimeout(0.5),
+                either(intakeRollers.serialize().withTimeout(4).andThen(intakeRollers.runManipulator(0.05)), intakeRollers.runManipulator(0), ()-> shouldStall).withTimeout(0.5),
                 sequence(
                     waitSeconds(0.5),
                     runOnce(()-> isRetracting = false),

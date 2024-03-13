@@ -24,7 +24,7 @@ public class Climber extends NAR_PIDSubsystem {
 
     public enum Setpoint {
         EXTENDED(30),
-        AMP(17),
+        AMP(18),
         RETRACTED(0);
 
         public final double setpoint;
@@ -64,7 +64,7 @@ public class Climber extends NAR_PIDSubsystem {
         NAR_Shuffleboard.addSendable("Commands", "IntakePivot", Intake.getInstance().intakePivot, 0, 3);
         NAR_Shuffleboard.addSendable("Commands", "IntakeRollers", Intake.getInstance().intakeRollers, 0, 4);
         NAR_Shuffleboard.addSendable("Commands", "CommandScheduler", CommandScheduler.getInstance(), 3, 0);
-        x = NAR_Shuffleboard.debug("ASDASJJDIOASJD", getName(), -1, 0, 0);
+        x = NAR_Shuffleboard.debug("ASDASJJDIOASJD", getName(), -0.95, 0, 0);
 
     }
     
@@ -177,6 +177,9 @@ public class Climber extends NAR_PIDSubsystem {
 
     public void addClimberTests() {
         Tester.getInstance().addTest("Climber", getClimberTestExtend());
+        Tester.getInstance().addTest("Climber", AmpMechanism.getInstance().getExtendTest());
+        Tester.getInstance().addTest("Climber", AmpMechanism.getInstance().getRollerTest());
+        Tester.getInstance().addTest("Climber", AmpMechanism.getInstance().getRetractTest());
         Tester.getInstance().addTest("Climber", getClimberTestRetract());
         Tester.getInstance().getTest("Climber").setTimeBetweenTests(1);
     }

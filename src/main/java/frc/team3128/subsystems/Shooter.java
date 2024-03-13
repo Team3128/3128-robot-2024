@@ -68,9 +68,9 @@ public class Shooter extends NAR_PIDSubsystem {
 
     @Override
     protected void useOutput(double output, double setpoint) {
-        leftMotor.setVolts(output + kF);
+        leftMotor.setVolts(setpoint != 0 ? output + kF : 0);
         // rightMotor.setVolts(output);
-        rightMotor.setVolts(Math.max(0, (setpoint - x.getAsDouble()) * PIDConstants.kV + kF));
+        rightMotor.setVolts(setpoint != 0 ? Math.max(0, (setpoint - x.getAsDouble()) * PIDConstants.kV + kF) : 0);
     }
 
     @Override

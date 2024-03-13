@@ -60,7 +60,7 @@ public class Constants {
     }
 
     public static class SwerveConstants {
-        public static final double RAMP_TIME = 1;
+        public static final double RAMP_TIME = 3;
 
         public static final int pigeonID = 30; 
 
@@ -291,12 +291,12 @@ public class Constants {
     }
 
     public static class ShooterConstants {
-        public static final PIDFFConfig PIDConstants = new PIDFFConfig(0, 0, 0, 0, 0.00180723, 0); //Retune later
+        public static final PIDFFConfig PIDConstants = new PIDFFConfig(0, 0, 0, 0, 0.00187623, 0); //Retune later
         public static final double kF = 0.144578;
         public static final int LEFT_MOTOR_ID = 41;
         public static final int RIGHT_MOTOR_ID = 42;
         public static final double GEAR_RATIO = 1;
-        public static final double MAX_RPM = 5800;
+        public static final double MAX_RPM = 5500;
         public static final double MIN_RPM = 0;
         public static final double TOLERANCE = 150;
         public static final double AMP_RPM = 1500;
@@ -328,6 +328,13 @@ public class Constants {
         public static final int ROLLER_MOTOR_ID = 52;
         public static final NAR_TalonSRX ROLLER_MOTOR = new NAR_TalonSRX(ROLLER_MOTOR_ID);
         public static final double AMP_POWER = 0.7;
+
+        public static final double EXTEND_TIMEOUT = 5;
+        public static final double RETRACTED_TIMEOUT = 5;
+
+        public static final double ROLLER_TIMEOUT = 30;
+        public static final double ROLLER_TEST_PLATEAU = 0.5;
+        public static final double ROLLER_TEST_EXPECTED_CURRENT = 0;
     }
     public static class ClimberConstants {
         public static final PIDFFConfig PIDConstants = new PIDFFConfig(2, 0, 0, 0.18, 0, 0, 0.3);//240
@@ -382,9 +389,9 @@ public class Constants {
         public static final NAR_CANSpark ROLLER_MOTOR = new NAR_CANSpark(ROLLER_MOTOR_ID);
         public static final double ANGLE_TOLERANCE = 3;
         public static final int CURRENT_LIMIT = 40;
-        public static final double STALL_CURRENT = 200;
-        public static final double STALL_POWER = 0.03;
-        public static final double OUTTAKE_POWER = -0.75 / 0.75;
+        public static final double STALL_CURRENT = 50;
+        public static final double STALL_POWER = 0;
+        public static final double OUTTAKE_POWER = -0.15 / 0.75;
         public static final double INTAKE_POWER = 0.7 /0.75;
         public static final double AMP_POWER = -0.18 / 0.75;
 
@@ -405,12 +412,18 @@ public class Constants {
         
         public static final int WHITE_VALUE = 0; //leds used don't have a white value
         
+        public static final double r_SPEED = 0.75;
+        public static final double c_SPEED = 1;
         public static final int STARTING_ID = 8;
-        public static final int PIVOT_COUNT = 200;
-        public static final int PIVOT_COUNT_FRONT = 40; //change
-        public static final int PIVOT_COUNT_BACK = 50; //change
-
+        public static final int PIVOT_COUNT = 200; //dunno what this is for
+        public static final int PIVOT_FRONT = 40; //change
+        public static final int PIVOT_BACK = 50; //change
+        public static final int NUM_LED = PIVOT_FRONT - 10;
+        public static final int SPARKING = 1;
+        public static final double COOLING = 0.3;
         public static final double HOLDING_SPEED = 2;
+        public static final double BRIGHTNESS = 1;
+        public static final int OFFSET = 5 + 55;
 
         public static class RainbowAnimation {
             public static final double BRIGHTNESS = 1;
@@ -430,6 +443,8 @@ public class Constants {
             ORANGE(255, 105, 0, false),
     
             FLAME(0,0,0,true),
+            CHARGE(255, 0, 0, true),
+            DISCHARGE(0, 0, 0, true),
             AMP(0,0,0,true);
     
             public final int r;

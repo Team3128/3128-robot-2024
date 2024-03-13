@@ -3,6 +3,8 @@ package frc.team3128.subsystems;
 import common.core.controllers.TrapController;
 import common.core.subsystems.PivotTemplate;
 import common.hardware.motorcontroller.NAR_Motor.Neutral;
+import common.utility.tester.CurrentTest;
+import common.utility.tester.Tester.UnitTest;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -13,7 +15,7 @@ import static frc.team3128.Constants.IntakeConstants.CURRENT_LIMIT;
 public class AmpMechanism extends PivotTemplate {
 
     public enum Setpoint {
-        AMP(45),
+        AMP(50),
         RETRACTED(-90);
 
         private double angle;
@@ -68,6 +70,18 @@ public class AmpMechanism extends PivotTemplate {
 
     public Command runRollers(double power) {
         return runOnce(()-> ROLLER_MOTOR.set(power));
+    }
+
+    public UnitTest getExtendTest() {
+        return new SetpointTest("Extend Amp", Setpoint.AMP.angle, 0.02, EXTEND_TIMEOUT);
+    }
+
+    public UnitTest getRollerTest() {
+        return new CurrentTest("Amp Roller", ROLLER_MOTOR, AMP_POWER, ROLLER_TIMEOUT, ROLLER_TEST_PLATEAU, ROLLER_TEST_EXPECTED_CURRENT, this);
+    }
+
+    public UnitTest getRetractTest() {
+        return new SetpointTest("Retract Amp", Setpoint.RETRACTED.angle, 0.02, RETRACTED_TIMEOUT);
     }
     
 }

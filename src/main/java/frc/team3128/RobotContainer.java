@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+
 import static edu.wpi.first.wpilibj2.command.Commands.*;
 import static frc.team3128.Constants.ShooterConstants.MAX_RPM;
 import static frc.team3128.commands.CmdManager.*;
@@ -36,6 +38,8 @@ import frc.team3128.subsystems.Intake;
 import frc.team3128.subsystems.Leds;
 import frc.team3128.subsystems.Shooter;
 import frc.team3128.subsystems.Swerve;
+import frc.team3128.subsystems.Intake.Setpoint;
+
 import java.util.LinkedList;
 
 /**
@@ -163,10 +167,13 @@ public class RobotContainer {
         buttonPad.getButton(12).onTrue(climber.reset());
 
         // buttonPad.getButton(13).onTrue(runOnce(()-> CommandScheduler.getInstance().cancelAll()));
+        buttonPad.getButton(13).onTrue(intake.outtake());
         buttonPad.getButton(14).onTrue(runOnce(()-> swerve.zeroGyro(0)));
-        // buttonPad.getButton(15).onTrue(runOnce(()-> autoAmpAlign().schedule()));
-        buttonPad.getButton(15).onTrue(ampMechanism.runRollers(0.5)).onFalse(ampMechanism.runRollers(0));
-        buttonPad.getButton(13).onTrue(intake.intakeRollers.outtake()).onFalse(intake.intakeRollers.runManipulator(0));
+
+        buttonPad.getButton(15).onTrue(runOnce(()-> autoAmpAlign().schedule()));
+        buttonPad.getButton(16).onTrue(runOnce(()-> swerve.stop(), swerve));
+        // buttonPad.getButton(15).onTrue(ampMechanism.runRollers(0.5)).onFalse(ampMechanism.runRollers(0));
+        // buttonPad.getButton(13).onTrue(intake.intakeRollers.outtake()).onFalse(intake.intakeRollers.runManipulator(0));
         // buttonPad.getButton(16).onTrue(intake.intakeRollers.outtake()).onFalse(intake.intakeRollers.runManipulator(0));
         // buttonPad.getButton(16).onTrue(intake.outtake());
     }
@@ -221,6 +228,7 @@ public class RobotContainer {
         tester.addTest("Robot", tester.getTest("Shooter"));
         tester.addTest("Robot", tester.getTest("Climber"));
         tester.addTest("Robot", new UnitTest("Shoot", shoot(2500, 25)));
+        tester.addTest("Robot", new UnitTest("Amp", sequence(intake.intake(Setpoint.EXTENDED), ampShoot())));
         tester.getTest("Robot").setTimeBetweenTests(1);
     }
 }
