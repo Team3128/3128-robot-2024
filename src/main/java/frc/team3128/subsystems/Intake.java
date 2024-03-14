@@ -177,7 +177,7 @@ public class Intake {
             waitSeconds(0.1),
             intakePivot.runPivot(0),
             parallel(
-                either(intakeRollers.serialize().withTimeout(4).andThen(intakeRollers.runManipulator(0.05)), intakeRollers.runManipulator(0), ()-> shouldStall).withTimeout(0.5),
+                either(intakeRollers.serialize().withTimeout(4).andThen(intakeRollers.runManipulator(0)), intakeRollers.runManipulator(0), ()-> shouldStall).withTimeout(0.5),
                 sequence(
                     waitSeconds(0.5),
                     runOnce(()-> isRetracting = false),
@@ -205,7 +205,7 @@ public class Intake {
         return sequence (
             // runOnce(()-> DriverStation.reportWarning("Outtake: CommandStarting", false)),
             intakePivot.pivotTo(Setpoint.EXTENDED.angle),
-            waitUntil(()-> intakePivot.atSetpoint()),
+            waitUntil(()-> intakePivot.atSetpoint()).withTimeout(2),
             intakeRollers.outtake(),
             waitSeconds(0.5),
             retract(false)

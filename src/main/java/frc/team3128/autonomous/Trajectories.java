@@ -143,7 +143,7 @@ public class Trajectories {
                 // waitSeconds(1),
                 runOnce(()->{turning = false;}),
                 intake.intakeRollers.outtakeNoRequirements(),
-                waitSeconds(0.1),
+                waitSeconds(0.25),
                 intake.intakeRollers.runManipulator(0)
                 // shooter.setShooter(0)
                 // neutralAuto()

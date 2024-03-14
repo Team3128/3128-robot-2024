@@ -1,23 +1,18 @@
 package frc.team3128;
 
 import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-
 import static edu.wpi.first.wpilibj2.command.Commands.*;
 import static frc.team3128.Constants.ShooterConstants.MAX_RPM;
 import static frc.team3128.commands.CmdManager.*;
 
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
-import frc.team3128.Constants.ShooterConstants;
 import frc.team3128.Constants.LedConstants.Colors;
 import frc.team3128.commands.CmdSwerveDrive;
 import common.core.misc.NAR_Robot;
@@ -29,7 +24,6 @@ import common.hardware.motorcontroller.NAR_CANSpark;
 import common.utility.Log;
 import common.utility.narwhaldashboard.NarwhalDashboard;
 import common.utility.shuffleboard.NAR_Shuffleboard;
-import common.utility.sysid.CmdSysId;
 import common.utility.tester.Tester;
 import common.utility.tester.Tester.UnitTest;
 import frc.team3128.subsystems.AmpMechanism;
@@ -57,7 +51,7 @@ public class RobotContainer {
     private Intake intake;
     private Leds leds;
 
-    private NAR_ButtonBoard judgePad;
+    // private NAR_ButtonBoard judgePad;
     private NAR_ButtonBoard buttonPad;
 
     public static NAR_XboxController controller;
@@ -153,17 +147,17 @@ public class RobotContainer {
 
 
         buttonPad.getButton(1).onTrue(shooter.setShooter(-0.8)).onFalse(shooter.setShooter(0));
-        buttonPad.getButton(2).onTrue(ampMechanism.runPivot(0.2)).onFalse(ampMechanism.runPivot(0));
-        buttonPad.getButton(3).onTrue(climber.setClimber(-1)).onFalse(climber.setClimber(0));
+        buttonPad.getButton(2).onTrue(intake.intakePivot.runPivot(0.2)).onFalse(ampMechanism.runPivot(0));
+        buttonPad.getButton(3).onTrue(climber.setClimber(-0.5)).onFalse(climber.setClimber(0));
         buttonPad.getButton(4).onTrue(shooter.setShooter(0.8)).onFalse(shooter.setShooter(0));
-        buttonPad.getButton(5).onTrue(ampMechanism.runPivot(-0.2)).onFalse(ampMechanism.runPivot(0));
-        buttonPad.getButton(6).onTrue(climber.setClimber(1)).onFalse(climber.setClimber(0));
+        buttonPad.getButton(5).onTrue(intake.intakePivot.runPivot(-0.2)).onFalse(ampMechanism.runPivot(0));
+        buttonPad.getButton(6).onTrue(climber.setClimber(0.5)).onFalse(climber.setClimber(0));
         buttonPad.getButton(7).onTrue(shooter.shoot(0));
-        buttonPad.getButton(8).onTrue(ampMechanism.pivotTo(0));
+        buttonPad.getButton(8).onTrue(intake.intakePivot.pivotTo(0));
         buttonPad.getButton(9).onTrue(climber.climbTo(0));
         buttonPad.getButton(10).onTrue(neutral(false));
         
-        buttonPad.getButton(11).onTrue(ampMechanism.reset(-90));
+        buttonPad.getButton(11).onTrue(intake.intakePivot.reset(0));
         buttonPad.getButton(12).onTrue(climber.reset());
 
         // buttonPad.getButton(13).onTrue(runOnce(()-> CommandScheduler.getInstance().cancelAll()));
@@ -207,9 +201,10 @@ public class RobotContainer {
         dashboard.checkState("IntakeState", ()-> intake.getRunningState());
         dashboard.checkState("ClimberState", ()-> climber.getRunningState());
         dashboard.checkState("ShooterState", ()-> shooter.getRunningState());
+        dashboard.checkState("AmpMechanismState", ()-> ampMechanism.getRunningState());
 
         if (NAR_CANSpark.getNumFailedConfigs() > 0) {
-            Log.info("Colors", "Errors configuring: " + NAR_CANSpark.getNumFailedConfigs());
+            Log.recoverable("Colors", "Errors configuring: " + NAR_CANSpark.getNumFailedConfigs());
             Leds.getInstance().setLedColor(Colors.ERROR);
         }
         else if (!swerve.isConfigured()) {

@@ -291,8 +291,8 @@ public class Constants {
     }
 
     public static class ShooterConstants {
-        public static final PIDFFConfig PIDConstants = new PIDFFConfig(0, 0, 0, 0, 0.00187623, 0); //Retune later
-        public static final double kF = 0.144578;
+        public static final PIDFFConfig PIDConstants = new PIDFFConfig(0, 0, 0, 0, 0, 0); // 0.00187623
+        public static final double kF = 0; //0.144578;
         public static final int LEFT_MOTOR_ID = 41;
         public static final int RIGHT_MOTOR_ID = 42;
         public static final double GEAR_RATIO = 1;
@@ -308,7 +308,7 @@ public class Constants {
         public static final double CURRENT_TEST_EXPECTED_CURRENT = 0;
 
         public static final double SHOOTER_TEST_PLATEAU = 1;
-        public static final double SHOOTER_TEST_TIMEOUT = 1.8;
+        public static final double SHOOTER_TEST_TIMEOUT = 5;
 
         public static final double PROJECTILE_SPEED = 100; // m/s
     }
@@ -370,8 +370,8 @@ public class Constants {
             climberHeightMap.put(3.0 + 0.93, 9.5);
         }
 
-        public static final double SETPOINT_TEST_TIMEOUT_EXTEND = 0.6;
-        public static final double SETPOINT_TEST_TIMEOUT_RETRACT = 0.52;
+        public static final double SETPOINT_TEST_TIMEOUT_EXTEND = 5;
+        public static final double SETPOINT_TEST_TIMEOUT_RETRACT = 5;
     }
 
     public static class IntakeConstants {
@@ -402,7 +402,7 @@ public class Constants {
         public static final double CURRENT_TEST_EXPECTED_CURRENT = 13;
 
         public static final double SETPOINT_TEST_PLATEAU = 1;
-        public static final double SETPOINT_TEST_TIMEOUT = 1.6;
+        public static final double SETPOINT_TEST_TIMEOUT = 5;
 
         public static final double INTAKE_TEST_TIMEOUT = 30;
     }

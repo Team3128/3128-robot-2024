@@ -3,6 +3,7 @@ package frc.team3128.subsystems;
 import common.core.controllers.TrapController;
 import common.core.subsystems.PivotTemplate;
 import common.hardware.motorcontroller.NAR_Motor.Neutral;
+import common.utility.narwhaldashboard.NarwhalDashboard.State;
 import common.utility.tester.CurrentTest;
 import common.utility.tester.Tester.UnitTest;
 import edu.wpi.first.math.util.Units;
@@ -39,6 +40,7 @@ public class AmpMechanism extends PivotTemplate {
         setTolerance(POSITION_TOLERANCE);
         setConstraints(-90, 90);
         initShuffleboard();
+
     }
 
     @Override
@@ -82,6 +84,10 @@ public class AmpMechanism extends PivotTemplate {
 
     public UnitTest getRetractTest() {
         return new SetpointTest("Retract Amp", Setpoint.RETRACTED.angle, 0.02, RETRACTED_TIMEOUT);
+    }
+
+    public State getRunningState() {
+        return WRIST_MOTOR.getState();
     }
     
 }
