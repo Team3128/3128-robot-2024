@@ -13,9 +13,11 @@ import frc.team3128.Robot;
 import frc.team3128.RobotContainer;
 import frc.team3128.Constants.IntakeConstants;
 import frc.team3128.Constants.ShooterConstants;
+import frc.team3128.Constants.LedConstants.Colors;
 import frc.team3128.subsystems.AmpMechanism;
 import frc.team3128.subsystems.Climber;
 import frc.team3128.subsystems.Intake;
+import frc.team3128.subsystems.Leds;
 import frc.team3128.subsystems.Shooter;
 import frc.team3128.subsystems.Swerve;
 import frc.team3128.subsystems.Climber.Setpoint;
@@ -165,11 +167,15 @@ public class CmdManager {
     public static Command autoAmpAlign(){
         Pose2d ampPos = new Pose2d(Robot.getAlliance() == Alliance.Red ? 14.70 : 1.84, 7.8,  Rotation2d.fromDegrees(90));
 
-        return AutoBuilder.pathfindToPose(
-            ampPos,
-            new PathConstraints(maxAttainableSpeed, maxAcceleration, maxAngularVelocity, maxAngularAcceleration),
-            0.0, // Goal end velocity in meters/sec
-            0.0 // Rotation delay distance in meters. This is how far the robot should travel before attempting to rotate.
-            );
+        return sequence(
+            runOnce(()-> Leds.getInstance().setLedColor(Colors.AMP)),
+            AutoBuilder.pathfindToPose(
+                ampPos,
+                new PathConstraints(maxAttainableSpeed, maxAcceleration, maxAngularVelocity, maxAngularAcceleration),
+                0.0, // Goal end velocity in meters/sec
+                0.0 // Rotation delay distance in meters. This is how far the robot should travel before attempting to rotate.
+            ),
+            runOnce(()-> Leds.getInstance().setDefaultColor())
+        );
     }
 }
