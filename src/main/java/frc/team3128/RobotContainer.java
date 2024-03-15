@@ -16,6 +16,7 @@ import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import frc.team3128.Constants.LedConstants.Colors;
 import frc.team3128.commands.CmdSwerveDrive;
 import common.core.misc.NAR_Robot;
+import common.core.swerve.SwerveModule;
 import common.hardware.camera.Camera;
 import common.hardware.input.NAR_ButtonBoard;
 import common.hardware.input.NAR_XboxController;
@@ -23,6 +24,7 @@ import common.hardware.input.NAR_XboxController.XboxButton;
 import common.hardware.motorcontroller.NAR_CANSpark;
 import common.utility.Log;
 import common.utility.narwhaldashboard.NarwhalDashboard;
+import common.utility.narwhaldashboard.NarwhalDashboard.State;
 import common.utility.shuffleboard.NAR_Shuffleboard;
 import common.utility.sysid.CmdSysId;
 import common.utility.tester.Tester;
@@ -203,7 +205,7 @@ public class RobotContainer {
         dashboard.checkState("ShooterState", ()-> shooter.getRunningState());
         dashboard.checkState("AmpMechanismState", ()-> ampMechanism.getRunningState());
 
-        if (NAR_CANSpark.getNumFailedConfigs() > 0) {
+        if (NAR_CANSpark.getNumFailedConfigs() > 0 || !isConnected()) {
             Log.recoverable("Colors", "Errors configuring: " + NAR_CANSpark.getNumFailedConfigs());
             Leds.getInstance().setLedColor(Colors.ERROR);
         }
@@ -215,6 +217,32 @@ public class RobotContainer {
             Log.info("Colors", "Errors configuring: " + NAR_CANSpark.getNumFailedConfigs());
             Leds.getInstance().setLedColor(Colors.CONFIGURED);
         }
+    }
+
+    public boolean isConnected() {
+        for (SwerveModule module : swerve.getModules()) {
+            if (module.getRunningState() != State.RUNNING) {
+                Log.info("State Check", "Module " + module.moduleNumber +" failed.");
+                return false;
+            }
+        }
+        if (shooter.getRunningState() != State.RUNNING) {
+            Log.info("State Check", "Shooter failed.");
+            return false;
+        }
+        if (intake.getRunningState() != State.RUNNING) {
+            Log.info("State Check", "Intake failed.");
+            return false;
+        }
+        if (climber.getRunningState() != State.RUNNING) {
+            Log.info("State Check", "Climber failed.");
+            return false;
+        }
+        if (ampMechanism.getRunningState() != State.RUNNING) {
+            Log.info("State Check", "AmpMechanism failed.");
+            return false;
+        }
+        return true;
     }
 
     private void initRobotTest() {

@@ -35,7 +35,7 @@ public class Swerve extends SwerveBase {
 
     public double throttle = 1;
 
-    public Supplier<Double> yaw, pitch, roll;
+    public Supplier<Double> yaw;
 
     public static synchronized Swerve getInstance() {
         if (instance == null) {
@@ -48,9 +48,12 @@ public class Swerve extends SwerveBase {
         super(swerveKinematics, SVR_STATE_STD, SVR_VISION_MEASUREMENT_STD, Mod0, Mod1, Mod2, Mod3);
         chassisVelocityCorrection = false;
         gyro = new Pigeon2(pigeonID);
+        var x = gyro.getYaw();
+        x.setUpdateFrequency(100);
         yaw = gyro.getYaw().asSupplier();
-        pitch = gyro.getPitch().asSupplier();
-        roll = gyro.getRoll().asSupplier();
+
+        gyro.optimizeBusUtilization();
+
         initShuffleboard();
         NAR_Shuffleboard.addData("Testing", "Name", ()-> getDist(speakerMidpointRed), 0, 0);
         // NAR_Shuffleboard.addData("Auto", "Setpoint", ()-> TURN_CONTROLLER.atSetpoint());
@@ -76,12 +79,12 @@ public class Swerve extends SwerveBase {
 
     @Override
     public double getPitch() {
-        return pitch.get();
+        return 0;
     }
 
     @Override
     public double getRoll() {
-        return roll.get();
+        return 0;
     }
 
     @Override
