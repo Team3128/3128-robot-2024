@@ -6,6 +6,7 @@ import common.core.controllers.Controller.Type;
 import common.core.subsystems.NAR_PIDSubsystem;
 import common.hardware.motorcontroller.NAR_CANSpark;
 import common.hardware.motorcontroller.NAR_CANSpark.ControllerType;
+import common.hardware.motorcontroller.NAR_CANSpark.SparkMaxConfig;
 import common.hardware.motorcontroller.NAR_Motor.Neutral;
 import common.utility.narwhaldashboard.NarwhalDashboard.State;
 import common.utility.shuffleboard.NAR_Shuffleboard;
@@ -43,7 +44,8 @@ public class Shooter extends NAR_PIDSubsystem {
         rightController.setkS(()-> controller.getkS());
         rightController.setkV(()-> controller.getkV());
         rightController.setkG(()-> controller.getkG());
-        NAR_Shuffleboard.addSendable(getName(), "rightController", controller, 4, 0);
+        rightController.setTolerance(TOLERANCE);
+        NAR_Shuffleboard.addSendable(getName(), "rightController", rightController, 4, 0);
         kF_Func = NAR_Shuffleboard.debug(getName(), "kF", kF, 4, 2);
     }
 
@@ -56,7 +58,7 @@ public class Shooter extends NAR_PIDSubsystem {
 
     @Override
     public boolean atSetpoint() {
-        return super.atSetpoint() && Math.abs(Math.abs(rightMotor.getVelocity()) - (getSetpoint() - rpmDiff.getAsDouble())) < TOLERANCE;
+        return super.atSetpoint() && rightController.atSetpoint();
     }
 
     private void configMotors(){
@@ -70,6 +72,9 @@ public class Shooter extends NAR_PIDSubsystem {
 
         leftMotor.setNeutralMode(Neutral.COAST);
         rightMotor.setNeutralMode(Neutral.COAST);
+
+        leftMotor.setStatusFrames(SparkMaxConfig.VELOCITY);
+        rightMotor.setStatusFrames(SparkMaxConfig.VELOCITY);
     }
 
     private void setPower(double power){
@@ -78,10 +83,21 @@ public class Shooter extends NAR_PIDSubsystem {
         rightMotor.set(power);
     }
 
+    public void startPID(double leftSetpoint, double rightSetpoint) {
+        enable();
+        getController().setSetpoint(leftSetpoint);
+        rightController.setSetpoint(rightSetpoint);
+    }
+
+    @Override
+    public void startPID(double setpoint) {
+        startPID(setpoint, setpoint - rpmDiff.getAsDouble());
+    }
+
     @Override
     protected void useOutput(double output, double setpoint) {
         leftMotor.setVolts(setpoint != 0 ? output + kF_Func.getAsDouble() : 0);
-        final double rightOutput = rightController.calculate(Math.abs(rightMotor.getVelocity()), setpoint - rpmDiff.getAsDouble());
+        final double rightOutput = rightController.calculate(Math.abs(rightMotor.getVelocity()));
         // rightMotor.setVolts(output);
         rightMotor.setVolts(setpoint != 0 ? rightOutput + kF_Func.getAsDouble() : 0);
     }
@@ -89,6 +105,10 @@ public class Shooter extends NAR_PIDSubsystem {
     @Override
     public double getMeasurement() {
         return leftMotor.getVelocity();
+    }
+
+    public Command shoot(double leftSetpoint, double rightSetpoint) {
+        return runOnce(()-> startPID(leftSetpoint, rightSetpoint));
     }
 
     public Command shoot(double setpoint){

@@ -24,6 +24,7 @@ import common.hardware.motorcontroller.NAR_CANSpark;
 import common.utility.Log;
 import common.utility.narwhaldashboard.NarwhalDashboard;
 import common.utility.shuffleboard.NAR_Shuffleboard;
+import common.utility.sysid.CmdSysId;
 import common.utility.tester.Tester;
 import common.utility.tester.Tester.UnitTest;
 import frc.team3128.subsystems.AmpMechanism;
@@ -92,7 +93,7 @@ public class RobotContainer {
     private void configureButtonBindings() {
         controller.getButton(XboxButton.kB).onTrue(runOnce(()-> swerve.resetEncoders()));
 
-        controller.getButton(XboxButton.kRightBumper).onTrue(rampUp(MAX_RPM, 25)).onFalse(shoot(MAX_RPM, 25)); //Ram Shot
+        controller.getButton(XboxButton.kRightBumper).onTrue(rampRam()).onFalse(ramShot()); //Ram Shot
         controller.getButton(XboxButton.kRightTrigger).onTrue(rampUpContinuous()).onFalse(autoShoot());     //Auto Shoot
         controller.getButton(XboxButton.kY).onTrue(rampUp(5000, 15)).onFalse(feed(5000, 15));   //Feed Shot
         controller.getButton(XboxButton.kX).onTrue(rampUpAmp()).onFalse(ampShoot()); //Amp Shot
@@ -147,17 +148,17 @@ public class RobotContainer {
 
 
         buttonPad.getButton(1).onTrue(shooter.setShooter(-0.8)).onFalse(shooter.setShooter(0));
-        buttonPad.getButton(2).onTrue(intake.intakePivot.runPivot(0.2)).onFalse(ampMechanism.runPivot(0));
+        buttonPad.getButton(2).onTrue(intake.intakePivot.runPivot(0.2)).onFalse(intake.intakePivot.runPivot(0));
         buttonPad.getButton(3).onTrue(climber.setClimber(-0.5)).onFalse(climber.setClimber(0));
         buttonPad.getButton(4).onTrue(shooter.setShooter(0.8)).onFalse(shooter.setShooter(0));
-        buttonPad.getButton(5).onTrue(intake.intakePivot.runPivot(-0.2)).onFalse(ampMechanism.runPivot(0));
+        buttonPad.getButton(5).onTrue(intake.intakePivot.runPivot(-0.2)).onFalse(intake.intakePivot.runPivot(0));
         buttonPad.getButton(6).onTrue(climber.setClimber(0.5)).onFalse(climber.setClimber(0));
         buttonPad.getButton(7).onTrue(shooter.shoot(0));
         buttonPad.getButton(8).onTrue(intake.intakePivot.pivotTo(0));
         buttonPad.getButton(9).onTrue(climber.climbTo(0));
         buttonPad.getButton(10).onTrue(neutral(false));
         
-        buttonPad.getButton(11).onTrue(intake.intakePivot.reset(0));
+        buttonPad.getButton(11).onTrue(ampMechanism.reset(-90));
         buttonPad.getButton(12).onTrue(climber.reset());
 
         // buttonPad.getButton(13).onTrue(runOnce(()-> CommandScheduler.getInstance().cancelAll()));
@@ -165,6 +166,7 @@ public class RobotContainer {
         buttonPad.getButton(14).onTrue(runOnce(()-> swerve.zeroGyro(0)));
 
         buttonPad.getButton(15).onTrue(runOnce(()-> autoAmpAlign().schedule()));
+        // buttonPad.getButton(15).onTrue(new CmdSysId("Swerve", (Double output)-> swerve.setVoltage(output), ()-> swerve.getVelocity(), swerve));
         buttonPad.getButton(16).onTrue(runOnce(()-> swerve.stop(), swerve));
         // buttonPad.getButton(15).onTrue(ampMechanism.runRollers(0.5)).onFalse(ampMechanism.runRollers(0));
         // buttonPad.getButton(13).onTrue(intake.intakeRollers.outtake()).onFalse(intake.intakeRollers.runManipulator(0));
@@ -179,11 +181,9 @@ public class RobotContainer {
         Camera.setAmbiguityThreshold(0.2);
 
         final LinkedList<Double> blacklist = new LinkedList<Double>();
-        blacklist.add(1.0);
-        blacklist.add(2.0);
-        blacklist.add(9.0);
-        blacklist.add(10.0);
-        // Camera.setIgnoredTags(blacklist);
+        blacklist.add(13.0);
+        blacklist.add(14.0);
+        Camera.setIgnoredTags(blacklist);
 
         final Camera camera = new Camera("FRONT_LEFT", Units.inchesToMeters(10.055), Units.inchesToMeters(9.79), Units.degreesToRadians(30), Units.degreesToRadians(-28.125), 0);
         final Camera camera2 = new Camera("FRONT_RIGHT", Units.inchesToMeters(10.055), -Units.inchesToMeters(9.79), Units.degreesToRadians(-30), Units.degreesToRadians(-28.125), 0);

@@ -278,7 +278,7 @@ public class Constants {
 
     public static class FocalAimConstants {
         public static final double speakerLength = 1.043;
-        public static final double speakerMidpointY = 5.6;//5.4;
+        public static final double speakerMidpointY = 5.5;//5.4;
         ; //6.151 - speakerLength / 2;
         public static final double focalPointX = 0; //1.4583577128;
         public static final Translation2d speakerMidpointBlue = new Translation2d(0, speakerMidpointY);
@@ -291,8 +291,8 @@ public class Constants {
     }
 
     public static class ShooterConstants {
-        public static final PIDFFConfig PIDConstants = new PIDFFConfig(0, 0, 0, 0, 0, 0); // 0.00187623
-        public static final double kF = 0; //0.144578;
+        public static final PIDFFConfig PIDConstants = new PIDFFConfig(0.005, 0, 0, 0, 0.00179104, 0); // 0.00187623
+        public static final double kF = 0.3582; //0.144578;
         public static final int LEFT_MOTOR_ID = 41;
         public static final int RIGHT_MOTOR_ID = 42;
         public static final double GEAR_RATIO = 1;
@@ -300,6 +300,7 @@ public class Constants {
         public static final double MIN_RPM = 0;
         public static final double TOLERANCE = 150;
         public static final double AMP_RPM = 1500;
+        public static final double RAM_SHOT_RPM = 4500;
 
         public static final double CURRENT_TEST_POWER = 0;
         public static final double CURRENT_TEST_PLATEAU = 0;

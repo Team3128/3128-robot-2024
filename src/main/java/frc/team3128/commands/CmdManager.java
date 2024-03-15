@@ -28,6 +28,8 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 
 import static edu.wpi.first.wpilibj2.command.Commands.*;
+import static frc.team3128.Constants.ShooterConstants.MAX_RPM;
+import static frc.team3128.Constants.ShooterConstants.RAM_SHOT_RPM;
 import static frc.team3128.Constants.SwerveConstants.RAMP_TIME;
 import static frc.team3128.Constants.SwerveConstants.maxAcceleration;
 import static frc.team3128.Constants.SwerveConstants.maxAngularAcceleration;
@@ -55,7 +57,7 @@ public class CmdManager {
             // runOnce(()-> DriverStation.reportWarning("AutoShoot: CommandStarting", false)),
             parallel(
                 rampUp().withTimeout(RAMP_TIME),
-                swerve.turnInPlace(false).asProxy().withTimeout(RAMP_TIME)
+                swerve.turnInPlace(false).asProxy().withTimeout(1)
                 // runOnce(()-> CmdSwerveDrive.setTurnSetpoint(swerve.getTurnAngle(Robot.getAlliance() == Alliance.Red ? focalPointRed : focalPointBlue))),
                 // waitUntil(()-> CmdSwerveDrive.rController.atSetpoint())
             ),
@@ -67,7 +69,8 @@ public class CmdManager {
     }
 
     public static Command rampUpAmp() {
-        return sequence (
+        return sequence(
+            runOnce(()-> autoAmpAlign().schedule()),
             climber.climbTo(Setpoint.AMP),
             shooter.shoot(ShooterConstants.AMP_RPM),
             waitUntil(()-> climber.atSetpoint()),
@@ -83,9 +86,27 @@ public class CmdManager {
             ampMechanism.extend(),
             waitUntil(()-> ampMechanism.atSetpoint() && shooter.atSetpoint()),
             intake.intakeRollers.outtake(),
-            waitSeconds(2.5),
+            waitSeconds(1.5),
             ampMechanism.retract(),
             waitUntil(()-> ampMechanism.atSetpoint()),
+            neutral(false)
+        );
+    }
+
+    public static Command rampRam() {
+        return sequence(
+            climber.climbTo(Climber.Setpoint.RAMSHOT),
+            shooter.shoot(RAM_SHOT_RPM, RAM_SHOT_RPM)
+        );
+    }
+
+    public static Command ramShot() {
+        return sequence(
+            climber.climbTo(Climber.Setpoint.RAMSHOT),
+            shooter.shoot(RAM_SHOT_RPM, RAM_SHOT_RPM),
+            waitUntil(()-> climber.atSetpoint() && shooter.atSetpoint()),
+            intake.intakeRollers.outtakeNoRequirements(),
+            waitSeconds(0.35),
             neutral(false)
         );
     }
@@ -104,7 +125,7 @@ public class CmdManager {
     public static Command feed(double rpm, double height){
         return sequence(
             parallel(
-                swerve.turnInPlace(()-> Robot.getAlliance() == Alliance.Blue ? 155 : 35).asProxy().withTimeout(1),
+                // swerve.turnInPlace(()-> Robot.getAlliance() == Alliance.Blue ? 155 : 35).asProxy().withTimeout(1),
                 rampUp(rpm, height)
             ),
             intake.intakeRollers.outtakeNoRequirements(),
@@ -165,7 +186,7 @@ public class CmdManager {
     }
 
     public static Command autoAmpAlign(){
-        Pose2d ampPos = new Pose2d(Robot.getAlliance() == Alliance.Red ? 14.70 : 1.84, 7.8,  Rotation2d.fromDegrees(90));
+        Pose2d ampPos = new Pose2d(Robot.getAlliance() == Alliance.Red ? 14.6 : 1.94, 7.75,  Rotation2d.fromDegrees(90));
 
         return sequence(
             runOnce(()-> Leds.getInstance().setLedColor(Colors.AMP)),
@@ -178,4 +199,6 @@ public class CmdManager {
             runOnce(()-> Leds.getInstance().setDefaultColor())
         );
     }
+
+
 }

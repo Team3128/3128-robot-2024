@@ -142,7 +142,7 @@ public class Trajectories {
                 ),
                 // waitSeconds(1),
                 runOnce(()->{turning = false;}),
-                intake.intakeRollers.outtakeNoRequirements(),
+                intake.intakeRollers.outtake(),
                 waitSeconds(0.25),
                 intake.intakeRollers.runManipulator(0)
                 // shooter.setShooter(0)
@@ -171,6 +171,7 @@ public class Trajectories {
         return sequence(
             Intake.getInstance().intakePivot.reset(0),
             Climber.getInstance().reset(),
+            // runOnce(()-> swerve.zeroGyro(Robot.getAlliance() == Alliance.Red ? 0 : 180)),
             AmpMechanism.getInstance().reset(-90),
             runOnce(()-> swerve.resetEncoders()),
             runOnce(()-> Intake.getInstance().isRetracting = false)

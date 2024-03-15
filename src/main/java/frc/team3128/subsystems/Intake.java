@@ -3,6 +3,7 @@ package frc.team3128.subsystems;
 import common.core.controllers.TrapController;
 import common.core.subsystems.ManipulatorTemplate;
 import common.core.subsystems.PivotTemplate;
+import common.hardware.motorcontroller.NAR_CANSpark.SparkMaxConfig;
 import common.hardware.motorcontroller.NAR_Motor.Neutral;
 import common.utility.Log;
 import common.utility.narwhaldashboard.NarwhalDashboard.State;
@@ -48,6 +49,7 @@ public class Intake {
             PIVOT_MOTOR.setInverted(true);
             PIVOT_MOTOR.setUnitConversionFactor(360 * GEAR_RATIO);
             PIVOT_MOTOR.setNeutralMode(Neutral.COAST);
+            PIVOT_MOTOR.setStatusFrames(SparkMaxConfig.POSITION);
         }
 
         @Override
@@ -89,6 +91,7 @@ public class Intake {
             ROLLER_MOTOR.setNeutralMode(Neutral.BRAKE);
             ROLLER_MOTOR.setCurrentLimit(CURRENT_LIMIT);
             ROLLER_MOTOR.enableVoltageCompensation(9);
+            ROLLER_MOTOR.setStatusFrames(SparkMaxConfig.FOLLOWER);
         }
 
         public Command runNoRequirements(double power) {
@@ -114,19 +117,19 @@ public class Intake {
         public Command serialize() {
             return sequence(
                 // runOnce(()-> DriverStation.reportWarning("Serialize: CommandStarting", false)),
-                // runManipulator(-0.1),
-                // waitUntil(()-> !hasObjectPresent()),
-                // runManipulator(0.1),
-                // waitUntil(()-> hasObjectPresent()),
+                runManipulator(-0.1),
+                waitUntil(()-> !hasObjectPresent()),
+                runManipulator(0.1),
+                waitUntil(()-> hasObjectPresent()),
                 runManipulator(0)
                 // runOnce(()-> DriverStation.reportWarning("Serialize: CommandEnding", false))
             );
         }
 
-        // @Override
-        // public boolean hasObjectPresent() {
-        //     return !limitSwitch.get();
-        // }
+        @Override
+        public boolean hasObjectPresent() {
+            return !limitSwitch.get();
+        }
 
         public CurrentTest getRollersTest() {
             return new CurrentTest

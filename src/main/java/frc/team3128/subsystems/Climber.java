@@ -13,6 +13,7 @@ import java.util.function.DoubleSupplier;
 import common.core.controllers.TrapController;
 import common.core.subsystems.NAR_PIDSubsystem;
 import common.hardware.motorcontroller.NAR_CANSpark;
+import common.hardware.motorcontroller.NAR_CANSpark.SparkMaxConfig;
 import common.hardware.motorcontroller.NAR_Motor.Neutral;
 import common.utility.narwhaldashboard.NarwhalDashboard.State;
 import common.utility.shuffleboard.NAR_Shuffleboard;
@@ -24,7 +25,8 @@ public class Climber extends NAR_PIDSubsystem {
 
     public enum Setpoint {
         EXTENDED(30),
-        AMP(18),
+        RAMSHOT(24.5),
+        AMP(16),
         RETRACTED(0);
 
         public final double setpoint;
@@ -64,7 +66,7 @@ public class Climber extends NAR_PIDSubsystem {
         NAR_Shuffleboard.addSendable("Commands", "IntakePivot", Intake.getInstance().intakePivot, 0, 3);
         NAR_Shuffleboard.addSendable("Commands", "IntakeRollers", Intake.getInstance().intakeRollers, 0, 4);
         NAR_Shuffleboard.addSendable("Commands", "CommandScheduler", CommandScheduler.getInstance(), 3, 0);
-        x = NAR_Shuffleboard.debug("Shooter Function", "Concavity", -0.95, 0, 0);
+        x = NAR_Shuffleboard.debug("Shooter Function", "Concavity", -0.90, 0, 0);
 
     }
     
@@ -78,6 +80,9 @@ public class Climber extends NAR_PIDSubsystem {
 
         leftMotor.setNeutralMode(Neutral.COAST);
         rightMotor.setNeutralMode(Neutral.COAST);
+
+        leftMotor.setStatusFrames(SparkMaxConfig.POSITION);
+        rightMotor.setStatusFrames(SparkMaxConfig.POSITION);
     }
 
     private void setPower(double power) {
