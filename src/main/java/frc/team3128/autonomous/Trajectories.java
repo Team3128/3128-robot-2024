@@ -24,6 +24,7 @@ import static frc.team3128.Constants.AutoConstants.*;
 import static frc.team3128.Constants.FocalAimConstants.focalPointBlue;
 import static frc.team3128.Constants.FocalAimConstants.focalPointRed;
 import static frc.team3128.Constants.ShooterConstants.MAX_RPM;
+import static frc.team3128.Constants.ShooterConstants.RAM_SHOT_RPM;
 import static frc.team3128.Constants.SwerveConstants.*;
 
 import frc.team3128.Constants.ShooterConstants;
@@ -74,6 +75,7 @@ public class Trajectories {
         // TODO: add commands
         NamedCommands.registerCommand("Intake", intake.intakeAuto());
         NamedCommands.registerCommand("Shoot", autoShoot());
+        NamedCommands.registerCommand("RamShoot", ramShot());
         NamedCommands.registerCommand("Retract", intake.retractAuto());
         NamedCommands.registerCommand("Neutral", neutralAuto());
         NamedCommands.registerCommand("NeutralWait", sequence(neutralAuto(), waitUntil(()-> climber.atSetpoint())));
@@ -101,6 +103,16 @@ public class Trajectories {
             vx = velocity.vxMetersPerSecond;
             vy = velocity.vyMetersPerSecond;
         }
+    }
+    public static Command ramShotAuto() {
+        return sequence(
+            climber.climbTo(Climber.Setpoint.RAMSHOT),
+            shooter.shoot(RAM_SHOT_RPM, RAM_SHOT_RPM),
+            waitUntil(()-> climber.atSetpoint() && shooter.atSetpoint()),
+            intake.intakeRollers.outtakeNoRequirements(),
+            waitSeconds(0.35),
+            neutralAuto()
+        );
     }
 
     public static Command turnInPlace() {

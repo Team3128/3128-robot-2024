@@ -111,12 +111,12 @@ public class Constants {
         // For safety, use less than theoretical and real values
         public static final double maxSpeed = 5.9;//4.8; //meters per second - 16.3 ft/sec
         public static final double maxAttainableSpeed = maxSpeed; //Stole from citrus.
-        public static final double maxAcceleration = 8;
+        public static final double maxAcceleration = 2;
         public static final double maxAngularVelocity = 8; //3; //11.5; // citrus: 10 - Mason look at this later wtf
         public static final double maxAngularAcceleration = 2 * Math.PI; //I stole from citrus.
 
         /* Motor Inverts */
-        public static final boolean driveMotorInvert = true;
+        public static final boolean driveMotorInvert = false;
         public static final boolean angleMotorInvert = true;
 
         /* Angle Encoder Invert */
@@ -135,7 +135,7 @@ public class Constants {
             new SwerveMotorConfig(new NAR_CANSpark(1, ControllerType.CAN_SPARK_FLEX), driveMotorConfig, drivePIDConfig),
             new SwerveMotorConfig(new NAR_CANSpark(2, ControllerType.CAN_SPARK_FLEX), angleMotorConfig, anglePIDConfig),
             10,
-            20.478515625,
+            20.478515625 + 180,
             canCoderInvert,
             maxSpeed);
 
@@ -144,7 +144,7 @@ public class Constants {
             new SwerveMotorConfig(new NAR_CANSpark(3, ControllerType.CAN_SPARK_FLEX), driveMotorConfig, drivePIDConfig),
             new SwerveMotorConfig(new NAR_CANSpark(4, ControllerType.CAN_SPARK_FLEX), angleMotorConfig, anglePIDConfig),
             11,
-            149.58984375,
+            149.58984375 + 180,
             canCoderInvert,
             maxSpeed);
         
@@ -153,7 +153,7 @@ public class Constants {
             new SwerveMotorConfig(new NAR_CANSpark(5, ControllerType.CAN_SPARK_FLEX), driveMotorConfig, drivePIDConfig),
             new SwerveMotorConfig(new NAR_CANSpark(6, ControllerType.CAN_SPARK_FLEX), angleMotorConfig, anglePIDConfig),
             12,
-            -70.83984375000001,
+            -70.83984375000001 + 180,
             canCoderInvert,
             maxSpeed);
         
@@ -162,7 +162,7 @@ public class Constants {
             new SwerveMotorConfig(new NAR_CANSpark(7, ControllerType.CAN_SPARK_FLEX), driveMotorConfig, drivePIDConfig),
             new SwerveMotorConfig(new NAR_CANSpark(8, ControllerType.CAN_SPARK_FLEX), angleMotorConfig, anglePIDConfig),
             13,
-            -155.7421875 + 13.974609375,
+            -155.7421875 + 13.974609375 + 180,
             canCoderInvert,
             maxSpeed);
 
@@ -400,7 +400,7 @@ public class Constants {
         public static final double CURRENT_TEST_PLATEAU = 1;
         public static final double CURRENT_TEST_TIMEOUT = 5;
         public static final double CURRENT_TEST_TOLERANCE = 5;
-        public static final double CURRENT_TEST_EXPECTED_CURRENT = 13;
+        public static final double CURRENT_TEST_EXPECTED_CURRENT = 20;
 
         public static final double SETPOINT_TEST_PLATEAU = 1;
         public static final double SETPOINT_TEST_TIMEOUT = 5;

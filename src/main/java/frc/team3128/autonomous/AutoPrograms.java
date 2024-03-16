@@ -30,6 +30,7 @@ public class AutoPrograms {
             "top_2note",
             "top_4note",
             "top_7note",
+            "ramTop_7note",
             "middle_2note",
             "middle_4note",
             "middleClose_4note",
@@ -47,6 +48,7 @@ public class AutoPrograms {
 
     public Command getAutonomousCommand() {
         String selectedAutoName = NarwhalDashboard.getInstance().getSelectedAuto();
+        // String selectedAutoName = "bottom_4note";
         // String selectedAutoName = "Test";
         final Command autoCommand;
         if (selectedAutoName == null) {

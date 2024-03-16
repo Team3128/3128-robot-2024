@@ -7,6 +7,7 @@ import common.hardware.motorcontroller.NAR_CANSpark.SparkMaxConfig;
 import common.hardware.motorcontroller.NAR_Motor.Neutral;
 import common.utility.Log;
 import common.utility.narwhaldashboard.NarwhalDashboard.State;
+import common.utility.shuffleboard.NAR_Shuffleboard;
 import common.utility.tester.CurrentTest;
 import common.utility.tester.Tester;
 import common.utility.tester.Tester.*;
@@ -91,7 +92,7 @@ public class Intake {
             ROLLER_MOTOR.setNeutralMode(Neutral.BRAKE);
             ROLLER_MOTOR.setCurrentLimit(CURRENT_LIMIT);
             ROLLER_MOTOR.enableVoltageCompensation(9);
-            ROLLER_MOTOR.setStatusFrames(SparkMaxConfig.FOLLOWER);
+            ROLLER_MOTOR.setStatusFrames(SparkMaxConfig.VELOCITY);
         }
 
         public Command runNoRequirements(double power) {

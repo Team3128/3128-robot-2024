@@ -2,6 +2,7 @@ package frc.team3128.subsystems;
 
 import common.core.controllers.TrapController;
 import common.core.subsystems.PivotTemplate;
+import common.hardware.motorcontroller.MotorControllerConstants;
 import common.hardware.motorcontroller.NAR_CANSpark.SparkMaxConfig;
 import common.hardware.motorcontroller.NAR_Motor.Neutral;
 import common.utility.narwhaldashboard.NarwhalDashboard.State;
@@ -15,10 +16,12 @@ import static edu.wpi.first.wpilibj2.command.Commands.*;
 import static frc.team3128.Constants.AmpWristConstants.*;
 import static frc.team3128.Constants.IntakeConstants.CURRENT_LIMIT;
 
+import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
+
 public class AmpMechanism extends PivotTemplate {
 
     public enum Setpoint {
-        AMP(37),
+        AMP(25),
         RETRACTED(-90);
 
         private double angle;
@@ -55,6 +58,7 @@ public class AmpMechanism extends PivotTemplate {
 
         WRIST_MOTOR.setStatusFrames(SparkMaxConfig.POSITION);
         ROLLER_MOTOR.setDefaultStatusFrames();
+        ROLLER_MOTOR.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, MotorControllerConstants.HIGH_PRIORITY);
     }
 
     public Command pivotTo(Setpoint setpoint) {

@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.team3128.Robot;
 import frc.team3128.RobotContainer;
+import frc.team3128.Constants.AutoConstants;
+import frc.team3128.Constants.FieldConstants;
 import frc.team3128.Constants.IntakeConstants;
 import frc.team3128.Constants.ShooterConstants;
 import frc.team3128.Constants.LedConstants.Colors;
@@ -186,13 +188,15 @@ public class CmdManager {
     }
 
     public static Command autoAmpAlign(){
-        Pose2d ampPos = new Pose2d(Robot.getAlliance() == Alliance.Red ? 14.6 : 1.94, 7.75,  Rotation2d.fromDegrees(90));
+        double ampX = 14.64;
+        double ampY = 7.70;
+        Pose2d ampPos = new Pose2d(Robot.getAlliance() == Alliance.Red ? ampX : FieldConstants.FIELD_X_LENGTH - ampX, ampY,  Rotation2d.fromDegrees(90));
 
         return sequence(
             runOnce(()-> Leds.getInstance().setLedColor(Colors.AMP)),
             AutoBuilder.pathfindToPose(
                 ampPos,
-                new PathConstraints(maxAttainableSpeed, maxAcceleration, maxAngularVelocity, maxAngularAcceleration),
+                AutoConstants.constraints,
                 0.0, // Goal end velocity in meters/sec
                 0.0 // Rotation delay distance in meters. This is how far the robot should travel before attempting to rotate.
             ),
