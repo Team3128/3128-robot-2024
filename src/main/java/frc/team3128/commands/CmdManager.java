@@ -201,7 +201,7 @@ public class CmdManager {
                 0.0 // Rotation delay distance in meters. This is how far the robot should travel before attempting to rotate.
             ),
             runOnce(()-> Leds.getInstance().setDefaultColor())
-        );
+        ).beforeStarting(runOnce(()-> RobotContainer.toggleSideCams(false))).finallyDo((boolean interrupted)-> RobotContainer.toggleSideCams(true));
     }
 
 

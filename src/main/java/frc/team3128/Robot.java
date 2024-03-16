@@ -86,6 +86,7 @@ public class Robot extends NAR_Robot {
 
     @Override
     public void autonomousInit() {
+        Camera.enableAll();
         Leds.getInstance().setDefaultColor();
         Command m_autonomousCommand = autoPrograms.getAutonomousCommand();
         if (m_autonomousCommand != null) {
@@ -105,6 +106,7 @@ public class Robot extends NAR_Robot {
 
     @Override
     public void teleopInit() {
+        Camera.enableAll();
         CommandScheduler.getInstance().cancelAll();
 
         if(DriverStation.getMatchType() != MatchType.None)

@@ -40,6 +40,7 @@ import frc.team3128.subsystems.Swerve;
 import frc.team3128.subsystems.Intake.Setpoint;
 
 import java.util.LinkedList;
+import java.util.ArrayList;
 
 /**
  * Command-based is a "declarative" paradigm, very little robot logic should
@@ -63,10 +64,12 @@ public class RobotContainer {
 
     private NarwhalDashboard dashboard;
 
+    private static ArrayList<Camera> sideCams = new ArrayList<Camera>();
+
     public RobotContainer() {
         NAR_CANSpark.maximumRetries = 3;
 
-        NAR_Robot.logWithAdvantageKit = true;
+        NAR_Robot.logWithAdvantageKit = false;
         NAR_Shuffleboard.WINDOW_WIDTH = 10;
 
         swerve = Swerve.getInstance();
@@ -183,6 +186,7 @@ public class RobotContainer {
 
     @SuppressWarnings("unused")
     public void initCameras() {
+        Camera.disableAll();
         Camera.configCameras(AprilTagFields.k2024Crescendo, PoseStrategy.LOWEST_AMBIGUITY, (pose, time) -> swerve.addVisionMeasurement(pose, time), () -> swerve.getPose());
         Camera.setDistanceThreshold(3.5);
         Camera.setAmbiguityThreshold(0.2);
@@ -196,6 +200,16 @@ public class RobotContainer {
         final Camera camera2 = new Camera("FRONT_RIGHT", Units.inchesToMeters(10.055), -Units.inchesToMeters(9.79), Units.degreesToRadians(-30), Units.degreesToRadians(-28.125), 0);
         final Camera camera3 = new Camera("LEFT", Units.inchesToMeters(-3.1), Units.inchesToMeters(12.635), Units.degreesToRadians(90), Units.degreesToRadians(-10), 0);
         final Camera camera4 = new Camera("RIGHT", Units.inchesToMeters(-3.1), Units.inchesToMeters(-12.635), Units.degreesToRadians(-90), Units.degreesToRadians(0), 0);
+
+        sideCams.add(camera3);
+        sideCams.add(camera4);
+    }
+
+    public static void toggleSideCams(boolean enable) {
+        for (Camera camera : sideCams) {
+            if (enable) camera.enable();
+            else camera.disable();
+        }
     }
 
     public void initDashboard() {
