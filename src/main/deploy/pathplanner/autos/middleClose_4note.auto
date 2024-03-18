@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.45,
-      "y": 5.55
+      "x": 1.29,
+      "y": 5.410406484151056
     },
     "rotation": 180.0
   },
@@ -14,7 +14,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Shoot"
+            "name": "RamShoot"
           }
         },
         {
@@ -56,25 +56,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "middle-note1.3"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "NeutralWait"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "note1.3-midLine"
+            "pathName": "bs"
           }
         }
       ]

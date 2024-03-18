@@ -72,7 +72,7 @@ public class CmdManager {
 
     public static Command rampUpAmp() {
         return sequence(
-            runOnce(()-> autoAmpAlign().schedule()),
+            // runOnce(()-> autoAmpAlign().schedule()),
             climber.climbTo(Setpoint.AMP),
             shooter.shoot(ShooterConstants.AMP_RPM),
             waitUntil(()-> climber.atSetpoint()),

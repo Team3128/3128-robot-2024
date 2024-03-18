@@ -26,7 +26,7 @@ public class Climber extends NAR_PIDSubsystem {
     public enum Setpoint {
         EXTENDED(30),
         RAMSHOT(24.5),
-        AMP(12),
+        AMP(11.5),
         RETRACTED(0);
 
         public final double setpoint;
