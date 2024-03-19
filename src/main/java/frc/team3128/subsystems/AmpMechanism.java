@@ -59,6 +59,8 @@ public class AmpMechanism extends PivotTemplate {
         WRIST_MOTOR.setStatusFrames(SparkMaxConfig.POSITION);
         ROLLER_MOTOR.setDefaultStatusFrames();
         ROLLER_MOTOR.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, MotorControllerConstants.HIGH_PRIORITY);
+
+        WRIST_MOTOR.resetPosition(-90);
     }
 
     public Command pivotTo(Setpoint setpoint) {

@@ -65,9 +65,6 @@ public class Robot extends NAR_Robot {
         m_robotContainer.initDashboard();
         LiveWindow.disableAllTelemetry();
         // runOnce(()-> Swerve.getInstance().zeroGyro(Robot.getAlliance() == Alliance.Red ? 0 : 180));
-
-        addReceiver(true, LoggingState.SESSION);
-
         // Swerve.getInstance().resetOdometry((new Pose2d(new Translation2d(1.45, 4.1), Rotation2d.fromDegrees(180)))); //1.45, 4.1
         // Alliance allianceTemp = getAlliance();
         // if (allianceTemp == null) {
@@ -77,6 +74,19 @@ public class Robot extends NAR_Robot {
         //     Log.info("Alliance", "We are alliance " + allianceTemp);
         // }
         // Log.info("Gyro Angle", "" + Swerve.getInstance().getYaw());
+    }
+
+    @Override
+    public void driverStationConnected() {
+        System.out.println("stationConnected");
+        if(DriverStation.getMatchType() != MatchType.None){
+            addReceiver(true, LoggingState.FULLMATCH);
+
+        }else{
+            addReceiver(true, LoggingState.SESSION);
+        }
+
+        Logger.start();
     }
 
     @Override
@@ -92,11 +102,6 @@ public class Robot extends NAR_Robot {
         if (m_autonomousCommand != null) {
             m_autonomousCommand.schedule();
         }
-
-        if(DriverStation.getMatchType() != MatchType.None)
-            addReceiver(true, LoggingState.FULLMATCH);
-        Logger.start();
-
     }
 
     @Override
@@ -108,10 +113,6 @@ public class Robot extends NAR_Robot {
     public void teleopInit() {
         Camera.enableAll();
         CommandScheduler.getInstance().cancelAll();
-
-        if(DriverStation.getMatchType() != MatchType.None)
-            addReceiver(true, LoggingState.FULLMATCH);
-        Logger.start();
         
         CmdManager.neutral(false).schedule();
     }

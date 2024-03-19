@@ -69,7 +69,7 @@ public class RobotContainer {
     public RobotContainer() {
         NAR_CANSpark.maximumRetries = 3;
 
-        NAR_Robot.logWithAdvantageKit = false;
+        NAR_Robot.logWithAdvantageKit = true;
         NAR_Shuffleboard.WINDOW_WIDTH = 10;
 
         swerve = Swerve.getInstance();
@@ -190,11 +190,7 @@ public class RobotContainer {
         Camera.configCameras(AprilTagFields.k2024Crescendo, PoseStrategy.LOWEST_AMBIGUITY, (pose, time) -> swerve.addVisionMeasurement(pose, time), () -> swerve.getPose());
         Camera.setDistanceThreshold(3.5);
         Camera.setAmbiguityThreshold(0.2);
-
-        final LinkedList<Double> blacklist = new LinkedList<Double>();
-        blacklist.add(13.0);
-        blacklist.add(14.0);
-        Camera.setIgnoredTags(blacklist);
+        Camera.addIgnoredTags(13.0,14.0);
 
         final Camera camera = new Camera("FRONT_LEFT", Units.inchesToMeters(10.055), Units.inchesToMeters(9.79), Units.degreesToRadians(30), Units.degreesToRadians(-28.125), 0);
         final Camera camera2 = new Camera("FRONT_RIGHT", Units.inchesToMeters(10.055), -Units.inchesToMeters(9.79), Units.degreesToRadians(-30), Units.degreesToRadians(-28.125), 0);
