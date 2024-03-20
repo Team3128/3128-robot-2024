@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.4598486868776401,
-      "y": 7.0
+      "x": 1.46,
+      "y": 7.35
     },
     "rotation": 180.0
   },
@@ -20,31 +20,43 @@
         {
           "type": "path",
           "data": {
-            "pathName": "top-note1.1"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
+            "pathName": "amp-note2.1"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "note1.1-note1.2"
+            "pathName": "note2.1-wing"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Shoot"
+            "name": "Outtake"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "note1.2-note1.3"
+            "pathName": "wing-note2.2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "note2.2-wing"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Outtake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "wing-note1.1"
           }
         },
         {

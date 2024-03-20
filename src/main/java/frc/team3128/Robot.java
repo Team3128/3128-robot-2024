@@ -78,7 +78,8 @@ public class Robot extends NAR_Robot {
 
     @Override
     public void driverStationConnected() {
-        System.out.println("stationConnected");
+        Log.info("State", "DS Connected");
+        if (!NAR_Robot.logWithAdvantageKit) return;
         if(DriverStation.getMatchType() != MatchType.None){
             addReceiver(true, LoggingState.FULLMATCH);
 

@@ -3,7 +3,7 @@
   "startingPose": {
     "position": {
       "x": 1.45,
-      "y": 5.55
+      "y": 4.1
     },
     "rotation": 180.0
   },
@@ -14,13 +14,13 @@
         {
           "type": "named",
           "data": {
-            "name": "RamShoot"
+            "name": "Shoot"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "middle-note1.3"
+            "pathName": "bottom-note1.3"
           }
         },
         {
@@ -32,7 +32,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Copy of note1.3-note1.2"
+            "pathName": "note1.3-note1.2"
           }
         },
         {

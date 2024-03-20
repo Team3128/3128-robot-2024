@@ -31,7 +31,7 @@ import frc.team3128.Constants.ShooterConstants;
 import frc.team3128.Robot;
 import frc.team3128.commands.CmdSwerveDrive;
 
-import static frc.team3128.commands.CmdManager.*;
+import static frc.team3128.commands.CmdManager.rampUp;
 
 import java.util.function.DoubleSupplier;
 
@@ -49,7 +49,7 @@ public class Trajectories {
 
     public enum ShootPosition {
         // find values
-        TOP(4),
+        WING(6),
         TOP_PRELOAD(6.2),
         BOTTOM(4);
 
@@ -75,7 +75,9 @@ public class Trajectories {
         // TODO: add commands
         NamedCommands.registerCommand("Intake", intake.intakeAuto());
         NamedCommands.registerCommand("Shoot", autoShoot());
-        NamedCommands.registerCommand("RamShoot", ramShot());
+        NamedCommands.registerCommand("RamShoot", ramShotAuto());
+        NamedCommands.registerCommand("WingRamp", rampUpAuto(ShootPosition.WING));
+        NamedCommands.registerCommand("Outtake", outtakeAuto());
         NamedCommands.registerCommand("Retract", intake.retractAuto());
         NamedCommands.registerCommand("Neutral", neutralAuto());
         NamedCommands.registerCommand("NeutralWait", sequence(neutralAuto(), waitUntil(()-> climber.atSetpoint())));
@@ -143,7 +145,7 @@ public class Trajectories {
     public static Command autoShoot() {
         return either(
             sequence(
-                shooter.shoot(MAX_RPM),
+                either(shooter.shoot(MAX_RPM), none(), ()-> shooter.isEnabled()),
                 parallel(
                     sequence(
                         either(sequence(waitUntil(()-> intake.intakeRollers.hasObjectPresent()).withTimeout(0.5), intake.retractAuto()), none(), ()-> intake.intakePivot.isEnabled()),
@@ -163,6 +165,18 @@ public class Trajectories {
             none(),
             ()-> true
             // ()->intake.intakeRollers.hasObjectPresent()
+        );
+    }
+
+    public static Command outtakeAuto() {
+        return either(
+            sequence(
+                intake.intakeRollers.outtake(),
+                waitSeconds(0.25),
+                intake.intakeRollers.runManipulator(0)
+            ),
+            none(),
+            ()-> true
         );
     }
 

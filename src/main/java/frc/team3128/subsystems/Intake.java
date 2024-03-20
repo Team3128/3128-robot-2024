@@ -25,7 +25,7 @@ import java.util.function.DoubleSupplier;
 public class Intake {
 
     public enum Setpoint {
-        EXTENDED(-200),
+        EXTENDED(-202),
         AMP(-90);
 
         public final double angle;

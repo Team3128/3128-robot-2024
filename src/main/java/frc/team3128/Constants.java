@@ -135,7 +135,7 @@ public class Constants {
             new SwerveMotorConfig(new NAR_CANSpark(1, ControllerType.CAN_SPARK_FLEX), driveMotorConfig, drivePIDConfig),
             new SwerveMotorConfig(new NAR_CANSpark(2, ControllerType.CAN_SPARK_FLEX), angleMotorConfig, anglePIDConfig),
             10,
-            20.478515625 + 180,
+            -160.400390625,
             canCoderInvert,
             maxSpeed);
 
@@ -144,7 +144,7 @@ public class Constants {
             new SwerveMotorConfig(new NAR_CANSpark(3, ControllerType.CAN_SPARK_FLEX), driveMotorConfig, drivePIDConfig),
             new SwerveMotorConfig(new NAR_CANSpark(4, ControllerType.CAN_SPARK_FLEX), angleMotorConfig, anglePIDConfig),
             11,
-            149.58984375 + 180,
+            150.732421875 - 180,
             canCoderInvert,
             maxSpeed);
         
@@ -153,7 +153,7 @@ public class Constants {
             new SwerveMotorConfig(new NAR_CANSpark(5, ControllerType.CAN_SPARK_FLEX), driveMotorConfig, drivePIDConfig),
             new SwerveMotorConfig(new NAR_CANSpark(6, ControllerType.CAN_SPARK_FLEX), angleMotorConfig, anglePIDConfig),
             12,
-            -70.83984375000001 + 180,
+            109.951171875,
             canCoderInvert,
             maxSpeed);
         
@@ -162,7 +162,7 @@ public class Constants {
             new SwerveMotorConfig(new NAR_CANSpark(7, ControllerType.CAN_SPARK_FLEX), driveMotorConfig, drivePIDConfig),
             new SwerveMotorConfig(new NAR_CANSpark(8, ControllerType.CAN_SPARK_FLEX), angleMotorConfig, anglePIDConfig),
             13,
-            -155.7421875 + 13.974609375 + 180,
+            -138.69140625 + 180,
             canCoderInvert,
             maxSpeed);
 
@@ -192,7 +192,7 @@ public class Constants {
 
         public static final Matrix<N3,N1> SVR_STATE_STD = VecBuilder.fill(0.1,0.1,Units.degreesToRadians(3));
  
-        public static final Matrix<N3,N1> SVR_VISION_MEASUREMENT_STD = VecBuilder.fill(3,3,Units.degreesToRadians(10));
+        public static final Matrix<N3,N1> SVR_VISION_MEASUREMENT_STD = VecBuilder.fill(1,1,Units.degreesToRadians(10));
 
         public static final HashMap<Integer,Pose2d> APRIL_TAG_POS = new HashMap<Integer,Pose2d>();
 
@@ -392,7 +392,7 @@ public class Constants {
         public static final int CURRENT_LIMIT = 40;
         public static final double STALL_CURRENT = 50;
         public static final double STALL_POWER = 0;
-        public static final double OUTTAKE_POWER = -0.15 / 0.75;
+        public static final double OUTTAKE_POWER = -0.2 / 0.75;
         public static final double INTAKE_POWER = 0.7 /0.75;
         public static final double AMP_POWER = -0.18 / 0.75;
 

@@ -29,13 +29,13 @@ public class AutoPrograms {
         final String[] autoStrings = new String[] {
             "top_2note",
             "top_4note",
-            "top_7note",
             "ramTop_7note",
             "middle_2note",
             "middle_4note",
             "middleClose_4note",
             "bottom_2note",
             "bottom_4note",
+            "bottom_7note",
             "bottomClose_4note",
             "leave"
         };
