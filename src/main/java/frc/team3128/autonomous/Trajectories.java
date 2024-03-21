@@ -49,7 +49,7 @@ public class Trajectories {
 
     public enum ShootPosition {
         // find values
-        WING(6),
+        WING(5.5),
         TOP_PRELOAD(6.2),
         BOTTOM(4);
 

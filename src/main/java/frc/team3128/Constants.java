@@ -43,12 +43,12 @@ public class Constants {
             SwerveConstants.maxSpeed, SwerveConstants.maxAcceleration, SwerveConstants.maxAngularVelocity, SwerveConstants.maxAngularAcceleration); 
 
         /* Translation PID Values */
-        public static final double translationKP = 3;
+        public static final double translationKP = 2;
         public static final double translationKI = 0;
         public static final double translationKD = 0;
       
         /* Rotation PID Values */
-        public static final double rotationKP = 2;
+        public static final double rotationKP = 5;
         public static final double rotationKI = 0;
         public static final double rotationKD = 0;
 

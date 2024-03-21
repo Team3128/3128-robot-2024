@@ -154,10 +154,10 @@ public class RobotContainer {
         // rightStick.getButton(8).onTrue(runOnce(()-> NAR_CANSpark.burnFlashAll()));
 
 
-        buttonPad.getButton(1).onTrue(shooter.setShooter(-0.8)).onFalse(shooter.setShooter(0));
+        buttonPad.getButton(1).onTrue(shooter.setShooter(1)).onFalse(shooter.setShooter(0));
         buttonPad.getButton(2).onTrue(ampMechanism.runPivot(0.2)).onFalse(ampMechanism.runPivot(0));
         buttonPad.getButton(3).onTrue(climber.setClimber(-0.5)).onFalse(climber.setClimber(0));
-        buttonPad.getButton(4).onTrue(shooter.setShooter(0.8)).onFalse(shooter.setShooter(0));
+        buttonPad.getButton(4).onTrue(shooter.setShooter(1)).onFalse(shooter.setShooter(0));
         buttonPad.getButton(5).onTrue(ampMechanism.runPivot(-0.2)).onFalse(ampMechanism.runPivot(0));
         buttonPad.getButton(6).onTrue(climber.setClimber(0.5)).onFalse(climber.setClimber(0));
         buttonPad.getButton(7).onTrue(shooter.shoot(0));
@@ -172,7 +172,8 @@ public class RobotContainer {
         // buttonPad.getButton(13).onTrue(runOnce(()-> CommandScheduler.getInstance().cancelAll()));
         // buttonPad.getButton(13).onTrue(ampMechanism.runRollers(AMP_POWER)).onFalse(ampMechanism.runRollers(0));
         // buttonPad.getButton(14).onTrue(intake.intakeRollers.runManipulator(OUTTAKE_POWER));
-        buttonPad.getButton(13).onTrue(intake.outtake());
+        // buttonPad.getButton(13).onTrue(intake.outtake());
+        buttonPad.getButton(13).onTrue(intake.intakeRollers.outtake()).onFalse(intake.intakeRollers.runManipulator(0));
         buttonPad.getButton(14).onTrue(runOnce(()-> swerve.zeroGyro(0)));
 
         buttonPad.getButton(15).onTrue(runOnce(()-> autoAmpAlign().schedule()));

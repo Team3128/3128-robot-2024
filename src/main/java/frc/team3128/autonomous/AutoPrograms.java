@@ -29,6 +29,7 @@ public class AutoPrograms {
         final String[] autoStrings = new String[] {
             "top_2note",
             "top_4note",
+            "topFar_4note",
             "ramTop_7note",
             "middle_2note",
             "middle_4note",
