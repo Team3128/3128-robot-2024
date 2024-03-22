@@ -30,7 +30,6 @@ public class AutoPrograms {
             "top_2note",
             "top_4note",
             "topFar_4note",
-            "ramTop_7note",
             "middle_2note",
             "middle_4note",
             "middleClose_4note",
