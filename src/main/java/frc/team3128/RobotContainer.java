@@ -69,7 +69,6 @@ public class RobotContainer {
     public RobotContainer() {
         NAR_CANSpark.maximumRetries = 3;
 
-        NAR_Robot.logWithAdvantageKit = true;
         NAR_Shuffleboard.WINDOW_WIDTH = 10;
 
         swerve = Swerve.getInstance();

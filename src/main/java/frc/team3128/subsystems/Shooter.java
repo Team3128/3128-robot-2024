@@ -91,7 +91,8 @@ public class Shooter extends NAR_PIDSubsystem {
 
     @Override
     public void startPID(double setpoint) {
-        startPID(setpoint, setpoint - rpmDiff.getAsDouble());
+        final double rpm = (debug != null && debug.getAsBoolean()) ? this.setpoint.getAsDouble() : setpoint;
+        startPID(rpm, rpm - rpmDiff.getAsDouble());
     }
 
     @Override

@@ -74,7 +74,8 @@ public class Trajectories {
 
         // TODO: add commands
         NamedCommands.registerCommand("Intake", intake.intakeAuto());
-        NamedCommands.registerCommand("Shoot", autoShoot());
+        NamedCommands.registerCommand("Shoot", autoShoot(0.75));
+        NamedCommands.registerCommand("TurnShoot", autoShoot(1.25));
         NamedCommands.registerCommand("RamShoot", ramShotAuto());
         NamedCommands.registerCommand("WingRamp", rampUpAuto(ShootPosition.WING));
         NamedCommands.registerCommand("Outtake", outtakeAuto());
@@ -142,7 +143,7 @@ public class Trajectories {
         );
     }
  
-    public static Command autoShoot() {
+    public static Command autoShoot(double turnTimeout) {
         return either(
             sequence(
                 either(shooter.shoot(MAX_RPM), none(), ()-> shooter.isEnabled()),
@@ -152,7 +153,7 @@ public class Trajectories {
                         runOnce(()->{turning = true;}),
                         rampUp()
                     ),
-                    turnInPlace().withTimeout(0.75)
+                    turnInPlace().withTimeout(turnTimeout)
                 ),
                 // waitSeconds(1),
                 runOnce(()->{turning = false;}),
