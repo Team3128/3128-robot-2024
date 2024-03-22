@@ -127,17 +127,25 @@ public class CmdManager {
     public static Command feed(double rpm, double height){
         return sequence(
             parallel(
-                // swerve.turnInPlace(()-> Robot.getAlliance() == Alliance.Blue ? 155 : 35).asProxy().withTimeout(1),
-                rampUp(rpm, height)
+                swerve.turnInPlace(()-> Robot.getAlliance() == Alliance.Blue ? 160 : 20).asProxy().withTimeout(1),
+                rampUp(rpm, height),
+                runOnce(()-> shooter.startPID(rpm, rpm))
             ),
             intake.intakeRollers.outtakeNoRequirements(),
-            waitSeconds(0.1),
+            waitSeconds(0.25),
             neutral(false)
         );
     }
 
     public static Command rampUp() {
         return rampUp(ShooterConstants.MAX_RPM, ()-> climber.interpolate(swerve.getDist()));
+    }
+
+    public static Command rampUpFeed(double leftRpm, double rightRpm, double height) {
+        return sequence(
+            runOnce(()-> shooter.startPID(leftRpm, rightRpm)),
+            climber.climbTo(height)
+        );
     }
 
     public static Command rampUp(double rpm, double height){

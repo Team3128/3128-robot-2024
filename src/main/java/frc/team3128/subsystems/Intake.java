@@ -26,7 +26,9 @@ public class Intake {
 
     public enum Setpoint {
         EXTENDED(-202),
+        SOURCE(-60),
         AMP(-90);
+        
 
         public final double angle;
         private Setpoint(double angle) {

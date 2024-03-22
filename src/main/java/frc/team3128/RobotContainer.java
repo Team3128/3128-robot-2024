@@ -97,11 +97,11 @@ public class RobotContainer {
     }   
 
     private void configureButtonBindings() {
-        controller.getButton(XboxButton.kB).onTrue(runOnce(()-> swerve.resetEncoders()));
+        controller.getButton(XboxButton.kB).onTrue(intake.intake(Setpoint.SOURCE));
 
         controller.getButton(XboxButton.kRightBumper).onTrue(rampRam()).onFalse(ramShot()); //Ram Shot
         controller.getButton(XboxButton.kRightTrigger).onTrue(rampUpContinuous()).onFalse(autoShoot());     //Auto Shoot
-        controller.getButton(XboxButton.kY).onTrue(rampUp(5000, 15)).onFalse(feed(5000, 15));   //Feed Shot
+        controller.getButton(XboxButton.kY).onTrue(rampUpFeed(5500, 5500, 13)).onFalse(feed(5500, 13));   //Feed Shot
         controller.getButton(XboxButton.kX).onTrue(rampUpAmp()).onFalse(ampShoot()); //Amp Shot
         // controller.getButton(XboxButton.kX).onTrue(intake.intakePivot.pivotTo(-87)).onFalse(ampShootAlt());
 
@@ -111,7 +111,7 @@ public class RobotContainer {
         controller.getButton(XboxButton.kLeftTrigger).onTrue(intake.intake(Intake.Setpoint.EXTENDED));  //Extend Intake
         controller.getButton(XboxButton.kLeftBumper).onTrue(intake.retract(false));         //Retract Intake
 
-        controller.getButton(XboxButton.kStart).onTrue(startEnd(()-> leds.setLedColor(Colors.AMP), ()-> leds.setDefaultColor()).withTimeout(1)); //Amp LED
+        controller.getButton(XboxButton.kStart).onTrue(intake.outtake()); //Amp LED
 
         controller.getButton(XboxButton.kRightStick).onTrue(runOnce(()-> CmdSwerveDrive.setTurnSetpoint()));
         controller.getUpPOVButton().onTrue(runOnce(()-> {
@@ -160,7 +160,7 @@ public class RobotContainer {
         buttonPad.getButton(5).onTrue(ampMechanism.runPivot(-0.2)).onFalse(ampMechanism.runPivot(0));
         buttonPad.getButton(6).onTrue(climber.setClimber(0.5)).onFalse(climber.setClimber(0));
         buttonPad.getButton(7).onTrue(shooter.shoot(0));
-        buttonPad.getButton(8).onTrue(ampMechanism.pivotTo(0));
+        buttonPad.getButton(8).onTrue(intake.intakePivot.pivotTo(0));
         buttonPad.getButton(9).onTrue(climber.climbTo(0));
         buttonPad.getButton(10).onTrue(ampMechanism.reset(-90));
         
@@ -172,7 +172,7 @@ public class RobotContainer {
         // buttonPad.getButton(13).onTrue(ampMechanism.runRollers(AMP_POWER)).onFalse(ampMechanism.runRollers(0));
         // buttonPad.getButton(14).onTrue(intake.intakeRollers.runManipulator(OUTTAKE_POWER));
         // buttonPad.getButton(13).onTrue(intake.outtake());
-        buttonPad.getButton(13).onTrue(intake.intakeRollers.outtake()).onFalse(intake.intakeRollers.runManipulator(0));
+        // buttonPad.getButton(13).onTrue(intake.intakeRollers.intake()).onFalse(intake.intakeRollers.runManipulator(0));
         buttonPad.getButton(14).onTrue(runOnce(()-> swerve.zeroGyro(0)));
 
         buttonPad.getButton(15).onTrue(runOnce(()-> autoAmpAlign().schedule()));
