@@ -72,7 +72,7 @@ public class CmdManager {
 
     public static Command rampUpAmp() {
         return sequence(
-            // runOnce(()-> autoAmpAlign().schedule()),
+            runOnce(()-> autoAmpAlign().schedule()),
             climber.climbTo(Setpoint.AMP),
             shooter.shoot(ShooterConstants.AMP_RPM),
             waitUntil(()-> climber.atSetpoint()),
@@ -127,7 +127,7 @@ public class CmdManager {
     public static Command feed(double rpm, double height){
         return sequence(
             parallel(
-                swerve.turnInPlace(()-> Robot.getAlliance() == Alliance.Blue ? 160 : 20).asProxy().withTimeout(1),
+                swerve.turnInPlace(()-> Robot.getAlliance() == Alliance.Blue ? 155 : 25).asProxy().withTimeout(1),
                 rampUp(rpm, height),
                 runOnce(()-> shooter.startPID(rpm, rpm))
             ),

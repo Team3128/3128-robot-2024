@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.45,
-      "y": 2.2
+      "x": 1.4,
+      "y": 5.55
     },
     "rotation": 180.0
   },
@@ -12,15 +12,15 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "source-note2.5"
+            "name": "RamShoot"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "note2.5-bottomShoot"
+            "pathName": "middle-note1.3"
           }
         },
         {
@@ -32,13 +32,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "bottomShoot-note2.4"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "note2.4-bottomShoot"
+            "pathName": "note1.3diag-note1.2"
           }
         },
         {
@@ -50,13 +44,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "bottomShoot-source"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "source-bottomShoot"
+            "pathName": "note1.2-note1.1"
           }
         },
         {
@@ -66,9 +54,33 @@
           }
         },
         {
+          "type": "path",
+          "data": {
+            "pathName": "note1.1-note2.1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "note2.1-wing"
+          }
+        },
+        {
           "type": "named",
           "data": {
-            "name": "Neutral"
+            "name": "Outtake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "wing-note2.2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "note2.2-wing"
           }
         }
       ]

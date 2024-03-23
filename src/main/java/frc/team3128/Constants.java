@@ -192,7 +192,7 @@ public class Constants {
 
         public static final Matrix<N3,N1> SVR_STATE_STD = VecBuilder.fill(0.1,0.1,Units.degreesToRadians(3));
  
-        public static final Matrix<N3,N1> SVR_VISION_MEASUREMENT_STD = VecBuilder.fill(1,1,Units.degreesToRadians(10));
+        public static final Matrix<N3,N1> SVR_VISION_MEASUREMENT_STD = VecBuilder.fill(0.5,0.5,Units.degreesToRadians(5));
 
         public static final HashMap<Integer,Pose2d> APRIL_TAG_POS = new HashMap<Integer,Pose2d>();
 
@@ -280,7 +280,7 @@ public class Constants {
         public static final double speakerLength = 1.043;
         public static final double speakerMidpointY = 5.5;//5.4;
         ; //6.151 - speakerLength / 2;
-        public static final double focalPointX = 0; //1.4583577128;
+        public static final double focalPointX = 0.3; //1.4583577128;
         public static final Translation2d speakerMidpointBlue = new Translation2d(0, speakerMidpointY);
         public static final Translation2d speakerMidpointRed = new Translation2d(FieldConstants.FIELD_X_LENGTH, speakerMidpointY);
         public static final Translation2d focalPointBlue = new Translation2d(focalPointX, speakerMidpointY);
@@ -291,7 +291,7 @@ public class Constants {
     }
 
     public static class ShooterConstants {
-        public static final PIDFFConfig PIDConstants = new PIDFFConfig(0.005, 0, 0, 0, 0.00179104, 0); // 0.00187623
+        public static final PIDFFConfig PIDConstants = new PIDFFConfig(0.0025, 0, 0, 0, 0.00179104, 0); // 0.00187623
         public static final double kF = 0.3582; //0.144578;
         public static final int LEFT_MOTOR_ID = 41;
         public static final int RIGHT_MOTOR_ID = 42;
@@ -299,7 +299,7 @@ public class Constants {
         public static final double MAX_RPM = 5500;
         public static final double MIN_RPM = 0;
         public static final double TOLERANCE = 150;
-        public static final double AMP_RPM = 1500;
+        public static final double AMP_RPM = 2500;
         public static final double RAM_SHOT_RPM = 4500;
 
         public static final double CURRENT_TEST_POWER = 0;
@@ -309,7 +309,7 @@ public class Constants {
         public static final double CURRENT_TEST_EXPECTED_CURRENT = 0;
 
         public static final double SHOOTER_TEST_PLATEAU = 1;
-        public static final double SHOOTER_TEST_TIMEOUT = 5;
+        public static final double SHOOTER_TEST_TIMEOUT = 2.5;
 
         public static final double PROJECTILE_SPEED = 100; // m/s
     }
@@ -328,14 +328,14 @@ public class Constants {
 
         public static final int ROLLER_MOTOR_ID = 52;
         public static final NAR_TalonSRX ROLLER_MOTOR = new NAR_TalonSRX(ROLLER_MOTOR_ID);
-        public static final double AMP_POWER = 0.7;
+        public static final double AMP_POWER = 0.6;
 
-        public static final double EXTEND_TIMEOUT = 5;
-        public static final double RETRACTED_TIMEOUT = 5;
+        public static final double EXTEND_TIMEOUT = 1;
+        public static final double RETRACTED_TIMEOUT = 1;
 
-        public static final double ROLLER_TIMEOUT = 30;
+        public static final double ROLLER_TIMEOUT = 5;
         public static final double ROLLER_TEST_PLATEAU = 0.5;
-        public static final double ROLLER_TEST_EXPECTED_CURRENT = 0;
+        public static final double ROLLER_TEST_EXPECTED_CURRENT = 1.25;
     }
     public static class ClimberConstants {
         public static final PIDFFConfig PIDConstants = new PIDFFConfig(2, 0, 0, 0.18, 0, 0, 0.3);//240
@@ -371,8 +371,8 @@ public class Constants {
             climberHeightMap.put(3.0 + 0.93, 9.5);
         }
 
-        public static final double SETPOINT_TEST_TIMEOUT_EXTEND = 5;
-        public static final double SETPOINT_TEST_TIMEOUT_RETRACT = 5;
+        public static final double SETPOINT_TEST_TIMEOUT_EXTEND = 1;
+        public static final double SETPOINT_TEST_TIMEOUT_RETRACT = 1;
     }
 
     public static class IntakeConstants {
@@ -399,11 +399,11 @@ public class Constants {
         public static final double CURRENT_TEST_POWER = OUTTAKE_POWER;
         public static final double CURRENT_TEST_PLATEAU = 1;
         public static final double CURRENT_TEST_TIMEOUT = 5;
-        public static final double CURRENT_TEST_TOLERANCE = 30;
-        public static final double CURRENT_TEST_EXPECTED_CURRENT = 20;
+        public static final double CURRENT_TEST_TOLERANCE = 5;
+        public static final double CURRENT_TEST_EXPECTED_CURRENT = 12.5;
 
         public static final double SETPOINT_TEST_PLATEAU = 1;
-        public static final double SETPOINT_TEST_TIMEOUT = 5;
+        public static final double SETPOINT_TEST_TIMEOUT = 2;
 
         public static final double INTAKE_TEST_TIMEOUT = 30;
     }

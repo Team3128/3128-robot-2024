@@ -49,7 +49,7 @@ public class Trajectories {
 
     public enum ShootPosition {
         // find values
-        WING(5.5),
+        WING(6),
         TOP_PRELOAD(6.2),
         BOTTOM(4);
 
@@ -177,7 +177,7 @@ public class Trajectories {
                 intake.intakeRollers.runManipulator(0)
             ),
             none(),
-            ()-> true
+            ()-> intake.intakeRollers.hasObjectPresent()
         );
     }
 

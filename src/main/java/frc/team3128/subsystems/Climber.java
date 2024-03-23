@@ -26,7 +26,7 @@ public class Climber extends NAR_PIDSubsystem {
     public enum Setpoint {
         EXTENDED(30),
         RAMSHOT(24.5),
-        AMP(11.5),
+        AMP(13),
         RETRACTED(0);
 
         public final double setpoint;
@@ -66,7 +66,7 @@ public class Climber extends NAR_PIDSubsystem {
         NAR_Shuffleboard.addSendable("Commands", "IntakePivot", Intake.getInstance().intakePivot, 0, 3);
         NAR_Shuffleboard.addSendable("Commands", "IntakeRollers", Intake.getInstance().intakeRollers, 0, 4);
         NAR_Shuffleboard.addSendable("Commands", "CommandScheduler", CommandScheduler.getInstance(), 3, 0);
-        x = NAR_Shuffleboard.debug("Shooter Function", "Concavity", -0.90, 0, 0);
+        x = NAR_Shuffleboard.debug("Shooter Function", "Concavity", -0.925, 0, 0);
 
     }
     

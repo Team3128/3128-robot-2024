@@ -30,13 +30,16 @@ public class AutoPrograms {
             "top_2note",
             "top_4note",
             "topFar_4note",
+            "topFarCopy_4note",
             "middle_2note",
             "middle_4note",
             "middleClose_4note",
+            "middle_6note",
             "bottom_2note",
             "bottom_4note",
             "bottom_7note",
             "bottomClose_4note",
+            "special_3note",
             "leave"
         };
         

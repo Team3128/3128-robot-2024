@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.45,
-      "y": 2.2
+      "x": 1.46,
+      "y": 7.35
     },
     "rotation": 180.0
   },
@@ -14,55 +14,55 @@
         {
           "type": "path",
           "data": {
-            "pathName": "source-note2.5"
+            "pathName": "amp-note2.1"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "note2.5-bottomShoot"
+            "pathName": "note2.1-wing"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Shoot"
+            "name": "Outtake"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "bottomShoot-note2.4"
+            "pathName": "wing-note2.2"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "note2.4-bottomShoot"
+            "pathName": "note2.2-wing"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Shoot"
+            "name": "Outtake"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "bottomShoot-source"
+            "pathName": "wing-note2.3"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "source-bottomShoot"
+            "pathName": "note2.3-wing"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Shoot"
+            "name": "Outtake"
           }
         },
         {

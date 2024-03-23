@@ -21,7 +21,7 @@ import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 public class AmpMechanism extends PivotTemplate {
 
     public enum Setpoint {
-        AMP(25),
+        AMP(50),
         RETRACTED(-90);
 
         private double angle;
@@ -45,7 +45,7 @@ public class AmpMechanism extends PivotTemplate {
         setTolerance(POSITION_TOLERANCE);
         setConstraints(-90, 90);
         initShuffleboard();
-        NAR_Shuffleboard.addData(getName(), "Stall Current", ()-> WRIST_MOTOR.getStallCurrent(), 4, 0);
+        NAR_Shuffleboard.addData(getName(), "Stall Current", ()-> ROLLER_MOTOR.getStallCurrent(), 4, 0);
     }
 
     @Override
@@ -90,7 +90,7 @@ public class AmpMechanism extends PivotTemplate {
     }
 
     public UnitTest getRollerTest() {
-        return new CurrentTest("Amp Roller", ROLLER_MOTOR, AMP_POWER, ROLLER_TIMEOUT, ROLLER_TEST_PLATEAU, ROLLER_TEST_EXPECTED_CURRENT, this);
+        return new CurrentTest("Amp Roller", ROLLER_MOTOR, AMP_POWER, ROLLER_TIMEOUT, ROLLER_TEST_PLATEAU, ROLLER_TEST_EXPECTED_CURRENT, 5,  this);
     }
 
     public UnitTest getRetractTest() {
