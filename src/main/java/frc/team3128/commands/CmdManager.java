@@ -72,11 +72,36 @@ public class CmdManager {
 
     public static Command rampUpAmp() {
         return sequence(
-            runOnce(()-> autoAmpAlign().schedule()),
+            // runOnce(()-> autoAmpAlign().schedule()),
             climber.climbTo(Setpoint.AMP),
             shooter.shoot(ShooterConstants.AMP_RPM),
             waitUntil(()-> climber.atSetpoint()),
             ampMechanism.extend()
+        );
+    }
+
+    public static Command rampUpAmp2() {
+        return sequence(
+            // runOnce(()-> autoAmpAlign().schedule()),
+            climber.climbTo(Setpoint.AMP),
+            shooter.shoot(ShooterConstants.AMP_RPM),
+            waitUntil(()-> climber.atSetpoint()),
+            ampMechanism.extend2()
+        );
+    }
+
+    public static Command ampShoot2() {
+        return sequence (
+            climber.climbTo(Setpoint.AMP),
+            shooter.shoot(ShooterConstants.AMP_RPM),
+            waitUntil(()-> climber.atSetpoint()),
+            ampMechanism.extend2(),
+            waitUntil(()-> ampMechanism.atSetpoint() && shooter.atSetpoint()),
+            intake.intakeRollers.outtake(),
+            waitSeconds(2.5),
+            ampMechanism.retract(),
+            waitUntil(()-> ampMechanism.atSetpoint()),
+            neutral(false)
         );
     }
 

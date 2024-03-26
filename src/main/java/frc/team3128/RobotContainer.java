@@ -101,7 +101,7 @@ public class RobotContainer {
 
         controller.getButton(XboxButton.kRightBumper).onTrue(rampRam()).onFalse(ramShot()); //Ram Shot
         controller.getButton(XboxButton.kRightTrigger).onTrue(rampUpContinuous()).onFalse(autoShoot());     //Auto Shoot
-        controller.getButton(XboxButton.kY).onTrue(rampUpFeed(4500, 4500, 13)).onFalse(feed(4500, 13));   //Feed Shot
+        controller.getButton(XboxButton.kY).onTrue(rampUpFeed(4000, 4000, 13)).onFalse(feed(4000, 13));   //Feed Shot
         controller.getButton(XboxButton.kX).onTrue(rampUpAmp()).onFalse(ampShoot()); //Amp Shot
         // controller.getButton(XboxButton.kX).onTrue(intake.intakePivot.pivotTo(-87)).onFalse(ampShootAlt());
 
@@ -171,7 +171,7 @@ public class RobotContainer {
         // buttonPad.getButton(13).onTrue(runOnce(()-> CommandScheduler.getInstance().cancelAll()));
         // buttonPad.getButton(13).onTrue(ampMechanism.runRollers(AMP_POWER)).onFalse(ampMechanism.runRollers(0));
         // buttonPad.getButton(14).onTrue(intake.intakeRollers.runManipulator(OUTTAKE_POWER));
-        buttonPad.getButton(13).onTrue(intake.outtake());
+        buttonPad.getButton(13).onTrue(rampUpAmp2()).onFalse(ampShoot2()); //Amp Shot
         // buttonPad.getButton(13).onTrue(intake.intakeRollers.intake()).onFalse(intake.intakeRollers.runManipulator(0));
         buttonPad.getButton(14).onTrue(runOnce(()-> swerve.zeroGyro(0)));
 
@@ -199,7 +199,7 @@ public class RobotContainer {
         final Camera camera3 = new Camera("LEFT", Units.inchesToMeters(-3.1), Units.inchesToMeters(12.635), Units.degreesToRadians(90), Units.degreesToRadians(-10), 0);
         final Camera camera4 = new Camera("RIGHT", Units.inchesToMeters(-3.1), Units.inchesToMeters(-12.635), Units.degreesToRadians(-90), Units.degreesToRadians(0), 0);
 
-        sideCams.add(camera3);
+        // sideCams.add(camera3);
         sideCams.add(camera4);
     }
 
@@ -269,6 +269,6 @@ public class RobotContainer {
         tester.addTest("Robot", tester.getTest("Climber"));
         tester.addTest("Robot", new UnitTest("Shoot", shoot(2500, 25)));
         tester.addTest("Robot", new UnitTest("Amp", sequence(intake.intake(Setpoint.EXTENDED), ampShoot())));
-        tester.getTest("Robot").setTimeBetweenTests(1);
+        tester.getTest("Robot").setTimeBetweenTests(0.5);
     }
 }

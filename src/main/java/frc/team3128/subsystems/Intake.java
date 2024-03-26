@@ -211,8 +211,8 @@ public class Intake {
         return sequence (
             // runOnce(()-> DriverStation.reportWarning("Outtake: CommandStarting", false)),
             intakePivot.pivotTo(Setpoint.EXTENDED.angle),
-            waitUntil(()-> intakePivot.atSetpoint()).withTimeout(2),
-            intakeRollers.outtake(),
+            waitUntil(()-> intakePivot.getMeasurement() < -45).withTimeout(2),
+            intakeRollers.runManipulator(-1),
             waitSeconds(0.5),
             retract(false)
             // runOnce(()-> DriverStation.reportWarning("Outtake: CommanedEnding", false))
@@ -233,7 +233,7 @@ public class Intake {
             intakePivot.pivotTo(()-> Climber.getInstance().getAngle()),
             waitUntil(() -> intakePivot.atSetpoint()),
             intakePivot.runPivot(0)
-        );
+        ).withTimeout(3);
     }
 
     public State getRunningState() {

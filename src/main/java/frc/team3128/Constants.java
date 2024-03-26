@@ -280,7 +280,7 @@ public class Constants {
         public static final double speakerLength = 1.043;
         public static final double speakerMidpointY = 5.5;//5.4;
         ; //6.151 - speakerLength / 2;
-        public static final double focalPointX = 0.3; //1.4583577128;
+        public static final double focalPointX = 0.15; //1.4583577128;
         public static final Translation2d speakerMidpointBlue = new Translation2d(0, speakerMidpointY);
         public static final Translation2d speakerMidpointRed = new Translation2d(FieldConstants.FIELD_X_LENGTH, speakerMidpointY);
         public static final Translation2d focalPointBlue = new Translation2d(focalPointX, speakerMidpointY);
@@ -299,7 +299,7 @@ public class Constants {
         public static final double MAX_RPM = 5500;
         public static final double MIN_RPM = 0;
         public static final double TOLERANCE = 150;
-        public static final double AMP_RPM = 2500;
+        public static final double AMP_RPM = 3000;
         public static final double RAM_SHOT_RPM = 4500;
 
         public static final double CURRENT_TEST_POWER = 0;
@@ -328,7 +328,7 @@ public class Constants {
 
         public static final int ROLLER_MOTOR_ID = 52;
         public static final NAR_TalonSRX ROLLER_MOTOR = new NAR_TalonSRX(ROLLER_MOTOR_ID);
-        public static final double AMP_POWER = 0.6;
+        public static final double AMP_POWER = 0.8;
 
         public static final double EXTEND_TIMEOUT = 1;
         public static final double RETRACTED_TIMEOUT = 1;

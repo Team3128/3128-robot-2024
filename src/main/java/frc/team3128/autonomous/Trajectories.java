@@ -49,7 +49,7 @@ public class Trajectories {
 
     public enum ShootPosition {
         // find values
-        WING(6),
+        WING(5.75),
         TOP_PRELOAD(6.2),
         BOTTOM(4);
 
@@ -76,6 +76,7 @@ public class Trajectories {
         NamedCommands.registerCommand("Intake", intake.intakeAuto());
         NamedCommands.registerCommand("Shoot", autoShoot(0.75));
         NamedCommands.registerCommand("TurnShoot", autoShoot(1.25));
+        NamedCommands.registerCommand("ShootSkip", either(autoShoot(0.5), none(), ()-> intake.intakeRollers.hasObjectPresent()));
         NamedCommands.registerCommand("RamShoot", ramShotAuto());
         NamedCommands.registerCommand("WingRamp", rampUpAuto(ShootPosition.WING));
         NamedCommands.registerCommand("Outtake", outtakeAuto());
@@ -149,7 +150,7 @@ public class Trajectories {
                 either(shooter.shoot(MAX_RPM), none(), ()-> shooter.isEnabled()),
                 parallel(
                     sequence(
-                        either(sequence(waitUntil(()-> intake.intakeRollers.hasObjectPresent()).withTimeout(0.5), intake.retractAuto()), none(), ()-> intake.intakePivot.isEnabled()),
+                        either(sequence(waitUntil(()-> intake.intakeRollers.hasObjectPresent()).withTimeout(0.25), intake.retractAuto()), none(), ()-> intake.intakePivot.isEnabled()),
                         runOnce(()->{turning = true;}),
                         rampUp()
                     ),
