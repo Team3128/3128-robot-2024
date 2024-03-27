@@ -138,6 +138,25 @@ public class CmdManager {
         );
     }
 
+    public static Command moveShoot(double height) {
+        return parallel(
+            sequence(
+                runOnce(()-> CmdSwerveDrive.setTurnSetpoint(Robot.getAlliance() == Alliance.Red ? 0 : 180)),
+                climber.climbTo(height),
+                shooter.shoot(RAM_SHOT_RPM, RAM_SHOT_RPM),
+                waitUntil(()-> swerve.crossedPodium()),
+                either(
+                    either(waitUntil(()-> swerve.getPose().getY() < 5.7), waitUntil(()-> swerve.getPose().getY() > 5.35), ()-> swerve.getPose().getY() > 5.55),
+                    waitUntil(()-> shooter.atSetpoint() && climber.atSetpoint()),
+                    ()-> (swerve.getPose().getY() > 5.55 && swerve.getPose().getY() < 5.7)
+                ),
+                intake.intakeRollers.outtakeNoRequirements(),
+                waitSeconds(0.35),
+                neutral(false)
+            )
+        );
+    }
+
     public static Command shoot(double rpm, double height){
         return sequence(
             // runOnce(()-> DriverStation.reportWarning("Shoot: CommandStarting", false)),

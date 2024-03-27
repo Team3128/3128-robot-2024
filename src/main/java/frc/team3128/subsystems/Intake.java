@@ -91,14 +91,18 @@ public class Intake {
         @Override
         protected void configMotors() {
             ROLLER_MOTOR.setInverted(false);
-            ROLLER_MOTOR.setNeutralMode(Neutral.BRAKE);
+            ROLLER_MOTOR.setNeutralMode(Neutral.COAST);
             ROLLER_MOTOR.setCurrentLimit(CURRENT_LIMIT);
-            ROLLER_MOTOR.enableVoltageCompensation(9);
+            ROLLER_MOTOR.enableVoltageCompensation(12);
             ROLLER_MOTOR.setStatusFrames(SparkMaxConfig.VELOCITY);
         }
 
         public Command runNoRequirements(double power) {
             return new InstantCommand(()-> setPower(power));
+        }
+
+        public Command ramShotOuttake() {
+            return runNoRequirements(-1);
         }
 
         public Command outtakeNoRequirements() {

@@ -99,7 +99,7 @@ public class RobotContainer {
     private void configureButtonBindings() {
         controller.getButton(XboxButton.kB).onTrue(intake.intake(Setpoint.SOURCE));
 
-        controller.getButton(XboxButton.kRightBumper).onTrue(rampRam()).onFalse(ramShot()); //Ram Shot
+        controller.getButton(XboxButton.kRightBumper).onTrue(moveShoot(22));
         controller.getButton(XboxButton.kRightTrigger).onTrue(rampUpContinuous()).onFalse(autoShoot());     //Auto Shoot
         controller.getButton(XboxButton.kY).onTrue(rampUpFeed(4000, 4000, 13)).onFalse(feed(4000, 13));   //Feed Shot
         controller.getButton(XboxButton.kX).onTrue(rampUpAmp()).onFalse(ampShoot()); //Amp Shot
@@ -108,7 +108,8 @@ public class RobotContainer {
         controller.getButton(XboxButton.kA).onTrue(sequence(runOnce(()-> intake.isRetracting = false), intake.intakePivot.pivotTo(-150), climber.climbTo(Climber.Setpoint.EXTENDED))); //Extend Climber
         controller.getButton(XboxButton.kBack).onTrue(sequence(climber.setClimber(-0.35), waitSeconds(1), climber.setClimber(-1), waitUntil(()->climber.isClimbed()), climber.setClimber(0)));   //Retract Climber
 
-        controller.getButton(XboxButton.kLeftTrigger).onTrue(intake.intake(Intake.Setpoint.EXTENDED));  //Extend Intake
+        controller.getButton(XboxButton.kLeftTrigger).onTrue(intake.intake(Intake.Setpoint.EXTENDED)
+        );  //Extend Intake
         controller.getButton(XboxButton.kLeftBumper).onTrue(intake.retract(false));         //Retract Intake
 
         controller.getButton(XboxButton.kStart).onTrue(intake.outtake()); //Amp LED

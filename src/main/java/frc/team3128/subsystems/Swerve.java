@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.team3128.Robot;
 import frc.team3128.RobotContainer;
+import frc.team3128.Constants.FieldConstants;
 import frc.team3128.Constants.ShooterConstants;
 import frc.team3128.commands.CmdSwerveDrive;
 
@@ -61,6 +62,12 @@ public class Swerve extends SwerveBase {
         NAR_Shuffleboard.addData("Testing", "Name", ()-> getDist(speakerMidpointRed), 0, 0);
         NAR_Shuffleboard.addData("Auto", "Setpoint", ()-> TURN_CONTROLLER.atSetpoint());
         initStateCheck();
+    }
+
+    public boolean crossedPodium() {
+        final double x = getPose().getX();
+        if (Robot.getAlliance() == Alliance.Red) return x > FieldConstants.FIELD_X_LENGTH - 2.1;
+        return x < 2.1;
     }
 
     public void setVoltage(double volts) {

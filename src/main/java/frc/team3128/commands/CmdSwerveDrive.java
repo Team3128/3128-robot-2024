@@ -4,6 +4,7 @@ import java.util.function.DoubleSupplier;
 
 import common.core.controllers.ControllerBase;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -27,7 +28,7 @@ public class CmdSwerveDrive extends Command {
 
     private final SlewRateLimiter accelLimiter;
 
-    public static ControllerBase rController;
+    public static PIDController rController;
     private static boolean enabled = false;
     private static double rSetpoint;
     
@@ -39,7 +40,7 @@ public class CmdSwerveDrive extends Command {
         this.yAxis = yAxis;
         this.zAxis = zAxis;
 
-        rController = TURN_CONTROLLER;
+        rController = new PIDController(turnkP, 0, 0);
 
         accelLimiter = new SlewRateLimiter(maxAcceleration);
         // rController = new PIDController(turnkP, 0, 0);

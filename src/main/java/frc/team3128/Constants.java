@@ -392,7 +392,7 @@ public class Constants {
         public static final int CURRENT_LIMIT = 40;
         public static final double STALL_CURRENT = 50;
         public static final double STALL_POWER = 0;
-        public static final double OUTTAKE_POWER = -0.2 / 0.75;
+        public static final double OUTTAKE_POWER = -0.75 / 0.75;
         public static final double INTAKE_POWER = 0.7 /0.75;
         public static final double AMP_POWER = -0.18 / 0.75;
 

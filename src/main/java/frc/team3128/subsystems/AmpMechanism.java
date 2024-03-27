@@ -22,7 +22,7 @@ public class AmpMechanism extends PivotTemplate {
 
     public enum Setpoint {
         AMP2(25),
-        AMP(48),
+        AMP(60),
         RETRACTED(-90);
 
         private double angle;
