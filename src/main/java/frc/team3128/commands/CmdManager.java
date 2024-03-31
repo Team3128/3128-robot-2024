@@ -54,6 +54,17 @@ public class CmdManager {
         return new ScheduleCommand(new StartEndCommand(()-> controller.startVibrate(), ()-> controller.stopVibrate()).withTimeout(1));
     }
 
+    // public static Command shootDist() {
+    //     return sequence(
+    //         climber.climbTo(climber.interpolate(swerve.getDist())),
+    //         shooter.shoot(MAX_RPM),
+    //         deadline(
+    //             waitUntil(()-> shooter.getMeasurement() > 4000),
+    //         ),
+    //         climber.climbTo(climber.interpolate(swerve.getDist()))
+    //     );
+    // }
+
     public static Command autoShoot() {
         return sequence(
             // runOnce(()-> DriverStation.reportWarning("AutoShoot: CommandStarting", false)),

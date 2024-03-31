@@ -6,14 +6,13 @@ import com.pathplanner.lib.path.PathConstraints;
 
 import common.core.controllers.Controller;
 import common.core.controllers.PIDFFConfig;
-import common.core.controllers.TrapController;
 import common.core.controllers.Controller.Type;
 import common.core.swerve.SwerveConversions;
 import common.core.swerve.SwerveModuleConfig;
 import common.core.swerve.SwerveModuleConfig.SwerveMotorConfig;
 import common.hardware.motorcontroller.NAR_CANSpark;
+import common.hardware.motorcontroller.NAR_TalonFX;
 import common.hardware.motorcontroller.NAR_TalonSRX;
-import common.hardware.motorcontroller.NAR_CANSpark.ControllerType;
 import common.hardware.motorcontroller.NAR_Motor.MotorConfig;
 import common.hardware.motorcontroller.NAR_Motor.Neutral;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -74,8 +73,8 @@ public class Constants {
 
         public static final double closedLoopRamp = 0.0;
 
-        public static final double driveGearRatio = 425.0 / 72.0;
-        public static final double angleGearRatio = (150.0 / 7.0); 
+        public static final double driveGearRatio = 225.0 / 42.0;
+        public static final double angleGearRatio = (300.0 / 13.0); 
 
         public static final SwerveDriveKinematics swerveKinematics = new SwerveDriveKinematics(
                 new Translation2d(wheelBase / 2.0, trackWidth / 2.0),
@@ -84,12 +83,12 @@ public class Constants {
                 new Translation2d(-wheelBase / 2.0, -trackWidth / 2.0)); 
 
         /* Swerve Current Limiting */
-        public static final int angleLimit = 30; //30
-        public static final int driveLimit = 60; //40;
+        public static final int angleLimit = 40; //30
+        public static final int driveLimit = 80; //40;
 
         /* Angle Motor PID Values */
         // switched 364 pid values to SDS pid values
-        public static final double angleKP = 0.15; // 0.6; // citrus: 0.3 //0.15
+        public static final double angleKP = 0.15 * 30; // 0.6; // citrus: 0.3 //0.15
         public static final double angleKI = 0.0;
         public static final double angleKD = 0.0; // 12.0; // citrus: 0
         public static final double angleKF = 0.0;
@@ -101,8 +100,8 @@ public class Constants {
         public static final double driveKF = 0.0;
 
         /* Drive Motor Characterization Values */
-        public static final double driveKS = 0.29808;//0.60094; // 0.19225;
-        public static final double driveKV = 1.98988;//1.1559;  // 2.4366
+        public static final double driveKS = 0.29;//0.60094; // 0.19225;
+        public static final double driveKV = 1.98;//1.1559;  // 2.4366
         public static final double driveKA = 0.45610; //0.12348; // 0.34415
 
         /* Swerve Profiling Values */
@@ -116,15 +115,15 @@ public class Constants {
         public static final double maxAngularAcceleration = 2 * Math.PI; //I stole from citrus.
 
         /* Motor Inverts */
-        public static final boolean driveMotorInvert = false;
+        public static final boolean driveMotorInvert = true;
         public static final boolean angleMotorInvert = true;
 
         /* Angle Encoder Invert */
         public static final boolean canCoderInvert = false;
 
-        public static final MotorConfig driveMotorConfig = new MotorConfig(SwerveConversions.rotationsToMeters(1, wheelCircumference, driveGearRatio), 60, driveLimit, driveMotorInvert, Neutral.COAST);
+        public static final MotorConfig driveMotorConfig = new MotorConfig(SwerveConversions.rotationsToMeters(1, wheelCircumference, driveGearRatio), 60, driveLimit, driveMotorInvert, Neutral.BRAKE);
 
-        public static final MotorConfig angleMotorConfig = new MotorConfig(SwerveConversions.rotationsToDegrees(1, angleGearRatio), 1, angleLimit, angleMotorInvert, Neutral.COAST);
+        public static final MotorConfig angleMotorConfig = new MotorConfig(SwerveConversions.rotationsToDegrees(1, angleGearRatio), 1, angleLimit, angleMotorInvert, Neutral.BRAKE);
 
         public static final PIDFFConfig drivePIDConfig = new PIDFFConfig(driveKP, driveKI, driveKD, driveKS, driveKV, driveKA);
 
@@ -132,37 +131,37 @@ public class Constants {
 
         public static final SwerveModuleConfig Mod0 = new SwerveModuleConfig(
             0, 
-            new SwerveMotorConfig(new NAR_CANSpark(1, ControllerType.CAN_SPARK_FLEX), driveMotorConfig, drivePIDConfig),
-            new SwerveMotorConfig(new NAR_CANSpark(2, ControllerType.CAN_SPARK_FLEX), angleMotorConfig, anglePIDConfig),
+            new SwerveMotorConfig(new NAR_TalonFX(1), driveMotorConfig, drivePIDConfig),
+            new SwerveMotorConfig(new NAR_TalonFX(2), angleMotorConfig, anglePIDConfig),
             10,
-            -160.400390625,
+            70.6640625,
             canCoderInvert,
             maxSpeed);
 
         public static final SwerveModuleConfig Mod1 = new SwerveModuleConfig(
             1, 
-            new SwerveMotorConfig(new NAR_CANSpark(3, ControllerType.CAN_SPARK_FLEX), driveMotorConfig, drivePIDConfig),
-            new SwerveMotorConfig(new NAR_CANSpark(4, ControllerType.CAN_SPARK_FLEX), angleMotorConfig, anglePIDConfig),
+            new SwerveMotorConfig(new NAR_TalonFX(3), driveMotorConfig, drivePIDConfig),
+            new SwerveMotorConfig(new NAR_TalonFX(4), angleMotorConfig, anglePIDConfig),
             11,
-            150.732421875 - 180,
+            110.21484375,
             canCoderInvert,
             maxSpeed);
         
         public static final SwerveModuleConfig Mod2 = new SwerveModuleConfig(
             2, 
-            new SwerveMotorConfig(new NAR_CANSpark(5, ControllerType.CAN_SPARK_FLEX), driveMotorConfig, drivePIDConfig),
-            new SwerveMotorConfig(new NAR_CANSpark(6, ControllerType.CAN_SPARK_FLEX), angleMotorConfig, anglePIDConfig),
+            new SwerveMotorConfig(new NAR_TalonFX(5), driveMotorConfig, drivePIDConfig),
+            new SwerveMotorConfig(new NAR_TalonFX(6), angleMotorConfig, anglePIDConfig),
             12,
-            109.951171875,
+            -55.810546875,
             canCoderInvert,
             maxSpeed);
         
         public static final SwerveModuleConfig Mod3 = new SwerveModuleConfig(
             3, 
-            new SwerveMotorConfig(new NAR_CANSpark(7, ControllerType.CAN_SPARK_FLEX), driveMotorConfig, drivePIDConfig),
-            new SwerveMotorConfig(new NAR_CANSpark(8, ControllerType.CAN_SPARK_FLEX), angleMotorConfig, anglePIDConfig),
+            new SwerveMotorConfig(new NAR_TalonFX(7), driveMotorConfig, drivePIDConfig),
+            new SwerveMotorConfig(new NAR_TalonFX(8), angleMotorConfig, anglePIDConfig),
             13,
-            -138.69140625 + 180,
+            -178.505859375 + 22.1484375,
             canCoderInvert,
             maxSpeed);
 

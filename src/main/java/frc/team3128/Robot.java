@@ -151,11 +151,11 @@ public class Robot extends NAR_Robot {
     @Override
     public void disabledExit() {
         Leds.getInstance().setDefaultColor();
-        Swerve.getInstance().setBrakeMode(false);
+        Swerve.getInstance().setBrakeMode(true);
     }
     
     @Override
     public void disabledPeriodic() {
-
+        CommandScheduler.getInstance().run();
     }
 }
