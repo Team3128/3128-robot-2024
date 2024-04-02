@@ -7,9 +7,9 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+
 import static edu.wpi.first.wpilibj2.command.Commands.*;
-import static frc.team3128.Constants.AmpWristConstants.AMP_POWER;
-import static frc.team3128.Constants.IntakeConstants.OUTTAKE_POWER;
 import static frc.team3128.Constants.ShooterConstants.MAX_RPM;
 import static frc.team3128.commands.CmdManager.*;
 
@@ -17,7 +17,6 @@ import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
 import frc.team3128.Constants.LedConstants.Colors;
 import frc.team3128.commands.CmdSwerveDrive;
-import common.core.misc.NAR_Robot;
 import common.core.swerve.SwerveModule;
 import common.hardware.camera.Camera;
 import common.hardware.input.NAR_ButtonBoard;
@@ -39,7 +38,6 @@ import frc.team3128.subsystems.Shooter;
 import frc.team3128.subsystems.Swerve;
 import frc.team3128.subsystems.Intake.Setpoint;
 
-import java.util.LinkedList;
 import java.util.ArrayList;
 
 /**
@@ -99,8 +97,8 @@ public class RobotContainer {
     private void configureButtonBindings() {
         controller.getButton(XboxButton.kB).onTrue(intake.intake(Setpoint.SOURCE));
 
-        controller.getButton(XboxButton.kRightBumper).onTrue(moveShoot(22));
-        controller.getButton(XboxButton.kRightTrigger).onTrue(rampUpContinuous()).onFalse(autoShoot());     //Auto Shoot
+        controller.getButton(XboxButton.kRightBumper).onTrue(moveShoot());
+        controller.getButton(XboxButton.kRightTrigger).onTrue(rampUp(MAX_RPM, 12.5)).onFalse(shootDist());     //Auto Shoot
         controller.getButton(XboxButton.kY).onTrue(rampUpFeed(4000, 4000, 13)).onFalse(feed(4000, 13));   //Feed Shot
         controller.getButton(XboxButton.kX).onTrue(rampUpAmp()).onFalse(ampShoot()); //Amp Shot
         // controller.getButton(XboxButton.kX).onTrue(intake.intakePivot.pivotTo(-87)).onFalse(ampShootAlt());
@@ -108,8 +106,7 @@ public class RobotContainer {
         controller.getButton(XboxButton.kA).onTrue(sequence(runOnce(()-> intake.isRetracting = false), intake.intakePivot.pivotTo(-150), climber.climbTo(Climber.Setpoint.EXTENDED))); //Extend Climber
         controller.getButton(XboxButton.kBack).onTrue(sequence(climber.setClimber(-0.35), waitSeconds(1), climber.setClimber(-1), waitUntil(()->climber.isClimbed()), climber.setClimber(0)));   //Retract Climber
 
-        controller.getButton(XboxButton.kLeftTrigger).onTrue(intake.intake(Intake.Setpoint.EXTENDED)
-        );  //Extend Intake
+        controller.getButton(XboxButton.kLeftTrigger).onTrue(intake.intake(Intake.Setpoint.EXTENDED));  //Extend Intake
         controller.getButton(XboxButton.kLeftBumper).onTrue(intake.retract(false));         //Retract Intake
 
         controller.getButton(XboxButton.kStart).onTrue(intake.outtake()); //Amp LED
@@ -130,30 +127,6 @@ public class RobotContainer {
             CmdSwerveDrive.setTurnSetpoint(Robot.getAlliance() == Alliance.Red ? 270 : 90);
         }));
 
-        // judgePad.getButton(1).onTrue(runOnce(()-> swerve.resetOdometry(new Pose2d(5, 5, Rotation2d.fromDegrees(180)))));
-
-        // rightStick.getButton(1).onTrue(runOnce(()-> swerve.zeroGyro(0)));
-        // rightStick.getButton(3).onTrue(new CmdSysId("Rotation", (Double radiansPerSec) -> swerve.drive(new Translation2d(), radiansPerSec, true), ()-> Units.radiansToDegrees(swerve.getRobotVelocity().omegaRadiansPerSecond), swerve));
-        // rightStick.getButton(4).onTrue(runOnce(()-> swerve.resetOdometry(new Pose2d(1.35, FocalAimConstants.speakerMidpointY, Rotation2d.fromDegrees(180)))));
-        // rightStick.getButton(5).onTrue(runOnce(()-> swerve.resetOdometry(new Pose2d(FIELD_X_LENGTH - 1.35, FocalAimConstants.speakerMidpointY, Rotation2d.fromDegrees(0)))));
-        // rightStick.getButton(6).onTrue(swerve.turnInPlace(()-> 0)); 
-        
-        // rightStick.getButton(2).onTrue(shooter.setShooter(0.8)).onFalse(shooter.setShooter(0));
-        // rightStick.getButton(3).onTrue(shooter.shoot(0));
-        // rightStick.getButton(4).onTrue(climber.setClimber(0.2)).onFalse(climber.setClimber(0));
-        // rightStick.getButton(5).onTrue(climber.setClimber(-0.2)).onFalse(climber.setClimber(0));
-        // rightStick.getButton(6).onTrue(climber.climbTo(0));
-        // rightStick.getButton(7).onTrue(climber.reset());
-        // rightStick.getButton(8).onTrue(intake.setPivot(0.2)).onFalse(intake.setPivot(0));
-        // rightStick.getButton(9).onTrue(intake.setPivot(-0.2)).onFalse(intake.setPivot(0));
-        // rightStick.getButton(10).onTrue(intake.pivotTo(180));
-        // rightStick.getButton(11).onTrue(intake.reset());
-        // rightStick.getButton(12).onTrue(intake.setRoller(0.5)).onFalse(intake.setRoller(0));
-        // rightStick.getButton(13).onTrue(intake.setRoller(IntakeConstants.OUTTAKE_POWER)).onFalse(intake.setRoller(0));
-        // rightStick.getButton(7).onTrue(new CmdSysId("Swerve", (Double volts)-> swerve.setVoltage(volts), ()-> swerve.getVelocity(), swerve)).onFalse(runOnce(()-> swerve.stop(), swerve));
-        // rightStick.getButton(8).onTrue(runOnce(()-> NAR_CANSpark.burnFlashAll()));
-
-
         buttonPad.getButton(1).onTrue(shooter.setShooter(1)).onFalse(shooter.setShooter(0));
         buttonPad.getButton(2).onTrue(ampMechanism.runPivot(0.2)).onFalse(ampMechanism.runPivot(0));
         buttonPad.getButton(3).onTrue(climber.setClimber(-0.5)).onFalse(climber.setClimber(0));
@@ -172,7 +145,6 @@ public class RobotContainer {
         // buttonPad.getButton(13).onTrue(runOnce(()-> CommandScheduler.getInstance().cancelAll()));
         // buttonPad.getButton(13).onTrue(ampMechanism.runRollers(AMP_POWER)).onFalse(ampMechanism.runRollers(0));
         // buttonPad.getButton(14).onTrue(intake.intakeRollers.runManipulator(OUTTAKE_POWER));
-        buttonPad.getButton(13).onTrue(rampUpAmp2()).onFalse(ampShoot2()); //Amp Shot
         // buttonPad.getButton(13).onTrue(intake.intakeRollers.intake()).onFalse(intake.intakeRollers.runManipulator(0));
         buttonPad.getButton(14).onTrue(runOnce(()-> swerve.zeroGyro(0)));
 
@@ -183,6 +155,8 @@ public class RobotContainer {
         // buttonPad.getButton(13).onTrue(intake.intakeRollers.outtake()).onFalse(intake.intakeRollers.runManipulator(0));
         // buttonPad.getButton(16).onTrue(intake.intakeRollers.outtake()).onFalse(intake.intakeRollers.runManipulator(0));
         // buttonPad.getButton(16).onTrue(intake.outtake());
+
+        new Trigger(()-> intake.intakeRollers.hasObjectPresent()).onTrue(runOnce(()-> leds.setLedColor(Colors.GREEN))).onFalse(runOnce(()-> leds.setDefaultColor()));
     }
 
     @SuppressWarnings("unused")

@@ -91,9 +91,6 @@ public class Leds extends SubsystemBase {
        for (int i = 0; i < slots; i++) {
         m_candle.animate(null, i+offset);
        }
-    }
-
-    
-    
+    }    
 
 }

@@ -277,9 +277,10 @@ public class Constants {
 
     public static class FocalAimConstants {
         public static final double speakerLength = 1.043;
-        public static final double speakerMidpointY = 5.5;//5.4;
+        public static final double speakerMidpointY = Units.inchesToMeters(218.29);//5.4;
+        
         ; //6.151 - speakerLength / 2;
-        public static final double focalPointX = 0.15; //1.4583577128;
+        public static final double focalPointX = 0.229; //1.4583577128;
         public static final Translation2d speakerMidpointBlue = new Translation2d(0, speakerMidpointY);
         public static final Translation2d speakerMidpointRed = new Translation2d(FieldConstants.FIELD_X_LENGTH, speakerMidpointY);
         public static final Translation2d focalPointBlue = new Translation2d(focalPointX, speakerMidpointY);
@@ -287,6 +288,9 @@ public class Constants {
         public static final double angleOffset = 0;
         //testing: kV: drivetrain spinning consistently (ie. v1 = vel at  vel at 1 rad/sec v2=2 rad/sec). 1/(v2-v1) = kV
         //kS: plug kV into 1= kS + kV(v1)
+        public static final double offset = 0.15;
+        public static final double lowerBound = speakerMidpointY - offset;
+        public static final double higherBound = speakerMidpointY + offset;
     }
 
     public static class ShooterConstants {

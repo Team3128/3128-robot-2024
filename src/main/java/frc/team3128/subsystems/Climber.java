@@ -66,7 +66,7 @@ public class Climber extends NAR_PIDSubsystem {
         NAR_Shuffleboard.addSendable("Commands", "IntakePivot", Intake.getInstance().intakePivot, 0, 3);
         NAR_Shuffleboard.addSendable("Commands", "IntakeRollers", Intake.getInstance().intakeRollers, 0, 4);
         NAR_Shuffleboard.addSendable("Commands", "CommandScheduler", CommandScheduler.getInstance(), 3, 0);
-        x = NAR_Shuffleboard.debug("Shooter Function", "Concavity", -1, 0, 0);
+        x = NAR_Shuffleboard.debug("Shooter Function", "Concavity", -1.09, 0, 0);
 
     }
     
@@ -112,7 +112,8 @@ public class Climber extends NAR_PIDSubsystem {
     }
 
     public double interpolate(double dist){
-        return 28.5 - 0.233 * dist + 9.26 * Math.pow(10, -4) * Math.pow(dist, 2) - 1.33 * Math.pow(10, -6) * Math.pow(dist, 3) + 93;
+        return 27.8 * Math.pow(dist, x.getAsDouble());
+        // return 28.5 - 0.233 * dist + 9.26 * Math.pow(10, -4) * Math.pow(dist, 2) - 1.33 * Math.pow(10, -6) * Math.pow(dist, 3) + 93;
         // return 25 * Math.pow(dist + 0.07, x.getAsDouble());
         // return 45.1 - 27 * dist + 6.86 * Math.pow(dist, 2) - 0.621 * Math.pow(dist, 3);
     }

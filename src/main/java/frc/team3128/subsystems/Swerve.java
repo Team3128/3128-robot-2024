@@ -133,6 +133,11 @@ public class Swerve extends SwerveBase {
         return target.minus(new Translation2d(0, velocity.vyMetersPerSecond * time));
     }
 
+    public double getDistHorizontal() {
+        final double x = getPose().getX();
+        return Robot.getAlliance() == Alliance.Red ? FieldConstants.FIELD_X_LENGTH - x : x;
+    }
+
     public double getDist() {
         return getDist(Robot.getAlliance() == Alliance.Red ? speakerMidpointRed : speakerMidpointBlue);
     }

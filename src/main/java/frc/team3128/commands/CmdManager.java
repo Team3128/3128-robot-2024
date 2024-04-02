@@ -1,10 +1,8 @@
 package frc.team3128.commands;
 
 import common.hardware.input.NAR_XboxController;
-import common.utility.Log;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ScheduleCommand;
@@ -13,7 +11,6 @@ import frc.team3128.Robot;
 import frc.team3128.RobotContainer;
 import frc.team3128.Constants.AutoConstants;
 import frc.team3128.Constants.FieldConstants;
-import frc.team3128.Constants.IntakeConstants;
 import frc.team3128.Constants.ShooterConstants;
 import frc.team3128.Constants.LedConstants.Colors;
 import frc.team3128.subsystems.AmpMechanism;
@@ -27,16 +24,10 @@ import frc.team3128.subsystems.Climber.Setpoint;
 import java.util.function.DoubleSupplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.path.PathConstraints;
-
 import static edu.wpi.first.wpilibj2.command.Commands.*;
-import static frc.team3128.Constants.ShooterConstants.MAX_RPM;
-import static frc.team3128.Constants.ShooterConstants.RAM_SHOT_RPM;
-import static frc.team3128.Constants.SwerveConstants.RAMP_TIME;
-import static frc.team3128.Constants.SwerveConstants.maxAcceleration;
-import static frc.team3128.Constants.SwerveConstants.maxAngularAcceleration;
-import static frc.team3128.Constants.SwerveConstants.maxAngularVelocity;
-import static frc.team3128.Constants.SwerveConstants.maxAttainableSpeed;
+import static frc.team3128.Constants.ShooterConstants.*;
+import static frc.team3128.Constants.SwerveConstants.*;
+import static frc.team3128.Constants.FocalAimConstants.*;
 
 public class CmdManager {
 
@@ -54,16 +45,24 @@ public class CmdManager {
         return new ScheduleCommand(new StartEndCommand(()-> controller.startVibrate(), ()-> controller.stopVibrate()).withTimeout(1));
     }
 
-    // public static Command shootDist() {
-    //     return sequence(
-    //         climber.climbTo(climber.interpolate(swerve.getDist())),
-    //         shooter.shoot(MAX_RPM),
-    //         deadline(
-    //             waitUntil(()-> shooter.getMeasurement() > 4000),
-    //         ),
-    //         climber.climbTo(climber.interpolate(swerve.getDist()))
-    //     );
-    // }
+    public static Command shootDist() {
+        return deadline(
+            sequence(
+                climber.climbTo(climber.interpolate(swerve.getDist())),
+                shooter.shoot(MAX_RPM),
+                waitUntil(shooter::atSetpoint),
+                climber.climbTo(climber.interpolate(swerve.getDist())),
+                waitUntil(climber::atSetpoint),
+                intake.intakeRollers.outtakeNoRequirements(),
+                waitSeconds(0.35),
+                neutral(false)
+            ),
+            repeatingSequence(  
+                runOnce(()-> CmdSwerveDrive.setTurnSetpoint(swerve.getTurnAngle(Robot.getAlliance() == Alliance.Red ? focalPointRed : focalPointBlue))),
+                waitSeconds(0.1)
+            )
+        );
+    }
 
     public static Command autoShoot() {
         return sequence(
@@ -88,31 +87,6 @@ public class CmdManager {
             shooter.shoot(ShooterConstants.AMP_RPM),
             waitUntil(()-> climber.atSetpoint()),
             ampMechanism.extend()
-        );
-    }
-
-    public static Command rampUpAmp2() {
-        return sequence(
-            // runOnce(()-> autoAmpAlign().schedule()),
-            climber.climbTo(Setpoint.AMP),
-            shooter.shoot(ShooterConstants.AMP_RPM),
-            waitUntil(()-> climber.atSetpoint()),
-            ampMechanism.extend2()
-        );
-    }
-
-    public static Command ampShoot2() {
-        return sequence (
-            climber.climbTo(Setpoint.AMP),
-            shooter.shoot(ShooterConstants.AMP_RPM),
-            waitUntil(()-> climber.atSetpoint()),
-            ampMechanism.extend2(),
-            waitUntil(()-> ampMechanism.atSetpoint() && shooter.atSetpoint()),
-            intake.intakeRollers.outtake(),
-            waitSeconds(2.5),
-            ampMechanism.retract(),
-            waitUntil(()-> ampMechanism.atSetpoint()),
-            neutral(false)
         );
     }
 
@@ -149,21 +123,28 @@ public class CmdManager {
         );
     }
 
-    public static Command moveShoot(double height) {
-        return parallel(
-            sequence(
+    public static Command moveShoot() {
+        return deadline(
+            sequence (
                 runOnce(()-> CmdSwerveDrive.setTurnSetpoint(Robot.getAlliance() == Alliance.Red ? 0 : 180)),
-                climber.climbTo(height),
                 shooter.shoot(RAM_SHOT_RPM, RAM_SHOT_RPM),
                 waitUntil(()-> swerve.crossedPodium()),
                 either(
-                    either(waitUntil(()-> swerve.getPose().getY() < 5.7), waitUntil(()-> swerve.getPose().getY() > 5.35), ()-> swerve.getPose().getY() > 5.55),
-                    waitUntil(()-> shooter.atSetpoint() && climber.atSetpoint()),
-                    ()-> (swerve.getPose().getY() > 5.55 && swerve.getPose().getY() < 5.7)
+                    either(
+                        waitUntil(()-> swerve.getPose().getY() < higherBound), 
+                        waitUntil(()-> swerve.getPose().getY() > lowerBound), 
+                        ()-> swerve.getPose().getY() > speakerMidpointY),
+                    none(),
+                    ()-> (swerve.getPose().getY() > lowerBound && swerve.getPose().getY() < higherBound)
                 ),
+                waitUntil(()-> shooter.atSetpoint()),
                 intake.intakeRollers.outtakeNoRequirements(),
                 waitSeconds(0.35),
                 neutral(false)
+            ),
+            repeatingSequence(
+                climber.climbTo(swerve.getDistHorizontal()),
+                waitSeconds(0.25)
             )
         );
     }

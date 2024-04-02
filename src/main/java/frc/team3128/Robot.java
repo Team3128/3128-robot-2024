@@ -13,16 +13,12 @@ import common.hardware.camera.Camera;
 import common.utility.Log;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.DriverStation.MatchType;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import static edu.wpi.first.wpilibj2.command.Commands.*;
 
-import frc.team3128.Constants.FieldConstants;
 import frc.team3128.Constants.LedConstants.Colors;
 import frc.team3128.autonomous.AutoPrograms;
 import frc.team3128.commands.CmdManager;

@@ -21,7 +21,6 @@ import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 public class AmpMechanism extends PivotTemplate {
 
     public enum Setpoint {
-        AMP2(25),
         AMP(60),
         RETRACTED(-90);
 
@@ -79,13 +78,6 @@ public class AmpMechanism extends PivotTemplate {
         return sequence(
             pivotTo(Setpoint.AMP),
             runOnce(()-> ROLLER_MOTOR.set(AMP_POWER))
-        );
-    }
-
-    public Command extend2() {
-        return sequence(
-            pivotTo(Setpoint.AMP2),
-            runOnce(()-> ROLLER_MOTOR.set(0.7))
         );
     }
 

@@ -2,7 +2,6 @@ package frc.team3128.commands;
 
 import java.util.function.DoubleSupplier;
 
-import common.core.controllers.ControllerBase;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -41,6 +40,8 @@ public class CmdSwerveDrive extends Command {
         this.zAxis = zAxis;
 
         rController = new PIDController(turnkP, 0, 0);
+        rController.setTolerance(1);
+        rController.enableContinuousInput(-180, 180);
 
         accelLimiter = new SlewRateLimiter(maxAcceleration);
         // rController = new PIDController(turnkP, 0, 0);

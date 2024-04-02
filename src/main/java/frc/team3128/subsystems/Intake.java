@@ -5,19 +5,15 @@ import common.core.subsystems.ManipulatorTemplate;
 import common.core.subsystems.PivotTemplate;
 import common.hardware.motorcontroller.NAR_CANSpark.SparkMaxConfig;
 import common.hardware.motorcontroller.NAR_Motor.Neutral;
-import common.utility.Log;
 import common.utility.narwhaldashboard.NarwhalDashboard.State;
-import common.utility.shuffleboard.NAR_Shuffleboard;
 import common.utility.tester.CurrentTest;
 import common.utility.tester.Tester;
 import common.utility.tester.Tester.*;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.team3128.Constants.LedConstants.Colors;
 import static edu.wpi.first.wpilibj2.command.Commands.*;
 import static frc.team3128.Constants.IntakeConstants.*;
 import java.util.function.DoubleSupplier;
@@ -176,7 +172,6 @@ public class Intake {
     public Command retract(boolean shouldStall) {
         return sequence(
             // runOnce(()-> DriverStation.reportWarning("Retract: CommandStarting", false)),
-            runOnce(()-> Leds.getInstance().setLedColor(Colors.PIECE)),
             // CmdManager.vibrateController(),
             runOnce(()-> isRetracting = true),
             waitUntil(()-> Climber.getInstance().isNeutral()),
@@ -191,8 +186,7 @@ public class Intake {
                 sequence(
                     waitSeconds(0.5),
                     runOnce(()-> isRetracting = false),
-                    intakePivot.reset(0),
-                    runOnce(()-> Leds.getInstance().setDefaultColor())
+                    intakePivot.reset(0)
                 )
             )
             // runOnce(()-> DriverStation.reportWarning("Retract: CommandEnding", false))
