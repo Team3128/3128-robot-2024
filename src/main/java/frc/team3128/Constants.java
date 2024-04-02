@@ -134,7 +134,7 @@ public class Constants {
             new SwerveMotorConfig(new NAR_TalonFX(1), driveMotorConfig, drivePIDConfig),
             new SwerveMotorConfig(new NAR_TalonFX(2), angleMotorConfig, anglePIDConfig),
             10,
-            70.6640625,
+            62.40234375,
             canCoderInvert,
             maxSpeed);
 
@@ -143,7 +143,7 @@ public class Constants {
             new SwerveMotorConfig(new NAR_TalonFX(3), driveMotorConfig, drivePIDConfig),
             new SwerveMotorConfig(new NAR_TalonFX(4), angleMotorConfig, anglePIDConfig),
             11,
-            110.21484375,
+            110.302734375,
             canCoderInvert,
             maxSpeed);
         
@@ -152,7 +152,7 @@ public class Constants {
             new SwerveMotorConfig(new NAR_TalonFX(5), driveMotorConfig, drivePIDConfig),
             new SwerveMotorConfig(new NAR_TalonFX(6), angleMotorConfig, anglePIDConfig),
             12,
-            -55.810546875,
+            -49.658203125,
             canCoderInvert,
             maxSpeed);
         
@@ -161,7 +161,7 @@ public class Constants {
             new SwerveMotorConfig(new NAR_TalonFX(7), driveMotorConfig, drivePIDConfig),
             new SwerveMotorConfig(new NAR_TalonFX(8), angleMotorConfig, anglePIDConfig),
             13,
-            -178.505859375 + 22.1484375,
+            -158.203125,
             canCoderInvert,
             maxSpeed);
 
