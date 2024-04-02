@@ -17,10 +17,12 @@ import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
 import frc.team3128.Constants.ShooterConstants;
 import frc.team3128.Constants.LedConstants.Colors;
+import frc.team3128.commands.CmdAutoAlign;
 import frc.team3128.commands.CmdSwerveDrive;
 import common.core.misc.NAR_Robot;
 import common.hardware.camera.Camera;
 import common.hardware.input.NAR_ButtonBoard;
+import common.hardware.input.NAR_Joystick;
 import common.hardware.input.NAR_XboxController;
 import common.hardware.input.NAR_XboxController.XboxButton;
 import common.hardware.motorcontroller.NAR_CANSpark;
@@ -55,7 +57,7 @@ public class RobotContainer {
 
     private NAR_ButtonBoard judgePad;
     private NAR_ButtonBoard buttonPad;
-
+    private NAR_Joystick rightStick;
     public static NAR_XboxController controller;
 
     private NarwhalDashboard dashboard;
@@ -80,7 +82,7 @@ public class RobotContainer {
         // judgePad = new NAR_ButtonBoard(1);
         controller = new NAR_XboxController(2);
         buttonPad = new NAR_ButtonBoard(3);
-
+        rightStick = new NAR_Joystick(0);
         //uncomment line below to enable driving
         CommandScheduler.getInstance().setDefaultCommand(swerve, new CmdSwerveDrive(controller::getLeftX,controller::getLeftY, controller::getRightX, true));
         configureButtonBindings();
@@ -92,6 +94,7 @@ public class RobotContainer {
     }   
 
     private void configureButtonBindings() {
+        rightStick.getButton(1).onTrue(new CmdAutoAlign());
         controller.getButton(XboxButton.kB).onTrue(runOnce(()-> swerve.resetEncoders()));
 
         controller.getButton(XboxButton.kRightBumper).onTrue(rampUp(MAX_RPM, 25)).onFalse(shoot(MAX_RPM, 25)); //Ram Shot

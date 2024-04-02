@@ -5,17 +5,21 @@ import java.util.HashMap;
 import com.pathplanner.lib.path.PathConstraints;
 
 import common.core.controllers.Controller;
-import common.core.controllers.PIDFFConfig;
-import common.core.controllers.TrapController;
 import common.core.controllers.Controller.Type;
+import common.core.controllers.PIDFFConfig;
 import common.core.swerve.SwerveConversions;
 import common.core.swerve.SwerveModuleConfig;
 import common.core.swerve.SwerveModuleConfig.SwerveMotorConfig;
 import common.hardware.motorcontroller.NAR_CANSpark;
-import common.hardware.motorcontroller.NAR_TalonSRX;
 import common.hardware.motorcontroller.NAR_CANSpark.ControllerType;
 import common.hardware.motorcontroller.NAR_Motor.MotorConfig;
 import common.hardware.motorcontroller.NAR_Motor.Neutral;
+import common.hardware.motorcontroller.NAR_TalonSRX;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -25,11 +29,6 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.team3128.subsystems.Swerve;
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 
 
 public class Constants {
@@ -445,7 +444,27 @@ public class Constants {
             }
     
         }
+
+        
     }
+
+    public static class LimelightConstants {
+        public static final double CAMERA_ANGLE = 2; 
+        public static final double CAMERA_HEIGHT = 22; //inches?
+        public static final double FRONT_DISTANCE = 2;
+        public static final double TX_THRESHOLD = 4;
+        public static final double OBJ_TARGET_HEIGHT = 2 / 2; //og was 9.5/2. note height approx 2
+        public static final double HORIZONTAL_OFFSET_GOAL = 0;
+        public static final double KP = 0.1;
+        public static final double KD = 0;
+        public static final double KI = 0;
+        public static final double MIN_AREA = 1000;
+
+        //auto align
+        public static final PIDFFConfig config = new PIDFFConfig(KP, KI, KD);
+        public static final Constraints constraints = new Constraints(SwerveConstants.maxSpeed, SwerveConstants.maxAcceleration);
+    }
+
 }
 
 
