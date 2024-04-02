@@ -124,28 +124,30 @@ public class CmdManager {
     }
 
     public static Command moveShoot() {
-        return deadline(
-            sequence (
-                runOnce(()-> CmdSwerveDrive.setTurnSetpoint(Robot.getAlliance() == Alliance.Red ? 0 : 180)),
-                shooter.shoot(RAM_SHOT_RPM, RAM_SHOT_RPM),
-                waitUntil(()-> swerve.crossedPodium()),
-                either(
+        return sequence(
+            deadline(
+                sequence (
+                    runOnce(()-> CmdSwerveDrive.setTurnSetpoint(Robot.getAlliance() == Alliance.Red ? 0 : 180)),
+                    shooter.shoot(RAM_SHOT_RPM, RAM_SHOT_RPM),
+                    waitUntil(()-> swerve.crossedPodium()),
                     either(
-                        waitUntil(()-> swerve.getPose().getY() < higherBound), 
-                        waitUntil(()-> swerve.getPose().getY() > lowerBound), 
-                        ()-> swerve.getPose().getY() > speakerMidpointY),
-                    none(),
-                    ()-> (swerve.getPose().getY() > lowerBound && swerve.getPose().getY() < higherBound)
+                        either(
+                            waitUntil(()-> swerve.getPose().getY() < higherBound), 
+                            waitUntil(()-> swerve.getPose().getY() > lowerBound), 
+                            ()-> swerve.getPose().getY() > speakerMidpointY),
+                        none(),
+                        ()-> (swerve.getPose().getY() > lowerBound && swerve.getPose().getY() < higherBound)
+                    ),
+                    waitUntil(()-> shooter.atSetpoint())
                 ),
-                waitUntil(()-> shooter.atSetpoint()),
-                intake.intakeRollers.outtakeNoRequirements(),
-                waitSeconds(0.35),
-                neutral(false)
+                repeatingSequence(
+                    climber.climbTo(swerve.getDistHorizontal()),
+                    waitSeconds(0.25)
+                )
             ),
-            repeatingSequence(
-                climber.climbTo(swerve.getDistHorizontal()),
-                waitSeconds(0.25)
-            )
+            intake.intakeRollers.outtakeNoRequirements(),
+            waitSeconds(0.35),
+            neutral(false)
         );
     }
 
