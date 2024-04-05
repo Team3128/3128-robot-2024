@@ -94,7 +94,7 @@ public class RobotContainer {
     }   
 
     private void configureButtonBindings() {
-        rightStick.getButton(1).onTrue(new CmdAutoAlign());
+        rightStick.getButton(1).onTrue(new CmdAutoAlign().withTimeout(2));
         controller.getButton(XboxButton.kB).onTrue(runOnce(()-> swerve.resetEncoders()));
 
         controller.getButton(XboxButton.kRightBumper).onTrue(rampUp(MAX_RPM, 25)).onFalse(shoot(MAX_RPM, 25)); //Ram Shot

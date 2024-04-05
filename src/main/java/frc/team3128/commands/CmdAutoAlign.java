@@ -1,6 +1,8 @@
 package frc.team3128.commands;
 import static frc.team3128.Constants.LimelightConstants.*;
-import common.core.controllers.TrapController;
+import static frc.team3128.Constants.SwerveConstants.maxSpeed;
+import common.core.controllers.Controller;
+import common.core.controllers.Controller.Type;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.team3128.subsystems.Intake;
@@ -11,9 +13,12 @@ import frc.team3128.subsystems.Swerve;
 
 public class CmdAutoAlign extends Command{
     private double targetCount;
-    private TrapController controller;
+    private Controller controller;
     private double measurement;
-    private double output;
+    private double x_output;
+    private double y_output;
+    private double plateauCount;
+    private double y_threshhold;
     private LimelightSubsystem m_limelight;
     private Swerve m_swerve;
     private Intake m_intake;
@@ -24,11 +29,12 @@ public class CmdAutoAlign extends Command{
 
     public CmdAutoAlign() {
         //changed to trap controller
-        controller = new TrapController(config, constraints); //KD not used unless no friction involved, KI not used cause feedforward
+        controller = new Controller(config, Type.VELOCITY); //KD not used unless no friction involved, KI not used cause feedforward
         m_intake = Intake.getInstance();
         m_limelight = LimelightSubsystem.getInstance();
         m_swerve = Swerve.getInstance();
         addRequirements(m_swerve);
+        
 
         //calls shuffleboard
         m_limelight.initShuffleboard();
@@ -68,21 +74,41 @@ public class CmdAutoAlign extends Command{
             //if object is detected, calculate power needed to align 
             else 
             {
-                m_intake.intake(Intake.Setpoint.EXTENDED); //done in parallel command?
+                m_intake.intake(Intake.Setpoint.EXTENDED); 
                 m_intake.intakeRollers.intake();
-                measurement = m_limelight.calculateObjectDistance();
-                output = controller.calculate(measurement);  //apparently distance prob not accurate..
-                m_swerve.drive(new Translation2d(4, output), 0, false);
+                measurement = m_limelight.getObjectTX();
+                x_output = controller.calculate(measurement);
+
+                if (m_intake.intakeRollers.hasObjectPresent()) {
+                    cancel();
+                }
+
+                if (x_output < maxSpeed) { //total speed equals max speed
+                    y_output = maxSpeed - x_output;
+                    m_swerve.drive(new Translation2d(x_output, y_output), 0, false);
+                }
+
+                else if (x_output >= maxSpeed) { //tx too large so just strafe to try to minimize error
+                    m_swerve.drive(new Translation2d(maxSpeed, 0), 0, false);
+                }
+            
+    
             }
                 break;
 
-            //basically rotate until an object is detected, then switch to searching
             case BLIND:
-            m_swerve.drive(new Translation2d(0, 0), 3, false); 
-
             if (m_limelight.hasValidTarget()) { //also should be getValidTarget
                 targetState = detectionStates.SEARCHING;
             }
+
+            else if (m_limelight.getObjectTY() < y_threshhold) { //y decreases as you approach note. At some point, can't see note anymore
+                plateauCount ++;
+                
+                if (plateauCount > 10) { //cancel command cause note prob taken
+                    cancel();
+                }
+            }
+
             //resets error
             controller.reset();
                 break;
@@ -96,7 +122,6 @@ public class CmdAutoAlign extends Command{
         return false;
 
        }
-
 
        @Override
        public void end(boolean interrupted) {

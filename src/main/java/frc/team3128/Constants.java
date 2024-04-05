@@ -462,7 +462,6 @@ public class Constants {
 
         //auto align
         public static final PIDFFConfig config = new PIDFFConfig(KP, KI, KD);
-        public static final Constraints constraints = new Constraints(SwerveConstants.maxSpeed, SwerveConstants.maxAcceleration);
     }
 
 }
