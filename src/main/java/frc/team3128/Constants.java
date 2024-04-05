@@ -449,16 +449,13 @@ public class Constants {
     }
 
     public static class LimelightConstants {
-        public static final double CAMERA_ANGLE = 2; 
-        public static final double CAMERA_HEIGHT = 22; //inches?
-        public static final double FRONT_DISTANCE = 2;
-        public static final double TX_THRESHOLD = 4;
-        public static final double OBJ_TARGET_HEIGHT = 2 / 2; //og was 9.5/2. note height approx 2
+        public static final double TX_THRESHOLD = 1;
         public static final double HORIZONTAL_OFFSET_GOAL = 0;
+        public static final double PLATEAU_THRESHOLD = 5;
+        public static final double TIMEOUT = 2;
         public static final double KP = 0.1;
-        public static final double KD = 0;
         public static final double KI = 0;
-        public static final double MIN_AREA = 1000;
+        public static final double KD = 0;
 
         //auto align
         public static final PIDFFConfig config = new PIDFFConfig(KP, KI, KD);
