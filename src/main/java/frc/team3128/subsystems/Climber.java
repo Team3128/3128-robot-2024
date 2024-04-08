@@ -19,7 +19,6 @@ import common.utility.narwhaldashboard.NarwhalDashboard.State;
 import common.utility.shuffleboard.NAR_Shuffleboard;
 import common.utility.tester.Tester;
 import common.utility.tester.Tester.UnitTest;
-import java.util.function.DoubleSupplier;
 
 public class Climber extends NAR_PIDSubsystem {
 
@@ -112,6 +111,7 @@ public class Climber extends NAR_PIDSubsystem {
     }
 
     public double interpolate(double dist){
+        if(dist < 1.15) return 25;
         return 27.8 * Math.pow(dist, x.getAsDouble());
         // return 28.5 - 0.233 * dist + 9.26 * Math.pow(10, -4) * Math.pow(dist, 2) - 1.33 * Math.pow(10, -6) * Math.pow(dist, 3) + 93;
         // return 25 * Math.pow(dist + 0.07, x.getAsDouble());

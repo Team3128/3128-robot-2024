@@ -1,7 +1,6 @@
 package frc.team3128.autonomous;
 
 import edu.wpi.first.wpilibj2.command.Command;
-
 import common.utility.narwhaldashboard.NarwhalDashboard;
 
 import static edu.wpi.first.wpilibj2.command.Commands.sequence;
@@ -51,9 +50,7 @@ public class AutoPrograms {
 
     public Command getAutonomousCommand() {
         String selectedAutoName = NarwhalDashboard.getInstance().getSelectedAuto();
-        // String selectedAutoName = "bottom_4note";
-        // String selectedAutoName = "Test";
-        final Command autoCommand;
+        Command autoCommand;
         if (selectedAutoName == null) {
             autoCommand = sequence(
                 Trajectories.resetAuto(),

@@ -22,6 +22,8 @@ import common.hardware.camera.Camera;
 import common.hardware.input.NAR_ButtonBoard;
 import common.hardware.input.NAR_XboxController;
 import common.hardware.input.NAR_XboxController.XboxButton;
+import common.hardware.limelight.Limelight;
+import common.hardware.limelight.LimelightKey;
 import common.hardware.motorcontroller.NAR_CANSpark;
 import common.utility.Log;
 import common.utility.narwhaldashboard.NarwhalDashboard;
@@ -62,6 +64,8 @@ public class RobotContainer {
 
     private NarwhalDashboard dashboard;
 
+    public static Limelight limelight;
+
     private static ArrayList<Camera> sideCams = new ArrayList<Camera>();
 
     public RobotContainer() {
@@ -86,19 +90,23 @@ public class RobotContainer {
 
         //uncomment line below to enable driving
         CommandScheduler.getInstance().setDefaultCommand(swerve, new CmdSwerveDrive(controller::getLeftX,controller::getLeftY, controller::getRightX, true));
-        configureButtonBindings();
 
         initRobotTest();
         
         DriverStation.silenceJoystickConnectionWarning(true);
         initCameras();
+
+        configureButtonBindings();
+
+        NAR_Shuffleboard.addData("Limelight", "ValidTarget", ()-> limelight.hasValidTarget(), 0, 0);
+        NAR_Shuffleboard.addData("Limelight", "TX", ()-> limelight.getValue(LimelightKey.HORIZONTAL_OFFSET), 0, 1);
     }   
 
     private void configureButtonBindings() {
         controller.getButton(XboxButton.kB).onTrue(intake.intake(Setpoint.SOURCE));
 
         controller.getButton(XboxButton.kRightBumper).onTrue(moveShoot());
-        controller.getButton(XboxButton.kRightTrigger).onTrue(rampUp(MAX_RPM, 12.5)).onFalse(shootDist());     //Auto Shoot
+        controller.getButton(XboxButton.kRightTrigger).onTrue(rampUp(MAX_RPM, 0)).onFalse(shootDist());     //Auto Shoot
         controller.getButton(XboxButton.kY).onTrue(rampUpFeed(4000, 4000, 13)).onFalse(feed(4000, 13));   //Feed Shot
         controller.getButton(XboxButton.kX).onTrue(rampUpAmp()).onFalse(ampShoot()); //Amp Shot
         // controller.getButton(XboxButton.kX).onTrue(intake.intakePivot.pivotTo(-87)).onFalse(ampShootAlt());
@@ -157,14 +165,15 @@ public class RobotContainer {
         // buttonPad.getButton(16).onTrue(intake.outtake());
 
         new Trigger(()-> intake.intakeRollers.hasObjectPresent()).onTrue(runOnce(()-> leds.setLedColor(Colors.GREEN))).onFalse(runOnce(()-> leds.setDefaultColor()));
+        new Trigger(()-> limelight.hasValidTarget() && !intake.intakeRollers.hasObjectPresent()).onTrue(runOnce(()-> leds.setLedColor(Colors.ORANGE))).onFalse(runOnce(()-> leds.setDefaultColor()));
     }
 
     @SuppressWarnings("unused")
     public void initCameras() {
         Camera.disableAll();
         Camera.configCameras(AprilTagFields.k2024Crescendo, PoseStrategy.LOWEST_AMBIGUITY, (pose, time) -> swerve.addVisionMeasurement(pose, time), () -> swerve.getPose());
-        Camera.setDistanceThreshold(3.5);
-        Camera.setAmbiguityThreshold(0.2);
+        Camera.setDistanceThreshold(4.018);
+        Camera.setAmbiguityThreshold(0.3);
         Camera.overrideThreshold = 30;
         Camera.validDist = 0.5;
         // Camera.addIgnoredTags(13.0, 14.0);
@@ -176,6 +185,8 @@ public class RobotContainer {
 
         // sideCams.add(camera3);
         // sideCams.add(camera4);
+
+        limelight = new Limelight("limelight-mason", 0, 0, 0);
     }
 
     public static void toggleSideCams(boolean enable) {

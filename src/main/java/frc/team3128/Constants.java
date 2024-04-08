@@ -100,22 +100,22 @@ public class Constants {
         public static final double driveKF = 0.0;
 
         /* Drive Motor Characterization Values */
-        public static final double driveKS = 0.29;//0.60094; // 0.19225;
-        public static final double driveKV = 1.98;//1.1559;  // 2.4366
-        public static final double driveKA = 0.45610; //0.12348; // 0.34415
+        public static final double driveKS = 0.19057;//0.60094; // 0.19225;
+        public static final double driveKV = 2.01208;//1.1559;  // 2.4366
+        public static final double driveKA = 0.15168; //0.12348; // 0.34415
 
         /* Swerve Profiling Values */
         // Theoretical: v = 4.96824, omega = 11.5
         // Real: v = 4.5, omega = 10
         // For safety, use less than theoretical and real values
-        public static final double maxSpeed = 5.9;//4.8; //meters per second - 16.3 ft/sec
+        public static final double maxSpeed = 5.87;//4.8; //meters per second - 16.3 ft/sec
         public static final double maxAttainableSpeed = maxSpeed; //Stole from citrus.
-        public static final double maxAcceleration = 2;
+        public static final double maxAcceleration = 5;
         public static final double maxAngularVelocity = 8; //3; //11.5; // citrus: 10 - Mason look at this later wtf
         public static final double maxAngularAcceleration = 2 * Math.PI; //I stole from citrus.
 
         /* Motor Inverts */
-        public static final boolean driveMotorInvert = true;
+        public static final boolean driveMotorInvert = false;
         public static final boolean angleMotorInvert = true;
 
         /* Angle Encoder Invert */
@@ -134,7 +134,7 @@ public class Constants {
             new SwerveMotorConfig(new NAR_TalonFX(1), driveMotorConfig, drivePIDConfig),
             new SwerveMotorConfig(new NAR_TalonFX(2), angleMotorConfig, anglePIDConfig),
             10,
-            62.40234375,
+            63.017578125 - 180,
             canCoderInvert,
             maxSpeed);
 
@@ -143,7 +143,7 @@ public class Constants {
             new SwerveMotorConfig(new NAR_TalonFX(3), driveMotorConfig, drivePIDConfig),
             new SwerveMotorConfig(new NAR_TalonFX(4), angleMotorConfig, anglePIDConfig),
             11,
-            110.302734375,
+            110.478515625 - 180,
             canCoderInvert,
             maxSpeed);
         
@@ -152,7 +152,7 @@ public class Constants {
             new SwerveMotorConfig(new NAR_TalonFX(5), driveMotorConfig, drivePIDConfig),
             new SwerveMotorConfig(new NAR_TalonFX(6), angleMotorConfig, anglePIDConfig),
             12,
-            -49.658203125,
+            -48.076171875 + 180,
             canCoderInvert,
             maxSpeed);
         
@@ -161,7 +161,7 @@ public class Constants {
             new SwerveMotorConfig(new NAR_TalonFX(7), driveMotorConfig, drivePIDConfig),
             new SwerveMotorConfig(new NAR_TalonFX(8), angleMotorConfig, anglePIDConfig),
             13,
-            -158.203125,
+            -158.37890625000003 + 180,
             canCoderInvert,
             maxSpeed);
 
@@ -288,7 +288,7 @@ public class Constants {
         public static final double angleOffset = 0;
         //testing: kV: drivetrain spinning consistently (ie. v1 = vel at  vel at 1 rad/sec v2=2 rad/sec). 1/(v2-v1) = kV
         //kS: plug kV into 1= kS + kV(v1)
-        public static final double offset = 0.15;
+        public static final double offset = 0.3;
         public static final double lowerBound = speakerMidpointY - offset;
         public static final double higherBound = speakerMidpointY + offset;
     }
@@ -394,8 +394,8 @@ public class Constants {
         public static final double ANGLE_TOLERANCE = 3;
         public static final int CURRENT_LIMIT = 40;
         public static final double STALL_CURRENT = 50;
-        public static final double STALL_POWER = 0;
-        public static final double OUTTAKE_POWER = -0.75 / 0.75;
+        public static final double STALL_POWER = .05;
+        public static final double OUTTAKE_POWER = -0.2;
         public static final double INTAKE_POWER = 0.7 /0.75;
         public static final double AMP_POWER = -0.18 / 0.75;
 
@@ -409,6 +409,19 @@ public class Constants {
         public static final double SETPOINT_TEST_TIMEOUT = 2;
 
         public static final double INTAKE_TEST_TIMEOUT = 30;
+    }
+
+    public static class LimelightConstants {
+        public static final double TX_THRESHOLD = 1;
+        public static final double HORIZONTAL_OFFSET_GOAL = 0;
+        public static final double PLATEAU_THRESHOLD = 5;
+        public static final double TIMEOUT = 1;
+        public static final double KP = 0.15;
+        public static final double KI = 0;
+        public static final double KD = 0;
+
+        //auto align
+        public static final PIDFFConfig config = new PIDFFConfig(KP, KI, KD);
     }
 
     public static class LedConstants{

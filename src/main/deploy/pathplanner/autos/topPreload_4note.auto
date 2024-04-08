@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.45,
-      "y": 1.5
+      "x": 1.46,
+      "y": 7.35
     },
     "rotation": 180.0
   },
@@ -14,19 +14,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "source-note2.5"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "AlignCCW"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "note2.5-bottomShoot"
+            "pathName": "Amp-preload"
           }
         },
         {
@@ -38,19 +26,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "bottomShoot-note2.4"
+            "pathName": "Preload-note2.1"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "AlignCCW"
+            "name": "AlignCW"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "note2.4-bottomShoot"
+            "pathName": "note2.1-wing"
           }
         },
         {
@@ -60,15 +48,45 @@
           }
         },
         {
+          "type": "path",
+          "data": {
+            "pathName": "wing-note2.2"
+          }
+        },
+        {
           "type": "named",
           "data": {
-            "name": "AlignPreload"
+            "name": "AlignCW"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Preload-bottomShoot"
+            "pathName": "note2.2-wing"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Outtake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "wing-note2.3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AlignCW"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "note2.3-wing"
           }
         },
         {

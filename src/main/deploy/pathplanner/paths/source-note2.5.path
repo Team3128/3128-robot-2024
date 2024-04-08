@@ -4,28 +4,28 @@
     {
       "anchor": {
         "x": 1.45,
-        "y": 2.2
+        "y": 1.5
       },
       "prevControl": null,
       "nextControl": {
         "x": 1.55,
-        "y": 2.2
+        "y": 1.5
       },
       "isLocked": false,
       "linkedName": "source"
     },
     {
       "anchor": {
-        "x": 8.27504718963431,
+        "x": 6.0,
         "y": 0.98
       },
       "prevControl": {
-        "x": 4.290268397267329,
+        "x": 2.015221207633018,
         "y": 0.6313770290093673
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "note2.5"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -33,7 +33,7 @@
   "eventMarkers": [
     {
       "name": "Intake",
-      "waypointRelativePos": 0.35,
+      "waypointRelativePos": 0.0,
       "command": {
         "type": "parallel",
         "data": {
@@ -49,8 +49,8 @@
       }
     },
     {
-      "name": "WingRamp",
-      "waypointRelativePos": 0,
+      "name": "Drop",
+      "waypointRelativePos": 0.5,
       "command": {
         "type": "parallel",
         "data": {
@@ -58,7 +58,7 @@
             {
               "type": "named",
               "data": {
-                "name": "WingRamp"
+                "name": "Drop"
               }
             }
           ]
@@ -68,12 +68,12 @@
   ],
   "globalConstraints": {
     "maxVelocity": 5.6,
-    "maxAcceleration": 5.5,
+    "maxAcceleration": 6.0,
     "maxAngularVelocity": 720.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
-    "velocity": 0,
+    "velocity": 5.5,
     "rotation": 180.0,
     "rotateFast": true
   },

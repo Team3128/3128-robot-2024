@@ -41,6 +41,16 @@ public class CmdManager {
 
     public static boolean climb = false;
 
+    public static Command autoIntake() {
+        return deadline(
+            intake.intake(Intake.Setpoint.EXTENDED),
+            repeatingSequence(
+                waitUntil(()-> RobotContainer.limelight.hasValidTarget() && !intake.intakeRollers.hasObjectPresent()),
+                new CmdAutoAlign(maxSpeed, true).asProxy()
+            )
+        );
+    }
+
     public static Command vibrateController(){
         return new ScheduleCommand(new StartEndCommand(()-> controller.startVibrate(), ()-> controller.stopVibrate()).withTimeout(1));
     }
@@ -48,10 +58,10 @@ public class CmdManager {
     public static Command shootDist() {
         return deadline(
             sequence(
-                climber.climbTo(climber.interpolate(swerve.getDist())),
+                climber.climbTo(()-> climber.interpolate(swerve.getDist())),
                 shooter.shoot(MAX_RPM),
                 waitUntil(shooter::atSetpoint),
-                climber.climbTo(climber.interpolate(swerve.getDist())),
+                climber.climbTo(() -> climber.interpolate(swerve.getDist())),
                 waitUntil(climber::atSetpoint),
                 intake.intakeRollers.outtakeNoRequirements(),
                 waitSeconds(0.35),
@@ -126,22 +136,28 @@ public class CmdManager {
     public static Command moveShoot() {
         return sequence(
             deadline(
-                sequence (
+                sequence(
                     runOnce(()-> CmdSwerveDrive.setTurnSetpoint(Robot.getAlliance() == Alliance.Red ? 0 : 180)),
                     shooter.shoot(RAM_SHOT_RPM, RAM_SHOT_RPM),
                     waitUntil(()-> swerve.crossedPodium()),
                     either(
                         either(
-                            waitUntil(()-> swerve.getPose().getY() < higherBound), 
-                            waitUntil(()-> swerve.getPose().getY() > lowerBound), 
+                            sequence(
+                                runOnce(()-> CmdSwerveDrive.setTurnSetpoint(Robot.getAlliance() == Alliance.Red ? 10 : 170)),
+                                waitUntil(()-> swerve.getPose().getY() < higherBound)
+                            ), 
+                            sequence(
+                                runOnce(()-> CmdSwerveDrive.setTurnSetpoint(Robot.getAlliance() == Alliance.Red ? -10 : -170)),
+                                waitUntil(()-> swerve.getPose().getY() > lowerBound)
+                            ), 
                             ()-> swerve.getPose().getY() > speakerMidpointY),
                         none(),
-                        ()-> (swerve.getPose().getY() > lowerBound && swerve.getPose().getY() < higherBound)
+                        ()-> (swerve.getPose().getY() < lowerBound || swerve.getPose().getY() > higherBound)
                     ),
                     waitUntil(()-> shooter.atSetpoint())
                 ),
                 repeatingSequence(
-                    climber.climbTo(swerve.getDistHorizontal()),
+                    climber.climbTo(()-> climber.interpolate(swerve.getDistHorizontal())),
                     waitSeconds(0.25)
                 )
             ),

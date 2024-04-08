@@ -21,7 +21,7 @@ import java.util.function.DoubleSupplier;
 public class Intake {
 
     public enum Setpoint {
-        EXTENDED(-202),
+        EXTENDED(-200),
         SOURCE(-60),
         AMP(-90);
         
@@ -54,6 +54,15 @@ public class Intake {
         @Override
         public void useOutput(double output, double setpoint) {
             PIVOT_MOTOR.setVolts(MathUtil.clamp(output, -12, 12));
+        }
+
+        public Command stallIntakePivot(double power) {
+            return sequence(
+                waitUntil(()-> intakePivot.atSetpoint()).withTimeout(1.5),
+                intakePivot.runPivot(power),
+                waitSeconds(0.1),
+                intakePivot.runPivot(0)
+            );
         }
 
         public Command pivotTo(DoubleSupplier setpoint) {
@@ -119,13 +128,11 @@ public class Intake {
 
         public Command serialize() {
             return sequence(
-                // runOnce(()-> DriverStation.reportWarning("Serialize: CommandStarting", false)),
                 runManipulator(-0.1),
                 waitUntil(()-> !hasObjectPresent()),
                 runManipulator(0.1),
                 waitUntil(()-> hasObjectPresent()),
                 runManipulator(0)
-                // runOnce(()-> DriverStation.reportWarning("Serialize: CommandEnding", false))
             );
         }
 
@@ -166,21 +173,14 @@ public class Intake {
     private Intake(){
         intakePivot = new IntakePivot();
         intakeRollers = new IntakeRollers();
-        // NAR_Shuffleboard.addData("IsRetracting", "Boolean", ()-> isRetracting,0, 0);
     }
 
     public Command retract(boolean shouldStall) {
         return sequence(
-            // runOnce(()-> DriverStation.reportWarning("Retract: CommandStarting", false)),
-            // CmdManager.vibrateController(),
-            runOnce(()-> isRetracting = true),
             waitUntil(()-> Climber.getInstance().isNeutral()),
-            //intakeRollers.runManipulator(shouldStall ? STALL_POWER : 0),
+            runOnce(()-> isRetracting = true),
             intakePivot.pivotTo(-10),
-            waitUntil(() -> intakePivot.atSetpoint()),
-            intakePivot.runPivot(0.2),
-            waitSeconds(0.1),
-            intakePivot.runPivot(0),
+            intakePivot.stallIntakePivot(0.2),
             parallel(
                 either(intakeRollers.serialize().withTimeout(4).andThen(intakeRollers.runManipulator(0)), intakeRollers.runManipulator(0), ()-> shouldStall).withTimeout(0.5),
                 sequence(
@@ -189,38 +189,45 @@ public class Intake {
                     intakePivot.reset(0)
                 )
             )
-            // runOnce(()-> DriverStation.reportWarning("Retract: CommandEnding", false))
         );
     }
     
     public Command intake(Setpoint setpoint) {
         return sequence(
-            // runOnce(()-> DriverStation.reportWarning("Intake: CommandStarting", false)),
-            runOnce(()-> isRetracting = true),
-            intakeRollers.runManipulator(INTAKE_POWER),
-            intakePivot.pivotTo(setpoint.angle),
-            intakeRollers.intake(),
+            deadline(
+                intakeRollers.intake(),
+                sequence(
+                    intakePivot.pivotTo(setpoint.angle),
+                    either(
+                        intakePivot.stallIntakePivot(-0.1),
+                        none(),
+                        ()-> setpoint == Setpoint.EXTENDED
+                    )
+                )
+            ),
             retract(true)
-            // runOnce(()-> DriverStation.reportWarning("Intake: CommandEnding", false))
         );
     }
 
     public Command outtake() {
         return sequence (
-            // runOnce(()-> DriverStation.reportWarning("Outtake: CommandStarting", false)),
             intakePivot.pivotTo(Setpoint.EXTENDED.angle),
-            waitUntil(()-> intakePivot.getMeasurement() < -45).withTimeout(2),
+            waitUntil(()-> intakePivot.atSetpoint()).withTimeout(1.5),
             intakeRollers.runManipulator(-1),
             waitSeconds(0.5),
             retract(false)
-            // runOnce(()-> DriverStation.reportWarning("Outtake: CommanedEnding", false))
         );
     }
 
     public Command intakeAuto() {
         return sequence(
-            intakePivot.pivotTo(Setpoint.EXTENDED.angle),
-            intakeRollers.intake(),
+            deadline(
+                intakeRollers.intake(),
+                sequence(
+                    intakePivot.pivotTo(Setpoint.EXTENDED.angle),
+                    intakePivot.stallIntakePivot(-0.1)
+                )
+            ),
             retractAuto()
         );
     }

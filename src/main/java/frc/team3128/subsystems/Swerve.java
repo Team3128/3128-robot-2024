@@ -59,7 +59,8 @@ public class Swerve extends SwerveBase {
         gyro.optimizeBusUtilization();
 
         initShuffleboard();
-        NAR_Shuffleboard.addData("Testing", "Name", ()-> getDist(speakerMidpointRed), 0, 0);
+        NAR_Shuffleboard.addData("Testing", "Name", ()-> getDist(speakerMidpointBlue), 0, 0);
+        NAR_Shuffleboard.addData("Testing", "Dist", ()-> getDistHorizontal(), 0, 1);
         NAR_Shuffleboard.addData("Auto", "Setpoint", ()-> TURN_CONTROLLER.atSetpoint());
         initStateCheck();
     }
@@ -135,7 +136,8 @@ public class Swerve extends SwerveBase {
 
     public double getDistHorizontal() {
         final double x = getPose().getX();
-        return Robot.getAlliance() == Alliance.Red ? FieldConstants.FIELD_X_LENGTH - x : x;
+        final double dist = Robot.getAlliance() == Alliance.Red ? FieldConstants.FIELD_X_LENGTH - x : x;
+        return dist - robotLength / 2.0;
     }
 
     public double getDist() {

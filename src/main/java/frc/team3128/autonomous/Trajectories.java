@@ -11,6 +11,8 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.pathfinding.LocalADStar;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -24,8 +26,11 @@ import static frc.team3128.Constants.ShooterConstants.MAX_RPM;
 import static frc.team3128.Constants.ShooterConstants.RAM_SHOT_RPM;
 import static frc.team3128.Constants.SwerveConstants.*;
 
+import frc.team3128.Constants.AutoConstants;
 import frc.team3128.Constants.ShooterConstants;
 import frc.team3128.Robot;
+import frc.team3128.RobotContainer;
+import frc.team3128.commands.CmdAutoAlign;
 import frc.team3128.commands.CmdSwerveDrive;
 
 import static frc.team3128.commands.CmdManager.rampUp;
@@ -47,8 +52,8 @@ public class Trajectories {
     public enum ShootPosition {
         // find values
         WING(5.75),
-        TOP_PRELOAD(6.2),
-        BOTTOM(4);
+        TOP_PRELOAD(11),
+        BOTTOM(9);
 
         private final double height;
         ShootPosition(double height) {
@@ -76,10 +81,23 @@ public class Trajectories {
         NamedCommands.registerCommand("ShootSkip", either(autoShoot(0.5), none(), ()-> intake.intakeRollers.hasObjectPresent()));
         NamedCommands.registerCommand("RamShoot", ramShotAuto());
         NamedCommands.registerCommand("WingRamp", rampUpAuto(ShootPosition.WING));
+        NamedCommands.registerCommand("SourceRamp", rampUpAuto(ShootPosition.BOTTOM));
+        NamedCommands.registerCommand("TopRamp", rampUpAuto(ShootPosition.TOP_PRELOAD));
+        NamedCommands.registerCommand("AlignCCW", align(true));
+        NamedCommands.registerCommand("AlignCW", align(false));
         NamedCommands.registerCommand("Outtake", outtakeAuto());
         NamedCommands.registerCommand("Retract", intake.retractAuto());
         NamedCommands.registerCommand("Neutral", neutralAuto());
         NamedCommands.registerCommand("NeutralWait", sequence(neutralAuto(), waitUntil(()-> climber.atSetpoint())));
+        NamedCommands.registerCommand("AlignPreload", sequence(
+            deadline(
+                race(
+                    intake.intakeAuto(),
+                    align(false)
+                )
+            )
+        ));
+        NamedCommands.registerCommand("Drop", shooter.shoot(MAX_RPM));
 
         AutoBuilder.configureHolonomic(
             swerve::getPose,
@@ -105,6 +123,14 @@ public class Trajectories {
             vy = velocity.vyMetersPerSecond;
         }
     }
+
+    public static Command align(boolean counterClockwise) {
+        return repeatingSequence(
+            new CmdAutoAlign(3, false),
+            run(()-> swerve.drive(new Translation2d(), counterClockwise ? maxAngularVelocity / 8.0 : -maxAngularVelocity / 8.0, false)).until(()-> RobotContainer.limelight.hasValidTarget())
+        ).until(()-> intake.intakeRollers.hasObjectPresent());
+    }
+
     public static Command ramShotAuto() {
         return sequence(
             climber.climbTo(Climber.Setpoint.RAMSHOT),
@@ -132,8 +158,8 @@ public class Trajectories {
         return either(
             sequence(
                 shooter.shoot(MAX_RPM),
-                either(intake.retractAuto(), none(), ()-> intake.intakePivot.isEnabled()),
-                rampUp(ShooterConstants.MAX_RPM, pos.getHeight())
+                rampUp(ShooterConstants.MAX_RPM, pos.getHeight()).until(()-> climber.atSetpoint()),
+                intake.retractAuto()
             ),
             none(),
             ()-> true
@@ -202,6 +228,15 @@ public class Trajectories {
             runOnce(()-> Intake.getInstance().isRetracting = false)
         );
         
+    }
+
+    public static Command goToPoint(Pose2d pose) {
+        return AutoBuilder.pathfindToPose(
+                pose,
+                AutoConstants.constraints,
+                0.0, // Goal end velocity in meters/sec
+                0.0 // Rotation delay distance in meters. This is how far the robot should travel before attempting to rotate.
+            );
     }
     
 }
