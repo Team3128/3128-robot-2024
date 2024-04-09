@@ -5,6 +5,11 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import common.core.commands.NAR_PIDCommand;
+import common.core.controllers.Controller;
+import common.core.controllers.PIDFFConfig;
+import common.core.controllers.Controller.Type;
+import common.utility.shuffleboard.NAR_Shuffleboard;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -78,6 +83,7 @@ public class Trajectories {
         NamedCommands.registerCommand("Intake", intake.intakeAuto());
         NamedCommands.registerCommand("Shoot", autoShoot(0.75));
         NamedCommands.registerCommand("TurnShoot", autoShoot(1.25));
+        NamedCommands.registerCommand("VisionShoot", visionShoot());
         NamedCommands.registerCommand("ShootSkip", either(autoShoot(0.5), none(), ()-> intake.intakeRollers.hasObjectPresent()));
         NamedCommands.registerCommand("RamShoot", ramShotAuto());
         NamedCommands.registerCommand("WingRamp", rampUpAuto(ShootPosition.WING));
@@ -85,7 +91,7 @@ public class Trajectories {
         NamedCommands.registerCommand("TopRamp", rampUpAuto(ShootPosition.TOP_PRELOAD));
         NamedCommands.registerCommand("AlignCCW", align(true));
         NamedCommands.registerCommand("AlignCW", align(false));
-        NamedCommands.registerCommand("Outtake", outtakeAuto());
+        NamedCommands.registerCommand("Outtake", autoShoot(0.75));
         NamedCommands.registerCommand("Retract", intake.retractAuto());
         NamedCommands.registerCommand("Neutral", neutralAuto());
         NamedCommands.registerCommand("NeutralWait", sequence(neutralAuto(), waitUntil(()-> climber.atSetpoint())));
@@ -127,8 +133,13 @@ public class Trajectories {
     public static Command align(boolean counterClockwise) {
         return repeatingSequence(
             new CmdAutoAlign(3, false),
-            run(()-> swerve.drive(new Translation2d(), counterClockwise ? maxAngularVelocity / 8.0 : -maxAngularVelocity / 8.0, false)).until(()-> RobotContainer.limelight.hasValidTarget())
-        ).until(()-> intake.intakeRollers.hasObjectPresent());
+            run(()-> swerve.drive(
+                new Translation2d(), 
+                maxAngularVelocity / 4.0 * (counterClockwise ? 1 : -1) * (Robot.getAlliance() == Alliance.Red ? -1 : 1), 
+                false
+            )).until(()-> RobotContainer.limelight.hasValidTarget())
+        ).until(()-> intake.intakeRollers.hasObjectPresent())
+        .beforeStarting(runOnce(()->{turning = true;})).andThen(runOnce(()->{turning = false;}));
     }
 
     public static Command ramShotAuto() {
@@ -144,12 +155,16 @@ public class Trajectories {
 
     public static Command turnInPlace() {
         DoubleSupplier setpoint = ()-> swerve.getTurnAngle(Robot.getAlliance() == Alliance.Red ? focalPointRed : focalPointBlue);
+        Controller controller = new Controller(new PIDFFConfig(5, 0, 0, turnkS, 0, 0), Type.POSITION);
+        controller.enableContinuousInput(-180, 180);
+        controller.setTolerance(1);
         return new NAR_PIDCommand(
-            TURN_CONTROLLER, 
+            controller, 
             ()-> swerve.getYaw(), //measurement
             setpoint, //setpoint
             (double output) -> {
                 Swerve.getInstance().drive(new ChassisSpeeds(vx, vy, Units.degreesToRadians(output)));
+                NAR_Shuffleboard.addData("HElp", "help", output, 0, 0);
             }
         ).beforeStarting(runOnce(()-> CmdSwerveDrive.disableTurn()));
     }
@@ -166,15 +181,22 @@ public class Trajectories {
             // ()->intake.intakeRollers.hasObjectPresent()
         );
     }
+
+    public static Command visionShoot() {
+        return sequence(
+            waitSeconds(0.25),
+            autoShoot(0.5)
+        );
+    }
  
     public static Command autoShoot(double turnTimeout) {
         return either(
             sequence(
                 either(shooter.shoot(MAX_RPM), none(), ()-> shooter.isEnabled()),
                 parallel(
+                    runOnce(()->{turning = true;}),
                     sequence(
                         either(sequence(waitUntil(()-> intake.intakeRollers.hasObjectPresent()).withTimeout(0.25), intake.retractAuto()), none(), ()-> intake.intakePivot.isEnabled()),
-                        runOnce(()->{turning = true;}),
                         rampUp()
                     ),
                     turnInPlace().withTimeout(turnTimeout)
@@ -188,8 +210,7 @@ public class Trajectories {
                 // neutralAuto()
             ),
             none(),
-            ()-> true
-            // ()->intake.intakeRollers.hasObjectPresent()
+            ()->intake.intakeRollers.hasObjectPresent()
         );
     }
 

@@ -16,6 +16,18 @@
           "data": {
             "pathName": "leave"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AlignCW"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
         }
       ]
     }

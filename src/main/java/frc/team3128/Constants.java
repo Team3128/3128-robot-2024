@@ -178,7 +178,7 @@ public class Constants {
         public static final double TURN_TOLERANCE = 1;
 
         static {
-            TURN_CONTROLLER.enableContinuousInput(0, 360);
+            TURN_CONTROLLER.enableContinuousInput(-180, 180);
             TURN_CONTROLLER.setMeasurementSource(()-> Swerve.getInstance().getYaw());
             TURN_CONTROLLER.setTolerance(TURN_TOLERANCE);
         }
@@ -395,7 +395,7 @@ public class Constants {
         public static final int CURRENT_LIMIT = 40;
         public static final double STALL_CURRENT = 50;
         public static final double STALL_POWER = .05;
-        public static final double OUTTAKE_POWER = -0.2;
+        public static final double OUTTAKE_POWER = -0.3;
         public static final double INTAKE_POWER = 0.7 /0.75;
         public static final double AMP_POWER = -0.18 / 0.75;
 
