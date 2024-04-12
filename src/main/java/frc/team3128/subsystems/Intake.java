@@ -21,9 +21,9 @@ import java.util.function.DoubleSupplier;
 public class Intake {
 
     public enum Setpoint {
-        EXTENDED(-200),
-        SOURCE(-60),
-        AMP(-90);
+        EXTENDED(200),
+        SOURCE(60),
+        AMP(90);
         
 
         public final double angle;
@@ -38,7 +38,7 @@ public class Intake {
             super(new TrapController(PIDConstants, TRAP_CONSTRAINTS), PIVOT_MOTOR);
             setkG_Function(()-> Math.cos(Units.degreesToRadians(getSetpoint())));
             setTolerance(ANGLE_TOLERANCE);
-            setConstraints(-POSITION_MAXIMUM, POSITION_MINIMUM);
+            setConstraints(POSITION_MINIMUM, POSITION_MAXIMUM);
             setSafetyThresh(5);
             initShuffleboard();
         }
@@ -179,8 +179,8 @@ public class Intake {
         return sequence(
             waitUntil(()-> Climber.getInstance().isNeutral()),
             runOnce(()-> isRetracting = true),
-            intakePivot.pivotTo(-10),
-            intakePivot.stallIntakePivot(0.2),
+            intakePivot.pivotTo(5),
+            intakePivot.stallIntakePivot(-0.2),
             parallel(
                 either(intakeRollers.serialize().withTimeout(4).andThen(intakeRollers.runManipulator(0)), intakeRollers.runManipulator(0), ()-> shouldStall).withTimeout(0.5),
                 sequence(
@@ -199,7 +199,7 @@ public class Intake {
                 sequence(
                     intakePivot.pivotTo(setpoint.angle),
                     either(
-                        intakePivot.stallIntakePivot(-0.1),
+                        intakePivot.stallIntakePivot(0.1),
                         none(),
                         ()-> setpoint == Setpoint.EXTENDED
                     )
@@ -212,7 +212,7 @@ public class Intake {
     public Command outtake() {
         return sequence (
             intakePivot.pivotTo(Setpoint.EXTENDED.angle),
-            waitUntil(()-> intakePivot.atSetpoint()).withTimeout(1.5),
+            waitUntil(()-> intakePivot.getMeasurement() > 20).withTimeout(2),
             intakeRollers.runManipulator(-1),
             waitSeconds(0.5),
             retract(false)
@@ -225,7 +225,7 @@ public class Intake {
                 intakeRollers.intake(),
                 sequence(
                     intakePivot.pivotTo(Setpoint.EXTENDED.angle),
-                    intakePivot.stallIntakePivot(-0.1)
+                    intakePivot.stallIntakePivot(0.1)
                 )
             ),
             retractAuto()

@@ -89,11 +89,6 @@ public class Swerve extends SwerveBase {
         return yaw.get();
     }
 
-    @NARUpdateable(name = "robotX")
-    public double getX(){
-        return 10;
-    }
-
     @Override
     public double getPitch() {
         return 0;

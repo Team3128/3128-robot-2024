@@ -99,7 +99,7 @@ public class Climber extends NAR_PIDSubsystem {
     }
 
     public double getAngle(){
-        return -(Units.radiansToDegrees(Math.atan2((getMeasurement() + HEIGHT_OFFSET), PIVOT_CLIMBER_DIST)) - ANGLE_OFFSET);
+        return (Units.radiansToDegrees(Math.atan2((getMeasurement() + HEIGHT_OFFSET), PIVOT_CLIMBER_DIST)) - ANGLE_OFFSET);
     }
 
     public double heightToAngle(double height){

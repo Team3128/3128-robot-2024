@@ -379,10 +379,10 @@ public class Constants {
     }
 
     public static class IntakeConstants {
-        public static final PIDFFConfig PIDConstants = new PIDFFConfig(0.25, 0, 0, 0.11, 0, 0, -0.25);
+        public static final PIDFFConfig PIDConstants = new PIDFFConfig(0.1, 0, 0, 0.2, 0, 0, 0.3625);
         public static final int PIVOT_MOTOR_ID = 31;
         public static final NAR_CANSpark PIVOT_MOTOR = new NAR_CANSpark(PIVOT_MOTOR_ID);
-        public static final double GEAR_RATIO = 1.0 / 60.0;
+        public static final double GEAR_RATIO = 1.0 / 40.0;
         public static final double MAX_VELOCITY = 1000000;
         public static final double MAX_ACCELERATION = 100000;
         public static final Constraints TRAP_CONSTRAINTS = new Constraints(MAX_VELOCITY, MAX_ACCELERATION);

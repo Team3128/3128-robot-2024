@@ -71,7 +71,7 @@ public class CmdManager {
                 runOnce(()-> CmdSwerveDrive.setTurnSetpoint(swerve.getTurnAngle(Robot.getAlliance() == Alliance.Red ? focalPointRed : focalPointBlue))),
                 waitSeconds(0.1)
             )
-        );
+        ).andThen(runOnce(()-> CmdSwerveDrive.disableTurn()));
     }
 
     public static Command autoShoot() {
