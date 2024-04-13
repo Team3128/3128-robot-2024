@@ -22,6 +22,7 @@ import common.hardware.camera.Camera;
 import common.hardware.input.NAR_ButtonBoard;
 import common.hardware.input.NAR_XboxController;
 import common.hardware.input.NAR_XboxController.XboxButton;
+import common.hardware.limelight.LEDMode;
 import common.hardware.limelight.Limelight;
 import common.hardware.limelight.LimelightKey;
 import common.hardware.motorcontroller.NAR_CANSpark;
@@ -164,7 +165,7 @@ public class RobotContainer {
         // buttonPad.getButton(16).onTrue(intake.intakeRollers.outtake()).onFalse(intake.intakeRollers.runManipulator(0));
         // buttonPad.getButton(16).onTrue(intake.outtake());
 
-        new Trigger(()-> intake.intakeRollers.hasObjectPresent()).onTrue(runOnce(()-> leds.setLedColor(Colors.GREEN))).onFalse(runOnce(()-> leds.setDefaultColor()));
+        new Trigger(()-> intake.intakeRollers.hasObjectPresent()).onTrue(runOnce(()-> limelight.setLEDMode(LEDMode.BLINK))).onFalse(runOnce(()-> limelight.setLEDMode(LEDMode.OFF)));
         new Trigger(()-> limelight.hasValidTarget() && !intake.intakeRollers.hasObjectPresent()).onTrue(runOnce(()-> leds.setLedColor(Colors.ORANGE))).onFalse(runOnce(()-> leds.setDefaultColor()));
     }
 

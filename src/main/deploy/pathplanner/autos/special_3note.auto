@@ -32,7 +32,13 @@
         {
           "type": "named",
           "data": {
-            "name": "Outtake"
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Neutral"
           }
         },
         {
@@ -56,7 +62,13 @@
         {
           "type": "named",
           "data": {
-            "name": "Outtake"
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Neutral"
           }
         },
         {
