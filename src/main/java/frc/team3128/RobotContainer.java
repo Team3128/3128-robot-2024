@@ -173,7 +173,7 @@ public class RobotContainer {
     public void initCameras() {
         Camera.disableAll();
         Camera.configCameras(AprilTagFields.k2024Crescendo, PoseStrategy.LOWEST_AMBIGUITY, (pose, time) -> swerve.addVisionMeasurement(pose, time), () -> swerve.getPose());
-        Camera.setDistanceThreshold(4.018);
+        Camera.setDistanceThreshold(10);
         Camera.setAmbiguityThreshold(0.3);
         Camera.overrideThreshold = 30;
         Camera.validDist = 0.5;

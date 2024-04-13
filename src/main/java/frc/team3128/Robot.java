@@ -104,6 +104,8 @@ public class Robot extends NAR_Robot {
     @Override
     public void autonomousInit() {
         Camera.enableAll();
+        Camera.overrideThreshold = 0;
+        Camera.validDist = 30;
         Leds.getInstance().setDefaultColor();
         Command m_autonomousCommand = autoPrograms.getAutonomousCommand();
         if (m_autonomousCommand != null) {
@@ -118,6 +120,8 @@ public class Robot extends NAR_Robot {
 
     @Override
     public void teleopInit() {
+        Camera.overrideThreshold = 30;
+        Camera.validDist = 0.5;
         Camera.enableAll();
         CommandScheduler.getInstance().cancelAll();
         

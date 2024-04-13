@@ -97,6 +97,7 @@ public class Intake {
         protected void configMotors() {
             RIGHT_ROLLER_MOTOR.setInverted(false);
             LEFT_ROLLER_MOTOR.setInverted(true);
+            LEFT_ROLLER_MOTOR.enableVoltageCompensation(8);
             LEFT_ROLLER_MOTOR.follow(RIGHT_ROLLER_MOTOR);
             RIGHT_ROLLER_MOTOR.setNeutralMode(Neutral.COAST);
             RIGHT_ROLLER_MOTOR.setCurrentLimit(CURRENT_LIMIT);
@@ -183,7 +184,7 @@ public class Intake {
             intakePivot.pivotTo(5),
             intakePivot.stallIntakePivot(-0.2),
             parallel(
-                either(intakeRollers.serialize().withTimeout(4).andThen(intakeRollers.runManipulator(0)), intakeRollers.runManipulator(0), ()-> shouldStall).withTimeout(0.5),
+                either(intakeRollers.serialize().withTimeout(1).andThen(intakeRollers.runManipulator(0)), intakeRollers.runManipulator(0), ()-> shouldStall).withTimeout(0.5),
                 sequence(
                     waitSeconds(0.5),
                     runOnce(()-> isRetracting = false),
@@ -213,7 +214,7 @@ public class Intake {
     public Command outtake() {
         return sequence (
             intakePivot.pivotTo(Setpoint.EXTENDED.angle),
-            waitUntil(()-> intakePivot.getMeasurement() > 20).withTimeout(2),
+            waitUntil(()-> intakePivot.getMeasurement() > 45).withTimeout(2),
             intakeRollers.runManipulator(-1),
             waitSeconds(0.5),
             retract(false)

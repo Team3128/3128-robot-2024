@@ -99,11 +99,11 @@ public class Trajectories {
             deadline(
                 race(
                     intake.intakeAuto(),
-                    align(false)
+                    alignOld(false)
                 )
             )
         ));
-        NamedCommands.registerCommand("Drop", shooter.shoot(MAX_RPM));
+        NamedCommands.registerCommand("Drop", shooter.setShooter(0.5));
 
         AutoBuilder.configureHolonomic(
             swerve::getPose,
@@ -130,14 +130,49 @@ public class Trajectories {
         }
     }
 
+    public static Command turn45(boolean counterClockwise, double angle) {
+        DoubleSupplier setpoint = ()-> swerve.getYaw() + angle * (counterClockwise ? 1 : -1) * (Robot.getAlliance() == Alliance.Red ? -1 : 1);
+        Controller controller = new Controller(new PIDFFConfig(5, 0, 0, turnkS, 0, 0), Type.POSITION);
+        controller.enableContinuousInput(-180, 180);
+        controller.setTolerance(1);
+        return new NAR_PIDCommand(
+            controller, 
+            ()-> swerve.getYaw(), //measurement
+            setpoint, //setpoint
+            (double output) -> {
+                Swerve.getInstance().drive(new ChassisSpeeds(vx, vy, Units.degreesToRadians(output)));
+                NAR_Shuffleboard.addData("HElp", "help", output, 0, 0);
+            }
+        ).beforeStarting(runOnce(()-> CmdSwerveDrive.disableTurn()));
+    }
+
+    public static Command alignOld(boolean counterClockwise) {
+        return sequence(
+            turn45(false, 90).until(()-> RobotContainer.limelight.hasValidTarget()),
+            repeatingSequence(
+                new CmdAutoAlign(3, false)
+            ).until(()-> intake.intakeRollers.hasObjectPresent())
+            // turn45(counterClockwise).until(()-> RobotContainer.limelight.hasValidTarget()),
+            // new CmdAutoAlign(3, false)
+            // run(()-> swerve.drive(
+            //     new Translation2d(), 
+            //     maxAngularVelocity / 4.0 * (counterClockwise ? 1 : -1) * (Robot.getAlliance() == Alliance.Red ? -1 : 1), 
+            //     false
+            // )).until(()-> RobotContainer.limelight.hasValidTarget())
+        )
+        .beforeStarting(runOnce(()->{turning = true;})).andThen(runOnce(()->{turning = false;}));
+    }
+
     public static Command align(boolean counterClockwise) {
-        return repeatingSequence(
+        return sequence(
             new CmdAutoAlign(3, false),
-            run(()-> swerve.drive(
-                new Translation2d(), 
-                maxAngularVelocity / 4.0 * (counterClockwise ? 1 : -1) * (Robot.getAlliance() == Alliance.Red ? -1 : 1), 
-                false
-            )).until(()-> RobotContainer.limelight.hasValidTarget())
+            turn45(counterClockwise, 45).until(()-> RobotContainer.limelight.hasValidTarget()),
+            new CmdAutoAlign(3, false)
+            // run(()-> swerve.drive(
+            //     new Translation2d(), 
+            //     maxAngularVelocity / 4.0 * (counterClockwise ? 1 : -1) * (Robot.getAlliance() == Alliance.Red ? -1 : 1), 
+            //     false
+            // )).until(()-> RobotContainer.limelight.hasValidTarget())
         ).until(()-> intake.intakeRollers.hasObjectPresent())
         .beforeStarting(runOnce(()->{turning = true;})).andThen(runOnce(()->{turning = false;}));
     }
@@ -197,7 +232,7 @@ public class Trajectories {
                     runOnce(()->{turning = true;}),
                     sequence(
                         either(sequence(waitUntil(()-> intake.intakeRollers.hasObjectPresent()).withTimeout(0.25), intake.retractAuto()), none(), ()-> intake.intakePivot.isEnabled()),
-                        rampUp()
+                        rampUp(MAX_RPM, 6.7)
                     ),
                     turnInPlace().withTimeout(turnTimeout)
                 ),
@@ -210,7 +245,8 @@ public class Trajectories {
                 // neutralAuto()
             ),
             none(),
-            ()->intake.intakeRollers.hasObjectPresent()
+            ()-> true
+            // ()->intake.intakeRollers.hasObjectPresent()
         );
     }
 
@@ -229,7 +265,7 @@ public class Trajectories {
     public static Command neutralAuto() {
         return sequence(
             intake.intakeRollers.runNoRequirements(0),
-            Shooter.getInstance().setShooter(0),
+            // Shooter.getInstance().setShooter(0),
             Climber.getInstance().climbTo(Climber.Setpoint.RETRACTED)
         );
     }

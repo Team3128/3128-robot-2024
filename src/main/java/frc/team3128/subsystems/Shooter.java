@@ -37,7 +37,7 @@ public class Shooter extends NAR_PIDSubsystem {
         setTolerance(TOLERANCE);
         configMotors();
         initShuffleboard();
-        rpmDiff = NAR_Shuffleboard.debug("rmpDiff", "rpmDiff", 1000, 0, 0);
+        rpmDiff = NAR_Shuffleboard.debug("rmpDiff", "rpmDiff", 1500, 0, 0);
         NAR_Shuffleboard.addData("rmpDiff", "rightVelocity", ()-> rightMotor.getVelocity(), 1, 0);
 
         ControllerBase controller = getController();
