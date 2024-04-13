@@ -88,18 +88,19 @@ public class Intake {
         private DigitalInput limitSwitch;
 
         private IntakeRollers() {
-            super(STALL_CURRENT, INTAKE_POWER, OUTTAKE_POWER, STALL_POWER, 0.3, ROLLER_MOTOR);
+            super(STALL_CURRENT, INTAKE_POWER, OUTTAKE_POWER, STALL_POWER, 0.3, RIGHT_ROLLER_MOTOR);
             limitSwitch = new DigitalInput(9);
             initShuffleboard();
         }
 
         @Override
         protected void configMotors() {
-            ROLLER_MOTOR.setInverted(false);
-            ROLLER_MOTOR.setNeutralMode(Neutral.COAST);
-            ROLLER_MOTOR.setCurrentLimit(CURRENT_LIMIT);
-            ROLLER_MOTOR.enableVoltageCompensation(12);
-            ROLLER_MOTOR.setStatusFrames(SparkMaxConfig.VELOCITY);
+            RIGHT_ROLLER_MOTOR.setInverted(false);
+            LEFT_ROLLER_MOTOR.setInverted(true);
+            LEFT_ROLLER_MOTOR.follow(RIGHT_ROLLER_MOTOR);
+            RIGHT_ROLLER_MOTOR.setNeutralMode(Neutral.COAST);
+            RIGHT_ROLLER_MOTOR.setCurrentLimit(CURRENT_LIMIT);
+            RIGHT_ROLLER_MOTOR.setStatusFrames(SparkMaxConfig.VELOCITY);
         }
 
         public Command runNoRequirements(double power) {
@@ -145,7 +146,7 @@ public class Intake {
             return new CurrentTest
             (
                 "testRollers", 
-                ROLLER_MOTOR, 
+                RIGHT_ROLLER_MOTOR, 
                 CURRENT_TEST_POWER, 
                 CURRENT_TEST_TIMEOUT,
                 CURRENT_TEST_PLATEAU,
@@ -242,7 +243,7 @@ public class Intake {
     }
 
     public State getRunningState() {
-        if (ROLLER_MOTOR.getState() != State.DISCONNECTED && PIVOT_MOTOR.getState() != State.DISCONNECTED) {
+        if (RIGHT_ROLLER_MOTOR.getState() != State.DISCONNECTED && PIVOT_MOTOR.getState() != State.DISCONNECTED) {
             return State.RUNNING; 
         }
         return State.DISCONNECTED;
