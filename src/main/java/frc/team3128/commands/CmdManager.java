@@ -124,8 +124,7 @@ public class CmdManager {
 
     public static Command ramShot() {
         return sequence(
-            climber.climbTo(Climber.Setpoint.RAMSHOT),
-            shooter.shoot(RAM_SHOT_RPM, RAM_SHOT_RPM),
+            rampRam(),
             waitUntil(()-> climber.atSetpoint() && shooter.atSetpoint()),
             intake.intakeRollers.outtakeNoRequirements(),
             waitSeconds(0.35),

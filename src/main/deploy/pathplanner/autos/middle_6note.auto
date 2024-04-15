@@ -60,6 +60,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "AlignCW"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "note2.1-wing"
@@ -78,9 +84,39 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "AlignCW"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "note2.2-wing"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Outtake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "wing-note2.3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Align"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Neutral"
           }
         }
       ]

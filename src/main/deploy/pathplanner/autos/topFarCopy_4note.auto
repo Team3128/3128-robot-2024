@@ -18,6 +18,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "AlignCW"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "note2.1-wing"
@@ -36,6 +42,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "AlignCW"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "note2.2-wing"
@@ -51,6 +63,12 @@
           "type": "path",
           "data": {
             "pathName": "wing-note2.3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Align"
           }
         },
         {

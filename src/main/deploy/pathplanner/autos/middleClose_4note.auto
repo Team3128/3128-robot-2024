@@ -42,6 +42,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Align"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "note2.3-middle"
@@ -66,9 +72,15 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Neutral"
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "note1.3-leave"
+            "pathName": "note1.3diag-leave"
           }
         }
       ]

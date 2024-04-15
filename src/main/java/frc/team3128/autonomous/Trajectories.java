@@ -56,9 +56,9 @@ public class Trajectories {
 
     public enum ShootPosition {
         // find values
-        WING(5.75),
+        WING(5.8),
         TOP_PRELOAD(11),
-        BOTTOM(9);
+        BOTTOM(7.5);
 
         private final double height;
         ShootPosition(double height) {
@@ -82,27 +82,16 @@ public class Trajectories {
         // TODO: add commands
         NamedCommands.registerCommand("Intake", intake.intakeAuto());
         NamedCommands.registerCommand("Shoot", autoShoot(0.75));
-        NamedCommands.registerCommand("TurnShoot", autoShoot(1.25));
-        NamedCommands.registerCommand("VisionShoot", visionShoot());
-        NamedCommands.registerCommand("ShootSkip", either(autoShoot(0.5), none(), ()-> intake.intakeRollers.hasObjectPresent()));
         NamedCommands.registerCommand("RamShoot", ramShotAuto());
+        NamedCommands.registerCommand("BottomShoot", autoShootPreset(ShootPosition.BOTTOM));
         NamedCommands.registerCommand("WingRamp", rampUpAuto(ShootPosition.WING));
-        NamedCommands.registerCommand("SourceRamp", rampUpAuto(ShootPosition.BOTTOM));
-        NamedCommands.registerCommand("TopRamp", rampUpAuto(ShootPosition.TOP_PRELOAD));
-        NamedCommands.registerCommand("AlignCCW", align(true));
-        NamedCommands.registerCommand("AlignCW", align(false));
-        NamedCommands.registerCommand("Outtake", autoShoot(0.75));
+        NamedCommands.registerCommand("Align", align());
+        NamedCommands.registerCommand("AlignCCW", alignSearch(true));
+        NamedCommands.registerCommand("AlignCW", alignSearch(false));
+        NamedCommands.registerCommand("Outtake", outtakeAuto());
         NamedCommands.registerCommand("Retract", intake.retractAuto());
         NamedCommands.registerCommand("Neutral", neutralAuto());
-        NamedCommands.registerCommand("NeutralWait", sequence(neutralAuto(), waitUntil(()-> climber.atSetpoint())));
-        NamedCommands.registerCommand("AlignPreload", sequence(
-            deadline(
-                race(
-                    intake.intakeAuto(),
-                    alignOld(false)
-                )
-            )
-        ));
+        NamedCommands.registerCommand("AlignPreload", alignPreload(false));
         NamedCommands.registerCommand("Drop", shooter.setShooter(0.5));
 
         AutoBuilder.configureHolonomic(
@@ -130,7 +119,7 @@ public class Trajectories {
         }
     }
 
-    public static Command turn45(boolean counterClockwise, double angle) {
+    public static Command turnDegrees(boolean counterClockwise, double angle) {
         DoubleSupplier setpoint = ()-> swerve.getYaw() + angle * (counterClockwise ? 1 : -1) * (Robot.getAlliance() == Alliance.Red ? -1 : 1);
         Controller controller = new Controller(new PIDFFConfig(5, 0, 0, turnkS, 0, 0), Type.POSITION);
         controller.enableContinuousInput(-180, 180);
@@ -146,33 +135,36 @@ public class Trajectories {
         ).beforeStarting(runOnce(()-> CmdSwerveDrive.disableTurn()));
     }
 
-    public static Command alignOld(boolean counterClockwise) {
+    public static Command alignPreload(boolean counterClockwise) {
+        return race(
+            intake.intakeAuto(), 
+            sequence(
+                turnDegrees(false, 70).until(()-> RobotContainer.limelight.hasValidTarget()),
+                repeatingSequence(
+                    new CmdAutoAlign(3, false),
+                    run(()-> swerve.drive(
+                        new Translation2d(), 
+                        maxAngularVelocity / 4.0 * (counterClockwise ? 1 : -1) * (Robot.getAlliance() == Alliance.Red ? -1 : 1), 
+                        false)
+                    ).until(()-> RobotContainer.limelight.hasValidTarget())
+                ).until(()-> intake.intakeRollers.hasObjectPresent())
+            ).beforeStarting(runOnce(()->{turning = true;})).andThen(runOnce(()->{turning = false;})));
+    }
+
+    public static Command alignSearch(boolean counterClockwise) {
         return sequence(
-            turn45(false, 90).until(()-> RobotContainer.limelight.hasValidTarget()),
-            repeatingSequence(
-                new CmdAutoAlign(3, false)
-            ).until(()-> intake.intakeRollers.hasObjectPresent())
-            // turn45(counterClockwise).until(()-> RobotContainer.limelight.hasValidTarget()),
-            // new CmdAutoAlign(3, false)
-            // run(()-> swerve.drive(
-            //     new Translation2d(), 
-            //     maxAngularVelocity / 4.0 * (counterClockwise ? 1 : -1) * (Robot.getAlliance() == Alliance.Red ? -1 : 1), 
-            //     false
-            // )).until(()-> RobotContainer.limelight.hasValidTarget())
-        )
+            new CmdAutoAlign(3, false),
+            turnDegrees(counterClockwise, 45).until(()-> RobotContainer.limelight.hasValidTarget()),
+            new CmdAutoAlign(3, false)
+        ).until(()-> intake.intakeRollers.hasObjectPresent())
         .beforeStarting(runOnce(()->{turning = true;})).andThen(runOnce(()->{turning = false;}));
     }
 
-    public static Command align(boolean counterClockwise) {
+    public static Command align() {
         return sequence(
             new CmdAutoAlign(3, false),
-            turn45(counterClockwise, 45).until(()-> RobotContainer.limelight.hasValidTarget()),
+            waitSeconds(1).until(()-> RobotContainer.limelight.hasValidTarget()),
             new CmdAutoAlign(3, false)
-            // run(()-> swerve.drive(
-            //     new Translation2d(), 
-            //     maxAngularVelocity / 4.0 * (counterClockwise ? 1 : -1) * (Robot.getAlliance() == Alliance.Red ? -1 : 1), 
-            //     false
-            // )).until(()-> RobotContainer.limelight.hasValidTarget())
         ).until(()-> intake.intakeRollers.hasObjectPresent())
         .beforeStarting(runOnce(()->{turning = true;})).andThen(runOnce(()->{turning = false;}));
     }
@@ -184,6 +176,7 @@ public class Trajectories {
             waitUntil(()-> climber.atSetpoint() && shooter.atSetpoint()),
             intake.intakeRollers.outtakeNoRequirements(),
             waitSeconds(0.35),
+            shooter.shoot(MAX_RPM),
             neutralAuto()
         );
     }
@@ -217,10 +210,17 @@ public class Trajectories {
         );
     }
 
-    public static Command visionShoot() {
+    public static Command autoShootPreset(ShootPosition position) {
         return sequence(
+            parallel (
+                runOnce(()->{turning = true;}),
+                rampUp(MAX_RPM, position.getHeight()),
+                turnInPlace().withTimeout(0.5)
+            ),
+            runOnce(()->{turning = false;}),
+            intake.intakeRollers.outtake(),
             waitSeconds(0.25),
-            autoShoot(0.5)
+            intake.intakeRollers.runManipulator(0)
         );
     }
  
@@ -232,21 +232,17 @@ public class Trajectories {
                     runOnce(()->{turning = true;}),
                     sequence(
                         either(sequence(waitUntil(()-> intake.intakeRollers.hasObjectPresent()).withTimeout(0.25), intake.retractAuto()), none(), ()-> intake.intakePivot.isEnabled()),
-                        rampUp(MAX_RPM, 6.7)
+                        rampUp()
                     ),
                     turnInPlace().withTimeout(turnTimeout)
                 ),
-                // waitSeconds(1),
                 runOnce(()->{turning = false;}),
                 intake.intakeRollers.outtake(),
                 waitSeconds(0.25),
                 intake.intakeRollers.runManipulator(0)
-                // shooter.setShooter(0)
-                // neutralAuto()
             ),
             none(),
             ()-> true
-            // ()->intake.intakeRollers.hasObjectPresent()
         );
     }
 
@@ -258,7 +254,7 @@ public class Trajectories {
                 intake.intakeRollers.runManipulator(0)
             ),
             none(),
-            ()-> intake.intakeRollers.hasObjectPresent()
+            ()-> true
         );
     }
 

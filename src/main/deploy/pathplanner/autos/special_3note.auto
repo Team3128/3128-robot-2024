@@ -32,7 +32,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Shoot"
+            "name": "BottomShoot"
           }
         },
         {
@@ -62,7 +62,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Shoot"
+            "name": "BottomShoot"
           }
         },
         {
@@ -86,7 +86,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Shoot"
+            "name": "BottomShoot"
           }
         },
         {

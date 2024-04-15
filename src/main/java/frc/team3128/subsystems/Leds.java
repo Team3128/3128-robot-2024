@@ -11,7 +11,6 @@ import com.ctre.phoenix.led.SingleFadeAnimation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.team3128.Constants.LedConstants.*;
 
-import frc.team3128.Constants.LedConstants;
 import frc.team3128.Constants.LedConstants.Colors;
 
 

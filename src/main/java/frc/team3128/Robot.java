@@ -85,6 +85,11 @@ public class Robot extends NAR_Robot {
     public void driverStationConnected() {
         Log.info("State", "DS Connected");
         Log.info("Alliance", getAlliance().toString());
+        if (getAlliance() == Alliance.Red) {
+            Camera.addTags(3, 4, 5, 11, 12);
+        } else {
+            Camera.addTags(6, 7, 8, 15, 16);
+        }
         if (!NAR_Robot.logWithAdvantageKit) return;
         if(DriverStation.getMatchType() != MatchType.None){
             addReceiver(true, LoggingState.FULLMATCH);

@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 8.26,
+        "x": 6.2,
         "y": 7.2
       },
       "prevControl": {
-        "x": 4.26,
+        "x": 4.2,
         "y": 7.2
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "note2.1"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -73,7 +73,7 @@
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
-    "velocity": 0.0,
+    "velocity": 5.5,
     "rotation": -175.0,
     "rotateFast": true
   },

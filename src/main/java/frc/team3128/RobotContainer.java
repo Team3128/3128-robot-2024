@@ -26,6 +26,7 @@ import common.hardware.limelight.LEDMode;
 import common.hardware.limelight.Limelight;
 import common.hardware.limelight.LimelightKey;
 import common.hardware.motorcontroller.NAR_CANSpark;
+import common.hardware.motorcontroller.NAR_TalonFX;
 import common.utility.Log;
 import common.utility.narwhaldashboard.NarwhalDashboard;
 import common.utility.narwhaldashboard.NarwhalDashboard.State;
@@ -71,6 +72,7 @@ public class RobotContainer {
 
     public RobotContainer() {
         NAR_CANSpark.maximumRetries = 3;
+        NAR_TalonFX.maximumRetries = 1;
 
         NAR_Shuffleboard.WINDOW_WIDTH = 10;
 
@@ -107,6 +109,7 @@ public class RobotContainer {
         controller.getButton(XboxButton.kB).onTrue(intake.intake(Setpoint.SOURCE));
 
         controller.getButton(XboxButton.kRightBumper).onTrue(moveShoot());
+        controller.getButton(XboxButton.kRightBumper).onTrue(rampRam()).onFalse(ramShot()); //Ram Shot
         controller.getButton(XboxButton.kRightTrigger).onTrue(rampUp(MAX_RPM, 0)).onFalse(shootDist());     //Auto Shoot
         controller.getButton(XboxButton.kY).onTrue(rampUpFeed(4000, 4000, 13)).onFalse(feed(4000, 13));   //Feed Shot
         controller.getButton(XboxButton.kX).onTrue(rampUpAmp()).onFalse(ampShoot()); //Amp Shot
@@ -165,22 +168,26 @@ public class RobotContainer {
         // buttonPad.getButton(16).onTrue(intake.intakeRollers.outtake()).onFalse(intake.intakeRollers.runManipulator(0));
         // buttonPad.getButton(16).onTrue(intake.outtake());
 
-        new Trigger(()-> intake.intakeRollers.hasObjectPresent()).onTrue(runOnce(()-> limelight.setLEDMode(LEDMode.BLINK))).onFalse(runOnce(()-> limelight.setLEDMode(LEDMode.OFF)));
+        new Trigger(()-> intake.intakeRollers.hasObjectPresent()).onTrue(runOnce(()-> leds.setLedColor(Colors.GREEN))).onFalse(runOnce(()-> leds.setDefaultColor()));
         new Trigger(()-> limelight.hasValidTarget() && !intake.intakeRollers.hasObjectPresent()).onTrue(runOnce(()-> leds.setLedColor(Colors.ORANGE))).onFalse(runOnce(()-> leds.setDefaultColor()));
+        new Trigger(()-> Camera.seesTag()).onTrue(runOnce(()-> limelight.setLEDMode(LEDMode.BLINK))).onFalse(runOnce(()-> leds.setDefaultColor()));
     }
 
     @SuppressWarnings("unused")
     public void initCameras() {
         Camera.disableAll();
         Camera.configCameras(AprilTagFields.k2024Crescendo, PoseStrategy.LOWEST_AMBIGUITY, (pose, time) -> swerve.addVisionMeasurement(pose, time), () -> swerve.getPose());
-        Camera.setDistanceThreshold(10);
         Camera.setAmbiguityThreshold(0.3);
         Camera.overrideThreshold = 30;
         Camera.validDist = 0.5;
         // Camera.addIgnoredTags(13.0, 14.0);
 
-        final Camera camera = new Camera("FRONT_LEFT", Units.inchesToMeters(10.055), Units.inchesToMeters(9.79), Units.degreesToRadians(30), Units.degreesToRadians(-28.125), 0);
-        final Camera camera2 = new Camera("FRONT_RIGHT", Units.inchesToMeters(10.055), -Units.inchesToMeters(9.79), Units.degreesToRadians(-30), Units.degreesToRadians(-28.125), 0);
+        if (Robot.isReal()) {
+            final Camera camera = new Camera("FRONT_LEFT", Units.inchesToMeters(10.055), Units.inchesToMeters(9.79), Units.degreesToRadians(30), Units.degreesToRadians(-28.125), 0);
+            final Camera camera2 = new Camera("FRONT_RIGHT", Units.inchesToMeters(10.055), -Units.inchesToMeters(9.79), Units.degreesToRadians(-30), Units.degreesToRadians(-28.125), 0);
+            camera.setCamDistanceThreshold(3.5);
+            camera2.setCamDistanceThreshold(5);
+        }
         // final Camera camera3 = new Camera("LEFT", Units.inchesToMeters(-3.1), Units.inchesToMeters(12.635), Units.degreesToRadians(90), Units.degreesToRadians(-10), 0);
         // final Camera camera4 = new Camera("RIGHT", Units.inchesToMeters(-3.1), Units.inchesToMeters(-12.635), Units.degreesToRadians(-90), Units.degreesToRadians(0), 0);
 
@@ -209,8 +216,8 @@ public class RobotContainer {
         dashboard.checkState("ShooterState", ()-> shooter.getRunningState());
         dashboard.checkState("AmpMechanismState", ()-> ampMechanism.getRunningState());
 
-        if (NAR_CANSpark.getNumFailedConfigs() > 0 || !isConnected()) {
-            Log.recoverable("Colors", "Errors configuring: " + NAR_CANSpark.getNumFailedConfigs());
+        if (NAR_TalonFX.getNumFailedConfigs() + NAR_CANSpark.getNumFailedConfigs() > 0 || !isConnected()) {
+            Log.recoverable("Colors", "Errors configuring: " + NAR_CANSpark.getNumFailedConfigs() + NAR_TalonFX.getNumFailedConfigs());
             Leds.getInstance().setLedColor(Colors.ERROR);
         }
         else if (!swerve.isConfigured()) {
@@ -218,7 +225,7 @@ public class RobotContainer {
             Leds.getInstance().setLedColor(Colors.RED);
         }
         else {
-            Log.info("Colors", "Errors configuring: " + NAR_CANSpark.getNumFailedConfigs());
+            Log.info("Colors", "No errors configuring");
             Leds.getInstance().setLedColor(Colors.CONFIGURED);
         }
     }
