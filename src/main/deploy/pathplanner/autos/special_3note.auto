@@ -80,7 +80,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Preload-bottomShoot"
+            "pathName": "bottomShoot-source"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Align"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "source-bottomShoot"
           }
         },
         {

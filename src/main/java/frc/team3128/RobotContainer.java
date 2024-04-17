@@ -4,6 +4,7 @@ import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.DriverStation.MatchType;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -22,7 +23,6 @@ import common.hardware.camera.Camera;
 import common.hardware.input.NAR_ButtonBoard;
 import common.hardware.input.NAR_XboxController;
 import common.hardware.input.NAR_XboxController.XboxButton;
-import common.hardware.limelight.LEDMode;
 import common.hardware.limelight.Limelight;
 import common.hardware.limelight.LimelightKey;
 import common.hardware.motorcontroller.NAR_CANSpark;
@@ -41,7 +41,6 @@ import frc.team3128.subsystems.Leds;
 import frc.team3128.subsystems.Shooter;
 import frc.team3128.subsystems.Swerve;
 import frc.team3128.subsystems.Intake.Setpoint;
-
 import java.util.ArrayList;
 
 /**
@@ -169,8 +168,8 @@ public class RobotContainer {
         // buttonPad.getButton(16).onTrue(intake.outtake());
 
         new Trigger(()-> intake.intakeRollers.hasObjectPresent()).onTrue(runOnce(()-> leds.setLedColor(Colors.GREEN))).onFalse(runOnce(()-> leds.setDefaultColor()));
-        new Trigger(()-> limelight.hasValidTarget() && !intake.intakeRollers.hasObjectPresent()).onTrue(runOnce(()-> leds.setLedColor(Colors.ORANGE))).onFalse(runOnce(()-> leds.setDefaultColor()));
-        new Trigger(()-> Camera.seesTag()).onTrue(runOnce(()-> limelight.setLEDMode(LEDMode.BLINK))).onFalse(runOnce(()-> leds.setDefaultColor()));
+        new Trigger(()-> limelight.hasValidTarget() && !intake.intakeRollers.hasObjectPresent() && (!DriverStation.isAutonomous() || DriverStation.getMatchType() == MatchType.None)).onTrue(runOnce(()-> leds.setLedColor(Colors.ORANGE))).onFalse(runOnce(()-> leds.setDefaultColor()));
+        new Trigger(()-> Camera.seesTag() && intake.intakeRollers.hasObjectPresent()).onTrue(runOnce(()-> leds.setLedColor(Colors.BLUE))).onFalse(runOnce(()-> leds.setDefaultColor()));
     }
 
     @SuppressWarnings("unused")

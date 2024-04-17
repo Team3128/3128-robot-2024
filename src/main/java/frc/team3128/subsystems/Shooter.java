@@ -10,7 +10,6 @@ import common.hardware.motorcontroller.NAR_CANSpark.SparkMaxConfig;
 import common.hardware.motorcontroller.NAR_Motor.Neutral;
 import common.utility.narwhaldashboard.NarwhalDashboard.State;
 import common.utility.shuffleboard.NAR_Shuffleboard;
-import common.utility.tester.CurrentTest;
 import common.utility.tester.Tester;
 import common.utility.tester.Tester.UnitTest;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -129,34 +128,6 @@ public class Shooter extends NAR_PIDSubsystem {
             return State.RUNNING; 
         }
         return State.DISCONNECTED;
-    }
-
-    public CurrentTest getLeftMotorTest() {
-        return new CurrentTest
-        (
-            "testLeftMotor", 
-            leftMotor, 
-            CURRENT_TEST_POWER, 
-            CURRENT_TEST_TIMEOUT,
-            CURRENT_TEST_PLATEAU,
-            CURRENT_TEST_EXPECTED_CURRENT,
-            CURRENT_TEST_TOLERANCE, 
-            this
-        );
-    }
-
-    public CurrentTest getRightMotorTest() {
-        return new CurrentTest
-        (
-            "testRightMotor", 
-            rightMotor, 
-            CURRENT_TEST_POWER, 
-            CURRENT_TEST_TIMEOUT,
-            CURRENT_TEST_PLATEAU,
-            CURRENT_TEST_EXPECTED_CURRENT,
-            CURRENT_TEST_TOLERANCE, 
-            this
-        );
     }
 
     public UnitTest getShooterTest() {

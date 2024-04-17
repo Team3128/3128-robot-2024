@@ -54,11 +54,11 @@ import frc.team3128.subsystems.Swerve;
  */
 public class Trajectories {
 
+    //USED FOR HARDCODED SHOTS BITCHES
     public enum ShootPosition {
         // find values
-        WING(5.8),
-        TOP_PRELOAD(11),
-        BOTTOM(7.5);
+        WING(5.8),      //Change this for top 
+        BOTTOM(7.5);    //Change this for bottom auto  
 
         private final double height;
         ShootPosition(double height) {
@@ -92,7 +92,7 @@ public class Trajectories {
         NamedCommands.registerCommand("Retract", intake.retractAuto());
         NamedCommands.registerCommand("Neutral", neutralAuto());
         NamedCommands.registerCommand("AlignPreload", alignPreload(false));
-        NamedCommands.registerCommand("Drop", shooter.setShooter(0.5));
+        NamedCommands.registerCommand("Drop", shooter.shoot(MAX_RPM));
 
         AutoBuilder.configureHolonomic(
             swerve::getPose,

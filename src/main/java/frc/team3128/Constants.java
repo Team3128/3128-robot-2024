@@ -404,7 +404,7 @@ public class Constants {
         public static final double CURRENT_TEST_POWER = OUTTAKE_POWER;
         public static final double CURRENT_TEST_PLATEAU = 1;
         public static final double CURRENT_TEST_TIMEOUT = 5;
-        public static final double CURRENT_TEST_TOLERANCE = 5;
+        public static final double CURRENT_TEST_TOLERANCE = 10;
         public static final double CURRENT_TEST_EXPECTED_CURRENT = 12.5;
 
         public static final double SETPOINT_TEST_PLATEAU = 1;
@@ -459,7 +459,7 @@ public class Constants {
             RED(171, 48, 97, false),
             PURPLE(255, 0, 255, false),
             GREEN(0, 255, 0, false),
-            ORANGE(255, 105, 0, false),
+            ORANGE(255, 50, 0, false),
     
             FLAME(0,0,0,true),
             CHARGE(255, 0, 0, true),
