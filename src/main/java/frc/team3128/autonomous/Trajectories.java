@@ -176,8 +176,7 @@ public class Trajectories {
             waitUntil(()-> climber.atSetpoint() && shooter.atSetpoint()),
             intake.intakeRollers.outtakeNoRequirements(),
             waitSeconds(0.35),
-            shooter.shoot(MAX_RPM),
-            neutralAuto()
+            shooter.shoot(MAX_RPM)
         );
     }
 

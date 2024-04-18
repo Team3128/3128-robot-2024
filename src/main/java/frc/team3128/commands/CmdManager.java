@@ -177,10 +177,10 @@ public class CmdManager {
         );
     }
 
-    public static Command feed(double rpm, double height){
+    public static Command feed(double rpm, double height, double angle){
         return sequence(
             parallel(
-                swerve.turnInPlace(()-> Robot.getAlliance() == Alliance.Blue ? 155 : 25).asProxy().withTimeout(1),
+                swerve.turnInPlace(()-> Robot.getAlliance() == Alliance.Blue ? 180-angle : angle).asProxy().withTimeout(1),
                 rampUp(rpm, height),
                 runOnce(()-> shooter.startPID(rpm, rpm))
             ),

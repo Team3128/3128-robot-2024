@@ -11,7 +11,11 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import static edu.wpi.first.wpilibj2.command.Commands.*;
+import static frc.team3128.Constants.ShooterConstants.EDGE_FEED_ANGLE;
+import static frc.team3128.Constants.ShooterConstants.EDGE_FEED_RPM;
 import static frc.team3128.Constants.ShooterConstants.MAX_RPM;
+import static frc.team3128.Constants.ShooterConstants.MIDDLE_FEED_ANGLE;
+import static frc.team3128.Constants.ShooterConstants.MIDDLE_FEED_RPM;
 import static frc.team3128.commands.CmdManager.*;
 
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
@@ -105,12 +109,11 @@ public class RobotContainer {
     }   
 
     private void configureButtonBindings() {
-        controller.getButton(XboxButton.kB).onTrue(intake.intake(Setpoint.SOURCE));
+        controller.getButton(XboxButton.kB).onTrue(rampUpFeed(MIDDLE_FEED_RPM, MIDDLE_FEED_RPM, 13)).onFalse(feed(MIDDLE_FEED_RPM, 13,MIDDLE_FEED_ANGLE));
+        controller.getButton(XboxButton.kY).onTrue(rampUpFeed(EDGE_FEED_RPM, EDGE_FEED_RPM, 13)).onFalse(feed(EDGE_FEED_RPM, 13, EDGE_FEED_ANGLE));   //Feed Shot
 
-        controller.getButton(XboxButton.kRightBumper).onTrue(moveShoot());
         controller.getButton(XboxButton.kRightBumper).onTrue(rampRam()).onFalse(ramShot()); //Ram Shot
         controller.getButton(XboxButton.kRightTrigger).onTrue(rampUp(MAX_RPM, 0)).onFalse(shootDist());     //Auto Shoot
-        controller.getButton(XboxButton.kY).onTrue(rampUpFeed(4000, 4000, 13)).onFalse(feed(4000, 13));   //Feed Shot
         controller.getButton(XboxButton.kX).onTrue(rampUpAmp()).onFalse(ampShoot()); //Amp Shot
         // controller.getButton(XboxButton.kX).onTrue(intake.intakePivot.pivotTo(-87)).onFalse(ampShootAlt());
 
@@ -168,7 +171,8 @@ public class RobotContainer {
         // buttonPad.getButton(16).onTrue(intake.outtake());
 
         new Trigger(()-> intake.intakeRollers.hasObjectPresent()).onTrue(runOnce(()-> leds.setLedColor(Colors.GREEN))).onFalse(runOnce(()-> leds.setDefaultColor()));
-        new Trigger(()-> limelight.hasValidTarget() && !intake.intakeRollers.hasObjectPresent() && (!DriverStation.isAutonomous() || DriverStation.getMatchType() == MatchType.None)).onTrue(runOnce(()-> leds.setLedColor(Colors.ORANGE))).onFalse(runOnce(()-> leds.setDefaultColor()));
+
+        new Trigger(()-> limelight.hasValidTarget() && !intake.intakeRollers.hasObjectPresent() && (DriverStation.isAutonomous() || DriverStation.getMatchType() == MatchType.None)).onTrue(runOnce(()-> leds.setLedColor(Colors.ORANGE))).onFalse(runOnce(()-> leds.setDefaultColor()));
         new Trigger(()-> Camera.seesTag() && intake.intakeRollers.hasObjectPresent()).onTrue(runOnce(()-> leds.setLedColor(Colors.BLUE))).onFalse(runOnce(()-> leds.setDefaultColor()));
     }
 

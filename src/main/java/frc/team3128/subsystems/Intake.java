@@ -240,7 +240,7 @@ public class Intake {
             intakePivot.pivotTo(()-> Climber.getInstance().getAngle()),
             waitUntil(() -> intakePivot.atSetpoint()),
             intakePivot.runPivot(0)
-        ).withTimeout(3);
+        ).withTimeout(1.5);
     }
 
     public State getRunningState() {

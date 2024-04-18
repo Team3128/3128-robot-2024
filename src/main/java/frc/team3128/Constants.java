@@ -280,7 +280,7 @@ public class Constants {
         public static final double speakerMidpointY = Units.inchesToMeters(218.29);//5.4;
         
         ; //6.151 - speakerLength / 2;
-        public static final double focalPointX = 0.229; //1.4583577128;
+        public static final double focalPointX = 0.1; //0.229; //1.4583577128;
         public static final Translation2d speakerMidpointBlue = new Translation2d(0, speakerMidpointY);
         public static final Translation2d speakerMidpointRed = new Translation2d(FieldConstants.FIELD_X_LENGTH, speakerMidpointY);
         public static final Translation2d focalPointBlue = new Translation2d(focalPointX, speakerMidpointY);
@@ -304,6 +304,12 @@ public class Constants {
         public static final double TOLERANCE = 150;
         public static final double AMP_RPM = 3000;
         public static final double RAM_SHOT_RPM = 4500;
+        
+        public static final double EDGE_FEED_RPM = 5000;
+        public static final double EDGE_FEED_ANGLE = 35;
+        public static final double MIDDLE_FEED_RPM = 4500;
+        public static final double MIDDLE_FEED_ANGLE = 25;
+        
 
         public static final double CURRENT_TEST_POWER = 0;
         public static final double CURRENT_TEST_PLATEAU = 0;
