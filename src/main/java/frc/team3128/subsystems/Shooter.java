@@ -63,6 +63,9 @@ public class Shooter extends NAR_PIDSubsystem {
     private void configMotors(){
         leftMotor = new NAR_CANSpark(LEFT_MOTOR_ID, ControllerType.CAN_SPARK_FLEX);
         rightMotor = new NAR_CANSpark(RIGHT_MOTOR_ID, ControllerType.CAN_SPARK_FLEX);
+
+        leftMotor.setCurrentLimit(80);
+        rightMotor.setCurrentLimit(80);
         
         leftMotor.setInverted(true);
         rightMotor.setInverted(false);

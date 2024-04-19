@@ -173,7 +173,7 @@ public class Trajectories {
         return sequence(
             climber.climbTo(Climber.Setpoint.RAMSHOT),
             shooter.shoot(RAM_SHOT_RPM, RAM_SHOT_RPM),
-            waitUntil(()-> climber.atSetpoint() && shooter.atSetpoint()),
+            waitUntil(()-> climber.atSetpoint() && shooter.atSetpoint()).withTimeout(1.5),
             intake.intakeRollers.outtakeNoRequirements(),
             waitSeconds(0.35),
             shooter.shoot(MAX_RPM)
@@ -274,7 +274,7 @@ public class Trajectories {
         return sequence(
             Intake.getInstance().intakePivot.reset(0),
             Climber.getInstance().reset(),
-            // runOnce(()-> swerve.zeroGyro(Robot.getAlliance() == Alliance.Red ? 0 : 180)),
+            runOnce(()-> swerve.zeroGyro(Robot.getAlliance() == Alliance.Red ? 0 : 180)),
             AmpMechanism.getInstance().reset(-90),
             runOnce(()-> swerve.resetEncoders()),
             runOnce(()-> Intake.getInstance().isRetracting = false)

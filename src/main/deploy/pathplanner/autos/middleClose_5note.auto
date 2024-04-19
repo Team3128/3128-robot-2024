@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.45,
-      "y": 1.5
+      "x": 1.4,
+      "y": 5.55
     },
     "rotation": 180.0
   },
@@ -12,87 +12,15 @@
     "data": {
       "commands": [
         {
-          "type": "path",
-          "data": {
-            "pathName": "source-note2.5"
-          }
-        },
-        {
           "type": "named",
           "data": {
-            "name": "AlignCCW"
+            "name": "RamShoot"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "note2.5-bottomShoot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "BottomShoot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Neutral"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "bottomShoot-note2.4"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "AlignCCW"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "note2.4-bottomShoot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "BottomShoot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Neutral"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "AlignPreload"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "bottomShoot-source"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Align"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "source-bottomShoot"
+            "pathName": "middle-note1.2"
           }
         },
         {
@@ -105,6 +33,72 @@
           "type": "named",
           "data": {
             "name": "Neutral"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "note1.2-note2.3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Align"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "note2.3-middle"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "middle-note1.1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "note1.1-middle"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "middle-note1.3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Neutral"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "note1.3diag-leave"
           }
         }
       ]

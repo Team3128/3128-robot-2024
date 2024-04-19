@@ -1,6 +1,10 @@
 package frc.team3128.autonomous;
 
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.team3128.Robot;
+import frc.team3128.subsystems.Swerve;
 import common.utility.narwhaldashboard.NarwhalDashboard;
 
 import static edu.wpi.first.wpilibj2.command.Commands.*;
@@ -25,9 +29,11 @@ public class AutoPrograms {
 
     private void initAutoSelector() {
         final String[] autoStrings = new String[] {
+            "default",
             "topFar_4note",
             "topFarCopy_4note",
             "middleClose_4note",
+            "middleClose_5note",
             "middle_6note",
             "bottom_7note",
             "special_3note"
@@ -35,24 +41,34 @@ public class AutoPrograms {
         
         NarwhalDashboard.getInstance().addAutos(autoStrings);
         for (final String auto : autoStrings) {
+            if (auto.equals("default")) continue;
             autoMap.put(auto, Trajectories.getPathPlannerAuto(auto));
         }
     }
 
     public Command getAutonomousCommand() {
         String selectedAutoName = NarwhalDashboard.getInstance().getSelectedAuto();
+        String hardcode = "default";
+        
         Command autoCommand;
         if (selectedAutoName == null) {
-            autoCommand = sequence(
-                Trajectories.resetAuto(),
-                waitSeconds(5),
-                autoShoot()
-            );
+            selectedAutoName = hardcode;
         }
-        else {
-            autoCommand = autoMap.get(selectedAutoName);
+        else if (selectedAutoName.equals("default")) {
+            defaultAuto();
         }
+        autoCommand = autoMap.get(selectedAutoName);
 
         return autoCommand.beforeStarting(Trajectories.resetAuto());
+    }
+
+    private Command defaultAuto(){
+        return sequence(
+                Trajectories.resetAuto(),
+                waitSeconds(5),
+                autoShoot(),
+                waitSeconds(2),
+                run(()-> Swerve.getInstance().drive(new Translation2d(Robot.getAlliance() == Alliance.Blue ? 1 : -1, 0), 0, true))
+            );
     }
 }
