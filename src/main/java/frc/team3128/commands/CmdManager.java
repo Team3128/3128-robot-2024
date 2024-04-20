@@ -108,7 +108,7 @@ public class CmdManager {
             ampMechanism.extend(),
             waitUntil(()-> ampMechanism.atSetpoint() && shooter.atSetpoint()),
             intake.intakeRollers.outtake(),
-            waitSeconds(1.5),
+            waitSeconds(0.9),
             ampMechanism.retract(),
             waitUntil(()-> ampMechanism.atSetpoint()),
             neutral(false)
@@ -233,6 +233,7 @@ public class CmdManager {
             intake.intakeRollers.runNoRequirements(0),
             shooter.setShooter(0),
             climber.climbTo(Climber.Setpoint.RETRACTED),
+            // runOnce(()-> climber.toggleBrake(false)),
             waitUntil(()-> climber.atSetpoint()),
             climber.setClimber(-0.5),
             waitSeconds(0.1),
@@ -242,6 +243,7 @@ public class CmdManager {
                 sequence(
                     waitSeconds(0.5),
                     climber.reset()
+                    // runOnce(()-> climber.toggleBrake(true))
                 )
             )
             // runOnce(()-> DriverStation.reportWarning("Neutral: CommandEnding", false))

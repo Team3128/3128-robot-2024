@@ -163,7 +163,7 @@ public class RobotContainer {
         buttonPad.getButton(14).onTrue(runOnce(()-> swerve.zeroGyro(0)));
 
         // buttonPad.getButton(15).onTrue(runOnce(()-> autoAmpAlign().schedule()));
-        buttonPad.getButton(15).onTrue(new CmdSysId("Swerve", (Double output)-> swerve.setVoltage(output), ()-> swerve.getVelocity(), swerve));
+        //buttonPad.getButton(15).onTrue(new CmdSysId("Swerve", (Double output)-> swerve.setVoltage(output), ()-> swerve.getVelocity(), swerve));
         buttonPad.getButton(16).onTrue(sequence(runOnce(()-> swerve.stop(), swerve), runOnce(()-> leds.setDefaultColor())));
         // buttonPad.getButton(15).onTrue(ampMechanism.runRollers(0.5)).onFalse(ampMechanism.runRollers(0));
         // buttonPad.getButton(13).onTrue(intake.intakeRollers.outtake()).onFalse(intake.intakeRollers.runManipulator(0));
@@ -172,8 +172,8 @@ public class RobotContainer {
 
         new Trigger(()-> intake.intakeRollers.hasObjectPresent()).onTrue(runOnce(()-> leds.setLedColor(Colors.GREEN))).onFalse(runOnce(()-> leds.setDefaultColor()));
 
-        // new Trigger(()-> limelight.hasValidTarget() && !intake.intakeRollers.hasObjectPresent() && (DriverStation.isAutonomous() || DriverStation.getMatchType() == MatchType.None)).onTrue(runOnce(()-> leds.setLedColor(Colors.ORANGE))).onFalse(runOnce(()-> leds.setDefaultColor()));
-        new Trigger(()-> limelight.hasValidTarget() && !intake.intakeRollers.hasObjectPresent() && (DriverStation.isAutonomous())).onTrue(runOnce(()-> leds.setLedColor(Colors.ORANGE))).onFalse(runOnce(()-> leds.setDefaultColor()));
+        new Trigger(()-> limelight.hasValidTarget() && !intake.intakeRollers.hasObjectPresent() && (DriverStation.isAutonomous() || DriverStation.getMatchType() == MatchType.None)).onTrue(runOnce(()-> leds.setLedColor(Colors.ORANGE))).onFalse(runOnce(()-> leds.setDefaultColor()));
+        // new Trigger(()-> limelight.hasValidTarget() && !intake.intakeRollers.hasObjectPresent() && (DriverStation.isAutonomous())).onTrue(runOnce(()-> leds.setLedColor(Colors.ORANGE))).onFalse(runOnce(()-> leds.setDefaultColor()));
         new Trigger(()-> Camera.seesTag() && intake.intakeRollers.hasObjectPresent()).onTrue(runOnce(()-> leds.setLedColor(Colors.BLUE))).onFalse(runOnce(()-> leds.setDefaultColor()));
     }
 

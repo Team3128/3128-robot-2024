@@ -11,6 +11,7 @@ import frc.team3128.subsystems.Intake;
 import frc.team3128.subsystems.Swerve;
 
 public class CmdAutoAlign extends WaitCommand {
+    public static boolean hasTimedOut = false;
     private PIDController controller;
     private double plateauCount;
     private Swerve swerve;
@@ -53,7 +54,8 @@ public class CmdAutoAlign extends WaitCommand {
 
     @Override
     public boolean isFinished() {
-        return plateauCount > PLATEAU_THRESHOLD || Intake.getInstance().intakeRollers.hasObjectPresent() || super.isFinished();
+        if (super.isFinished()) hasTimedOut = true;
+        return plateauCount > PLATEAU_THRESHOLD || Intake.getInstance().intakeRollers.hasObjectPresent() || hasTimedOut;
     }
 
     @Override

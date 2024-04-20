@@ -57,8 +57,9 @@ public class Trajectories {
     //USED FOR HARDCODED SHOTS BITCHES
     public enum ShootPosition {
         // find values
-        WING(5.8),      //Change this for top 
-        BOTTOM(7.5);    //Change this for bottom auto  
+        WING(5.09),      //Change this for top 
+        BOTTOM(7.5),    //Change this for bottom auto
+        RAM(24.5);
 
         private final double height;
         ShootPosition(double height) {
@@ -93,6 +94,7 @@ public class Trajectories {
         NamedCommands.registerCommand("Neutral", neutralAuto());
         NamedCommands.registerCommand("AlignPreload", alignPreload(false));
         NamedCommands.registerCommand("Drop", shooter.shoot(MAX_RPM));
+        NamedCommands.registerCommand("RamShootMax", autoShootPreset(ShootPosition.RAM));
 
         AutoBuilder.configureHolonomic(
             swerve::getPose,
@@ -141,6 +143,7 @@ public class Trajectories {
             sequence(
                 turnDegrees(false, 70).until(()-> RobotContainer.limelight.hasValidTarget()),
                 repeatingSequence(
+                    runOnce(()-> CmdAutoAlign.hasTimedOut = false),
                     new CmdAutoAlign(3, false),
                     run(()-> swerve.drive(
                         new Translation2d(), 
@@ -153,6 +156,7 @@ public class Trajectories {
 
     public static Command alignSearch(boolean counterClockwise) {
         return sequence(
+            runOnce(()-> CmdAutoAlign.hasTimedOut = false),
             new CmdAutoAlign(3, false),
             turnDegrees(counterClockwise, 45).until(()-> RobotContainer.limelight.hasValidTarget()),
             new CmdAutoAlign(3, false)
@@ -162,6 +166,7 @@ public class Trajectories {
 
     public static Command align() {
         return sequence(
+            runOnce(()-> CmdAutoAlign.hasTimedOut = false),
             new CmdAutoAlign(3, false),
             waitSeconds(1).until(()-> RobotContainer.limelight.hasValidTarget()),
             new CmdAutoAlign(3, false)
@@ -206,6 +211,15 @@ public class Trajectories {
             none(),
             ()-> true
             // ()->intake.intakeRollers.hasObjectPresent()
+        );
+    }
+
+    public static Command autoShootNoTurn() {
+        return sequence(
+            rampUp(),
+            intake.intakeRollers.outtake(),
+            waitSeconds(0.25),
+            intake.intakeRollers.runManipulator(0)
         );
     }
 

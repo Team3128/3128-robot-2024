@@ -74,11 +74,11 @@ public class Climber extends NAR_PIDSubsystem {
         rightMotor = new NAR_CANSpark(RIGHT_MOTOR_ID);
 
         leftMotor.setInverted(false);
-        rightMotor.follow(leftMotor, true);
+        rightMotor.setInverted(true);
         leftMotor.setUnitConversionFactor(GEAR_RATIO * WHEEL_CIRCUMFERENCE * 100);
 
-        leftMotor.setNeutralMode(Neutral.COAST);
-        rightMotor.setNeutralMode(Neutral.COAST);
+        leftMotor.setNeutralMode(Neutral.BRAKE);
+        rightMotor.setNeutralMode(Neutral.BRAKE);
 
         leftMotor.setStatusFrames(SparkMaxConfig.POSITION);
         rightMotor.setStatusFrames(SparkMaxConfig.POSITION);
@@ -87,15 +87,25 @@ public class Climber extends NAR_PIDSubsystem {
     private void setPower(double power) {
         disable();
         leftMotor.set(power);
+        rightMotor.set(power);
+    }
+
+    public Command toggleBrake(boolean isBrake) {
+        return runOnce(()-> {
+            leftMotor.setNeutralMode(isBrake ? Neutral.BRAKE : Neutral.COAST);
+            rightMotor.setNeutralMode(isBrake ? Neutral.BRAKE : Neutral.COAST);
+        });
     }
 
     @Override
     protected void useOutput(double output, double setpoint) {
         if (Intake.getInstance().isRetracting && isNeutral()) {
             leftMotor.setVolts(0);
+            rightMotor.setVolts(0);
             return;
         }
         leftMotor.setVolts(output);
+        rightMotor.setVolts(output);
     }
 
     public double getAngle(){

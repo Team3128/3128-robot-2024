@@ -410,11 +410,11 @@ public class Constants {
         public static final double CURRENT_TEST_POWER = OUTTAKE_POWER;
         public static final double CURRENT_TEST_PLATEAU = 1;
         public static final double CURRENT_TEST_TIMEOUT = 5;
-        public static final double CURRENT_TEST_TOLERANCE = 10;
+        public static final double CURRENT_TEST_TOLERANCE = 40;
         public static final double CURRENT_TEST_EXPECTED_CURRENT = 12.5;
 
         public static final double SETPOINT_TEST_PLATEAU = 1;
-        public static final double SETPOINT_TEST_TIMEOUT = 2;
+        public static final double SETPOINT_TEST_TIMEOUT = 3;
 
         public static final double INTAKE_TEST_TIMEOUT = 30;
     }

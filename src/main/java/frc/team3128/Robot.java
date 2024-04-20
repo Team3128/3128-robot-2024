@@ -93,7 +93,7 @@ public class Robot extends NAR_Robot {
         if (!NAR_Robot.logWithAdvantageKit) return;
         if(DriverStation.getMatchType() != MatchType.None){
             addReceiver(true, LoggingState.FULLMATCH);
-
+ 
         }else{
             addReceiver(true, LoggingState.SESSION);
         }

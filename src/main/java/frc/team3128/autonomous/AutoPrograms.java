@@ -48,7 +48,7 @@ public class AutoPrograms {
 
     public Command getAutonomousCommand() {
         String selectedAutoName = NarwhalDashboard.getInstance().getSelectedAuto();
-        String hardcode = "default";
+        String hardcode = "middleClose_4note";
         
         Command autoCommand;
         if (selectedAutoName == null) {

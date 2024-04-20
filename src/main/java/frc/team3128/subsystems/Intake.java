@@ -244,10 +244,10 @@ public class Intake {
     }
 
     public State getRunningState() {
-        if (RIGHT_ROLLER_MOTOR.getState() != State.DISCONNECTED && PIVOT_MOTOR.getState() != State.DISCONNECTED) {
-            return State.RUNNING; 
-        }
-        return State.DISCONNECTED;
+        if (PIVOT_MOTOR.getState() == State.DISCONNECTED) return State.DISCONNECTED;
+        if (LEFT_ROLLER_MOTOR.getState() == State.DISCONNECTED && RIGHT_ROLLER_MOTOR.getState() == State.DISCONNECTED) return State.DISCONNECTED;
+        if (LEFT_ROLLER_MOTOR.getState() == State.DISCONNECTED || RIGHT_ROLLER_MOTOR.getState() == State.DISCONNECTED) return State.PARTIALLY_RUNNING;
+        return State.RUNNING;
     }
 
     public UnitTest getIntakeTest() {
