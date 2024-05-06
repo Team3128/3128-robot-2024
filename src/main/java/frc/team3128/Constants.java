@@ -83,8 +83,8 @@ public class Constants {
                 new Translation2d(-wheelBase / 2.0, -trackWidth / 2.0)); 
 
         /* Swerve Current Limiting */
-        public static final int angleLimit = 40; //30
-        public static final int driveLimit = 80; //40;
+        public static final int angleLimit = 30; //30
+        public static final int driveLimit = 60; //40;
 
         /* Angle Motor PID Values */
         // switched 364 pid values to SDS pid values
@@ -302,7 +302,7 @@ public class Constants {
         public static final double MAX_RPM = 5500;
         public static final double MIN_RPM = 0;
         public static final double TOLERANCE = 150;
-        public static final double AMP_RPM = 3000;
+        public static final double AMP_RPM = 2500;
         public static final double RAM_SHOT_RPM = 4500;
         
         public static final double EDGE_FEED_RPM = 5000;
