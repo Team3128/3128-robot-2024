@@ -233,7 +233,7 @@ public class Constants {
     
     public static class FieldConstants{
 
-        public static final double FIELD_X_LENGTH = Units.inchesToMeters(651.25); // meters
+        public static final double FIELD_X_LENGTH = Units.inchesToMeters(507.25); // meters
         public static final double FIELD_Y_LENGTH = Units.inchesToMeters(315.5); // meters
         public static final Pose2d SPEAKER = new Pose2d(Units.inchesToMeters(324.5), Units.inchesToMeters(315.5), Rotation2d.fromDegrees(0));
 

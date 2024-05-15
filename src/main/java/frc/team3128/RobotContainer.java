@@ -1,6 +1,6 @@
 package frc.team3128;
 
-import edu.wpi.first.apriltag.AprilTagFields;
+
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -23,6 +23,7 @@ import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import frc.team3128.Constants.LedConstants.Colors;
 import frc.team3128.commands.CmdSwerveDrive;
 import common.core.swerve.SwerveModule;
+import common.hardware.camera.AprilTagFields;
 import common.hardware.camera.Camera;
 import common.hardware.input.NAR_ButtonBoard;
 import common.hardware.input.NAR_XboxController;
@@ -180,7 +181,7 @@ public class RobotContainer {
     @SuppressWarnings("unused")
     public void initCameras() {
         Camera.disableAll();
-        Camera.configCameras(AprilTagFields.k2024Crescendo, PoseStrategy.LOWEST_AMBIGUITY, (pose, time) -> swerve.addVisionMeasurement(pose, time), () -> swerve.getPose());
+        Camera.configCameras(AprilTagFields.k2024OffseasonCrescendo, PoseStrategy.LOWEST_AMBIGUITY, (pose, time) -> swerve.addVisionMeasurement(pose, time), () -> swerve.getPose());
         Camera.setAmbiguityThreshold(0.3);
         Camera.overrideThreshold = 30;
         Camera.validDist = 0.5;
