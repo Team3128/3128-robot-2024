@@ -25,6 +25,7 @@ import frc.team3128.commands.CmdSwerveDrive;
 import common.core.swerve.SwerveModule;
 import common.hardware.camera.AprilTagFields;
 import common.hardware.camera.Camera;
+import common.hardware.camera.OffseasonAprilTags;
 import common.hardware.input.NAR_ButtonBoard;
 import common.hardware.input.NAR_XboxController;
 import common.hardware.input.NAR_XboxController.XboxButton;
@@ -181,7 +182,7 @@ public class RobotContainer {
     @SuppressWarnings("unused")
     public void initCameras() {
         Camera.disableAll();
-        Camera.configCameras(AprilTagFields.k2024OffseasonCrescendo, PoseStrategy.LOWEST_AMBIGUITY, (pose, time) -> swerve.addVisionMeasurement(pose, time), () -> swerve.getPose());
+        Camera.configCameras(OffseasonTags.offSeasonTagMap, PoseStrategy.LOWEST_AMBIGUITY, (pose, time) -> swerve.addVisionMeasurement(pose, time), () -> swerve.getPose());
         Camera.setAmbiguityThreshold(0.3);
         Camera.overrideThreshold = 30;
         Camera.validDist = 0.5;
