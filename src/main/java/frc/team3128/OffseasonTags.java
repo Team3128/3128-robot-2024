@@ -7,6 +7,7 @@ import edu.wpi.first.math.util.Units;
 import java.util.HashMap;
 
 public class OffseasonTags {
+    // TODO: offset all tags
     public static HashMap<Integer, Pose3d> offSeasonTagMap = new HashMap<Integer, Pose3d>();
     static {
         offSeasonTagMap.put(1, new Pose3d(
@@ -22,19 +23,19 @@ public class OffseasonTags {
             new Rotation3d(0,0,Units.degreesToRadians(120))
         ));
         offSeasonTagMap.put(3, new Pose3d(
-            14.7172,
+            14.7172-Units.feetToMeters(6),
             4.9827,
             1.4511,
             new Rotation3d(0,0,Units.degreesToRadians(180))
         ));
         offSeasonTagMap.put(4, new Pose3d(
-            14.7172,
+            14.7172-Units.feetToMeters(6),
             5.5478,
             1.4511,
             new Rotation3d(0,0,Units.degreesToRadians(180))
         ));        
         offSeasonTagMap.put(5, new Pose3d(
-            12.8386,
+            12.8386-Units.feetToMeters(6),
             8.2042,
             1.3558,
             new Rotation3d(0,0,Units.degreesToRadians(270))
