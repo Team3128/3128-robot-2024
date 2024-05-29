@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.45950738420841,
-        "y": 6.989143254076636
+        "x": 1.45,
+        "y": 7.0
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.5161645558146453,
-        "y": 7.023917019551774
+        "x": 1.438077785009737,
+        "y": 7.882982508912066
       },
       "isLocked": false,
-      "linkedName": "note1.1"
+      "linkedName": "top"
     },
     {
       "anchor": {
@@ -20,39 +20,22 @@
         "y": 7.417120674711771
       },
       "prevControl": {
-        "x": 3.0727785863983015,
-        "y": 7.428273950603418
+        "x": 3.875537417596826,
+        "y": 7.798313840117264
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "note2.1-entry"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "Intake",
-      "waypointRelativePos": 0.35,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "Intake"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
       "name": "WingRamp",
       "waypointRelativePos": 0,
       "command": {
-        "type": "parallel",
+        "type": "sequential",
         "data": {
           "commands": [
             {
@@ -73,12 +56,15 @@
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
-    "velocity": 5.5,
+    "velocity": 0,
     "rotation": 180.0,
     "rotateFast": true
   },
   "reversed": false,
   "folder": null,
-  "previewStartingState": null,
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 0
+  },
   "useDefaultConstraints": true
 }

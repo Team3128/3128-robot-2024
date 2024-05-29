@@ -57,7 +57,7 @@ public class Trajectories {
     //USED FOR HARDCODED SHOTS BITCHES
     public enum ShootPosition {
         // find values
-        WING(5.09),      //Change this for top 
+        WING(5.213),      
         BOTTOM(7.5),    //Change this for bottom auto
         RAM(24.5);
 
@@ -84,7 +84,7 @@ public class Trajectories {
         NamedCommands.registerCommand("Intake", intake.intakeAuto());
         NamedCommands.registerCommand("Shoot", autoShoot(0.75));
         NamedCommands.registerCommand("RamShoot", ramShotAuto());
-        NamedCommands.registerCommand("BottomShoot", autoShootPreset(ShootPosition.BOTTOM));
+        // NamedCommands.registerCommand("BottomShoot", autoShootPreset(ShootPosition.BOTTOM));
         NamedCommands.registerCommand("WingRamp", rampUpAuto(ShootPosition.WING));
         NamedCommands.registerCommand("Align", align());
         NamedCommands.registerCommand("AlignCCW", alignSearch(true));
