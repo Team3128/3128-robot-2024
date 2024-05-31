@@ -7,35 +7,34 @@ import edu.wpi.first.math.util.Units;
 import java.util.HashMap;
 
 public class OffseasonTags {
-    // TODO: offset all tags
     public static HashMap<Integer, Pose3d> offSeasonTagMap = new HashMap<Integer, Pose3d>();
     static {
         offSeasonTagMap.put(1, new Pose3d(
-            13.2173,
+            11.3551,
             0.2458,
             1.3558,
             new Rotation3d(0,0,Units.degreesToRadians(120))
         ));
         offSeasonTagMap.put(2, new Pose3d(
-            14.322,
+            12.4608,
             0.8836,
             1.3558,
             new Rotation3d(0,0,Units.degreesToRadians(120))
         ));
         offSeasonTagMap.put(3, new Pose3d(
-            14.7172-Units.feetToMeters(6),
+            12.8550,
             4.9827,
             1.4511,
             new Rotation3d(0,0,Units.degreesToRadians(180))
         ));
         offSeasonTagMap.put(4, new Pose3d(
-            14.7172-Units.feetToMeters(6),
+            12.8550,
             5.5478,
             1.4511,
             new Rotation3d(0,0,Units.degreesToRadians(180))
         ));        
         offSeasonTagMap.put(5, new Pose3d(
-            12.8386-Units.feetToMeters(6),
+            10.9764,
             8.2042,
             1.3558,
             new Rotation3d(0,0,Units.degreesToRadians(270))
@@ -71,19 +70,19 @@ public class OffseasonTags {
             new Rotation3d(0,0,Units.degreesToRadians(60))
         ));
         offSeasonTagMap.put(11, new Pose3d(
-            10.0425,
+            8.1804,
             3.7132,
             1.3208,
             new Rotation3d(0,0,Units.degreesToRadians(300))
         ));
         offSeasonTagMap.put(12, new Pose3d(
-            10.0425,
+            8.1804,
             4.4983,
             1.3208,
             new Rotation3d(0,0,Units.degreesToRadians(60))
         ));
         offSeasonTagMap.put(13, new Pose3d(
-            9.3580,
+            7.4959,
             4.1051,
             1.3208,
             new Rotation3d(0,0,Units.degreesToRadians(180))
