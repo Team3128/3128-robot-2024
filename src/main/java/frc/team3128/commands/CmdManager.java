@@ -115,6 +115,23 @@ public class CmdManager {
         );
     }
 
+    public static Command readyOrbitAmp() {
+        return intake.intakePivot.pivotTo(15);
+    }
+
+    public static Command orbitAmp() {
+        return sequence(
+            parallel(
+                intake.intakePivot.pivotTo(30),
+                intake.intakeRollers.runManipulator(-0.8)
+            ),
+            parallel(
+                intake.intakePivot.pivotTo(0),
+                intake.intakeRollers.runManipulator(0)
+            )
+        );
+    }
+
     public static Command rampRam() {
         return sequence(
             climber.climbTo(Climber.Setpoint.RAMSHOT),
