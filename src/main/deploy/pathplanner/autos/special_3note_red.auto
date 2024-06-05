@@ -1,0 +1,115 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.45,
+      "y": 1.5
+    },
+    "rotation": 1.2613583794546281
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "source-note2.5_red"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AlignCCW"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "note2.5-bottomShoot_red"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "BottomShoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Neutral"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "bottomShoot-note2.4_red"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AlignCCW"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "note2.4-bottomShoot_red"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "BottomShoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Neutral"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AlignPreload"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "bottomShoot-source_red"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Align"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "source-bottomShoot_red"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Neutral"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

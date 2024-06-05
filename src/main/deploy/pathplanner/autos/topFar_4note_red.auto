@@ -1,0 +1,103 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.45,
+      "y": 7.0
+    },
+    "rotation": 180.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "top-note2.1_red"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AlignCW"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "note2.1-wing_red"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Outtake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "wing-note2.2_red"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AlignCW"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "note2.2-wing_red"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Outtake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "wing-note2.3_red"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Align"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "note2.3-wing_red"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Outtake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Neutral"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

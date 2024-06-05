@@ -45,6 +45,7 @@ public class AutoPrograms {
         for (final String auto : autoStrings) {
             if (auto.equals("default")) continue;
             autoMap.put(auto, Trajectories.getPathPlannerAuto(auto));
+            autoMap.put(auto + "_red", Trajectories.getPathPlannerAuto(auto + "_red"));
         }
     }
 
@@ -58,6 +59,9 @@ public class AutoPrograms {
         }
         else if (selectedAutoName.equals("default")) {
             defaultAuto();
+        }
+        if (Robot.getAlliance() == Alliance.Red) {
+            selectedAutoName += "_red";
         }
         autoCommand = autoMap.get(selectedAutoName);
 

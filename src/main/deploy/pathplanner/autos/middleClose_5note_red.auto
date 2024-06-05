@@ -1,0 +1,109 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.4,
+      "y": 5.55
+    },
+    "rotation": 180.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "RamShoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "middle-note1.2_red"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Neutral"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "note1.2-note2.3_red"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Align"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "note2.3-middle_red"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "RamShootMax"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "middle-note1.1_red"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "note1.1-middle-2_red"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "RamShootMax"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "middle-note1.3_red"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Neutral"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "note1.3diag-leave_red"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}
