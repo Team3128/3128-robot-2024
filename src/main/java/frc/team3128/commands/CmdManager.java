@@ -115,16 +115,15 @@ public class CmdManager {
         );
     }
 
-    public static Command readyOrbitAmp() {
-        return intake.intakePivot.pivotTo(15);
+    public static Command readyOrbitAmp(DoubleSupplier angle1) {
+        return intake.intakePivot.pivotTo(angle1.getAsDouble());
     }
 
-    public static Command orbitAmp() {
-        return sequence(
-            parallel(
-                intake.intakePivot.pivotTo(30),
-                intake.intakeRollers.runManipulator(-0.8)
-            ),
+    public static Command orbitAmp(DoubleSupplier angle2, DoubleSupplier power) {
+        return parallel(
+            intake.intakePivot.pivotTo(angle2.getAsDouble()),
+            intake.intakeRollers.runManipulator(power.getAsDouble())
+        ).andThen(
             parallel(
                 intake.intakePivot.pivotTo(0),
                 intake.intakeRollers.runManipulator(0)

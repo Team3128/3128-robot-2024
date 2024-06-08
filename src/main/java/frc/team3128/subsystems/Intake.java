@@ -89,7 +89,7 @@ public class Intake {
 
         private IntakeRollers() {
             super(STALL_CURRENT, INTAKE_POWER, OUTTAKE_POWER, STALL_POWER, 0.3, RIGHT_ROLLER_MOTOR);
-            limitSwitch = new DigitalInput(9);
+            limitSwitch = new DigitalInput(8);
             initShuffleboard();
         }
 
