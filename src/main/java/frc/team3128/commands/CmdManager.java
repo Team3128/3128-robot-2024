@@ -120,10 +120,12 @@ public class CmdManager {
     }
 
     public static Command orbitAmp(DoubleSupplier angle2, DoubleSupplier power) {
-        return parallel(
-            intake.intakePivot.pivotTo(angle2.getAsDouble()),
-            intake.intakeRollers.runManipulator(power.getAsDouble())
-        ).andThen(
+        return sequence(
+            parallel(
+                intake.intakePivot.pivotTo(angle2.getAsDouble()),
+                intake.intakeRollers.runManipulator(power.getAsDouble())
+            ),
+            waitUntil(()->intake.intakePivot.atSetpoint()),
             parallel(
                 intake.intakePivot.pivotTo(0),
                 intake.intakeRollers.runManipulator(0)
