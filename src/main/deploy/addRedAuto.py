@@ -4,7 +4,7 @@ import sys
 
 def update_pathnames_in_files(directory):
     for filename in os.listdir(directory):
-        if filename.endswith(".auto"):
+        if filename.endswith(".auto") and not filename.endswith("_red.auto"):
             input_filepath = os.path.join(directory, filename)
             output_filepath = os.path.join(directory, filename[:-5] + "_red.auto")
             with open(input_filepath, "r") as input_file:
