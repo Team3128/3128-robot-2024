@@ -117,14 +117,12 @@ public class RobotContainer {
 
         controller.getButton(XboxButton.kRightBumper).onTrue(rampRam()).onFalse(ramShot()); //Ram Shot
         controller.getButton(XboxButton.kRightTrigger).onTrue(rampUp(MAX_RPM, 0)).onFalse(shootDist());     //Auto Shoot
-        controller.getButton(XboxButton.kX).onTrue(rampUpAmp()).onFalse(ampShoot()); //Amp Shot
+        DoubleSupplier climberHeight = NAR_Shuffleboard.debug("AmpMechanism", "Climber Height", 20.4, 3, 3);
+        controller.getButton(XboxButton.kX).onTrue(rampUpAmp(climberHeight)).onFalse(ampShoot(climberHeight)); //Amp Shot
         // controller.getButton(XboxButton.kX).onTrue(intake.intakePivot.pivotTo(-87)).onFalse(ampShootAlt());
 
         // controller.getButton(XboxButton.kA).onTrue(sequence(runOnce(()-> intake.isRetracting = false), intake.intakePivot.pivotTo(150), climber.climbTo(Climber.Setpoint.EXTENDED))); //Extend Climber
-        DoubleSupplier angle1 = NAR_Shuffleboard.debug("Amp", "angle1", 30, 0, 0);
-        DoubleSupplier angle2 = NAR_Shuffleboard.debug("Amp", "angle2", 60, 1, 0);
-        DoubleSupplier power = NAR_Shuffleboard.debug("Amp", "power", -0.8, 2, 0);
-        controller.getButton(XboxButton.kA).onTrue(readyOrbitAmp(angle1)).onFalse(orbitAmp(angle2, power));
+        controller.getButton(XboxButton.kA).onTrue(readyOrbitAmp()).onFalse(orbitAmp());
         controller.getButton(XboxButton.kBack).onTrue(sequence(climber.setClimber(-0.35), waitSeconds(1), climber.setClimber(-1), waitUntil(()->climber.isClimbed()), climber.setClimber(0)));   //Retract Climber
 
         controller.getButton(XboxButton.kLeftTrigger).onTrue(intake.intake(Intake.Setpoint.EXTENDED));  //Extend Intake

@@ -143,6 +143,10 @@ public class Intake {
             return !limitSwitch.get();
         }
 
+        public Command runManipulator(DoubleSupplier power) {
+            return runManipulator(power.getAsDouble());
+        }
+
         public CurrentTest getRollersTest() {
             return new CurrentTest
             (

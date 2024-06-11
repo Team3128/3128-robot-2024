@@ -1,6 +1,7 @@
 package frc.team3128.commands;
 
 import common.hardware.input.NAR_XboxController;
+import common.utility.shuffleboard.NAR_Shuffleboard;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -100,6 +101,16 @@ public class CmdManager {
         );
     }
 
+    public static Command rampUpAmp(DoubleSupplier climberHeight) {
+        return sequence(
+            // runOnce(()-> autoAmpAlign().schedule()),
+            climber.climbTo(climberHeight),
+            shooter.shoot(ShooterConstants.AMP_RPM),
+            waitUntil(()-> climber.atSetpoint()),
+            ampMechanism.extend()
+        );
+    }
+
     public static Command ampShoot() {
         return sequence (
             climber.climbTo(Setpoint.AMP),
@@ -115,15 +126,33 @@ public class CmdManager {
         );
     }
 
-    public static Command readyOrbitAmp(DoubleSupplier angle1) {
-        return intake.intakePivot.pivotTo(angle1.getAsDouble());
+    public static Command ampShoot(DoubleSupplier climberHeight) {
+        return sequence (
+            climber.climbTo(climberHeight),
+            shooter.shoot(ShooterConstants.AMP_RPM),
+            waitUntil(()-> climber.atSetpoint()),
+            ampMechanism.extend(),
+            waitUntil(()-> ampMechanism.atSetpoint() && shooter.atSetpoint()),
+            intake.intakeRollers.outtake(),
+            waitSeconds(0.9),
+            ampMechanism.retract(),
+            waitUntil(()-> ampMechanism.atSetpoint()),
+            neutral(false)
+        );
     }
 
-    public static Command orbitAmp(DoubleSupplier angle2, DoubleSupplier power) {
+    public static Command readyOrbitAmp() {
+        DoubleSupplier angle1 = NAR_Shuffleboard.debug("Amp", "angle1", 30, 0, 0);
+        return intake.intakePivot.pivotTo(angle1);
+    }
+
+    public static Command orbitAmp() {
+        DoubleSupplier angle2 = NAR_Shuffleboard.debug("Amp", "angle2", 60, 1, 0);
+        DoubleSupplier power = NAR_Shuffleboard.debug("Amp", "power", -0.8, 2, 0);
         return sequence(
             parallel(
-                intake.intakePivot.pivotTo(angle2.getAsDouble()),
-                intake.intakeRollers.runManipulator(power.getAsDouble())
+                intake.intakePivot.pivotTo(angle2),
+                intake.intakeRollers.runManipulator(power)
             ),
             waitUntil(()->intake.intakePivot.atSetpoint()),
             parallel(
