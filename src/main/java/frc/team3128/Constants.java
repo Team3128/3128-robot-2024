@@ -337,7 +337,7 @@ public class Constants {
 
         public static final int ROLLER_MOTOR_ID = 52;
         public static final NAR_TalonSRX ROLLER_MOTOR = new NAR_TalonSRX(ROLLER_MOTOR_ID);
-        public static final double AMP_POWER = 0.8;
+        public static final double AMP_POWER = -0.8;
 
         public static final double EXTEND_TIMEOUT = 1;
         public static final double RETRACTED_TIMEOUT = 1;

@@ -202,14 +202,14 @@ public class Intake {
         return sequence(
             deadline(
                 intakeRollers.intake(),
-                sequence(
+                // sequence(
                     intakePivot.pivotTo(setpoint.angle)
                     // either(
                     //     intakePivot.stallIntakePivot(0.1),
                     //     none(),
                     //     ()-> setpoint == Setpoint.EXTENDED
                     // )
-                )
+                // )
             ),
             retract(true)
         );

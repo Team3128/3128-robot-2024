@@ -277,7 +277,8 @@ public class CmdManager {
     public static Command neutral(boolean shouldStall){
         return sequence(
             // runOnce(()-> DriverStation.reportWarning("Neutral: CommandStarting", false)),
-            intake.intakeRollers.runNoRequirements(0),
+            // TODO: test this
+            // intake.intakeRollers.runNoRequirements(0),
             shooter.setShooter(0),
             climber.climbTo(Climber.Setpoint.RETRACTED),
             // runOnce(()-> climber.toggleBrake(false)),
