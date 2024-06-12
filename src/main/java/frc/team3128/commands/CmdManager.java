@@ -118,7 +118,9 @@ public class CmdManager {
             waitUntil(()-> climber.atSetpoint()),
             ampMechanism.extend(),
             waitUntil(()-> ampMechanism.atSetpoint() && shooter.atSetpoint()),
-            intake.intakeRollers.outtake(),
+            //TEST IF THIS WORKS
+            intake.intakeRollers.runNoRequirements(-1),
+            // intake.intakeRollers.outtake(),
             waitSeconds(0.9),
             ampMechanism.retract(),
             waitUntil(()-> ampMechanism.atSetpoint()),
@@ -277,8 +279,8 @@ public class CmdManager {
     public static Command neutral(boolean shouldStall){
         return sequence(
             // runOnce(()-> DriverStation.reportWarning("Neutral: CommandStarting", false)),
-            // TODO: test this
-            // intake.intakeRollers.runNoRequirements(0),
+            // Remove if ampShoot change does not work to try to fix
+            intake.intakeRollers.runNoRequirements(0),
             shooter.setShooter(0),
             climber.climbTo(Climber.Setpoint.RETRACTED),
             // runOnce(()-> climber.toggleBrake(false)),
