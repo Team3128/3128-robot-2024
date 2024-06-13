@@ -21,7 +21,7 @@ import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 public class AmpMechanism extends PivotTemplate {
 
     public enum Setpoint {
-        AMP(60),
+        AMP(55),
         RETRACTED(-90);
 
         private double angle;

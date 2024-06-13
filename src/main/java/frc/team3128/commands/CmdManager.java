@@ -122,9 +122,11 @@ public class CmdManager {
             intake.intakeRollers.runNoRequirements(-1),
             // intake.intakeRollers.outtake(),
             waitSeconds(0.9),
-            ampMechanism.retract(),
+            intake.intakeRollers.runNoRequirements(0),
+            ampMechanism.retract(), 
             waitUntil(()-> ampMechanism.atSetpoint()),
-            neutral(false)
+
+            neutral(true)
         );
     }
 
@@ -276,11 +278,10 @@ public class CmdManager {
         );
     }
 
-    public static Command neutral(boolean shouldStall){
+    public static Command neutral(boolean keepRolling){
         return sequence(
-            // runOnce(()-> DriverStation.reportWarning("Neutral: CommandStarting", false)),
             // Remove if ampShoot change does not work to try to fix
-            intake.intakeRollers.runNoRequirements(0),
+            either(none(), intake.intakeRollers.runNoRequirements(0), ()->keepRolling),
             shooter.setShooter(0),
             climber.climbTo(Climber.Setpoint.RETRACTED),
             // runOnce(()-> climber.toggleBrake(false)),
@@ -289,14 +290,12 @@ public class CmdManager {
             waitSeconds(0.1),
             climber.setClimber(0),
             parallel(
-                // intake.retract(shouldStall),
                 sequence(
                     waitSeconds(0.5),
                     climber.reset()
                     // runOnce(()-> climber.toggleBrake(true))
                 )
             )
-            // runOnce(()-> DriverStation.reportWarning("Neutral: CommandEnding", false))
         );
     }
 
