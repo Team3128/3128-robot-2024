@@ -1,6 +1,12 @@
 {
   "version": 1.0,
-  "startingPose": null,
+  "startingPose": {
+    "position": {
+      "x": 5.1576,
+      "y": 5.55
+    },
+    "rotation": 180.0
+  },
   "command": {
     "type": "sequential",
     "data": {
@@ -50,7 +56,7 @@
         {
           "type": "named",
           "data": {
-            "name": "RamShootMax"
+            "name": "Shoot"
           }
         },
         {
@@ -68,7 +74,7 @@
         {
           "type": "named",
           "data": {
-            "name": "RamShootMax"
+            "name": "Shoot"
           }
         },
         {

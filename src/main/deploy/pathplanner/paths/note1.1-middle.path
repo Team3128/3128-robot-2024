@@ -16,11 +16,11 @@
     },
     {
       "anchor": {
-        "x": 1.4,
+        "x": 1.5,
         "y": 5.55
       },
       "prevControl": {
-        "x": 2.037272222692593,
+        "x": 2.1372722226925926,
         "y": 6.1979018544931685
       },
       "nextControl": null,
@@ -33,7 +33,7 @@
   "eventMarkers": [
     {
       "name": "Retract",
-      "waypointRelativePos": 0,
+      "waypointRelativePos": 0.3,
       "command": {
         "type": "parallel",
         "data": {

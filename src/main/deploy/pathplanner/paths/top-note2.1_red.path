@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.1076,
-        "y": 7.0
+        "x": 5.051682331673936,
+        "y": 6.991369417831561
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.0956777850097374,
-        "y": 7.882982508912066
+        "x": 5.039760116683673,
+        "y": 7.8743519267436275
       },
       "isLocked": false,
       "linkedName": "top_red"
@@ -42,6 +42,23 @@
               "type": "named",
               "data": {
                 "name": "WingRamp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Intake",
+      "waypointRelativePos": 0.45,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Intake"
               }
             }
           ]

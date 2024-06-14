@@ -22,11 +22,13 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 import static edu.wpi.first.wpilibj2.command.Commands.*;
 import static frc.team3128.Constants.AutoConstants.*;
 import static frc.team3128.Constants.FocalAimConstants.focalPointBlue;
 import static frc.team3128.Constants.FocalAimConstants.focalPointRed;
+import static frc.team3128.Constants.IntakeConstants.OUTTAKE_POWER;
 import static frc.team3128.Constants.ShooterConstants.MAX_RPM;
 import static frc.team3128.Constants.ShooterConstants.RAM_SHOT_RPM;
 import static frc.team3128.Constants.SwerveConstants.*;
@@ -54,7 +56,7 @@ import frc.team3128.subsystems.Swerve;
  */
 public class Trajectories {
 
-    //USED FOR HARDCODED SHOTS BITCHES
+    //USED FOR HARDCODED SHOTS
     public enum ShootPosition {
         // find values
         WING(5.213),      
@@ -89,12 +91,13 @@ public class Trajectories {
         NamedCommands.registerCommand("Align", align());
         NamedCommands.registerCommand("AlignCCW", alignSearch(true));
         NamedCommands.registerCommand("AlignCW", alignSearch(false));
-        NamedCommands.registerCommand("Outtake", outtakeAuto());
+        NamedCommands.registerCommand("Outtake", intake.intakeRollers.outtakeWithTimeout(0.25));
         NamedCommands.registerCommand("Retract", intake.retractAuto());
         NamedCommands.registerCommand("Neutral", neutralAuto());
         NamedCommands.registerCommand("AlignPreload", alignPreload(false));
         NamedCommands.registerCommand("Drop", shooter.shoot(MAX_RPM));
         NamedCommands.registerCommand("RamShootMax", autoShootPreset(ShootPosition.RAM));
+        NamedCommands.registerCommand("MidShoot", midShotAuto());
 
         AutoBuilder.configureHolonomic(
             swerve::getPose,
@@ -176,10 +179,22 @@ public class Trajectories {
 
     public static Command ramShotAuto() {
         return sequence(
+            new InstantCommand(()->swerve.resetEncoders()),
             climber.climbTo(Climber.Setpoint.RAMSHOT),
             shooter.shoot(RAM_SHOT_RPM, RAM_SHOT_RPM),
             waitUntil(()-> climber.atSetpoint() && shooter.atSetpoint()).withTimeout(1.5),
-            intake.intakeRollers.outtakeNoRequirements(),
+            intake.intakeRollers.runNoRequirements(OUTTAKE_POWER),
+            waitSeconds(0.35),
+            shooter.shoot(MAX_RPM)
+        );
+    }
+
+    public static Command midShotAuto() {
+        return sequence(
+            climber.climbTo(Climber.Setpoint.MIDSHOT),
+            shooter.shoot(RAM_SHOT_RPM, RAM_SHOT_RPM),
+            waitUntil(()-> climber.atSetpoint() && shooter.atSetpoint()).withTimeout(1.5),
+            intake.intakeRollers.runNoRequirements(OUTTAKE_POWER),
             waitSeconds(0.35),
             shooter.shoot(MAX_RPM)
         );
@@ -205,7 +220,7 @@ public class Trajectories {
         return either(
             sequence(
                 shooter.shoot(MAX_RPM),
-                rampUp(ShooterConstants.MAX_RPM, pos.getHeight()).until(()-> climber.atSetpoint()),
+                rampUp(()->ShooterConstants.MAX_RPM, pos.getHeight()).until(()-> climber.atSetpoint()),
                 intake.retractAuto()
             ),
             none(),
@@ -214,20 +229,11 @@ public class Trajectories {
         );
     }
 
-    public static Command autoShootNoTurn() {
-        return sequence(
-            rampUp(),
-            intake.intakeRollers.outtake(),
-            waitSeconds(0.25),
-            intake.intakeRollers.runManipulator(0)
-        );
-    }
-
     public static Command autoShootPreset(ShootPosition position) {
         return sequence(
             parallel (
                 runOnce(()->{turning = true;}),
-                rampUp(MAX_RPM, position.getHeight()),
+                rampUp(()->MAX_RPM, position.getHeight()),
                 turnInPlace().withTimeout(0.5)
             ),
             runOnce(()->{turning = false;}),
@@ -259,18 +265,6 @@ public class Trajectories {
         );
     }
 
-    public static Command outtakeAuto() {
-        return either(
-            sequence(
-                intake.intakeRollers.outtake(),
-                waitSeconds(0.25),
-                intake.intakeRollers.runManipulator(0)
-            ),
-            none(),
-            ()-> true
-        );
-    }
-
     public static Command neutralAuto() {
         return sequence(
             intake.intakeRollers.runNoRequirements(0),
@@ -286,8 +280,8 @@ public class Trajectories {
     // TODO: make new
     public static Command resetAuto() {
         return sequence(
-            Intake.getInstance().intakePivot.reset(0),
-            Climber.getInstance().reset(),
+            intake.intakePivot.reset(0),
+            climber.reset(),
             runOnce(()-> swerve.zeroGyro(Robot.getAlliance() == Alliance.Red ? 0 : 180)),
             AmpMechanism.getInstance().reset(-90),
             runOnce(()-> swerve.resetEncoders()),

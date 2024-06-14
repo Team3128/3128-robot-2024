@@ -9,6 +9,7 @@ def update_pathnames_in_files(directory):
             output_filepath = os.path.join(directory, filename[:-5] + "_red.auto")
             with open(input_filepath, "r") as input_file:
                 data = json.load(input_file)
+            data["startingPose"]["position"]["x"] += 3.6576
                 
             if "command" in data and "data" in data["command"] and "commands" in data["command"]["data"]:
                 commands = data["command"]["data"]["commands"]

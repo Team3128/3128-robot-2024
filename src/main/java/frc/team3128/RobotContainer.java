@@ -8,14 +8,17 @@ import edu.wpi.first.wpilibj.DriverStation.MatchType;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import static edu.wpi.first.wpilibj2.command.Commands.*;
+import static frc.team3128.Constants.ShooterConstants.AMP_RPM;
 import static frc.team3128.Constants.ShooterConstants.EDGE_FEED_ANGLE;
 import static frc.team3128.Constants.ShooterConstants.EDGE_FEED_RPM;
 import static frc.team3128.Constants.ShooterConstants.MAX_RPM;
 import static frc.team3128.Constants.ShooterConstants.MIDDLE_FEED_ANGLE;
 import static frc.team3128.Constants.ShooterConstants.MIDDLE_FEED_RPM;
+import static frc.team3128.Constants.ShooterConstants.RAM_SHOT_RPM;
 import static frc.team3128.commands.CmdManager.*;
 
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
@@ -23,9 +26,7 @@ import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import frc.team3128.Constants.LedConstants.Colors;
 import frc.team3128.commands.CmdSwerveDrive;
 import common.core.swerve.SwerveModule;
-import common.hardware.camera.AprilTagFields;
 import common.hardware.camera.Camera;
-import common.hardware.camera.OffseasonAprilTags;
 import common.hardware.input.NAR_ButtonBoard;
 import common.hardware.input.NAR_XboxController;
 import common.hardware.input.NAR_XboxController.XboxButton;
@@ -37,7 +38,6 @@ import common.utility.Log;
 import common.utility.narwhaldashboard.NarwhalDashboard;
 import common.utility.narwhaldashboard.NarwhalDashboard.State;
 import common.utility.shuffleboard.NAR_Shuffleboard;
-import common.utility.sysid.CmdSysId;
 import common.utility.tester.Tester;
 import common.utility.tester.Tester.UnitTest;
 import frc.team3128.subsystems.AmpMechanism;
@@ -48,7 +48,6 @@ import frc.team3128.subsystems.Shooter;
 import frc.team3128.subsystems.Swerve;
 import frc.team3128.subsystems.Intake.Setpoint;
 import java.util.ArrayList;
-import java.util.function.DoubleSupplier;
 
 /**
  * Command-based is a "declarative" paradigm, very little robot logic should
@@ -74,8 +73,6 @@ public class RobotContainer {
 
     public static Limelight limelight;
 
-    private static ArrayList<Camera> sideCams = new ArrayList<Camera>();
-
     public RobotContainer() {
         NAR_CANSpark.maximumRetries = 3;
         NAR_TalonFX.maximumRetries = 1;
@@ -93,7 +90,6 @@ public class RobotContainer {
         climber.addClimberTests();
         intake.addIntakeTests();
 
-        // judgePad = new NAR_ButtonBoard(1);
         controller = new NAR_XboxController(2);
         buttonPad = new NAR_ButtonBoard(3);
 
@@ -112,17 +108,16 @@ public class RobotContainer {
     }   
 
     private void configureButtonBindings() {
-        controller.getButton(XboxButton.kB).onTrue(rampUpFeed(MIDDLE_FEED_RPM, MIDDLE_FEED_RPM, 13)).onFalse(feed(MIDDLE_FEED_RPM, 13,MIDDLE_FEED_ANGLE));
-        controller.getButton(XboxButton.kY).onTrue(rampUpFeed(EDGE_FEED_RPM, EDGE_FEED_RPM, 13)).onFalse(feed(EDGE_FEED_RPM, 13, EDGE_FEED_ANGLE));   //Feed Shot
+        //controller.getButton(XboxButton.kB).onTrue(rampUp(()->13, MIDDLE_FEED_RPM)).onFalse(feed(MIDDLE_FEED_RPM, 13,MIDDLE_FEED_ANGLE));
+        controller.getButton(XboxButton.kY).onTrue(rampUp(()->13, EDGE_FEED_RPM)).onFalse(feed(EDGE_FEED_RPM, 13, EDGE_FEED_ANGLE));   //Feed Shot
+        // controller.getButton().onTrue(intake.intake(Intake.Setpoint.SOURCE));
 
-        controller.getButton(XboxButton.kRightBumper).onTrue(rampRam()).onFalse(ramShot()); //Ram Shot
-        controller.getButton(XboxButton.kRightTrigger).onTrue(rampUp(MAX_RPM, 0)).onFalse(shootDist());     //Auto Shoot
-        // DoubleSupplier climberHeight = NAR_Shuffleboard.debug("AmpMechanism", "Climber Height", 20.4, 3, 3);
-        controller.getButton(XboxButton.kX).onTrue(rampUpAmp()).onFalse(ampShoot()); //Amp Shot
-        // controller.getButton(XboxButton.kX).onTrue(intake.intakePivot.pivotTo(-87)).onFalse(ampShootAlt());
+        controller.getButton(XboxButton.kRightBumper).onTrue(rampUp(()->Climber.Setpoint.RAMSHOT.setpoint, RAM_SHOT_RPM)).onFalse(ramShot()); //Ram Shot
+        controller.getButton(XboxButton.kRightTrigger).onTrue(rampUp(()->MAX_RPM, 0)).onFalse(shootDist());     //Auto Shoot
+        controller.getButton(XboxButton.kX).onTrue(rampUp(()->Climber.Setpoint.AMP.setpoint, AMP_RPM).andThen(ampMechanism.extend())).onFalse(ampShoot()); //Amp Shot
+        controller.getButton(XboxButton.kB).onTrue(new InstantCommand(()->swerve.resetEncoders()));
 
         controller.getButton(XboxButton.kA).onTrue(sequence(runOnce(()-> intake.isRetracting = false), intake.intakePivot.pivotTo(150), climber.climbTo(Climber.Setpoint.EXTENDED))); //Extend Climber
-        // controller.getButton(XboxButton.kA).onTrue(readyOrbitAmp()).onFalse(orbitAmp());
         controller.getButton(XboxButton.kBack).onTrue(sequence(climber.setClimber(-0.35), waitSeconds(1), climber.setClimber(-1), waitUntil(()->climber.isClimbed()), climber.setClimber(0)));   //Retract Climber
 
         controller.getButton(XboxButton.kLeftTrigger).onTrue(intake.intake(Intake.Setpoint.EXTENDED));  //Extend Intake
@@ -182,7 +177,6 @@ public class RobotContainer {
         new Trigger(()-> Camera.seesTag() && intake.intakeRollers.hasObjectPresent()).onTrue(runOnce(()-> leds.setLedColor(Colors.BLUE))).onFalse(runOnce(()-> leds.setDefaultColor()));
     }
 
-    @SuppressWarnings("unused")
     public void initCameras() {
         Camera.disableAll();
         Camera.configCameras(OffseasonTags.offSeasonTagMap, PoseStrategy.LOWEST_AMBIGUITY, (pose, time) -> swerve.addVisionMeasurement(pose, time), () -> swerve.getPose());
@@ -197,20 +191,8 @@ public class RobotContainer {
             camera.setCamDistanceThreshold(3.5);
             camera2.setCamDistanceThreshold(5);
         }
-        // final Camera camera3 = new Camera("LEFT", Units.inchesToMeters(-3.1), Units.inchesToMeters(12.635), Units.degreesToRadians(90), Units.degreesToRadians(-10), 0);
-        // final Camera camera4 = new Camera("RIGHT", Units.inchesToMeters(-3.1), Units.inchesToMeters(-12.635), Units.degreesToRadians(-90), Units.degreesToRadians(0), 0);
-
-        // sideCams.add(camera3);
-        // sideCams.add(camera4);
 
         limelight = new Limelight("limelight-mason", 0, 0, 0);
-    }
-
-    public static void toggleSideCams(boolean enable) {
-        for (Camera camera : sideCams) {
-            if (enable) camera.enable();
-            else camera.disable();
-        }
     }
 
     public void initDashboard() {

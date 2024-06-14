@@ -74,12 +74,12 @@ dependencies {
     def akitJson = new groovy.json.JsonSlurper().parseText(new File(projectDir.getAbsolutePath() + "/vendordeps/AdvantageKit.json").text)
     annotationProcessor "org.littletonrobotics.akit.junction:junction-autolog:$akitJson.version"
 
-    annotationProcessor project(":annotation-processor")
-    implementation project(":annotation-processor")
+    // annotationProcessor project(":annotation-processor")
+    // implementation project(":annotation-processor")
 
-    implementation 'com.squareup:javapoet:1.13.0'
+//     implementation 'com.squareup:javapoet:1.13.0'
 
-    implementation 'org.reflections:reflections:0.9.12'
+//     implementation 'org.reflections:reflections:0.9.12'
 }
 
 repositories {

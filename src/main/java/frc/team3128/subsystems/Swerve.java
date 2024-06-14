@@ -204,6 +204,12 @@ public class Swerve extends SwerveBase {
         return gyro;
     }
 
+    public void resetEncoders() {
+        for (SwerveModule module : modules) {
+            module.resetToAbsolute();
+        }
+    }
+
     @Override
     public void initShuffleboard(){
         super.initShuffleboard();

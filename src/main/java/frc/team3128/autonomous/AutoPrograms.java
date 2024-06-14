@@ -22,7 +22,6 @@ public class AutoPrograms {
     private HashMap<String, Command> autoMap = new HashMap<String, Command>();
 
     public AutoPrograms() {
-
         Trajectories.initTrajectories();
         initAutoSelector();
     }
@@ -38,7 +37,9 @@ public class AutoPrograms {
             "special_3note",
             "top_2note",
             "topFar_4note",
-            "topFarCopy_4note"
+            "topFarCopy_4note",
+            "bottom_3note_inner",
+            "bottom_3note_outter"
         };
         
         NarwhalDashboard.getInstance().addAutos(autoStrings);
@@ -51,7 +52,7 @@ public class AutoPrograms {
 
     public Command getAutonomousCommand() {
         String selectedAutoName = NarwhalDashboard.getInstance().getSelectedAuto();
-        String hardcode = "middleClose_4note";
+        String hardcode = "bottom_3note_outter";
         
         Command autoCommand;
         if (selectedAutoName == null) {
@@ -69,12 +70,13 @@ public class AutoPrograms {
     }
 
     private Command defaultAuto(){
-        return sequence(
-                Trajectories.resetAuto(),
-                waitSeconds(5),
-                autoShoot(),
-                waitSeconds(2),
-                run(()-> Swerve.getInstance().drive(new Translation2d(Robot.getAlliance() == Alliance.Blue ? 1 : -1, 0), 0, true))
-            );
+        return none();
+        // sequence(
+        //         Trajectories.resetAuto(),
+        //         waitSeconds(5),
+        //         autoShoot(),
+        //         waitSeconds(2),
+        //         run(()-> Swerve.getInstance().drive(new Translation2d(Robot.getAlliance() == Alliance.Blue ? 1 : -1, 0), 0, true))
+        //     );
     }
 }

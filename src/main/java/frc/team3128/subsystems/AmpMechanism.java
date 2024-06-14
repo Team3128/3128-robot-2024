@@ -70,7 +70,8 @@ public class AmpMechanism extends PivotTemplate {
     public Command retract() {
         return sequence(
             pivotTo(Setpoint.RETRACTED),
-            runOnce(()-> ROLLER_MOTOR.set(0))
+            runOnce(()-> ROLLER_MOTOR.set(0)),
+            waitUntil(()->atSetpoint())
         );
     }
 

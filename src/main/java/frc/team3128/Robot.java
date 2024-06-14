@@ -10,6 +10,8 @@ import org.littletonrobotics.junction.Logger;
 
 import common.core.misc.NAR_Robot;
 import common.hardware.camera.Camera;
+import common.hardware.limelight.LEDMode;
+import common.hardware.limelight.Limelight;
 import common.utility.Log;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.DriverStation.MatchType;
@@ -57,14 +59,6 @@ public class Robot extends NAR_Robot {
 
     @Override
     public void robotInit(){
-        
-        try {
-            Class<?> container = Class.forName("processor.ClassManager");
-            container.getDeclaredMethod("process").invoke(null);
-        } catch (Exception e) {
-            Log.info("Annotation Processor", "Failed to invoke ClassManager");
-            e.printStackTrace();
-        }
 
         autoPrograms = new AutoPrograms();
         m_robotContainer.initDashboard();
@@ -108,6 +102,9 @@ public class Robot extends NAR_Robot {
 
     @Override
     public void autonomousInit() {
+
+        RobotContainer.limelight.setLEDMode(LEDMode.ON);
+        Swerve.getInstance().resetEncoders();
         Camera.enableAll();
         Camera.overrideThreshold = 0;
         Camera.validDist = 30;
@@ -125,12 +122,13 @@ public class Robot extends NAR_Robot {
 
     @Override
     public void teleopInit() {
+        Swerve.getInstance().resetEncoders();
+        RobotContainer.limelight.setLEDMode(LEDMode.OFF);
         Camera.overrideThreshold = 30;
         Camera.validDist = 0.5;
         Camera.enableAll();
         CommandScheduler.getInstance().cancelAll();
-        
-        CmdManager.neutral(false).schedule();
+        CmdManager.neutral().schedule();
     }
 
     @Override

@@ -337,7 +337,7 @@ public class Constants {
 
         public static final int ROLLER_MOTOR_ID = 52;
         public static final NAR_TalonSRX ROLLER_MOTOR = new NAR_TalonSRX(ROLLER_MOTOR_ID);
-        public static final double AMP_POWER = -0.8;
+        public static final double AMP_POWER = 0.8;
 
         public static final double EXTEND_TIMEOUT = 1;
         public static final double RETRACTED_TIMEOUT = 1;
@@ -403,8 +403,8 @@ public class Constants {
         public static final int CURRENT_LIMIT = 40;
         public static final double STALL_CURRENT = 50;
         public static final double STALL_POWER = .05;
-        public static final double OUTTAKE_POWER = -0.3;
-        public static final double INTAKE_POWER = 0.7 /0.75;
+        public static final double OUTTAKE_POWER = -1;
+        public static final double INTAKE_POWER = 0.7 / 0.75;
         public static final double AMP_POWER = -0.18 / 0.75;
 
         public static final double CURRENT_TEST_POWER = OUTTAKE_POWER;
@@ -412,6 +412,8 @@ public class Constants {
         public static final double CURRENT_TEST_TIMEOUT = 5;
         public static final double CURRENT_TEST_TOLERANCE = 40;
         public static final double CURRENT_TEST_EXPECTED_CURRENT = 12.5;
+
+        public static final double OUTTAKE_TIMEOUT = 0.35;
 
         public static final double SETPOINT_TEST_PLATEAU = 1;
         public static final double SETPOINT_TEST_TIMEOUT = 3;
