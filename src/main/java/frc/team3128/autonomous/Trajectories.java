@@ -246,6 +246,7 @@ public class Trajectories {
     public static Command autoShoot(double turnTimeout) {
         return either(
             sequence(
+                new InstantCommand(()->swerve.resetEncoders()),
                 either(shooter.shoot(MAX_RPM), none(), ()-> shooter.isEnabled()),
                 parallel(
                     runOnce(()->{turning = true;}),
