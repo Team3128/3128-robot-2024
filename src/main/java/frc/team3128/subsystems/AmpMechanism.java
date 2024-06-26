@@ -21,7 +21,7 @@ import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 public class AmpMechanism extends PivotTemplate {
 
     public enum Setpoint {
-        AMP(60),
+        AMP(55),
         RETRACTED(-90);
 
         private double angle;
@@ -70,7 +70,8 @@ public class AmpMechanism extends PivotTemplate {
     public Command retract() {
         return sequence(
             pivotTo(Setpoint.RETRACTED),
-            runOnce(()-> ROLLER_MOTOR.set(0))
+            runOnce(()-> ROLLER_MOTOR.set(0)),
+            waitUntil(()->atSetpoint())
         );
     }
 

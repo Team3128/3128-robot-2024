@@ -122,10 +122,6 @@ public class Shooter extends NAR_PIDSubsystem {
         return runOnce(()-> setPower(power));
     }
 
-    public Command runBottomRollers(double power) {
-        return runOnce(()-> rightMotor.set(power));
-    }
-
     public State getRunningState() {
         if (rightMotor.getState() != State.DISCONNECTED && leftMotor.getState() != State.DISCONNECTED) {
             return State.RUNNING; 

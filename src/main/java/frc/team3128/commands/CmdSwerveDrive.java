@@ -4,7 +4,6 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
@@ -25,8 +24,6 @@ public class CmdSwerveDrive extends Command {
     private final DoubleSupplier yAxis;
     private final DoubleSupplier zAxis;
 
-    private final SlewRateLimiter accelLimiter;
-
     public static PIDController rController;
     private static boolean enabled = false;
     private static double rSetpoint;
@@ -43,15 +40,12 @@ public class CmdSwerveDrive extends Command {
         rController.setTolerance(1);
         rController.enableContinuousInput(-180, 180);
 
-        accelLimiter = new SlewRateLimiter(maxAcceleration);
         // rController = new PIDController(turnkP, 0, 0);
         swerve.fieldRelative = fieldRelative;
     }
 
     @Override
     public void execute() {
-        // deadbands are taken care of in NAR_Joystick
-        // TODO: add in slewratelimiter here
         translation = new Translation2d(xAxis.getAsDouble(), yAxis.getAsDouble()).times(swerve.throttle).times(maxAttainableSpeed);
         if (Robot.getAlliance() == Alliance.Red || !swerve.fieldRelative) {
             translation = translation.rotateBy(Rotation2d.fromDegrees(90));

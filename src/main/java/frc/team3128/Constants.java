@@ -403,7 +403,7 @@ public class Constants {
         public static final int CURRENT_LIMIT = 40;
         public static final double STALL_CURRENT = 50;
         public static final double STALL_POWER = .05;
-        public static final double OUTTAKE_POWER = -0.3;
+        public static final double OUTTAKE_POWER = -1;
         public static final double INTAKE_POWER = 0.7 /0.75;
         public static final double AMP_POWER = -0.18 / 0.75;
 
@@ -415,6 +415,8 @@ public class Constants {
 
         public static final double SETPOINT_TEST_PLATEAU = 1;
         public static final double SETPOINT_TEST_TIMEOUT = 3;
+
+        public static final double OUTTAKE_TIMEOUT = 0.35;
 
         public static final double INTAKE_TEST_TIMEOUT = 30;
     }

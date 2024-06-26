@@ -56,21 +56,18 @@ public class Intake {
             PIVOT_MOTOR.setVolts(MathUtil.clamp(output, -12, 12));
         }
 
-        public Command stallIntakePivot(double power) {
+        public Command hardReset(double power) {
             return sequence(
                 waitUntil(()-> intakePivot.atSetpoint()).withTimeout(1.5),
                 intakePivot.runPivot(power),
                 waitSeconds(0.1),
-                intakePivot.runPivot(0)
+                intakePivot.runPivot(0),
+                intakePivot.reset(0)
             );
         }
 
         public Command pivotTo(DoubleSupplier setpoint) {
             return runOnce(()-> startPID(setpoint.getAsDouble()));
-        }
-
-        public Command pivotNoRequirements(double setpoint) {
-            return new InstantCommand(()-> startPID(setpoint));
         }
 
         public SetpointTest getPivotTest() {
@@ -89,7 +86,7 @@ public class Intake {
 
         private IntakeRollers() {
             super(STALL_CURRENT, INTAKE_POWER, OUTTAKE_POWER, STALL_POWER, 0.3, RIGHT_ROLLER_MOTOR);
-            limitSwitch = new DigitalInput(9);
+            limitSwitch = new DigitalInput(8);
             initShuffleboard();
         }
 
@@ -108,23 +105,19 @@ public class Intake {
             return new InstantCommand(()-> setPower(power));
         }
 
-        public Command ramShotOuttake() {
-            return runNoRequirements(-1);
-        }
-
-        public Command outtakeNoRequirements() {
-            return runNoRequirements(OUTTAKE_POWER);
-        }
-
-        public Command intakeNoRequirements() {
-            return runNoRequirements(INTAKE_POWER);
-        }
-
-        public Command miniOuttake() {
+        public Command outtakeWithTimeout(double timeout) {
             return sequence(
-                runManipulator(-0.1),
-                waitSeconds(0.25),
-                runManipulator(0)
+                runNoRequirements(OUTTAKE_POWER),
+                waitSeconds(timeout),
+                runNoRequirements(0)
+            );
+        }
+
+        public Command ampOuttake(double timeout) {
+            return sequence(
+                runNoRequirements(-0.3),
+                waitSeconds(timeout),
+                runNoRequirements(0)
             );
         }
 
@@ -177,20 +170,14 @@ public class Intake {
         intakeRollers = new IntakeRollers();
     }
 
-    public Command retract(boolean shouldStall) {
+    public Command retract(boolean serialize) {
         return sequence(
             waitUntil(()-> Climber.getInstance().isNeutral()),
             runOnce(()-> isRetracting = true),
             intakePivot.pivotTo(5),
-            intakePivot.stallIntakePivot(-0.2),
-            parallel(
-                either(intakeRollers.serialize().withTimeout(1).andThen(intakeRollers.runManipulator(0)), intakeRollers.runManipulator(0), ()-> shouldStall),
-                sequence(
-                    waitSeconds(0.5),
-                    runOnce(()-> isRetracting = false),
-                    intakePivot.reset(0)
-                )
-            )
+            intakePivot.hardReset(-0.2),
+            runOnce(()-> isRetracting = false),
+            either(intakeRollers.serialize().withTimeout(1).andThen(intakeRollers.runManipulator(0)), intakeRollers.runManipulator(0), ()-> serialize)
         );
     }
     
@@ -238,7 +225,7 @@ public class Intake {
         return sequence(
             intakeRollers.runManipulator(STALL_POWER),
             intakePivot.pivotTo(()-> Climber.getInstance().getAngle()),
-            waitUntil(() -> intakePivot.atSetpoint()).withTimeout(1.5),
+            waitUntil(() -> intakePivot.atSetpoint()).withTimeout(1),
             intakePivot.runPivot(0)
         );
     }

@@ -1,14 +1,9 @@
 package frc.team3128.autonomous;
 
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.team3128.Robot;
-import frc.team3128.subsystems.Swerve;
 import common.utility.narwhaldashboard.NarwhalDashboard;
 
 import static edu.wpi.first.wpilibj2.command.Commands.*;
-import static frc.team3128.commands.CmdManager.autoShoot;
 
 import java.util.HashMap;
 
@@ -63,12 +58,13 @@ public class AutoPrograms {
     }
 
     private Command defaultAuto(){
-        return sequence(
-                Trajectories.resetAuto(),
-                waitSeconds(5),
-                autoShoot(),
-                waitSeconds(2),
-                run(()-> Swerve.getInstance().drive(new Translation2d(Robot.getAlliance() == Alliance.Blue ? 1 : -1, 0), 0, true))
-            );
+        return none();
+        // sequence(
+        //         Trajectories.resetAuto(),
+        //         waitSeconds(5),
+        //         autoShoot(),
+        //         waitSeconds(2),
+        //         run(()-> Swerve.getInstance().drive(new Translation2d(Robot.getAlliance() == Alliance.Blue ? 1 : -1, 0), 0, true))
+        //     );
     }
 }

@@ -4,9 +4,9 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
+import static edu.wpi.first.wpilibj2.command.Commands.sequence;
+import static edu.wpi.first.wpilibj2.command.Commands.waitSeconds;
 import static frc.team3128.Constants.ClimberConstants.*;
-import static frc.team3128.Constants.ClimberConstants.SETPOINT_TEST_TIMEOUT_EXTEND;
-import static frc.team3128.Constants.ClimberConstants.SETPOINT_TEST_TIMEOUT_RETRACT;
 
 import java.util.function.DoubleSupplier;
 
@@ -25,7 +25,8 @@ public class Climber extends NAR_PIDSubsystem {
     public enum Setpoint {
         EXTENDED(30),
         RAMSHOT(24.5),
-        AMP(20.4),
+        AMP(20),
+        MIDSHOT(10.84),
         RETRACTED(0);
 
         public final double setpoint;
@@ -65,7 +66,7 @@ public class Climber extends NAR_PIDSubsystem {
         NAR_Shuffleboard.addSendable("Commands", "IntakePivot", Intake.getInstance().intakePivot, 0, 3);
         NAR_Shuffleboard.addSendable("Commands", "IntakeRollers", Intake.getInstance().intakeRollers, 0, 4);
         NAR_Shuffleboard.addSendable("Commands", "CommandScheduler", CommandScheduler.getInstance(), 3, 0);
-        x = NAR_Shuffleboard.debug("Shooter Function", "Concavity", -1.1, 0, 0);
+        x = NAR_Shuffleboard.debug("Shooter Function", "Concavity", -1.08, 0, 0);
 
     }
     
@@ -82,12 +83,6 @@ public class Climber extends NAR_PIDSubsystem {
 
         leftMotor.setStatusFrames(SparkMaxConfig.POSITION);
         rightMotor.setStatusFrames(SparkMaxConfig.POSITION);
-    }
-
-    private void setPower(double power) {
-        disable();
-        leftMotor.set(power);
-        rightMotor.set(power);
     }
 
     public Command toggleBrake(boolean isBrake) {
@@ -112,20 +107,24 @@ public class Climber extends NAR_PIDSubsystem {
         return (Units.radiansToDegrees(Math.atan2((getMeasurement() + HEIGHT_OFFSET), PIVOT_CLIMBER_DIST)) - ANGLE_OFFSET);
     }
 
-    public double heightToAngle(double height){
-        return Units.radiansToDegrees(Math.atan2((height + HEIGHT_OFFSET), PIVOT_CLIMBER_DIST));
-    }
-
     public Command reset(){
         return runOnce(() -> leftMotor.resetPosition(POSITION_MINIMUM));
+    }
+
+     // runs climber into hardstop to ensure at physical zero
+    public Command hardReset(){
+        return sequence(
+            setClimber(-0.5),
+            waitSeconds(0.1),
+            setClimber(0),
+            waitSeconds(0.2),
+            reset()
+        );
     }
 
     public double interpolate(double dist){
         if(dist < 1.15) return 25;
         return 27.4 * Math.pow(dist, x.getAsDouble());
-        // return 28.5 - 0.233 * dist + 9.26 * Math.pow(10, -4) * Math.pow(dist, 2) - 1.33 * Math.pow(10, -6) * Math.pow(dist, 3) + 93;
-        // return 25 * Math.pow(dist + 0.07, x.getAsDouble());
-        // return 45.1 - 27 * dist + 6.86 * Math.pow(dist, 2) - 0.621 * Math.pow(dist, 3);
     }
 
     @Override
@@ -133,12 +132,12 @@ public class Climber extends NAR_PIDSubsystem {
         return leftMotor.getPosition();
     }
 
-    public Command climbTo(DoubleSupplier setpointSupplier) {
-        return runOnce(()-> startPID(setpointSupplier.getAsDouble()));
-    }
-    
     public Command climbTo(double setpoint){
-        return climbTo(()-> setpoint);
+        return runOnce(()-> startPID(setpoint));
+    }
+
+    public Command climbTo(DoubleSupplier setpoint){
+        return runOnce(()->startPID(setpoint.getAsDouble()));
     }
 
     public Command climbTo(Setpoint state) {
@@ -146,13 +145,13 @@ public class Climber extends NAR_PIDSubsystem {
     }
 
     public Command setClimber(double power) {
-        return runOnce(() -> setPower(power));
+        return sequence(
+            runOnce(()->disable()),
+            runOnce(()->leftMotor.set(power)),
+            runOnce(()->rightMotor.set(power))
+        );
     }
 
-
-    public Command setAngle(double angle){
-        return climbTo(Math.tan(Units.degreesToRadians(angle)) * PIVOT_CLIMBER_DIST - HEIGHT_OFFSET);
-    }
 
     public boolean isNeutral() {
         return getMeasurement() < NEUTRAL_THRESHOLD;
