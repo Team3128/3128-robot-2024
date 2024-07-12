@@ -13,6 +13,7 @@ import common.core.swerve.SwerveModuleConfig.SwerveMotorConfig;
 import common.hardware.motorcontroller.NAR_CANSpark;
 import common.hardware.motorcontroller.NAR_TalonFX;
 import common.hardware.motorcontroller.NAR_TalonSRX;
+import common.hardware.motorcontroller.NAR_CANSpark.ControllerType;
 import common.hardware.motorcontroller.NAR_Motor.MotorConfig;
 import common.hardware.motorcontroller.NAR_Motor.Neutral;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -132,7 +133,7 @@ public class Constants {
         public static final SwerveModuleConfig Mod0 = new SwerveModuleConfig(
             0, 
             new SwerveMotorConfig(new NAR_TalonFX(1), driveMotorConfig, drivePIDConfig),
-            new SwerveMotorConfig(new NAR_TalonFX(2), angleMotorConfig, anglePIDConfig),
+            new SwerveMotorConfig(new NAR_CANSpark(2, ControllerType.CAN_SPARK_FLEX), angleMotorConfig, anglePIDConfig),
             10,
             63.017578125 - 180,
             canCoderInvert,
@@ -141,7 +142,7 @@ public class Constants {
         public static final SwerveModuleConfig Mod1 = new SwerveModuleConfig(
             1, 
             new SwerveMotorConfig(new NAR_TalonFX(3), driveMotorConfig, drivePIDConfig),
-            new SwerveMotorConfig(new NAR_TalonFX(4), angleMotorConfig, anglePIDConfig),
+            new SwerveMotorConfig(new NAR_CANSpark(4, ControllerType.CAN_SPARK_FLEX), angleMotorConfig, anglePIDConfig),
             11,
             110.478515625 - 180,
             canCoderInvert,
@@ -150,7 +151,7 @@ public class Constants {
         public static final SwerveModuleConfig Mod2 = new SwerveModuleConfig(
             2, 
             new SwerveMotorConfig(new NAR_TalonFX(5), driveMotorConfig, drivePIDConfig),
-            new SwerveMotorConfig(new NAR_TalonFX(6), angleMotorConfig, anglePIDConfig),
+            new SwerveMotorConfig(new NAR_CANSpark(6, ControllerType.CAN_SPARK_FLEX), angleMotorConfig, anglePIDConfig),
             12,
             -48.076171875 + 180,
             canCoderInvert,
@@ -159,7 +160,7 @@ public class Constants {
         public static final SwerveModuleConfig Mod3 = new SwerveModuleConfig(
             3, 
             new SwerveMotorConfig(new NAR_TalonFX(7), driveMotorConfig, drivePIDConfig),
-            new SwerveMotorConfig(new NAR_TalonFX(8), angleMotorConfig, anglePIDConfig),
+            new SwerveMotorConfig(new NAR_CANSpark(8, ControllerType.CAN_SPARK_FLEX), angleMotorConfig, anglePIDConfig),
             13,
             -158.37890625000003 + 180,
             canCoderInvert,
