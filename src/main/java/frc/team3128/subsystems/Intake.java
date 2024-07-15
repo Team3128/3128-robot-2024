@@ -237,18 +237,18 @@ public class Intake {
         return State.RUNNING;
     }
 
-    public UnitTest getIntakeTest() {
-        return new UnitTest
-        (
-            "testIntakeExtend",
-            intake(Setpoint.EXTENDED).withTimeout(INTAKE_TEST_TIMEOUT)
-        );
-    }
+    // public UnitTest getIntakeTest() {
+    //     return new UnitTest
+    //     (
+    //         "testIntakeExtend",
+    //         intake(Setpoint.EXTENDED).withTimeout(INTAKE_TEST_TIMEOUT)
+    //     );
+    // }
 
-    public void addIntakeTests() {
-        Tester.getInstance().addTest("Intake", intakeRollers.getRollersTest());
-        Tester.getInstance().addTest("Intake", intakePivot.getPivotTest());
-        Tester.getInstance().addTest("Intake", getIntakeTest());
-        Tester.getInstance().getTest("Intake").setTimeBetweenTests(1);
-    }
+    // public void addIntakeTests() {
+    //     Tester.getInstance().addTest("Intake", intakeRollers.getRollersTest());
+    //     Tester.getInstance().addTest("Intake", intakePivot.getPivotTest());
+    //     Tester.getInstance().addTest("Intake", getIntakeTest());
+    //     Tester.getInstance().getTest("Intake").setTimeBetweenTests(1);
+    // }
 }

@@ -11,7 +11,7 @@ import common.hardware.motorcontroller.NAR_Motor.Neutral;
 import common.utility.narwhaldashboard.NarwhalDashboard.State;
 import common.utility.shuffleboard.NAR_Shuffleboard;
 import common.utility.tester.Tester;
-import common.utility.tester.Tester.UnitTest;
+// import common.utility.tester.Tester.UnitTest;
 import edu.wpi.first.wpilibj2.command.Command;
 import java.util.function.DoubleSupplier;
 
@@ -129,19 +129,19 @@ public class Shooter extends NAR_PIDSubsystem {
         return State.DISCONNECTED;
     }
 
-    public UnitTest getShooterTest() {
-        return new SetpointTest
-        (
-            "testShooter",
-            MAX_RPM,
-            SHOOTER_TEST_PLATEAU,
-            SHOOTER_TEST_TIMEOUT
-        );
-    }
+    // public UnitTest getShooterTest() {
+    //     return new SetpointTest
+    //     (
+    //         "testShooter",
+    //         MAX_RPM,
+    //         SHOOTER_TEST_PLATEAU,
+    //         SHOOTER_TEST_TIMEOUT
+    //     );
+    // }
 
-    public void addShooterTests() {
-        // Tester.getInstance().addTest("Shooter", getLeftMotorTest());
-        // Tester.getInstance().addTest("Shooter", getRightMotorTest());
-        Tester.getInstance().addTest("Shooter", getShooterTest());
-    }
+    // public void addShooterTests() {
+    //     // Tester.getInstance().addTest("Shooter", getLeftMotorTest());
+    //     // Tester.getInstance().addTest("Shooter", getRightMotorTest());
+    //     Tester.getInstance().addTest("Shooter", getShooterTest());
+    // }
 }

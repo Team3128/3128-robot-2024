@@ -37,7 +37,7 @@ import common.utility.narwhaldashboard.NarwhalDashboard;
 import common.utility.narwhaldashboard.NarwhalDashboard.State;
 import common.utility.shuffleboard.NAR_Shuffleboard;
 import common.utility.tester.Tester;
-import common.utility.tester.Tester.UnitTest;
+// import common.utility.tester.Tester.UnitTest;
 import frc.team3128.subsystems.AmpMechanism;
 import frc.team3128.subsystems.Climber;
 import frc.team3128.subsystems.Intake;
@@ -83,9 +83,9 @@ public class RobotContainer {
         intake = Intake.getInstance();
         leds = Leds.getInstance();
 
-        shooter.addShooterTests();
-        climber.addClimberTests();
-        intake.addIntakeTests();
+        // shooter.addShooterTests();
+        // climber.addClimberTests();
+        // intake.addIntakeTests();
 
         controller = new NAR_XboxController(2);
         buttonPad = new NAR_ButtonBoard(3);
@@ -93,7 +93,7 @@ public class RobotContainer {
         //uncomment line below to enable driving
         CommandScheduler.getInstance().setDefaultCommand(swerve, new CmdSwerveDrive(controller::getLeftX,controller::getLeftY, controller::getRightX, true));
 
-        initRobotTest();
+        // initRobotTest();
         
         DriverStation.silenceJoystickConnectionWarning(true);
         initCameras();
@@ -244,13 +244,13 @@ public class RobotContainer {
         return true;
     }
 
-    private void initRobotTest() {
-        Tester tester = Tester.getInstance();
-        tester.addTest("Robot", tester.getTest("Intake"));
-        tester.addTest("Robot", tester.getTest("Shooter"));
-        tester.addTest("Robot", tester.getTest("Climber"));
-        tester.addTest("Robot", new UnitTest("Shoot", shoot(2500, 25)));
-        tester.addTest("Robot", new UnitTest("Amp", sequence(intake.intake(Setpoint.EXTENDED), ampShoot())));
-        tester.getTest("Robot").setTimeBetweenTests(0.5);
-    }
+    // private void initRobotTest() {
+    //     Tester tester = Tester.getInstance();
+    //     tester.addTest("Robot", tester.getTest("Intake"));
+    //     tester.addTest("Robot", tester.getTest("Shooter"));
+    //     tester.addTest("Robot", tester.getTest("Climber"));
+    //     tester.addTest("Robot", new UnitTest("Shoot", shoot(2500, 25)));
+    //     tester.addTest("Robot", new UnitTest("Amp", sequence(intake.intake(Setpoint.EXTENDED), ampShoot())));
+    //     tester.getTest("Robot").setTimeBetweenTests(0.5);
+    // }
 }
