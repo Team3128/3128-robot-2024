@@ -75,7 +75,7 @@ public class Constants {
         public static final double closedLoopRamp = 0.0;
 
         public static final double driveGearRatio = 225.0 / 42.0;
-        public static final double angleGearRatio = (300.0 / 13.0); 
+        public static final double angleGearRatio = (300.0 / 14.0); 
 
         public static final SwerveDriveKinematics swerveKinematics = new SwerveDriveKinematics(
                 new Translation2d(wheelBase / 2.0, trackWidth / 2.0),
@@ -135,7 +135,7 @@ public class Constants {
             new SwerveMotorConfig(new NAR_TalonFX(1), driveMotorConfig, drivePIDConfig),
             new SwerveMotorConfig(new NAR_CANSpark(2, ControllerType.CAN_SPARK_FLEX), angleMotorConfig, anglePIDConfig),
             10,
-            63.017578125 - 180,
+            63.017578125-2.021484375 - 180,
             canCoderInvert,
             maxSpeed);
 
@@ -144,7 +144,7 @@ public class Constants {
             new SwerveMotorConfig(new NAR_TalonFX(3), driveMotorConfig, drivePIDConfig),
             new SwerveMotorConfig(new NAR_CANSpark(4, ControllerType.CAN_SPARK_FLEX), angleMotorConfig, anglePIDConfig),
             11,
-            110.478515625 - 180,
+            110.478515625+2.021484375+0.615234375 - 180,
             canCoderInvert,
             maxSpeed);
         
@@ -153,7 +153,7 @@ public class Constants {
             new SwerveMotorConfig(new NAR_TalonFX(5), driveMotorConfig, drivePIDConfig),
             new SwerveMotorConfig(new NAR_CANSpark(6, ControllerType.CAN_SPARK_FLEX), angleMotorConfig, anglePIDConfig),
             12,
-            -48.076171875 + 180,
+            -48.076171875-0.263671875 + 180,
             canCoderInvert,
             maxSpeed);
         
@@ -162,7 +162,7 @@ public class Constants {
             new SwerveMotorConfig(new NAR_TalonFX(7), driveMotorConfig, drivePIDConfig),
             new SwerveMotorConfig(new NAR_CANSpark(8, ControllerType.CAN_SPARK_FLEX), angleMotorConfig, anglePIDConfig),
             13,
-            -158.37890625000003 + 180,
+            -158.37890625000003+0.703125000000028 + 180,
             canCoderInvert,
             maxSpeed);
 

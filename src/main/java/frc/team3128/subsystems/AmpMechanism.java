@@ -52,7 +52,7 @@ public class AmpMechanism extends PivotTemplate {
     protected void configMotors() {
         WRIST_MOTOR.setUnitConversionFactor(GEAR_RATIO * 360);
         WRIST_MOTOR.setCurrentLimit(CURRENT_LIMIT);
-        WRIST_MOTOR.setNeutralMode(Neutral.BRAKE);
+        WRIST_MOTOR.setNeutralMode(Neutral.COAST);
 
         ROLLER_MOTOR.setNeutralMode(Neutral.COAST);
 
