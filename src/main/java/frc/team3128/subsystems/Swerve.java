@@ -7,6 +7,7 @@ import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
+import com.google.errorprone.annotations.OverridingMethodsMustInvokeSuper;
 
 import common.core.commands.NAR_PIDCommand;
 import common.core.swerve.SwerveBase;
@@ -24,6 +25,7 @@ import frc.team3128.Robot;
 import frc.team3128.RobotContainer;
 import frc.team3128.Constants.FieldConstants;
 import frc.team3128.Constants.ShooterConstants;
+import frc.team3128.Constants.SwerveConstants;
 import frc.team3128.commands.CmdSwerveDrive;
 
 import static frc.team3128.Constants.SwerveConstants.*;
@@ -97,7 +99,13 @@ public class Swerve extends SwerveBase {
     public double getRoll() {
         return 0;
     }
-
+    
+    public int getdriveLimit(){
+        return driveLimit;
+    }
+    public int getOffSet(){
+        return SwerveConstants.offset;
+    }
     @Override
     public void zeroGyro(double reset) {
         gyro.setYaw(reset);

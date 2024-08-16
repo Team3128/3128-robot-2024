@@ -85,7 +85,10 @@ public class Constants {
 
         /* Swerve Current Limiting */
         public static final int angleLimit = 30; //30
-        public static final int driveLimit = 60; //40;
+        public static final int driveLimit = 60;
+        public static final int offset = 20;
+         //40;
+        public static final int stallLimit = 40;
 
         /* Angle Motor PID Values */
         // switched 364 pid values to SDS pid values

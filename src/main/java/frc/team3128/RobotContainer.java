@@ -203,6 +203,8 @@ public class RobotContainer {
         dashboard.checkState("ClimberState", ()-> climber.getRunningState());
         dashboard.checkState("ShooterState", ()-> shooter.getRunningState());
         dashboard.checkState("AmpMechanismState", ()-> ampMechanism.getRunningState());
+        dashboard.addUpdate("driveLimit", ()-> swerve.getdriveLimit());
+        dashboard.addUpdate("offset", ()-> swerve.getOffSet());
 
         if (NAR_TalonFX.getNumFailedConfigs() + NAR_CANSpark.getNumFailedConfigs() > 0 || !isConnected()) {
             Log.recoverable("Colors", "Errors configuring: " + NAR_CANSpark.getNumFailedConfigs() + NAR_TalonFX.getNumFailedConfigs());
