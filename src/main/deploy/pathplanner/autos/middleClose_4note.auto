@@ -18,6 +18,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "RampUp-Note1.2"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "middle-note1.2"
@@ -44,7 +50,13 @@
         {
           "type": "named",
           "data": {
-            "name": "Align"
+            "name": "AlignCW"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "RampUp-Middle"
           }
         },
         {
@@ -57,6 +69,12 @@
           "type": "named",
           "data": {
             "name": "RamShootMax"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "RampUp-Note1.3"
           }
         },
         {

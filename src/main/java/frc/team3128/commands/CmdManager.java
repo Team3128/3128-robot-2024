@@ -111,6 +111,10 @@ public class CmdManager {
         return rampUp(()->climber.interpolate(swerve.getDist()), ShooterConstants.MAX_RPM);
     }
 
+    public static Command autoRampUp(int distance) {
+        return rampUp(() -> climber.interpolate(distance), ShooterConstants.MAX_RPM);
+    }
+
     public static Command rampUp(DoubleSupplier height, double... rpm) {
         double left = rpm[0];
         double right = rpm.length > 1 ? rpm[1] : left; 

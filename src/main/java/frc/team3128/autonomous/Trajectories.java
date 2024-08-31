@@ -38,6 +38,7 @@ import frc.team3128.Constants.ShooterConstants;
 import frc.team3128.Robot;
 import frc.team3128.RobotContainer;
 import frc.team3128.commands.CmdAutoAlign;
+import frc.team3128.commands.CmdManager;
 import frc.team3128.commands.CmdSwerveDrive;
 
 import static frc.team3128.commands.CmdManager.rampUp;
@@ -97,6 +98,19 @@ public class Trajectories {
         NamedCommands.registerCommand("Drop", shooter.shoot(MAX_RPM));
         NamedCommands.registerCommand("RamShootMax", autoShootPreset(ShootPosition.RAM));
         NamedCommands.registerCommand("MidShoot", midShotAuto());
+
+        NamedCommands.registerCommand("RampUp-BottomShootClose", autoRampUp(getDistance(2.39, 3.43))); //should be 3.097
+        NamedCommands.registerCommand("RampUp-Bottom", autoRampUp(getDistance(1.45, 4.10)));
+        NamedCommands.registerCommand("RampUp-Note1.3", autoRampUp(getDistance(2.07, 4.10))); 
+        // !!!REMIND SOMEEONE THAT BOTTOM TO NOTE 1.3 IS FAULTY
+        NamedCommands.registerCommand("RampUp-Note1.2", autoRampUp(getDistance(2.46, 5.55)));
+        NamedCommands.registerCommand("RampUp-Note1.1", autoRampUp(getDistance(2.58, 6.99)));
+        NamedCommands.registerCommand("RampUp-Middle", autoRampUp(getDistance(1.50, 5.55)));
+        NamedCommands.registerCommand("RampUp-BottomShoot", autoRampUp(getDistance(3.20, 2.71)));
+        NamedCommands.registerCommand("RampUp-Top", autoRampUp(getDistance(1.39, 6.99)));
+
+        NamedCommands.registerCommand("ShootNoRotate", shootNoRotate());
+
 
         AutoBuilder.configureHolonomic(
             swerve::getPose,
@@ -226,6 +240,33 @@ public class Trajectories {
             ()-> true
             // ()->intake.intakeRollers.hasObjectPresent()
         );
+    }
+
+    public static Command autoRampUp(double distance) {
+        return CmdManager.rampUp(() -> climber.interpolate(distance), ShooterConstants.MAX_RPM);
+    }
+
+    public static Command shootNoRotate() {
+        return either(
+            sequence(
+                either(intake.retractAuto(), none(), ()-> intake.intakePivot.isEnabled()),
+                runOnce(()->{turning = true;}),
+                CmdManager.rampUp(),
+                // waitSeconds(1),
+                runOnce(()->{turning = false;}),
+                intake.intakeRollers.outtake(),
+                //intake.intakeRollers.outtakeNoRequirements(),
+                waitSeconds(0.1),
+                neutralAuto()
+            ),
+            none(),
+            ()->intake.intakeRollers.hasObjectPresent()
+        );
+    }
+
+    public static double getDistance(double d, double e) {
+        return Math.sqrt((d*d)+((5.4-e)*(5.4-e)));
+        //gets distance of point based on blue's focal point (0, 5.4)
     }
 
 

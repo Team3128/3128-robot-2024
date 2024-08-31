@@ -8,40 +8,29 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.8990922922198386,
-        "y": 4.665685424949237
+        "x": 2.5116719621962864,
+        "y": 1.617205468180154
       },
       "isLocked": false,
       "linkedName": "note1.3"
     },
     {
       "anchor": {
-        "x": 2.4531671088096294,
-        "y": 6.845812413490527
+        "x": 4.809173542822771,
+        "y": 1.0831115865001613
       },
       "prevControl": {
-        "x": 1.833432086921051,
-        "y": 6.226077391601948
+        "x": 3.993889619630843,
+        "y": 1.1147383823949628
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "note1.1-diag"
+      "linkedName": "taxi"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
-  "eventMarkers": [
-    {
-      "name": "Intake",
-      "waypointRelativePos": 0,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": []
-        }
-      }
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 5.6,
     "maxAcceleration": 6.0,
@@ -50,14 +39,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -149.38,
+    "rotation": 180.0,
     "rotateFast": false
   },
   "reversed": false,
   "folder": null,
-  "previewStartingState": {
-    "rotation": 179.73241824506192,
-    "velocity": 0
-  },
-  "useDefaultConstraints": true
+  "previewStartingState": null,
+  "useDefaultConstraints": false
 }

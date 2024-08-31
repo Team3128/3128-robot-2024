@@ -24,6 +24,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "RampUp-BottomShoot"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "note2.5-bottomShoot"
@@ -51,6 +57,12 @@
           "type": "named",
           "data": {
             "name": "AlignCCW"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "RampUp-BottomShoot"
           }
         },
         {
@@ -87,6 +99,12 @@
           "type": "named",
           "data": {
             "name": "Align"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "RampUp-BottomShoot"
           }
         },
         {

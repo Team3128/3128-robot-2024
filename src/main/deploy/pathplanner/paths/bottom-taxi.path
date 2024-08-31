@@ -8,47 +8,29 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.5499999999999996,
-        "y": 4.1
+        "x": 1.4240379545055546,
+        "y": 1.9423001795640116
       },
       "isLocked": false,
       "linkedName": "bottom"
     },
     {
       "anchor": {
-        "x": 2.4647777171690763,
-        "y": 4.1
+        "x": 4.809173542822771,
+        "y": 1.0831115865001613
       },
       "prevControl": {
-        "x": 2.0248680760793514,
-        "y": 4.108916707705726
+        "x": 3.087307722963123,
+        "y": 1.132509782723025
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "note1.3"
+      "linkedName": "taxi"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
-  "eventMarkers": [
-    {
-      "name": "Intake",
-      "waypointRelativePos": 0.0,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "Intake"
-              }
-            }
-          ]
-        }
-      }
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 5.6,
     "maxAcceleration": 6.0,
@@ -57,11 +39,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -178.69753494768494,
-    "rotateFast": true
+    "rotation": 180.0,
+    "rotateFast": false
   },
   "reversed": false,
   "folder": null,
   "previewStartingState": null,
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

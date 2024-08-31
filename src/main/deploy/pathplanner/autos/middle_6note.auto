@@ -18,6 +18,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "RampUp-Note1.3"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "middle-note1.3"
@@ -30,6 +36,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "RampUp-Note1.2"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "note1.3diag-note1.2"
@@ -39,6 +51,12 @@
           "type": "named",
           "data": {
             "name": "Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "RampUp-Note1.1"
           }
         },
         {
