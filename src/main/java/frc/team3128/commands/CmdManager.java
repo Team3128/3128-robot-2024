@@ -1,12 +1,15 @@
 package frc.team3128.commands;
 
 import common.hardware.input.NAR_XboxController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.team3128.Robot;
 import frc.team3128.RobotContainer;
+import frc.team3128.Constants.AutoConstants;
 import frc.team3128.Constants.ShooterConstants;
 import frc.team3128.subsystems.AmpMechanism;
 import frc.team3128.subsystems.Climber;
@@ -15,6 +18,8 @@ import frc.team3128.subsystems.Shooter;
 import frc.team3128.subsystems.Swerve;
 
 import java.util.function.DoubleSupplier;
+
+import com.pathplanner.lib.auto.AutoBuilder;
 
 import static edu.wpi.first.wpilibj2.command.Commands.*;
 import static frc.team3128.Constants.ShooterConstants.*;
@@ -136,5 +141,14 @@ public class CmdManager {
             climber.hardReset()
             // runOnce(()-> DriverStation.reportWarning("Neutral: CommandEnding", false))
         );
+    }
+
+    public static Command ampAlign(){
+        // switch back to 90 after testing with -90
+        Pose2d target = new Pose2d(Robot.getAlliance() == Alliance.Red ? 14.70 : 1.84, 7.8,  Rotation2d.fromDegrees(-90));
+
+        Command path = AutoBuilder.pathfindToPose(target, AutoConstants.constraints, 0.0, 0.0);
+
+        return path;
     }
 }
