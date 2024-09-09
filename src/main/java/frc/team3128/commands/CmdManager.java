@@ -115,6 +115,22 @@ public class CmdManager {
         return rampUp(() -> climber.interpolate(distance), ShooterConstants.MAX_RPM);
     }
 
+    public static Command closeChain() {
+        double x = swerve.getPose().getX();
+        double y = swerve.getPose().getY();
+
+        if (x>5.88) {
+            //180 degrees
+            return swerve.turnInPlace(()->180);
+        } else if (y>4.10) {
+            //60 degrees
+            return swerve.turnInPlace(()->60);
+        } else {
+            //300 degrees or -60
+            return swerve.turnInPlace(()->-60);
+        }
+    }
+
     public static Command rampUp(DoubleSupplier height, double... rpm) {
         double left = rpm[0];
         double right = rpm.length > 1 ? rpm[1] : left; 
