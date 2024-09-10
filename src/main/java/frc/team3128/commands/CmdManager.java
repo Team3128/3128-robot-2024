@@ -1,6 +1,7 @@
 package frc.team3128.commands;
 
 import common.hardware.input.NAR_XboxController;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ScheduleCommand;
@@ -15,6 +16,8 @@ import frc.team3128.subsystems.Shooter;
 import frc.team3128.subsystems.Swerve;
 
 import java.util.function.DoubleSupplier;
+
+import javax.swing.plaf.TreeUI;
 
 import static edu.wpi.first.wpilibj2.command.Commands.*;
 import static frc.team3128.Constants.ShooterConstants.*;
@@ -118,17 +121,22 @@ public class CmdManager {
     public static Command closeChain() {
         double x = swerve.getPose().getX();
         double y = swerve.getPose().getY();
+        
+        Alliance all = Robot.getAlliance();
+        double offset = all == Alliance.Red ? 0 : 4.847;
 
-        if (x>5.88) {
+        if (x>(5.88+offset)) {
             //180 degrees
             return swerve.turnInPlace(()->180);
+            
         } else if (y>4.10) {
-            //60 degrees
+             //60 degrees
             return swerve.turnInPlace(()->60);
         } else {
             //300 degrees or -60
             return swerve.turnInPlace(()->-60);
         }
+        
     }
 
     public static Command rampUp(DoubleSupplier height, double... rpm) {
