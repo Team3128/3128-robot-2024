@@ -14,6 +14,8 @@ import common.core.swerve.SwerveBase;
 import common.core.swerve.SwerveModule;
 import common.hardware.motorcontroller.NAR_Motor.Control;
 import common.utility.shuffleboard.NAR_Shuffleboard;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -46,6 +48,15 @@ public class Swerve extends SwerveBase {
             instance = new Swerve();
         }
         return instance;
+    }
+
+    public static Pose2d blueToAlliance(Pose2d pose) {
+        if (Robot.getAlliance() == Alliance.Blue) return pose;
+        return new Pose2d(
+            FieldConstants.FIELD_X_LENGTH - pose.getX(),
+            pose.getY(),
+            Rotation2d.fromDegrees(MathUtil.inputModulus(180 - pose.getRotation().getDegrees(), -180, 180))
+        );
     }
 
     private Swerve() {
