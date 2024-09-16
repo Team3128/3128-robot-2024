@@ -126,22 +126,44 @@ public class CmdManager {
     }
 
     public static Command closeChain() {
+        // double x = swerve.getPose().getX();
+        // double y = swerve.getPose().getY();
+        
+        // Alliance all = Robot.getAlliance();
+        // double offset = all == Alliance.Red ? 0 : 4.847;
+
+        // if (x>(5.88+offset)) {
+        //     //180 degrees
+        //     return swerve.turnInPlace(()->180);
+            
+        // } else if (y>4.10) {
+        //      //60 degrees
+        //     return swerve.turnInPlace(()->60);
+        // } else {
+        //     //300 degrees or -60
+        //     return swerve.turnInPlace(()->-60);
+        // }
         double x = swerve.getPose().getX();
         double y = swerve.getPose().getY();
-        
-        Alliance all = Robot.getAlliance();
-        double offset = all == Alliance.Red ? 0 : 4.847;
 
-        if (x>(5.88+offset)) {
-            //180 degrees
-            return swerve.turnInPlace(()->180);
-            
-        } else if (y>4.10) {
-             //60 degrees
-            return swerve.turnInPlace(()->60);
+        Alliance all = Robot.getAlliance();
+
+        if (all==Alliance.Blue) {
+            if (x>5.88) {
+                return swerve.turnInPlace(()->180);
+            } else if (y>4.10) {
+                return swerve.turnInPlace(()->60);
+            } else {
+                return swerve.turnInPlace(()->-60);
+            }
         } else {
-            //300 degrees or -60
-            return swerve.turnInPlace(()->-60);
+            if (x<10.75) {
+                return swerve.turnInPlace(()->0);
+            } else if (y>4.10){
+                return swerve.turnInPlace(()->-120);
+            } else {
+                return swerve.turnInPlace(()->120);
+            }
         }
         
     }
