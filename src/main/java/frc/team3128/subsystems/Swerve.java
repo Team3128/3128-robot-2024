@@ -75,6 +75,10 @@ public class Swerve extends SwerveBase {
         NAR_Shuffleboard.addData("Testing", "Name", ()-> getDist(speakerMidpointBlue), 0, 0);
         NAR_Shuffleboard.addData("Testing", "Dist", ()-> getDistHorizontal(), 0, 1);
         NAR_Shuffleboard.addData("Auto", "Setpoint", ()-> TURN_CONTROLLER.atSetpoint());
+        NAR_Shuffleboard.addData("Motors", "Motor 1 Current", modules[0].getDriveMotor().getStallCurrent(), 0,0);
+        NAR_Shuffleboard.addData("Motors", "Motor 2 Current", modules[1].getDriveMotor().getStallCurrent(), 0, 1);
+        NAR_Shuffleboard.addData("Motors", "Motor 3 Current", modules[2].getDriveMotor().getStallCurrent(), 0,2);
+        NAR_Shuffleboard.addData("Motors", "Motor 4 Current", modules[3].getDriveMotor().getStallCurrent(), 0,3);
         initStateCheck();
     }
 
