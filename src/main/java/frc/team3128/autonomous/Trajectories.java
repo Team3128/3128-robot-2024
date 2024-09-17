@@ -13,6 +13,7 @@ import common.utility.shuffleboard.NAR_Shuffleboard;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.pathfinding.LocalADStar;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 
@@ -43,6 +44,7 @@ import frc.team3128.commands.CmdSwerveDrive;
 
 import static frc.team3128.commands.CmdManager.rampUp;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import frc.team3128.subsystems.AmpMechanism;
@@ -79,12 +81,14 @@ public class Trajectories {
     private static final Intake intake = Intake.getInstance();
     private static double vx = 0, vy = 0;
     private static boolean turning = false;
+    private static BooleanSupplier hasNote = intake.intakeRollers::hasObjectPresent;
+    private static final AutoPrograms autoPrograms = AutoPrograms.getInstance();
 
     public static void initTrajectories() {
         Pathfinding.setPathfinder(new LocalADStar());
 
         NamedCommands.registerCommand("Intake", intake.intakeAuto());
-        NamedCommands.registerCommand("Shoot", autoShoot(0.75));
+        NamedCommands.registerCommand("Shoot", autoShoot(0.75).onlyIf(hasNote));
         NamedCommands.registerCommand("RamShoot", ramShotAuto());
         NamedCommands.registerCommand("BottomShoot", autoShootPreset(ShootPosition.BOTTOM));
         NamedCommands.registerCommand("WingRamp", rampUpAuto(ShootPosition.WING));
@@ -126,6 +130,23 @@ public class Trajectories {
             ),
             ()-> Robot.getAlliance() == Alliance.Red,
             swerve
+        );
+    }
+
+    public static Command middle_6note() {
+        return sequence(
+            autoPrograms.getAuto("middle_6note_cond"),
+            alignSearch(false).onlyWhile(RobotContainer.limelight::hasValidTarget),
+            either(
+                sequence(
+                    autoPrograms.getPath("note2.1-wing"),
+                    intake.intakeRollers.outtakeWithTimeout(0.25),
+                    autoPrograms.getPath("wing-note2.2")
+                ),
+                autoPrograms.getPath("note2.1-note2.2"),
+                hasNote
+            ),
+            alignSearch(false).onlyWhile(RobotContainer.limelight::hasValidTarget)
         );
     }
 
@@ -318,6 +339,10 @@ public class Trajectories {
 
     public static Command getPathPlannerAuto(String name) {
         return new PathPlannerAuto(name);
+    }
+
+    public static Command getPathPlannerPath(String name) {
+        return AutoBuilder.followPath(PathPlannerPath.fromPathFile(name));
     }
 
     public static Command resetAuto() {

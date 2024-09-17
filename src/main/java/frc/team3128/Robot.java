@@ -67,7 +67,7 @@ public class Robot extends NAR_Robot {
             e.printStackTrace();
         }
 
-        autoPrograms = new AutoPrograms();
+        autoPrograms = AutoPrograms.getInstance();
         m_robotContainer.initDashboard();
         LiveWindow.disableAllTelemetry();
         // runOnce(()-> Swerve.getInstance().zeroGyro(Robot.getAlliance() == Alliance.Red ? 0 : 180));

@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.5783701862886301,
-      "y": 5.479868375578748
+      "x": 1.4,
+      "y": 5.55
     },
     "rotation": 180.0
   },
@@ -14,85 +14,67 @@
         {
           "type": "named",
           "data": {
+            "name": "RamShoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "RampUp-Note1.3"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "middle-note1.3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "RampUp-Note1.2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "note1.3diag-note1.2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "RampUp-Note1.1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "note1.2-note1.1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "Shoot"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "amp-note2.1"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "AlignCW"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "note2.1-wing"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Outtake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "wing-note2.2"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "AlignCW"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "note2.2-wing"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Outtake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "wing-note2.3"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Align"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "note2.3-wing"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Outtake"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Neutral"
+            "pathName": "note1.1-note2.1"
           }
         }
       ]
