@@ -1,5 +1,6 @@
 package frc.team3128;
 
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
@@ -7,7 +8,7 @@ import edu.wpi.first.math.util.Units;
 import java.util.HashMap;
 
 public class OffseasonTags {
-    public static HashMap<Integer, Pose3d> offSeasonTagMap = new HashMap<Integer, Pose3d>();
+    public static AprilTagFields offSeasonTagMap = new HashMap<Integer, Pose3d>();
     static {
         offSeasonTagMap.put(1, new Pose3d(
             11.3551,

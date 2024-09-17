@@ -6,6 +6,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "TestRunner",
+      "request": "launch",
+      "mainClass": "TestRunner",
+      "projectName": "3128-robot-2024"
+    },
+    {
+      "type": "java",
       "name": "Main",
       "request": "launch",
       "mainClass": "frc.team3128.Main",

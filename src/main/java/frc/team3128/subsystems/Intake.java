@@ -229,8 +229,8 @@ public class Intake {
         return State.RUNNING;
     }
 
-    public UnitTest getIntakeTest() {
-        return new UnitTest
+    public SystemsTest getIntakeTest() {
+        return new SystemsTest
         (
             "testIntakeExtend",
             intake(Setpoint.EXTENDED).withTimeout(INTAKE_TEST_TIMEOUT)

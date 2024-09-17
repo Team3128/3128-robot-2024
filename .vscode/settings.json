@@ -16,7 +16,7 @@
   },
   "java.test.config": [
     {
-      "name": "WPIlibUnitTests",
+      "name": "WPIlibSystemsTests",
       "workingDirectory": "${workspaceFolder}/build/jni/release",
       "vmargs": [ "-Djava.library.path=${workspaceFolder}/build/jni/release" ],
       "env": {
@@ -25,7 +25,7 @@
       }
     },
   ],
-  "java.test.defaultConfig": "WPIlibUnitTests",
+  "java.test.defaultConfig": "WPIlibSystemsTests",
   "java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx8G -Xms100m -Xlog:disable",
   "java.compile.nullAnalysis.mode": "disabled"
 }

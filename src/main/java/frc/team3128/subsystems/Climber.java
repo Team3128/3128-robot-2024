@@ -20,7 +20,7 @@ import common.hardware.motorcontroller.NAR_Motor.Neutral;
 import common.utility.narwhaldashboard.NarwhalDashboard.State;
 import common.utility.shuffleboard.NAR_Shuffleboard;
 import common.utility.tester.Tester;
-import common.utility.tester.Tester.UnitTest;
+import common.utility.tester.Tester.SystemsTest;
 
 public class Climber extends NAR_PIDSubsystem {
 
@@ -172,7 +172,7 @@ public class Climber extends NAR_PIDSubsystem {
         return State.DISCONNECTED;
     }
 
-    public UnitTest getClimberTestExtend() {
+    public SystemsTest getClimberTestExtend() {
         return new SetpointTest
         (
             "testClimber",
@@ -182,7 +182,7 @@ public class Climber extends NAR_PIDSubsystem {
         );
     }
 
-    public UnitTest getClimberTestRetract() {
+    public SystemsTest getClimberTestRetract() {
         return new SetpointTest
         (
             "testClimber",

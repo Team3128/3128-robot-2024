@@ -39,7 +39,8 @@ import common.utility.narwhaldashboard.NarwhalDashboard;
 import common.utility.narwhaldashboard.NarwhalDashboard.State;
 import common.utility.shuffleboard.NAR_Shuffleboard;
 import common.utility.tester.Tester;
-import common.utility.tester.Tester.UnitTest;
+import common.utility.tester.Tester.SystemsTest;
+import common.utility.tester.Tester.Test;
 import frc.team3128.subsystems.AmpMechanism;
 import frc.team3128.subsystems.Climber;
 import frc.team3128.subsystems.Intake;
@@ -47,6 +48,8 @@ import frc.team3128.subsystems.Leds;
 import frc.team3128.subsystems.Shooter;
 import frc.team3128.subsystems.Swerve;
 import frc.team3128.subsystems.Intake.Setpoint;
+import monologue.Monologue;
+
 import java.util.ArrayList;
 
 /**
@@ -140,7 +143,7 @@ public class RobotContainer {
         controller.getLeftPOVButton().onTrue(runOnce(()-> {
             CmdSwerveDrive.setTurnSetpoint(Robot.getAlliance() == Alliance.Red ? 270 : 90);
         }));
-
+        swerve.trigger.onTrue(swerve.hi());
         buttonPad.getButton(1).onTrue(shooter.setShooter(1)).onFalse(shooter.setShooter(0));
         buttonPad.getButton(2).onTrue(intake.intakePivot.runPivot(0.2)).onFalse(intake.intakePivot.runPivot(0));
         buttonPad.getButton(3).onTrue(climber.setClimber(-0.5)).onFalse(climber.setClimber(0));
@@ -194,7 +197,8 @@ public class RobotContainer {
 
         limelight = new Limelight("limelight-mason", 0, 0, 0);
     }
-
+    public void initMonologue(){
+    }
     public void initDashboard() {
         dashboard = NarwhalDashboard.getInstance();
         dashboard.addUpdate("time", ()-> Timer.getMatchTime());
@@ -252,8 +256,8 @@ public class RobotContainer {
         tester.addTest("Robot", tester.getTest("Intake"));
         tester.addTest("Robot", tester.getTest("Shooter"));
         tester.addTest("Robot", tester.getTest("Climber"));
-        tester.addTest("Robot", new UnitTest("Shoot", shoot(2500, 25)));
-        tester.addTest("Robot", new UnitTest("Amp", sequence(intake.intake(Setpoint.EXTENDED), ampShoot())));
+        tester.addTest("Robot", new SystemsTest("Shoot", shoot(2500, 25)));
+        tester.addTest("Robot", new SystemsTest("Amp", sequence(intake.intake(Setpoint.EXTENDED), ampShoot())));
         tester.getTest("Robot").setTimeBetweenTests(0.5);
     }
 }

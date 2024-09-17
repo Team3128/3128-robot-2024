@@ -6,6 +6,7 @@ import static frc.team3128.Constants.VisionConstants.SVR_VISION_MEASUREMENT_STD;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
+import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.Pigeon2;
 
 import common.core.commands.NAR_PIDCommand;
@@ -20,6 +21,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.team3128.Robot;
 import frc.team3128.RobotContainer;
 import frc.team3128.Constants.FieldConstants;
@@ -29,12 +31,14 @@ import frc.team3128.commands.CmdSwerveDrive;
 import static frc.team3128.Constants.SwerveConstants.*;
 import static frc.team3128.Constants.FocalAimConstants.*;
 
+import static edu.wpi.first.wpilibj2.command.Commands.*;
+
 public class Swerve extends SwerveBase {
 
     private static Swerve instance;
 
     private Pigeon2 gyro;
-
+    private StatusSignal<Double> hi = gyro.getAccelerationX();
     public double throttle = 1;
 
     public Supplier<Double> yaw;
@@ -216,6 +220,29 @@ public class Swerve extends SwerveBase {
         NAR_Shuffleboard.addSendable("Commands", "Swerve Commands", this, 0, 0);
     }
 
+    public boolean isCrashing(double stalllimit, double accelerationlimit){
+        int cnt = 0;
+        for(SwerveModule module : modules){
+            if (module.getDriveMotor().getStallCurrent() > stalllimit && 
+            gyro.getAccelerationX().getValueAsDouble() + gyro.getAccelerationY().getValueAsDouble() < accelerationlimit){
+                cnt++;
+            }
+        }
+        return cnt >= 3;
+    }
+    public void setCurrentModulesMethod(){
+        for(SwerveModule module : modules){
+            module.getDriveMotor().setCurrentLimit(60);
+    }
+    }
+
+    public Command hi(){
+        return runOnce(()->setCurrentModulesMethod());
+    }
+    public Trigger trigger = new Trigger(()->isCrashing(0,0));
+    
+
+    
 }
     
 

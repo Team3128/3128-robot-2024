@@ -8,7 +8,7 @@ import common.hardware.motorcontroller.NAR_Motor.Neutral;
 import common.utility.narwhaldashboard.NarwhalDashboard.State;
 import common.utility.shuffleboard.NAR_Shuffleboard;
 import common.utility.tester.CurrentTest;
-import common.utility.tester.Tester.UnitTest;
+import common.utility.tester.Tester.SystemsTest;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -86,15 +86,15 @@ public class AmpMechanism extends PivotTemplate {
         return runOnce(()-> ROLLER_MOTOR.set(power));
     }
 
-    public UnitTest getExtendTest() {
+    public SystemsTest getExtendTest() {
         return new SetpointTest("Extend Amp", Setpoint.AMP.angle, 0.02, EXTEND_TIMEOUT);
     }
 
-    public UnitTest getRollerTest() {
+    public SystemsTest getRollerTest() {
         return new CurrentTest("Amp Roller", ROLLER_MOTOR, AMP_POWER, ROLLER_TIMEOUT, ROLLER_TEST_PLATEAU, ROLLER_TEST_EXPECTED_CURRENT, 5,  this);
     }
 
-    public UnitTest getRetractTest() {
+    public SystemsTest getRetractTest() {
         return new SetpointTest("Retract Amp", Setpoint.RETRACTED.angle, 0.02, RETRACTED_TIMEOUT);
     }
 
