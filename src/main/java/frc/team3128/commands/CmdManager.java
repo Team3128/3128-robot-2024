@@ -145,9 +145,10 @@ public class CmdManager {
 
     public static Command ampAlign(){
         // switch back to 90 after testing with -90
-        Pose2d target = new Pose2d(Robot.getAlliance() == Alliance.Red ? 14.70 : 1.84, 7.8,  Rotation2d.fromDegrees(-90));
+        // y used to be 7.8
+        Pose2d target = new Pose2d(Robot.getAlliance() == Alliance.Red ? 14.70 : 1.84, 7.6,  Rotation2d.fromDegrees(-90));
 
-        Command path = AutoBuilder.pathfindToPose(target, AutoConstants.constraints, 0.0, 0.0);
+        Command path = AutoBuilder.pathfindToPose(target, AutoConstants.ampAlignConstraints, 0.0, 0.0);
 
         return path;
     }

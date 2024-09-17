@@ -42,6 +42,8 @@ public class Constants {
         public static final PathConstraints constraints = new PathConstraints(
             SwerveConstants.maxSpeed, SwerveConstants.maxAcceleration, SwerveConstants.maxAngularVelocity, SwerveConstants.maxAngularAcceleration); 
 
+        public static final PathConstraints ampAlignConstraints = new PathConstraints(0.5,1,1,1);
+
         /* Translation PID Values */
         public static final double translationKP = 2;
         public static final double translationKI = 0;
