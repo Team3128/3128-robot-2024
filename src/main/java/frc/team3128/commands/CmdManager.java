@@ -150,19 +150,19 @@ public class CmdManager {
 
         if (all==Alliance.Blue) {
             if (x>5.88) {
-                return swerve.turnInPlace(()->180);
+                return swerve.turnInPlace(()->0);
             } else if (y>4.10) {
-                return swerve.turnInPlace(()->60);
+                return swerve.turnInPlace(()->120);
             } else {
-                return swerve.turnInPlace(()->-60);
+                return swerve.turnInPlace(()->-120);
             }
         } else {
             if (x<10.75) {
-                return swerve.turnInPlace(()->0);
+                return swerve.turnInPlace(()->180);
             } else if (y>4.10){
-                return swerve.turnInPlace(()->-120);
+                return swerve.turnInPlace(()->60);
             } else {
-                return swerve.turnInPlace(()->120);
+                return swerve.turnInPlace(()->-60);
             }
         }
         
