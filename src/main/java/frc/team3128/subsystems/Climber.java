@@ -95,12 +95,12 @@ public class Climber extends NAR_PIDSubsystem {
     @Override
     protected void useOutput(double output, double setpoint) {
         if (Intake.getInstance().isRetracting && isNeutral()) {
-            leftMotor.setVolts(0);
-            rightMotor.setVolts(0);
+            //set left motor to 0 volts
+            //set right motor to 0 volts
             return;
         }
-        leftMotor.setVolts(output);
-        rightMotor.setVolts(output);
+        //set right motor to output volts
+        //set left motor to output volts
     }
 
     public double getAngle(){
@@ -108,29 +108,28 @@ public class Climber extends NAR_PIDSubsystem {
     }
 
     public Command reset(){
-        return runOnce(() -> leftMotor.resetPosition(POSITION_MINIMUM));
+         //return left motor - reset at pos minimum
     }
 
      // runs climber into hardstop to ensure at physical zero
     public Command hardReset(){
-        return sequence(
-            setClimber(-0.5),
-            waitSeconds(0.1),
-            setClimber(0),
-            waitSeconds(0.2),
-            reset()
-        );
+        //return sequence
+            //set climber to 0.5
+            //wait 0.1 seconds
+            //set climber power
+            //wait for .2 seconds
+            //reset
     }
 
-    public double interpolate(double dist){
-        if(dist < 1.15) return 25;
-        return 27.4 * Math.pow(dist, x.getAsDouble());
-    }
+    //* public double interpolate(double dist){
+    //     //return distance 
+    //     //return distance as X
+    //* }
 
     @Override
-    public double getMeasurement() {
-        return leftMotor.getPosition();
-    }
+    //* */ public double getMeasurement() {
+    //     //return position of left motor
+    // }
 
     public Command climbTo(double setpoint){
         return runOnce(()-> startPID(setpoint));
@@ -141,35 +140,44 @@ public class Climber extends NAR_PIDSubsystem {
     }
 
     public Command climbTo(Setpoint state) {
-        return climbTo(state.setpoint);
+        //return climb
     }
 
     public Command setClimber(double power) {
         return sequence(
-            runOnce(()->disable()),
-            runOnce(()->leftMotor.set(power)),
-            runOnce(()->rightMotor.set(power))
+            //disable run
+            //set power into left motor
+            //set power into right motor
         );
     }
 
 
     public boolean isNeutral() {
-        return getMeasurement() < NEUTRAL_THRESHOLD;
+        //return get measurement
     }
 
     public boolean isClimbed() {
-        return getMeasurement() < -5.0;
+        //return climb measurement
     }
 
     public State getRunningState() {
         if (rightMotor.getState() != State.DISCONNECTED && leftMotor.getState() != State.DISCONNECTED) {
-            return State.RUNNING; 
+            //return running
         }
         if (rightMotor.getState() != State.DISCONNECTED || leftMotor.getState() != State.DISCONNECTED) {
-            return State.PARTIALLY_RUNNING; 
+            //return partially running
         }
-        return State.DISCONNECTED;
+        //return disconnected
     }
+
+
+
+
+
+
+
+
+
 
     // public UnitTest getClimberTestExtend() {
     //     return new SetpointTest

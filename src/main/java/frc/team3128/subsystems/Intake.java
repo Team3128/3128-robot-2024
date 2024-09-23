@@ -28,7 +28,7 @@ public class Intake {
 
         public final double angle;
         private Setpoint(double angle) {
-            this.angle = angle;
+            //angle??
         }
     }
 
@@ -102,14 +102,14 @@ public class Intake {
         }
 
         public Command runNoRequirements(double power) {
-            return new InstantCommand(()-> setPower(power));
+            //return new + set power
         }
 
         public Command outtakeWithTimeout(double timeout) {
             return sequence(
-                runNoRequirements(OUTTAKE_POWER),
-                waitSeconds(timeout),
-                runNoRequirements(0)
+                //run no power in outtake
+                //timeout in seconds
+                //run no power
             );
         }
 
@@ -133,7 +133,7 @@ public class Intake {
 
         @Override
         public boolean hasObjectPresent() {
-            return !limitSwitch.get();
+            //return limit switch 
         }
 
         public CurrentTest getRollersTest() {
@@ -160,7 +160,7 @@ public class Intake {
 
     public static synchronized Intake getInstance(){
         if(instance == null){
-            instance = new Intake();
+            //instance==??
         }
         return instance;
     }
@@ -184,9 +184,9 @@ public class Intake {
     public Command intake(Setpoint setpoint) {
         return sequence(
             deadline(
-                intakeRollers.intake(),
+                //intake rollers
                 sequence(
-                    intakePivot.pivotTo(setpoint.angle)
+                    //set intake angle to setpoint
                     // either(
                     //     intakePivot.stallIntakePivot(0.1),
                     //     none(),
@@ -194,16 +194,16 @@ public class Intake {
                     // )
                 )
             ),
-            retract(true)
+            //retract serialize - true/false??
         );
     }
 
     public Command outtake() {
         return sequence (
-            intakePivot.pivotTo(Setpoint.EXTENDED.angle),
+            //set intake pivot to extended angle
             waitUntil(()-> intakePivot.getMeasurement() > 45).withTimeout(2),
-            intakeRollers.runManipulator(-1),
-            waitSeconds(0.5),
+            //run intake rollers - manipulator (-1)
+            //wait 0.5 seconds
             retract(false)
         );
     }
@@ -211,22 +211,22 @@ public class Intake {
     public Command intakeAuto() {
         return sequence(
             deadline(
-                intakeRollers.intake(),
+                //intake rollers
                 sequence(
-                    intakePivot.pivotTo(Setpoint.EXTENDED.angle)
+                    //set intake pivot to extended angle
                     // intakePivot.stallIntakePivot(0.1)
                 )
             ),
-            retractAuto()
+            //retract auto
         );
     }
 
     public Command retractAuto() {
         return sequence(
-            intakeRollers.runManipulator(STALL_POWER),
-            intakePivot.pivotTo(()-> Climber.getInstance().getAngle()),
-            waitUntil(() -> intakePivot.atSetpoint()).withTimeout(1),
-            intakePivot.runPivot(0)
+            //run manipulator
+            //get climber instance
+            //timeout pivot
+            //run pivot
         );
     }
 
@@ -234,7 +234,7 @@ public class Intake {
         if (PIVOT_MOTOR.getState() == State.DISCONNECTED) return State.DISCONNECTED;
         if (LEFT_ROLLER_MOTOR.getState() == State.DISCONNECTED && RIGHT_ROLLER_MOTOR.getState() == State.DISCONNECTED) return State.DISCONNECTED;
         if (LEFT_ROLLER_MOTOR.getState() == State.DISCONNECTED || RIGHT_ROLLER_MOTOR.getState() == State.DISCONNECTED) return State.PARTIALLY_RUNNING;
-        return State.RUNNING;
+        //return running
     }
 
     // public UnitTest getIntakeTest() {
