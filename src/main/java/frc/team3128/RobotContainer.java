@@ -22,6 +22,8 @@ import static frc.team3128.commands.CmdManager.*;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
 import frc.team3128.Constants.LedConstants.Colors;
+import frc.team3128.autonomous.Trajectories;
+import frc.team3128.autonomous.Trajectories.ShootPosition;
 import frc.team3128.commands.CmdSwerveDrive;
 import common.core.swerve.SwerveModule;
 import common.hardware.camera.Camera;
@@ -106,7 +108,7 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
 
-        controller.getButton(XboxButton.kY).onTrue(runOnce(() -> ampAlign().schedule()));
+        // controller.getButton(XboxButton.kY).onTrue(runOnce(() -> ampAlign().schedule()));
         // controller.getButton(XboxButton.kB).onTrue(rampUpFeed(MIDDLE_FEED_RPM, MIDDLE_FEED_RPM, 13)).onFalse(feed(MIDDLE_FEED_RPM, 13,MIDDLE_FEED_ANGLE));
         // controller.getButton(XboxButton.kY).onTrue(rampUpFeed(EDGE_FEED_RPM, EDGE_FEED_RPM, 13)).onFalse(feed(EDGE_FEED_RPM, 13, EDGE_FEED_ANGLE));   //Feed Shot
         // controller.getButton(XboxButton.kY).onTrue(rampUp(()->13, EDGE_FEED_RPM)).onFalse(feed(EDGE_FEED_RPM, 13, EDGE_FEED_ANGLE));   //Feed Shot
@@ -115,6 +117,7 @@ public class RobotContainer {
         controller.getButton(XboxButton.kRightTrigger).onTrue(rampUp(()->MAX_RPM, 0)).onFalse(shootDist());     //Auto Shoot
         controller.getButton(XboxButton.kX).onTrue(rampUp(()->Climber.Setpoint.AMP.setpoint, AMP_RPM).andThen(ampMechanism.extend())).onFalse(ampShoot()); //Amp Shot
         controller.getButton(XboxButton.kB).onTrue(new InstantCommand(()->swerve.resetEncoders()));
+        controller.getButton(XboxButton.kY).onTrue(Trajectories.rampUpAuto(ShootPosition.WING));
 
         controller.getButton(XboxButton.kA).onTrue(sequence(runOnce(()-> intake.isRetracting = false), intake.intakePivot.pivotTo(150), climber.climbTo(Climber.Setpoint.EXTENDED))); //Extend Climber
         controller.getButton(XboxButton.kBack).onTrue(sequence(climber.setClimber(-0.35), waitSeconds(1), climber.setClimber(-1), waitUntil(()->climber.isClimbed()), climber.setClimber(0)));   //Retract Climber

@@ -8,6 +8,7 @@ import common.core.commands.NAR_PIDCommand;
 import common.core.controllers.Controller;
 import common.core.controllers.PIDFFConfig;
 import common.core.controllers.Controller.Type;
+import common.utility.Log;
 import common.utility.shuffleboard.NAR_Shuffleboard;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -88,7 +89,7 @@ public class Trajectories {
         Pathfinding.setPathfinder(new LocalADStar());
 
         NamedCommands.registerCommand("Intake", intake.intakeAuto());
-        NamedCommands.registerCommand("Shoot", autoShoot(0.75).onlyIf(hasNote));
+        NamedCommands.registerCommand("Shoot", either(autoShoot(0.75), runOnce(()->Log.info("test", "skip shot")), hasNote));
         NamedCommands.registerCommand("RamShoot", ramShotAuto());
         NamedCommands.registerCommand("BottomShoot", autoShootPreset(ShootPosition.BOTTOM));
         NamedCommands.registerCommand("WingRamp", rampUpAuto(ShootPosition.WING));
@@ -143,7 +144,9 @@ public class Trajectories {
                     intake.intakeRollers.outtakeWithTimeout(0.25),
                     autoPrograms.getPath("wing-note2.2")
                 ),
-                autoPrograms.getPath("note2.1-note2.2"),
+                sequence(
+                turnInPlace(new Translation2d(8.29, 5.77)),
+                runOnce(()->Log.info("test", "skip wing shot"))),
                 hasNote
             ),
             alignSearch(false).onlyWhile(RobotContainer.limelight::hasValidTarget)
@@ -234,6 +237,22 @@ public class Trajectories {
         );
     }
 
+    public static Command turnInPlace(Translation2d point) {
+        DoubleSupplier setpoint = ()-> swerve.getTurnAngle(point);
+        Controller controller = new Controller(new PIDFFConfig(5, 0, 0, turnkS, 0, 0), Type.POSITION);
+        controller.enableContinuousInput(-180, 180);
+        controller.setTolerance(1);
+        return new NAR_PIDCommand(
+            controller, 
+            ()-> swerve.getYaw(), //measurement
+            setpoint, //setpoint
+            (double output) -> {
+                Swerve.getInstance().drive(new ChassisSpeeds(vx, vy, Units.degreesToRadians(output)));
+                NAR_Shuffleboard.addData("HElp", "help", output, 0, 0);
+            }
+        ).beforeStarting(runOnce(()-> CmdSwerveDrive.disableTurn()));
+    }
+
     public static Command turnInPlace() {
         DoubleSupplier setpoint = ()-> swerve.getTurnAngle(Robot.getAlliance() == Alliance.Red ? focalPointRed : focalPointBlue);
         Controller controller = new Controller(new PIDFFConfig(5, 0, 0, turnkS, 0, 0), Type.POSITION);
@@ -254,7 +273,7 @@ public class Trajectories {
         return either(
             sequence(
                 shooter.shoot(MAX_RPM),
-                rampUp(()->ShooterConstants.MAX_RPM, pos.getHeight()).until(()-> climber.atSetpoint()),
+                rampUp(()->pos.getHeight(), ShooterConstants.MAX_RPM).until(()-> climber.atSetpoint()),
                 intake.retractAuto()
             ),
             none(),
