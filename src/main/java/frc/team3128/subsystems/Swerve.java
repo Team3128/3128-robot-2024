@@ -38,7 +38,6 @@ public class Swerve extends SwerveBase {
     private static Swerve instance;
 
     private Pigeon2 gyro;
-    private StatusSignal<Double> hi = gyro.getAccelerationX();
     public double throttle = 1;
 
     public Supplier<Double> yaw;
@@ -220,26 +219,49 @@ public class Swerve extends SwerveBase {
         NAR_Shuffleboard.addSendable("Commands", "Swerve Commands", this, 0, 0);
     }
 
-    public boolean isCrashing(double stalllimit, double accelerationlimit){
+    public boolean isCrashing(double stallLimit, double accelerationLimit){
         int cnt = 0;
         for(SwerveModule module : modules){
-            if (module.getDriveMotor().getStallCurrent() > stalllimit && 
-            gyro.getAccelerationX().getValueAsDouble() + gyro.getAccelerationY().getValueAsDouble() < accelerationlimit){
+            if (module.getDriveMotor().getStallCurrent() > stallLimit && 
+            gyro.getAccelerationX().getValueAsDouble() + gyro.getAccelerationY().getValueAsDouble() < accelerationLimit){
                 cnt++;
             }
         }
         return cnt >= 3;
     }
-    public void setCurrentModulesMethod(){
-        for(SwerveModule module : modules){
-            module.getDriveMotor().setCurrentLimit(60);
+    public boolean isNotCrashing(double stallLimit, double accelerationLimit){
+        return !isCrashing(stallLimit, accelerationLimit);
     }
+    Timer timerCrashing = new Timer();
+    Timer timerNotCrashing = new Timer();
+
+    public void setCurrentModulesMethod(){
+        if(crashingLong()){
+            for(SwerveModule module : modules){
+                module.getDriveMotor().setCurrentLimit(60);
+            }
+        }
+    }
+
+    public boolean crashingLong(){
+        if(isCrashing(0, 0)){
+            timerCrashing.start();
+            while(!timerCrashing.hasElapsed(2)){
+                if(isNotCrashing(0,0)){
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
     }
 
     public Command hi(){
         return runOnce(()->setCurrentModulesMethod());
     }
-    public Trigger trigger = new Trigger(()->isCrashing(0,0));
+
+    public Trigger triggerCrashing = new Trigger(()->crashingLong());
+    public Trigger triggerNotCrashing = new Trigger(()-> isNotCrashing(0,0));
     
 
     

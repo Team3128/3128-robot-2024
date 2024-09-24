@@ -143,7 +143,7 @@ public class RobotContainer {
         controller.getLeftPOVButton().onTrue(runOnce(()-> {
             CmdSwerveDrive.setTurnSetpoint(Robot.getAlliance() == Alliance.Red ? 270 : 90);
         }));
-        swerve.trigger.onTrue(swerve.hi());
+        swerve.triggerCrashing.onTrue(swerve.hi());
         buttonPad.getButton(1).onTrue(shooter.setShooter(1)).onFalse(shooter.setShooter(0));
         buttonPad.getButton(2).onTrue(intake.intakePivot.runPivot(0.2)).onFalse(intake.intakePivot.runPivot(0));
         buttonPad.getButton(3).onTrue(climber.setClimber(-0.5)).onFalse(climber.setClimber(0));
@@ -182,7 +182,7 @@ public class RobotContainer {
 
     public void initCameras() {
         Camera.disableAll();
-        Camera.configCameras(OffseasonTags.offSeasonTagMap, PoseStrategy.LOWEST_AMBIGUITY, (pose, time) -> swerve.addVisionMeasurement(pose, time), () -> swerve.getPose());
+        // Camera.configCameras(OffseasonTags.offSeasonTagMap, PoseStrategy.LOWEST_AMBIGUITY, (pose, time) -> swerve.addVisionMeasurement(pose, time), () -> swerve.getPose());
         Camera.setAmbiguityThreshold(0.3);
         Camera.overrideThreshold = 30;
         Camera.validDist = 0.5;
