@@ -86,11 +86,12 @@ public class Constants {
                 new Translation2d(-wheelBase / 2.0, -trackWidth / 2.0)); 
 
         /* Swerve Current Limiting */
-        public static final int angleLimit = 30; //30
-        public static final int driveLimit = 60;
+        public static final int angleLimit = 30; 
+        public static final int driveLimit = 80;
         public static final int offset = 20;
-         //40;
-        public static final int stallLimit = 40;
+
+        public static final int lowerDriveLimit = 40;
+        public static final int currentAccelerationThreshold = 2;
 
         /* Angle Motor PID Values */
         // switched 364 pid values to SDS pid values
