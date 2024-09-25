@@ -72,14 +72,14 @@ public class Swerve extends SwerveBase {
 
         gyro.optimizeBusUtilization();
 
-        initModuleThrottling();
+        // initModuleThrottling();
 
         initShuffleboard();
         NAR_Shuffleboard.addData("Testing", "Name", ()-> getDist(speakerMidpointBlue), 0, 0);
         NAR_Shuffleboard.addData("Testing", "Dist", ()-> getDistHorizontal(), 0, 1);
         NAR_Shuffleboard.addData("Auto", "Setpoint", ()-> TURN_CONTROLLER.atSetpoint());
         initStateCheck();
-        initModuleThrottling();
+        // initModuleThrottling();
     }
 
     public boolean crossedPodium() {
@@ -246,83 +246,93 @@ public class Swerve extends SwerveBase {
         NAR_Shuffleboard.addData("Motors", "Motor 4 Current", modules[3].getDriveMotor().getStallCurrent(), 4,3);
     }
 
-    private int upperStallCounter;
-    private int upperStallThreshold;
-    private int lowerStallCounter;
-    private int lowerStallThreshold;
-    private boolean usingUpperStallLimit;
-
-    public void initModuleThrottling(){
-        upperStallCounter = 0; //2 seconds?
-        upperStallThreshold = 100;
-
-        lowerStallCounter = 0; //1 seconds?
-        lowerStallThreshold = 50;
-
-        usingUpperStallLimit = true;
+    public Translation2d getRobotAcceleration(){
+        return new Translation2d(
+            gyro.getAccelerationX().getValueAsDouble(), 
+            gyro.getAccelerationY().getValueAsDouble());
     }
 
-    public void setModuleThrottlingConstaints(int upperStallCounter, int upperStallThreshold, int lowerStallCounter, int lowerStallThreshold){
-        this.upperStallCounter = upperStallCounter;
-        this.upperStallThreshold = upperStallThreshold;
-        this.lowerStallCounter = lowerStallCounter;
-        this.lowerStallThreshold = lowerStallThreshold;
-    }
-
-    public double getAccelerationMag(){
-        return Math.pow(
-            Math.pow(gyro.getAccelerationX().getValueAsDouble(),2) 
-            + Math.pow(gyro.getAccelerationY().getValueAsDouble(),2), 
-            0.5);
-    }
-
-    public boolean updateModuleThrottling(){
-
-        if(usingUpperStallLimit){ //check if need to go to lower stall limit
-            if(getAccelerationMag() < currentAccelerationThreshold){
-                upperStallCounter++;
-            }else{
-                upperStallCounter = 0;
-            }
-
-            if(upperStallCounter >= upperStallThreshold){
-                upperStallCounter = 0;
-                return true;
-            }else{
-                return false;
-            }
-        }else{ // check if need to go to upper stall limit
-            if(getAccelerationMag() > currentAccelerationThreshold){
-                lowerStallCounter++;
-            }else{
-                lowerStallCounter = 0;
-            }
-
-            if(lowerStallCounter >= lowerStallThreshold){
-                lowerStallCounter = 0;
-                return true;
-            }else{
-                return false;
-            }
-        }
-    }
-
-    public void toggleModuleThrottling(){
-        if (usingUpperStallLimit) {
+    public Command throttleModules(int limit){
+        return runOnce(()-> {
             for(SwerveModule module : modules){
-                module.getDriveMotor().setCurrentLimit(lowerDriveLimit);
+                module.getDriveMotor().setCurrentLimit(limit);
             }
-        }else{
-            for(SwerveModule module : modules){
-                module.getDriveMotor().setCurrentLimit(driveLimit);
-            }
-        }
-
-        usingUpperStallLimit = !usingUpperStallLimit;
+        });
     }
 
-    public Trigger triggerCrashing = new Trigger(()->updateModuleThrottling()).onTrue(runOnce(()->toggleModuleThrottling()));
-    
+
+    private Trigger throttleController = new Trigger(() -> getRobotAcceleration().getNorm() < currentAccelerationThreshold)
+                    .onTrue(throttleModules(conservDriveLimit))
+                    .onFalse(throttleModules(driveLimit));
+
+
+    // private int upperStallCounter;
+    // private int upperStallThreshold;
+    // private int lowerStallCounter;
+    // private int lowerStallThreshold;
+    // private boolean usingUpperStallLimit;
+
+    // public void initModuleThrottling(){
+    //     upperStallCounter = 0; //2 seconds?
+    //     upperStallThreshold = 100;
+
+    //     lowerStallCounter = 0; //1 seconds?
+    //     lowerStallThreshold = 50;
+
+    //     usingUpperStallLimit = true;
+    // }
+
+    // public void setModuleThrottlingConstaints(int upperStallCounter, int upperStallThreshold, int lowerStallCounter, int lowerStallThreshold){
+    //     this.upperStallCounter = upperStallCounter;
+    //     this.upperStallThreshold = upperStallThreshold;
+    //     this.lowerStallCounter = lowerStallCounter;
+    //     this.lowerStallThreshold = lowerStallThreshold;
+    // }
+
+    // public boolean updateModuleThrottling(){
+
+    //     if(usingUpperStallLimit){ //check if need to go to lower stall limit
+    //         if(getAccelerationMag() < currentAccelerationThreshold){
+    //             upperStallCounter++;
+    //         }else{
+    //             upperStallCounter = 0;
+    //         }
+
+    //         if(upperStallCounter >= upperStallThreshold){
+    //             upperStallCounter = 0;
+    //             return true;
+    //         }else{
+    //             return false;
+    //         }
+    //     }else{ // check if need to go to upper stall limit
+    //         if(getAccelerationMag() > currentAccelerationThreshold){
+    //             lowerStallCounter++;
+    //         }else{
+    //             lowerStallCounter = 0;
+    //         }
+
+    //         if(lowerStallCounter >= lowerStallThreshold){
+    //             lowerStallCounter = 0;
+    //             return true;
+    //         }else{
+    //             return false;
+    //         }
+    //     }
+    // }
+
+    // public void toggleModuleThrottling(){
+    //     if (usingUpperStallLimit) {
+    //         for(SwerveModule module : modules){
+    //             module.getDriveMotor().setCurrentLimit(conservDriveLimit);
+    //         }
+    //     }else{
+    //         for(SwerveModule module : modules){
+    //             module.getDriveMotor().setCurrentLimit(driveLimit);
+    //         }
+    //     }
+
+    //     usingUpperStallLimit = !usingUpperStallLimit;
+    // }
 
 }
     
