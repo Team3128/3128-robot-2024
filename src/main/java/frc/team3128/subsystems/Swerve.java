@@ -72,6 +72,10 @@ public class Swerve extends SwerveBase {
 
         gyro.optimizeBusUtilization();
 
+        final Trigger throttleController = new Trigger(() -> getRobotAcceleration().getNorm() < currentAccelerationThreshold)
+                    .onTrue(throttleModules(conserveDriveLimit))
+                    .onFalse(throttleModules(driveLimit));
+
         // initModuleThrottling();
 
         initShuffleboard();
@@ -237,13 +241,15 @@ public class Swerve extends SwerveBase {
     public void initShuffleboard(){
         super.initShuffleboard();
         NAR_Shuffleboard.addSendable("Commands", "Swerve Commands", this, 0, 0);
+
+        initThrottlingShuffleboard();
     }
 
     public void initThrottlingShuffleboard(){
-        NAR_Shuffleboard.addData("Motors", "Motor 1 Current", modules[0].getDriveMotor().getStallCurrent(), 4,0);
-        NAR_Shuffleboard.addData("Motors", "Motor 2 Current", modules[1].getDriveMotor().getStallCurrent(), 4, 1);
-        NAR_Shuffleboard.addData("Motors", "Motor 3 Current", modules[2].getDriveMotor().getStallCurrent(), 4,2);
-        NAR_Shuffleboard.addData("Motors", "Motor 4 Current", modules[3].getDriveMotor().getStallCurrent(), 4,3);
+        NAR_Shuffleboard.addData("Motors", "Motor 1 Current", ()->modules[0].getDriveMotor().getStallCurrent(), 4,0);
+        NAR_Shuffleboard.addData("Motors", "Motor 2 Current", ()->modules[1].getDriveMotor().getStallCurrent(), 4, 1);
+        NAR_Shuffleboard.addData("Motors", "Motor 3 Current", ()->modules[2].getDriveMotor().getStallCurrent(), 4,2);
+        NAR_Shuffleboard.addData("Motors", "Motor 4 Current", ()->modules[3].getDriveMotor().getStallCurrent(), 4,3);
     }
 
     public Translation2d getRobotAcceleration(){
@@ -261,9 +267,6 @@ public class Swerve extends SwerveBase {
     }
 
 
-    private Trigger throttleController = new Trigger(() -> getRobotAcceleration().getNorm() < currentAccelerationThreshold)
-                    .onTrue(throttleModules(conservDriveLimit))
-                    .onFalse(throttleModules(driveLimit));
 
 
     // private int upperStallCounter;

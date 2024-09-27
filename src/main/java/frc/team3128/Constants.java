@@ -90,7 +90,7 @@ public class Constants {
         public static final int driveLimit = 80;
         public static final int offset = 20;
 
-        public static final int lowerDriveLimit = 40;
+        public static final int conserveDriveLimit = 40;
         public static final int currentAccelerationThreshold = 2;
 
         /* Angle Motor PID Values */
