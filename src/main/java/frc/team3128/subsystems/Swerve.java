@@ -72,18 +72,12 @@ public class Swerve extends SwerveBase {
 
         gyro.optimizeBusUtilization();
 
-        final Trigger throttleController = new Trigger(() -> getRobotAcceleration().getNorm() < currentAccelerationThreshold)
-                    .onTrue(throttleModules(conserveDriveLimit))
-                    .onFalse(throttleModules(driveLimit));
-
-        // initModuleThrottling();
-
         initShuffleboard();
         NAR_Shuffleboard.addData("Testing", "Name", ()-> getDist(speakerMidpointBlue), 0, 0);
         NAR_Shuffleboard.addData("Testing", "Dist", ()-> getDistHorizontal(), 0, 1);
         NAR_Shuffleboard.addData("Auto", "Setpoint", ()-> TURN_CONTROLLER.atSetpoint());
         initStateCheck();
-        // initModuleThrottling();
+        initThrottlingShuffleboard();
     }
 
     public boolean crossedPodium() {
@@ -241,8 +235,6 @@ public class Swerve extends SwerveBase {
     public void initShuffleboard(){
         super.initShuffleboard();
         NAR_Shuffleboard.addSendable("Commands", "Swerve Commands", this, 0, 0);
-
-        initThrottlingShuffleboard();
     }
 
     public void initThrottlingShuffleboard(){
