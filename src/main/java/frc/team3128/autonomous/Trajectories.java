@@ -18,6 +18,7 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.pathfinding.LocalADStar;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -73,6 +74,25 @@ public class Trajectories {
         }
         public double getHeight() {
             return height;
+        }
+    }
+
+    public enum Note {
+        NOTE1_1(2.89, 6.99),
+        NOTE1_2(2.89, 5.55),
+        NOTE1_3(2.89, 4.11),
+        NOTE2_1(6.45, 7.44),
+        NOTE2_2(6.45, 5.79),
+        NOTE2_3(6.45, 4.10),
+        NOTE2_4(6.45, 2.45),
+        NOTE2_5(6.45, 0.77);
+
+        private final Translation2d translation;
+        private Note(double x, double y) {
+            translation = new Translation2d(x, y);
+        }
+        public Translation2d getTranslation() {
+            return translation;
         }
     }
 
@@ -134,6 +154,24 @@ public class Trajectories {
         );
     }
 
+    public static Command middle_4note() {
+        return sequence(
+            autoShoot(0.75),
+            turnInPlaceIntake(Swerve.blueToAlliance(Note.NOTE1_3.getTranslation())).withTimeout(1),
+            alignSearch(true),
+            parallel(intake.retractAuto(), turnInPlace().withTimeout(0.75)),
+            autoShootNoTurn(),
+            turnInPlaceIntake(Swerve.blueToAlliance(Note.NOTE1_2.getTranslation())).withTimeout(1),
+            alignSearch(true),
+            parallel(intake.retractAuto(), turnInPlace().withTimeout(0.75)),
+            autoShootNoTurn(),
+            turnInPlaceIntake(Swerve.blueToAlliance(Note.NOTE1_1.getTranslation())).withTimeout(1),
+            alignSearch(true),
+            parallel(intake.retractAuto(), turnInPlace().withTimeout(0.75)),
+            autoShootNoTurn()
+        );
+    }
+
     public static Command middle_6note() {
         return sequence(
             autoPrograms.getAuto("middle_6note_cond"),
@@ -145,7 +183,7 @@ public class Trajectories {
                     autoPrograms.getPath("wing-note2.2")
                 ),
                 sequence(
-                turnInPlace(new Translation2d(8.29, 5.77)),
+                turnInPlace(Note.NOTE2_2.getTranslation()),
                 runOnce(()->Log.info("test", "skip wing shot"))),
                 hasNote
             ),
@@ -163,18 +201,15 @@ public class Trajectories {
 
     public static Command turnDegrees(boolean counterClockwise, double angle) {
         DoubleSupplier setpoint = ()-> swerve.getYaw() + angle * (counterClockwise ? 1 : -1) * (Robot.getAlliance() == Alliance.Red ? -1 : 1);
-        Controller controller = new Controller(new PIDFFConfig(5, 0, 0, turnkS, 0, 0), Type.POSITION);
-        controller.enableContinuousInput(-180, 180);
-        controller.setTolerance(1);
         return new NAR_PIDCommand(
-            controller, 
+            TURN_CONTROLLER, 
             ()-> swerve.getYaw(), //measurement
             setpoint, //setpoint
             (double output) -> {
                 Swerve.getInstance().drive(new ChassisSpeeds(vx, vy, Units.degreesToRadians(output)));
                 NAR_Shuffleboard.addData("HElp", "help", output, 0, 0);
             }
-        ).beforeStarting(runOnce(()-> CmdSwerveDrive.disableTurn()));
+        ).beforeStarting(runOnce(()-> {CmdSwerveDrive.disableTurn(); swerve.resetEncoders();}));
     }
 
     public static Command alignPreload(boolean counterClockwise) {
@@ -239,11 +274,21 @@ public class Trajectories {
 
     public static Command turnInPlace(Translation2d point) {
         DoubleSupplier setpoint = ()-> swerve.getTurnAngle(point);
-        Controller controller = new Controller(new PIDFFConfig(5, 0, 0, turnkS, 0, 0), Type.POSITION);
-        controller.enableContinuousInput(-180, 180);
-        controller.setTolerance(1);
         return new NAR_PIDCommand(
-            controller, 
+            TURN_CONTROLLER, 
+            ()-> swerve.getYaw(), //measurement
+            setpoint, //setpoint
+            (double output) -> {
+                Swerve.getInstance().drive(new ChassisSpeeds(vx, vy, Units.degreesToRadians(output)));
+                NAR_Shuffleboard.addData("HElp", "help", output, 0, 0);
+            }
+        ).beforeStarting(runOnce(()-> CmdSwerveDrive.disableTurn()));
+    }
+
+    public static Command turnInPlaceIntake(Translation2d point) {
+        DoubleSupplier setpoint = ()-> MathUtil.inputModulus(180 + swerve.getTurnAngle(point), -180, 180);
+        return new NAR_PIDCommand(
+            TURN_CONTROLLER, 
             ()-> swerve.getYaw(), //measurement
             setpoint, //setpoint
             (double output) -> {
@@ -255,16 +300,15 @@ public class Trajectories {
 
     public static Command turnInPlace() {
         DoubleSupplier setpoint = ()-> swerve.getTurnAngle(Robot.getAlliance() == Alliance.Red ? focalPointRed : focalPointBlue);
-        Controller controller = new Controller(new PIDFFConfig(5, 0, 0, turnkS, 0, 0), Type.POSITION);
-        controller.enableContinuousInput(-180, 180);
-        controller.setTolerance(1);
         return new NAR_PIDCommand(
-            controller, 
+            TURN_CONTROLLER, 
             ()-> swerve.getYaw(), //measurement
             setpoint, //setpoint
             (double output) -> {
                 Swerve.getInstance().drive(new ChassisSpeeds(vx, vy, Units.degreesToRadians(output)));
-                NAR_Shuffleboard.addData("HElp", "help", output, 0, 0);
+                NAR_Shuffleboard.addData("HElp", "Output", output, 0, 0);
+                NAR_Shuffleboard.addData("HElp", "At Setpoint", TURN_CONTROLLER.getController().atSetpoint(),0, 1);
+                NAR_Shuffleboard.addData("HElp", "Error", TURN_CONTROLLER.getController().getPositionError(),0, 1);
             }
         ).beforeStarting(runOnce(()-> CmdSwerveDrive.disableTurn()));
     }
@@ -324,6 +368,24 @@ public class Trajectories {
             intake.intakeRollers.runManipulator(0)
         );
     }
+
+    public static Command autoShootNoTurn() {
+        return sequence(
+            new InstantCommand(()->swerve.resetEncoders()),
+            either(shooter.shoot(MAX_RPM), none(), ()-> shooter.isEnabled()),
+            parallel(
+                runOnce(()->{turning = true;}),
+                sequence(
+                    either(sequence(waitUntil(()-> intake.intakeRollers.hasObjectPresent()).withTimeout(0.25), intake.retractAuto()), none(), ()-> intake.intakePivot.isEnabled()),
+                    rampUp()
+                )
+            ),
+            runOnce(()->{turning = false;}),
+            intake.intakeRollers.outtake(),
+            waitSeconds(0.25),
+            intake.intakeRollers.runManipulator(0)
+        );
+    }
  
     public static Command autoShoot(double turnTimeout) {
         return either(
@@ -368,7 +430,7 @@ public class Trajectories {
         return sequence(
             intake.intakePivot.reset(0),
             climber.reset(),
-            runOnce(()-> swerve.zeroGyro(Robot.getAlliance() == Alliance.Red ? 0 : 180)),
+            // runOnce(()-> swerve.zeroGyro(Robot.getAlliance() == Alliance.Red ? 0 : 180)),
             AmpMechanism.getInstance().reset(-90),
             runOnce(()-> swerve.resetEncoders()),
             runOnce(()-> Intake.getInstance().isRetracting = false)

@@ -179,7 +179,7 @@ public class Constants {
         public static final PIDFFConfig config = new PIDFFConfig(turnkP, turnkI, turnkD, turnkS, turnkV, turnkA, 0);
 
         public static final Controller TURN_CONTROLLER = new Controller(config, Type.POSITION);
-        public static final double TURN_TOLERANCE = 1;
+        public static final double TURN_TOLERANCE = 5;
 
         static {
             TURN_CONTROLLER.enableContinuousInput(-180, 180);

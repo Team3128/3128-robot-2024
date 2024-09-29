@@ -84,7 +84,21 @@ public class AutoPrograms {
         // }
         // autoCommand = autoMap.get(selectedAutoName);
 
-        return Trajectories.middle_6note().beforeStarting(Trajectories.resetAuto());
+        return sequence(
+            Trajectories.turnDegrees(true, 90),
+            waitSeconds(1),
+            Trajectories.turnDegrees(true, 90),
+            waitSeconds(1),
+            Trajectories.turnDegrees(true, 90),
+            waitSeconds(1),
+            Trajectories.turnDegrees(true, 90),
+            waitSeconds(1),
+            Trajectories.turnDegrees(true, 90),
+            waitSeconds(1),
+            Trajectories.turnDegrees(true, 90),
+            waitSeconds(1)
+        );
+        // return Trajectories.middle_4note().beforeStarting(Trajectories.resetAuto());
     }
 
     private Command defaultAuto(){

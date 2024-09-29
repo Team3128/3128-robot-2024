@@ -22,6 +22,7 @@ import static frc.team3128.commands.CmdManager.*;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
 import frc.team3128.Constants.LedConstants.Colors;
+import frc.team3128.autonomous.AutoPrograms;
 import frc.team3128.autonomous.Trajectories;
 import frc.team3128.autonomous.Trajectories.ShootPosition;
 import frc.team3128.commands.CmdSwerveDrive;
@@ -108,6 +109,7 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
 
+        // TODO: what is kY
         // controller.getButton(XboxButton.kY).onTrue(runOnce(() -> ampAlign().schedule()));
         // controller.getButton(XboxButton.kB).onTrue(rampUpFeed(MIDDLE_FEED_RPM, MIDDLE_FEED_RPM, 13)).onFalse(feed(MIDDLE_FEED_RPM, 13,MIDDLE_FEED_ANGLE));
         // controller.getButton(XboxButton.kY).onTrue(rampUpFeed(EDGE_FEED_RPM, EDGE_FEED_RPM, 13)).onFalse(feed(EDGE_FEED_RPM, 13, EDGE_FEED_ANGLE));   //Feed Shot
@@ -117,7 +119,6 @@ public class RobotContainer {
         controller.getButton(XboxButton.kRightTrigger).onTrue(rampUp(()->MAX_RPM, 0)).onFalse(shootDist());     //Auto Shoot
         controller.getButton(XboxButton.kX).onTrue(rampUp(()->Climber.Setpoint.AMP.setpoint, AMP_RPM).andThen(ampMechanism.extend())).onFalse(ampShoot()); //Amp Shot
         controller.getButton(XboxButton.kB).onTrue(new InstantCommand(()->swerve.resetEncoders()));
-        controller.getButton(XboxButton.kY).onTrue(Trajectories.rampUpAuto(ShootPosition.WING));
 
         controller.getButton(XboxButton.kA).onTrue(sequence(runOnce(()-> intake.isRetracting = false), intake.intakePivot.pivotTo(150), climber.climbTo(Climber.Setpoint.EXTENDED))); //Extend Climber
         controller.getButton(XboxButton.kBack).onTrue(sequence(climber.setClimber(-0.35), waitSeconds(1), climber.setClimber(-1), waitUntil(()->climber.isClimbed()), climber.setClimber(0)));   //Retract Climber
@@ -142,6 +143,8 @@ public class RobotContainer {
         controller.getLeftPOVButton().onTrue(runOnce(()-> {
             CmdSwerveDrive.setTurnSetpoint(Robot.getAlliance() == Alliance.Red ? 270 : 90);
         }));
+
+        controller.getButton(XboxButton.kY).onTrue(Trajectories.turnDegrees(true, 90));
 
         buttonPad.getButton(1).onTrue(shooter.setShooter(1)).onFalse(shooter.setShooter(0));
         buttonPad.getButton(2).onTrue(intake.intakePivot.runPivot(0.2)).onFalse(intake.intakePivot.runPivot(0));

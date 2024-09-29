@@ -59,6 +59,14 @@ public class Swerve extends SwerveBase {
         );
     }
 
+    public static Translation2d blueToAlliance(Translation2d translation) {
+        if (Robot.getAlliance() == Alliance.Blue) return translation;
+        return new Translation2d(
+            FieldConstants.FIELD_X_LENGTH - translation.getX(),
+            translation.getY()
+        );
+    }
+
     private Swerve() {
         super(swerveKinematics, SVR_STATE_STD, SVR_VISION_MEASUREMENT_STD, Mod0, Mod1, Mod2, Mod3);
         chassisVelocityCorrection = false;
