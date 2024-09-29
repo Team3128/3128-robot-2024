@@ -238,16 +238,22 @@ public class Swerve extends SwerveBase {
     }
 
     public void initThrottlingShuffleboard(){
-        NAR_Shuffleboard.addData("Motors", "Motor 1 Current", ()->modules[0].getDriveMotor().getStallCurrent(), 4,0);
-        NAR_Shuffleboard.addData("Motors", "Motor 2 Current", ()->modules[1].getDriveMotor().getStallCurrent(), 4, 1);
-        NAR_Shuffleboard.addData("Motors", "Motor 3 Current", ()->modules[2].getDriveMotor().getStallCurrent(), 4,2);
-        NAR_Shuffleboard.addData("Motors", "Motor 4 Current", ()->modules[3].getDriveMotor().getStallCurrent(), 4,3);
+        NAR_Shuffleboard.addData("Swerve2", "Motor 1 Current", ()->modules[0].getDriveMotor().getStallCurrent(), 0,0);
+        NAR_Shuffleboard.addData("Swerve2", "Motor 2 Current", ()->modules[1].getDriveMotor().getStallCurrent(), 0, 1);
+        NAR_Shuffleboard.addData("Swerve2", "Motor 3 Current", ()->modules[2].getDriveMotor().getStallCurrent(), 0,2);
+        NAR_Shuffleboard.addData("Swerve2", "Motor 4 Current", ()->modules[3].getDriveMotor().getStallCurrent(), 0,3);
+        NAR_Shuffleboard.addData("Swerve2", "AccelerationX", ()-> gyro.getAccelerationX().asSupplier().get(), 1, 0);
+        NAR_Shuffleboard.addData("Swerve2", "AccelerationY", ()-> gyro.getAccelerationY().asSupplier().get(), 1, 1);
+        NAR_Shuffleboard.addData("Swerve2", "AccelerationZ", ()-> gyro.getAccelerationZ().asSupplier().get(), 1, 2);
+        NAR_Shuffleboard.addData("Swerve2", "AccelerationMag", ()-> getRobotAcceleration().getNorm(), 1, 3);
+
     }
 
     public Translation2d getRobotAcceleration(){
         return new Translation2d(
             gyro.getAccelerationX().getValueAsDouble(), 
-            gyro.getAccelerationY().getValueAsDouble());
+            gyro.getAccelerationY().getValueAsDouble()
+            );
     }
 
     public Command throttleModules(int limit){
