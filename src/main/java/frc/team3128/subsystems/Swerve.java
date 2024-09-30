@@ -44,6 +44,9 @@ public class Swerve extends SwerveBase {
 
     public Supplier<Double> yaw;
 
+    public double calcVelocity;
+    private Pose2d prevPose = new Pose2d();
+
     public static synchronized Swerve getInstance() {
         if (instance == null) {
             instance = new Swerve();
@@ -78,6 +81,13 @@ public class Swerve extends SwerveBase {
         NAR_Shuffleboard.addData("Auto", "Setpoint", ()-> TURN_CONTROLLER.atSetpoint());
         initStateCheck();
         initThrottlingShuffleboard();
+    }
+
+    @Override
+    public void periodic(){
+        super.periodic();
+        calcVelocity = getPose().minus(prevPose).getTranslation().getNorm() / 0.020;
+        prevPose = getPose();
     }
 
     public boolean crossedPodium() {
@@ -242,10 +252,7 @@ public class Swerve extends SwerveBase {
         NAR_Shuffleboard.addData("Swerve2", "Motor 2 Current", ()->modules[1].getDriveMotor().getStallCurrent(), 0, 1);
         NAR_Shuffleboard.addData("Swerve2", "Motor 3 Current", ()->modules[2].getDriveMotor().getStallCurrent(), 0,2);
         NAR_Shuffleboard.addData("Swerve2", "Motor 4 Current", ()->modules[3].getDriveMotor().getStallCurrent(), 0,3);
-        NAR_Shuffleboard.addData("Swerve2", "AccelerationX", ()-> gyro.getAccelerationX().asSupplier().get(), 1, 0);
-        NAR_Shuffleboard.addData("Swerve2", "AccelerationY", ()-> gyro.getAccelerationY().asSupplier().get(), 1, 1);
-        NAR_Shuffleboard.addData("Swerve2", "AccelerationZ", ()-> gyro.getAccelerationZ().asSupplier().get(), 1, 2);
-        NAR_Shuffleboard.addData("Swerve2", "AccelerationMag", ()-> getRobotAcceleration().getNorm(), 1, 3);
+        NAR_Shuffleboard.addData("Swerve2", "Calc Robot Velocity", ()-> calcVelocity, 0, 4);
 
     }
 
@@ -253,7 +260,7 @@ public class Swerve extends SwerveBase {
         return new Translation2d(
             gyro.getAccelerationX().getValueAsDouble(), 
             gyro.getAccelerationY().getValueAsDouble()
-            );
+        );
     }
 
     public Command throttleModules(int limit){
@@ -264,77 +271,4 @@ public class Swerve extends SwerveBase {
         });
     }
 
-
-
-
-    // private int upperStallCounter;
-    // private int upperStallThreshold;
-    // private int lowerStallCounter;
-    // private int lowerStallThreshold;
-    // private boolean usingUpperStallLimit;
-
-    // public void initModuleThrottling(){
-    //     upperStallCounter = 0; //2 seconds?
-    //     upperStallThreshold = 100;
-
-    //     lowerStallCounter = 0; //1 seconds?
-    //     lowerStallThreshold = 50;
-
-    //     usingUpperStallLimit = true;
-    // }
-
-    // public void setModuleThrottlingConstaints(int upperStallCounter, int upperStallThreshold, int lowerStallCounter, int lowerStallThreshold){
-    //     this.upperStallCounter = upperStallCounter;
-    //     this.upperStallThreshold = upperStallThreshold;
-    //     this.lowerStallCounter = lowerStallCounter;
-    //     this.lowerStallThreshold = lowerStallThreshold;
-    // }
-
-    // public boolean updateModuleThrottling(){
-
-    //     if(usingUpperStallLimit){ //check if need to go to lower stall limit
-    //         if(getAccelerationMag() < currentAccelerationThreshold){
-    //             upperStallCounter++;
-    //         }else{
-    //             upperStallCounter = 0;
-    //         }
-
-    //         if(upperStallCounter >= upperStallThreshold){
-    //             upperStallCounter = 0;
-    //             return true;
-    //         }else{
-    //             return false;
-    //         }
-    //     }else{ // check if need to go to upper stall limit
-    //         if(getAccelerationMag() > currentAccelerationThreshold){
-    //             lowerStallCounter++;
-    //         }else{
-    //             lowerStallCounter = 0;
-    //         }
-
-    //         if(lowerStallCounter >= lowerStallThreshold){
-    //             lowerStallCounter = 0;
-    //             return true;
-    //         }else{
-    //             return false;
-    //         }
-    //     }
-    // }
-
-    // public void toggleModuleThrottling(){
-    //     if (usingUpperStallLimit) {
-    //         for(SwerveModule module : modules){
-    //             module.getDriveMotor().setCurrentLimit(conservDriveLimit);
-    //         }
-    //     }else{
-    //         for(SwerveModule module : modules){
-    //             module.getDriveMotor().setCurrentLimit(driveLimit);
-    //         }
-    //     }
-
-    //     usingUpperStallLimit = !usingUpperStallLimit;
-    // }
-
 }
-    
-

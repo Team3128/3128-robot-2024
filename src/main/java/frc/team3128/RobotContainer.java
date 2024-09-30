@@ -17,9 +17,7 @@ import static frc.team3128.Constants.ShooterConstants.EDGE_FEED_ANGLE;
 import static frc.team3128.Constants.ShooterConstants.EDGE_FEED_RPM;
 import static frc.team3128.Constants.ShooterConstants.MAX_RPM;
 import static frc.team3128.Constants.ShooterConstants.RAM_SHOT_RPM;
-import static frc.team3128.Constants.SwerveConstants.conserveDriveLimit;
-import static frc.team3128.Constants.SwerveConstants.currentAccelerationThreshold;
-import static frc.team3128.Constants.SwerveConstants.driveLimit;
+import static frc.team3128.Constants.SwerveConstants.*;
 import static frc.team3128.commands.CmdManager.*;
 
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
@@ -178,7 +176,7 @@ public class RobotContainer {
         // new Trigger(()-> limelight.hasValidTarget() && !intake.intakeRollers.hasObjectPresent() && (DriverStation.isAutonomous())).onTrue(runOnce(()-> leds.setLedColor(Colors.ORANGE))).onFalse(runOnce(()-> leds.setDefaultColor()));
         new Trigger(()-> Camera.seesTag() && intake.intakeRollers.hasObjectPresent()).onTrue(runOnce(()-> leds.setLedColor(Colors.BLUE))).onFalse(runOnce(()-> leds.setDefaultColor()));
 
-        new Trigger(() -> swerve.getRobotAcceleration().getNorm() < currentAccelerationThreshold)
+        new Trigger(() -> swerve.calcVelocity > currentVelocityThreshold)
                     .onTrue(swerve.throttleModules(conserveDriveLimit))
                     .onFalse(swerve.throttleModules(driveLimit));
 

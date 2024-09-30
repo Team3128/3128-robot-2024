@@ -91,7 +91,7 @@ public class Constants {
         public static final int offset = 20;
 
         public static final int conserveDriveLimit = 40;
-        public static final int currentAccelerationThreshold = 2;
+        public static final int currentVelocityThreshold = 2;
 
         /* Angle Motor PID Values */
         // switched 364 pid values to SDS pid values
