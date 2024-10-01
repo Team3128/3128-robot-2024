@@ -240,7 +240,26 @@ public class Constants {
         public static final double FIELD_X_LENGTH = Units.inchesToMeters(651.25); // meters
         public static final double FIELD_Y_LENGTH = Units.inchesToMeters(315.5); // meters
         public static final Pose2d SPEAKER = new Pose2d(Units.inchesToMeters(324.5), Units.inchesToMeters(315.5), Rotation2d.fromDegrees(0));
+        public static final double TOO_CLOSE = 0.2;
+        
+        public enum Note {
+            NOTE1_1(2.89, 6.99),
+            NOTE1_2(2.89, 5.55),
+            NOTE1_3(2.89, 4.11),
+            NOTE2_1(6.45, 7.44),
+            NOTE2_2(6.45, 5.79),
+            NOTE2_3(6.45, 4.10),
+            NOTE2_4(6.45, 2.45),
+            NOTE2_5(6.45, 0.77);
 
+            private final Translation2d translation;
+            private Note(double x, double y) {
+                translation = new Translation2d(x, y);
+            }
+            public Translation2d getTranslation() {
+                return translation;
+            }
+        }
 
         public static Pose2d allianceFlip(Pose2d pose) {
             if (Robot.getAlliance() == Alliance.Red) {
@@ -429,7 +448,7 @@ public class Constants {
         public static final double TX_THRESHOLD = 1;
         public static final double HORIZONTAL_OFFSET_GOAL = 0;
         public static final double PLATEAU_THRESHOLD = 5;
-        public static final double TIMEOUT = 1;
+        public static final double TIMEOUT = 3;
         public static final double KP = 0.1;
         public static final double KI = 0;
         public static final double KD = 0;

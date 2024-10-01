@@ -25,6 +25,7 @@ import frc.team3128.Constants.LedConstants.Colors;
 import frc.team3128.autonomous.AutoPrograms;
 import frc.team3128.autonomous.Trajectories;
 import frc.team3128.autonomous.Trajectories.ShootPosition;
+import frc.team3128.commands.CmdAutoAlign;
 import frc.team3128.commands.CmdSwerveDrive;
 import common.core.swerve.SwerveModule;
 import common.hardware.camera.Camera;
@@ -144,7 +145,7 @@ public class RobotContainer {
             CmdSwerveDrive.setTurnSetpoint(Robot.getAlliance() == Alliance.Red ? 270 : 90);
         }));
 
-        controller.getButton(XboxButton.kY).onTrue(Trajectories.turnDegrees(true, 90));
+        controller.getButton(XboxButton.kY).onTrue(new CmdAutoAlign(3, false));
 
         buttonPad.getButton(1).onTrue(shooter.setShooter(1)).onFalse(shooter.setShooter(0));
         buttonPad.getButton(2).onTrue(intake.intakePivot.runPivot(0.2)).onFalse(intake.intakePivot.runPivot(0));
