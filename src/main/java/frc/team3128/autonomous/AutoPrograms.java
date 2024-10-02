@@ -42,15 +42,14 @@ public class AutoPrograms {
             "middle_6note_cond"
         };
         final String[] pathStrings = new String[] {
-            "middle-note1.3",
-            "note1.3diag-note1.2",
-            "note1.2-note1.1",
-            "note1.1-note2.1",
-            "note2.1-wing",
-            "wing-note2.2",
-            "note2.2-wing",
-            "wing-note2.3",
-            "note2.1-note2.2"
+            "only-note1.2-note2.3",
+            "only-note2.3-middle",
+            "only-top-note2.1",
+            "only-note2.1-wing",
+            "only-wing-note2.2",
+            "only-note2.2-wing",
+            "only-wing-note2.3",
+            "only-note2.3-wing"
         };
         
         NarwhalDashboard.getInstance().addAutos(autoStrings);
@@ -84,7 +83,7 @@ public class AutoPrograms {
         // }
         // autoCommand = autoMap.get(selectedAutoName);
 
-        return Trajectories.middle_4note().beforeStarting(Trajectories.resetAuto());
+        return Trajectories.middleClose_4note().beforeStarting(Trajectories.resetAuto());
         // return Trajectories.middle_4note().beforeStarting(Trajectories.resetAuto());
     }
 

@@ -7,6 +7,7 @@ import com.pathplanner.lib.util.ReplanningConfig;
 import common.core.commands.NAR_PIDCommand;
 import common.core.controllers.Controller;
 import common.core.controllers.PIDFFConfig;
+import common.hardware.limelight.Limelight;
 import common.core.controllers.Controller.Type;
 import common.utility.Log;
 import common.utility.shuffleboard.NAR_Shuffleboard;
@@ -39,6 +40,7 @@ import static frc.team3128.Constants.SwerveConstants.*;
 import static frc.team3128.Constants.FieldConstants.*;
 
 import frc.team3128.Constants.AutoConstants;
+import frc.team3128.Constants.FieldConstants.Note;
 import frc.team3128.Constants.ShooterConstants;
 import frc.team3128.Robot;
 import frc.team3128.RobotContainer;
@@ -84,6 +86,7 @@ public class Trajectories {
     private static final Climber climber = Climber.getInstance();
     private static final Shooter shooter = Shooter.getInstance();
     private static final Intake intake = Intake.getInstance();
+    private static final Limelight limelight = RobotContainer.limelight;
     private static double vx = 0, vy = 0;
     private static boolean turning = false;
     private static BooleanSupplier hasNote = intake.intakeRollers::hasObjectPresent;
@@ -138,47 +141,106 @@ public class Trajectories {
         );
     }
 
-    public static Command middle_4note() {
+    public static Command middleClose_4note() {
         return sequence(
-            // autoShoot(0.75),
-            searchAndAcquire(allianceFlip(Note.NOTE1_1.getTranslation())),
-            searchAndAcquire(allianceFlip(Note.NOTE1_2.getTranslation())),
-            searchAndAcquire(allianceFlip(Note.NOTE1_3.getTranslation()))
+            autoShootNoTurn(),
+            findAndScore(allianceFlip(Note.NOTE1_1.getTranslation())),
+            findAndScore(allianceFlip(Note.NOTE1_2.getTranslation())),
+            findAndScore(allianceFlip(Note.NOTE1_3.getTranslation()))
         );
     }
 
-    public static Command middle_6note() {
+    public static Command middle_5note() {
         return sequence(
-            autoPrograms.getAuto("middle_6note_cond"),
-            alignSearch(false).onlyWhile(RobotContainer.limelight::hasValidTarget),
-            either(
-                sequence(
-                    autoPrograms.getPath("note2.1-wing"),
-                    intake.intakeRollers.outtakeWithTimeout(0.25),
-                    autoPrograms.getPath("wing-note2.2")
-                ),
-                sequence(
-                turnInPlace(Note.NOTE2_2.getTranslation()),
-                runOnce(()->Log.info("test", "skip wing shot"))),
-                hasNote
+            autoShootNoTurn(),
+            findAndScore(allianceFlip(Note.NOTE1_2.getTranslation())),
+            autoPrograms.getPath("only-note1.2-note2.3"),
+            findNoTurn(allianceFlip(Note.NOTE2_3.getTranslation())),
+            autoPrograms.getPath("note2.3-middle"),
+            autoShootNoTurn().onlyIf(hasNote),
+            findAndScore(allianceFlip(Note.NOTE1_1.getTranslation())),
+            findAndScore(allianceFlip(Note.NOTE1_3.getTranslation()))
+        );
+    }
+
+    public static Command top_4note() {
+        return sequence(
+            autoShootNoTurn(),
+            autoPrograms.getPath("only-top-note2.1"),
+            findNote2_1(),
+            autoPrograms.getPath("note2.1-wing"),
+            autoShoot(0.75).onlyIf(hasNote),
+            autoPrograms.getPath("only-wing-note2.2"),
+            findNote2_2(),
+            autoPrograms.getPath("note2.2-wing"),
+            autoShoot(0.75).onlyIf(hasNote),
+            autoPrograms.getPath("only-wing-note2.3"),
+            findNote2_3(),
+            autoPrograms.getPath("note2.3-wing"),
+            autoShoot(0.75).onlyIf(hasNote)
+        );
+    }
+
+    // Find Note2_1, if it is there
+    // If not, find Note2_2
+    // (If Note2_2 is not there, find Note2_3)
+    public static Command findNote2_1() {
+        return either(
+            findNoTurn(allianceFlip(Note.NOTE2_1.getTranslation())),
+            sequence(
+                turnInPlaceIntake(allianceFlip(Note.NOTE2_2.getTranslation())),
+                findNote2_2()
             ),
-            alignSearch(false).onlyWhile(RobotContainer.limelight::hasValidTarget)
+            () -> limelight.hasValidTarget()
         );
     }
 
-    public static Command searchAndAcquire(Translation2d note) {
+    // Find Note2_2, if it is there
+    // If not, find Note2_3
+    public static Command findNote2_2() {
+        return either(
+            findNoTurn(allianceFlip(Note.NOTE2_2.getTranslation())),
+            sequence(
+                turnInPlaceIntake(allianceFlip(Note.NOTE2_3.getTranslation())),
+                findNote2_3()
+            ),
+            () -> limelight.hasValidTarget()
+        );
+    }
+
+    // Find Note2_3, if it is there
+    public static Command findNote2_3() {
+        return findNoTurn(allianceFlip(Note.NOTE2_3.getTranslation())).onlyIf(() -> limelight.hasValidTarget());
+    }
+    
+    // find() and then shoot
+    public static Command findAndScore(Translation2d note) {
+        return sequence(
+            find(note),
+            autoShootNoTurn().onlyIf(hasNote)
+        );
+    }
+
+    // Points limelight toward the note and then findNoTurn()
+    public static Command find(Translation2d note) {
         return sequence(
             turnInPlaceIntake(note).withTimeout(1),
+            findNoTurn(note)
+        );
+    }
+
+    // Assuming limelight is pointed towards note, aligns and intakes it
+    // Also turns toward subwoofer
+    public static Command findNoTurn(Translation2d note) {
+        return sequence(
             sequence(
+                // This aligns
                 parallel(
                     intake.intakeAuto(),
-                    runOnce(()->Log.info("a", "a")),
-                    new CmdAutoAlign(3, false),
-                    runOnce(()->Log.info("a", "b"))
+                    new CmdAutoAlign(3, true).beforeStarting(() -> CmdAutoAlign.hasTimedOut = false)
                 ),
-                parallel(intake.retractAuto(), turnInPlace().withTimeout(0.75)),
-                autoShootNoTurn().onlyIf(hasNote)
-            ).onlyIf(() -> RobotContainer.limelight.hasValidTarget() && note.minus(swerve.getPose().getTranslation()).getNorm() > TOO_CLOSE)
+                parallel(intake.retractAuto(), turnInPlace().withTimeout(0.75))
+            ).onlyIf(() -> limelight.hasValidTarget() && note.minus(swerve.getPose().getTranslation()).getNorm() > TOO_CLOSE)
         );
     }
 
@@ -214,7 +276,7 @@ public class Trajectories {
         return race(
             intake.intakeAuto(), 
             sequence(
-                turnDegrees(false, 70).until(()-> RobotContainer.limelight.hasValidTarget()),
+                turnDegrees(false, 70).until(()-> limelight.hasValidTarget()),
                 repeatingSequence(
                     runOnce(()-> CmdAutoAlign.hasTimedOut = false),
                     new CmdAutoAlign(3, false),
@@ -222,7 +284,7 @@ public class Trajectories {
                         new Translation2d(), 
                         maxAngularVelocity / 4.0 * (counterClockwise ? 1 : -1) * (Robot.getAlliance() == Alliance.Red ? -1 : 1), 
                         false)
-                    ).until(()-> RobotContainer.limelight.hasValidTarget())
+                    ).until(()-> limelight.hasValidTarget())
                 ).until(()-> intake.intakeRollers.hasObjectPresent())
             ).beforeStarting(runOnce(()->{turning = true;})).andThen(runOnce(()->{turning = false;})));
     }
@@ -231,7 +293,7 @@ public class Trajectories {
         return sequence(
             runOnce(()-> CmdAutoAlign.hasTimedOut = false),
             new CmdAutoAlign(3, false),
-            turnDegrees(counterClockwise, 45).until(()-> RobotContainer.limelight.hasValidTarget()),
+            turnDegrees(counterClockwise, 45).until(()-> limelight.hasValidTarget()),
             new CmdAutoAlign(3, false)
         ).until(()-> intake.intakeRollers.hasObjectPresent())
         .beforeStarting(runOnce(()->{turning = true;})).andThen(runOnce(()->{turning = false;}));
@@ -241,7 +303,7 @@ public class Trajectories {
         return sequence(
             runOnce(()-> CmdAutoAlign.hasTimedOut = false),
             new CmdAutoAlign(3, false),
-            waitSeconds(1).until(()-> RobotContainer.limelight.hasValidTarget()),
+            waitSeconds(1).until(()-> limelight.hasValidTarget()),
             new CmdAutoAlign(3, false)
         ).until(()-> intake.intakeRollers.hasObjectPresent())
         .beforeStarting(runOnce(()->{turning = true;})).andThen(runOnce(()->{turning = false;}));
