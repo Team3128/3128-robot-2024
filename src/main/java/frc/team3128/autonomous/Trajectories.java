@@ -45,7 +45,7 @@ import static frc.team3128.commands.CmdManager.rampUp;
 
 import java.util.function.DoubleSupplier;
 
-import frc.team3128.subsystems.AmpMechanism;
+import frc.team3128.subsystems.Amp;
 import frc.team3128.subsystems.Climber;
 import frc.team3128.subsystems.Intake;
 import frc.team3128.subsystems.Shooter;
@@ -325,7 +325,7 @@ public class Trajectories {
             intake.intakePivot.reset(0),
             climber.reset(),
             runOnce(()-> swerve.zeroGyro(Robot.getAlliance() == Alliance.Red ? 0 : 180)),
-            AmpMechanism.getInstance().reset(-90),
+            Amp.getInstance().reset(-90),
             runOnce(()-> swerve.resetEncoders()),
             runOnce(()-> Intake.getInstance().isRetracting = false)
         );
