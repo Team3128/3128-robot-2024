@@ -12,15 +12,13 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import static edu.wpi.first.wpilibj2.command.Commands.*;
-import static frc.team3128.Constants.ShooterConstants.AMP_RPM;
-import static frc.team3128.Constants.ShooterConstants.EDGE_FEED_ANGLE;
-import static frc.team3128.Constants.ShooterConstants.EDGE_FEED_RPM;
-import static frc.team3128.Constants.ShooterConstants.MAX_RPM;
-import static frc.team3128.Constants.ShooterConstants.RAM_SHOT_RPM;
+import static frc.team3128.Constants.ShooterConstants.*;
+import static frc.team3128.Constants.AmpConstants.*;
 import static frc.team3128.commands.CmdManager.*;
 
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
+import frc.team3128.Constants.AmpConstants;
 import frc.team3128.Constants.LedConstants.Colors;
 import frc.team3128.commands.CmdSwerveDrive;
 import common.core.swerve.SwerveModule;
@@ -38,7 +36,7 @@ import common.utility.narwhaldashboard.NarwhalDashboard.State;
 import common.utility.shuffleboard.NAR_Shuffleboard;
 import common.utility.tester.Tester;
 // import common.utility.tester.Tester.UnitTest;
-import frc.team3128.subsystems.AmpMechanism;
+import frc.team3128.subsystems.Amp;
 import frc.team3128.subsystems.Climber;
 import frc.team3128.subsystems.Intake;
 import frc.team3128.subsystems.Leds;
@@ -56,7 +54,7 @@ public class RobotContainer {
 
     private Swerve swerve;
     private Shooter shooter;
-    private AmpMechanism ampMechanism;
+    private Amp amp;
     private Climber climber;
     private Intake intake;
     private Leds leds;
@@ -78,7 +76,7 @@ public class RobotContainer {
 
         swerve = Swerve.getInstance();
         shooter = Shooter.getInstance();
-        ampMechanism = AmpMechanism.getInstance();
+        amp = amp.getInstance();
         climber = Climber.getInstance();
         intake = Intake.getInstance();
         leds = Leds.getInstance();
@@ -113,7 +111,7 @@ public class RobotContainer {
 
         controller.getButton(XboxButton.kRightBumper).onTrue(rampUp(()->Climber.Setpoint.RAMSHOT.setpoint, RAM_SHOT_RPM)).onFalse(ramShot()); //Ram Shot
         controller.getButton(XboxButton.kRightTrigger).onTrue(rampUp(()->MAX_RPM, 0)).onFalse(shootDist());     //Auto Shoot
-        controller.getButton(XboxButton.kX).onTrue(rampUp(()->Climber.Setpoint.AMP.setpoint, AMP_RPM).andThen(ampMechanism.extend())).onFalse(ampShoot()); //Amp Shot
+        controller.getButton(XboxButton.kX).onTrue(rampUp(()->Climber.Setpoint.AMP.setpoint, AMP_RPM).andThen(amp.setState(AmpConstants.AmpState.AMP))).onFalse(ampShoot()); //Amp Shot
         controller.getButton(XboxButton.kB).onTrue(new InstantCommand(()->swerve.resetEncoders()));
 
         controller.getButton(XboxButton.kA).onTrue(sequence(runOnce(()-> intake.isRetracting = false), intake.intakePivot.pivotTo(150), climber.climbTo(Climber.Setpoint.EXTENDED))); //Extend Climber
@@ -149,7 +147,7 @@ public class RobotContainer {
         buttonPad.getButton(7).onTrue(shooter.shoot(0));
         buttonPad.getButton(8).onTrue(intake.intakePivot.pivotTo(0));
         buttonPad.getButton(9).onTrue(climber.climbTo(0));
-        buttonPad.getButton(10).onTrue(ampMechanism.reset(-90));
+        buttonPad.getButton(10).onTrue(amp.reset(-90));
         
         buttonPad.getButton(11).onTrue(intake.intakePivot.reset(0));
         buttonPad.getButton(12).onTrue(climber.reset());
@@ -204,7 +202,7 @@ public class RobotContainer {
         dashboard.checkState("IntakeState", ()-> intake.getRunningState());
         dashboard.checkState("ClimberState", ()-> climber.getRunningState());
         dashboard.checkState("ShooterState", ()-> shooter.getRunningState());
-        dashboard.checkState("AmpMechanismState", ()-> ampMechanism.getRunningState());
+        // dashboard.checkState("AmpMechanismState", ()-> ampMechanism.getRunningState());
         dashboard.addUpdate("driveLimit", ()-> swerve.getdriveLimit());
         dashboard.addUpdate("offset", ()-> swerve.getOffSet());
 
@@ -241,10 +239,10 @@ public class RobotContainer {
             Log.info("State Check", "Climber failed.");
             return false;
         }
-        if (ampMechanism.getRunningState() != State.RUNNING) {
-            Log.info("State Check", "AmpMechanism failed.");
-            return false;
-        }
+        // if (ampMechanism.getRunningState() != State.RUNNING) {
+        //     Log.info("State Check", "AmpMechanism failed.");
+        //     return false;
+        // }
         return true;
     }
 

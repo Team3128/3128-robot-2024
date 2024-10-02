@@ -5,30 +5,36 @@ import java.util.HashMap;
 import com.pathplanner.lib.path.PathConstraints;
 
 import common.core.controllers.Controller;
+import common.core.controllers.TrapController;
 import common.core.controllers.PIDFFConfig;
 import common.core.controllers.Controller.Type;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+
 import common.core.swerve.SwerveConversions;
 import common.core.swerve.SwerveModuleConfig;
 import common.core.swerve.SwerveModuleConfig.SwerveMotorConfig;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import frc.team3128.subsystems.Swerve;
+
 import common.hardware.motorcontroller.NAR_CANSpark;
 import common.hardware.motorcontroller.NAR_TalonFX;
 import common.hardware.motorcontroller.NAR_TalonSRX;
 import common.hardware.motorcontroller.NAR_CANSpark.ControllerType;
+import common.hardware.motorcontroller.NAR_CANSpark.SparkMaxConfig;
 import common.hardware.motorcontroller.NAR_Motor.MotorConfig;
 import common.hardware.motorcontroller.NAR_Motor.Neutral;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
-import edu.wpi.first.math.util.Units;
+
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import frc.team3128.subsystems.Swerve;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.util.Units;
+
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 
 
@@ -241,8 +247,17 @@ public class Constants {
 
         public static final double FIELD_X_LENGTH = Units.inchesToMeters(651.25); // meters
         public static final double FIELD_Y_LENGTH = Units.inchesToMeters(315.5); // meters
-        public static final Pose2d SPEAKER = new Pose2d(Units.inchesToMeters(324.5), Units.inchesToMeters(315.5), Rotation2d.fromDegrees(0));
+        public static final Translation2d SPEAKER = new Translation2d(Units.inchesToMeters(324.5), Units.inchesToMeters(315.5));
+        public static final Translation2d AMP = new Translation2d(1.8, 8.1); //Approximate in meters
 
+
+        public static double getDist(Translation2d point1, Translation2d point2) {
+            return point1.minus(point2).getNorm();
+        }
+
+        public static double getDist(Pose2d pose1, Pose2d pose2) {
+            return getDist(pose1.getTranslation(), pose2.getTranslation());
+        }
 
         public static Pose2d allianceFlip(Pose2d pose) {
             if (Robot.getAlliance() == Alliance.Red) {
@@ -282,6 +297,8 @@ public class Constants {
     }
 
     public static class FocalAimConstants {
+        public static final Translation2d focalPoint = new Translation2d(0.1, Units.inchesToMeters(218.29));
+
         public static final double speakerLength = 1.043;
         public static final double speakerMidpointY = Units.inchesToMeters(218.29);//5.4;
         
@@ -329,29 +346,62 @@ public class Constants {
         public static final double PROJECTILE_SPEED = 100; // m/s
     }
 
-    public static class AmpWristConstants {
-        public static final PIDFFConfig PIDConstants = new PIDFFConfig(0.25, 0, 0, 0.08, 0, 0.22);
-        public static final double MAX_VELOCITY = 10000000;
-        public static final double MAX_ACCELERATION = 1000000;
-        public static final Constraints TRAP_CONSTRAINTS = new Constraints(MAX_VELOCITY, MAX_ACCELERATION);
+    public static class AmpConstants {
+        // Pivot Motor
+        public static final int PIVOT_MOTOR_ID = 53;
+        public static final NAR_CANSpark PIVOT_MOTOR = new NAR_CANSpark(PIVOT_MOTOR_ID);
+        public static final double PIVOT_GEAR_RATIO = 1.0 / 40.0;
+        public static final int PIVOT_CURRENT_LIMIT = 20;
+        public static final Neutral PIVOT_NEUTRAL_MODE = Neutral.COAST;
+        public static final boolean PIVOT_INVERTED = false;
+        public static final SparkMaxConfig PIVOT_STATUS_FRAME = SparkMaxConfig.POSITION;
 
-        public static final int WRIST_MOTOR_ID = 53;
-        public static final NAR_CANSpark WRIST_MOTOR = new NAR_CANSpark(WRIST_MOTOR_ID);
-        public static final double GEAR_RATIO = 1.0 / 70.875;
-        public static final double CURRENT_LIMIT = 20;
+        // Pivot System Constraints
+        public static final double MAX_VELOCITY = 100000;
+        public static final double MAX_ACCELERATION = 100000;
+        public static final double POSITION_MINIMUM = 90;
+        public static final double POSITION_MAXIMUM = -90;
+
+        // Pivot Controller
+        public static final Constraints TRAP_CONSTRAINTS = new Constraints(MAX_VELOCITY, MAX_ACCELERATION);
+        public static final PIDFFConfig PID_CONFIG = new PIDFFConfig(0.25, 0, 0, 0.08, 0, 0.22);
+        public static final TrapController PIVOT_CONTROLLER = new TrapController(PID_CONFIG, TRAP_CONSTRAINTS);
         public static final double POSITION_TOLERANCE = 1;
 
+        // Pivot Functional Constraints
+        public static final double EXTENSION_TIMEOUT = 1;
+        public static final double RETRACTION_TIMEOUT = 1;
+
+        // Roller Motor
         public static final int ROLLER_MOTOR_ID = 52;
         public static final NAR_TalonSRX ROLLER_MOTOR = new NAR_TalonSRX(ROLLER_MOTOR_ID);
-        public static final double AMP_POWER = 0.8;
+        public static final double ROLLER_GEAR_RATIO = 1.0;
+        public static final int ROLLER_CURRENT_LIMIT = 40;
+        public static final Neutral ROLLER_NEUTRAL_MODE = Neutral.COAST;
+        public static final boolean ROLLER_INVERTED = false;
 
-        public static final double EXTEND_TIMEOUT = 1;
-        public static final double RETRACTED_TIMEOUT = 1;
+        // Roller Functional Constraints
+        public static final double ROLLER_POWER = 0.8;
+        public static final int ROLLER_STALL_CURRENT = 15;
 
-        public static final double ROLLER_TIMEOUT = 5;
-        public static final double ROLLER_TEST_PLATEAU = 0.5;
-        public static final double ROLLER_TEST_EXPECTED_CURRENT = 1.25;
+        // Subsystem Functional Constraints
+        public static final double AMP_DISTANCE_THRESHOLD = 0.5; //meters
+        public static final double AMP_ANGLE_THRESHOLD = 30; 
+
+        // Subsystem States
+        public enum AmpState {
+            RETRACTED(0, 0),
+            AMP(180, ROLLER_POWER);
+
+            public final double angle;
+            public final double rollerPower;
+            AmpState(double angle, double rollerPower) {
+                this.angle = angle;
+                this.rollerPower = rollerPower;
+            }
+        }
     }
+
     public static class ClimberConstants {
         public static final PIDFFConfig PIDConstants = new PIDFFConfig(2, 0, 0, 0.18, 0, 0, 0.3);//240
         public static final double MAX_VELOCTIY = 10000000;

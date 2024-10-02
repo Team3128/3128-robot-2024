@@ -14,7 +14,8 @@ import frc.team3128.Robot;
 import frc.team3128.RobotContainer;
 import frc.team3128.Constants.AutoConstants;
 import frc.team3128.Constants.ShooterConstants;
-import frc.team3128.subsystems.AmpMechanism;
+import frc.team3128.Constants.AmpConstants;
+import frc.team3128.subsystems.Amp;
 import frc.team3128.subsystems.Climber;
 import frc.team3128.subsystems.Intake;
 import frc.team3128.subsystems.Shooter;
@@ -38,7 +39,7 @@ public class CmdManager {
     private static Intake intake = Intake.getInstance();
     private static Shooter shooter = Shooter.getInstance();
     private static Climber climber = Climber.getInstance();
-    private static AmpMechanism ampMechanism = AmpMechanism.getInstance();
+    private static Amp amp = Amp.getInstance();
 
     private static NAR_XboxController controller = RobotContainer.controller;
 
@@ -81,10 +82,10 @@ public class CmdManager {
     public static Command ampShoot() {
         return sequence (
             rampUp(()->Climber.Setpoint.AMP.setpoint, AMP_RPM),
-            ampMechanism.extend(),
-            waitUntil(()-> ampMechanism.atSetpoint() && shooter.atSetpoint()),
+            amp.setState(AmpConstants.AmpState.AMP),
+            waitUntil(()-> amp.atSetpoint() && shooter.atSetpoint()),
             intake.intakeRollers.ampOuttake(0.9),
-            ampMechanism.retract(),
+            amp.setState(AmpConstants.AmpState.RETRACTED),
             neutral()
         );
     }
