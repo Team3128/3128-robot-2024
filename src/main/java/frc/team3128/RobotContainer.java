@@ -18,6 +18,7 @@ import static frc.team3128.Constants.ShooterConstants.EDGE_FEED_RPM;
 import static frc.team3128.Constants.ShooterConstants.MAX_RPM;
 import static frc.team3128.Constants.ShooterConstants.RAM_SHOT_RPM;
 import static frc.team3128.commands.CmdManager.*;
+import frc.team3128.Camera1;
 
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
@@ -42,6 +43,7 @@ import frc.team3128.subsystems.AmpMechanism;
 import frc.team3128.subsystems.Climber;
 import frc.team3128.subsystems.Intake;
 import frc.team3128.subsystems.Leds;
+// import frc.team3128.subsystems.NAR_Cam;
 import frc.team3128.subsystems.Shooter;
 import frc.team3128.subsystems.Swerve;
 import frc.team3128.subsystems.Intake.Setpoint;
@@ -177,18 +179,21 @@ public class RobotContainer {
     }
 
     public void initCameras() {
-        Camera.disableAll();
-        Camera.configCameras(AprilTagFields.k2024Crescendo, PoseStrategy.LOWEST_AMBIGUITY, (pose, time) -> swerve.addVisionMeasurement(pose, time), () -> swerve.getPose());
-        Camera.setAmbiguityThreshold(0.3);
-        Camera.overrideThreshold = 30;
-        Camera.validDist = 0.5;
+        // Camera.configCameras(AprilTagFields.k2024Crescendo, PoseStrategy.LOWEST_AMBIGUITY, (pose, time) -> swerve.addVisionMeasurement(pose, time), () -> swerve.getPose());
+        // Camera.setAmbiguityThreshold(0.3);
+        // Camera.overrideThreshold = 30;
+        // Camera.validDist = 0.5;
         // Camera.addIgnoredTags(13.0, 14.0);
 
+        Camera1.setResources(() -> swerve.getYaw(), (pose,time)->swerve.addVisionMeasurement(pose, time), AprilTagFields.k2024Crescendo.loadAprilTagLayoutField(), ()->swerve.getPose());
+        Camera1.addIgnoredTags(13);
         if (Robot.isReal()) {
-            final Camera camera = new Camera("FRONT_LEFT", Units.inchesToMeters(10.055), Units.inchesToMeters(9.79), Units.degreesToRadians(30), Units.degreesToRadians(-28.125), 0);
-            final Camera camera2 = new Camera("FRONT_RIGHT", Units.inchesToMeters(10.055), -Units.inchesToMeters(9.79), Units.degreesToRadians(-30), Units.degreesToRadians(-28.125), 0);
-            camera.setCamDistanceThreshold(3.5);
-            camera2.setCamDistanceThreshold(5);
+            // final Camera camera = new Camera("FRONT_LEFT", Units.inchesToMeters(10.055), Units.inchesToMeters(9.79), Units.degreesToRadians(30), Units.degreesToRadians(-28.125), 0);
+            // final Camera camera2 = new Camera("FRONT_RIGHT", Units.inchesToMeters(10.055), -Units.inchesToMeters(9.79), Units.degreesToRadians(-30), Units.degreesToRadians(-28.125), 0);
+            // camera.setCamDistanceThreshold(3.5);
+            // camera2.setCamDistanceThreshold(5);
+            final Camera1 camera = new Camera1("FRONT_LEFT", Units.inchesToMeters(10.055), Units.inchesToMeters(9.79), Units.degreesToRadians(30), Units.degreesToRadians(-28.125), 0);
+            final Camera1 camera2 = new Camera1("FRONT_RIGHT", Units.inchesToMeters(10.055), -Units.inchesToMeters(9.79), Units.degreesToRadians(-30), Units.degreesToRadians(-28.125), 0);
         }
 
         limelight = new Limelight("limelight-mason", 0, 0, 0);
