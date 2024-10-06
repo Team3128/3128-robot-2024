@@ -104,7 +104,7 @@ public class Robot extends NAR_Robot {
 
     @Override
     public void robotPeriodic(){
-        Camera.updateAll();
+        Camera1.updateAll();
     }
 
     @Override
@@ -112,7 +112,7 @@ public class Robot extends NAR_Robot {
         RobotContainer.limelight.setLEDMode(LEDMode.ON);
         Swerve.getInstance().resetEncoders();
 
-        Camera.enableAll();
+        Camera1.enableAll();
         Camera.overrideThreshold = 0;
         Camera.validDist = 30;
         Leds.getInstance().setDefaultColor();
@@ -134,7 +134,7 @@ public class Robot extends NAR_Robot {
         
         Camera.overrideThreshold = 30;
         Camera.validDist = 0.5;
-        Camera.enableAll();
+        Camera1.enableAll();
         CommandScheduler.getInstance().cancelAll();
         
         CmdManager.neutral().schedule();
