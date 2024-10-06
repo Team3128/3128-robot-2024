@@ -38,10 +38,12 @@ import static frc.team3128.Constants.ShooterConstants.MAX_RPM;
 import static frc.team3128.Constants.ShooterConstants.RAM_SHOT_RPM;
 import static frc.team3128.Constants.SwerveConstants.*;
 import static frc.team3128.Constants.FieldConstants.*;
+import static frc.team3128.Constants.LimelightConstants.*;
 
 import frc.team3128.Constants.AutoConstants;
 import frc.team3128.Constants.FieldConstants.Note;
 import frc.team3128.Constants.ShooterConstants;
+import frc.team3128.Constants.SwerveConstants;
 import frc.team3128.Robot;
 import frc.team3128.RobotContainer;
 import frc.team3128.commands.CmdAutoAlign;
@@ -237,7 +239,7 @@ public class Trajectories {
                 // This aligns
                 parallel(
                     intake.intakeAuto(),
-                    new CmdAutoAlign(3, true).beforeStarting(() -> CmdAutoAlign.hasTimedOut = false)
+                    new CmdAutoAlign(3, TIMEOUT, true).beforeStarting(() -> CmdAutoAlign.hasTimedOut = false)
                 ),
                 parallel(intake.retractAuto(), turnInPlace().withTimeout(0.75))
             ).onlyIf(() -> limelight.hasValidTarget() && note.minus(swerve.getPose().getTranslation()).getNorm() > TOO_CLOSE)
@@ -256,7 +258,7 @@ public class Trajectories {
 
         double setpoint = swerve.getYaw() + angle * (counterClockwise ? 1 : -1) * (Robot.getAlliance() == Alliance.Red ? -1 : 1);
 
-        Controller c = new Controller(config, Type.POSITION);
+        Controller c = new Controller(SwerveConstants.config, Type.POSITION);
         c.enableContinuousInput(-180, 180);
         // c.setMeasurementSource(()-> Swerve.getInstance().getYaw());
         c.setTolerance(TURN_TOLERANCE);
@@ -279,7 +281,7 @@ public class Trajectories {
                 turnDegrees(false, 70).until(()-> limelight.hasValidTarget()),
                 repeatingSequence(
                     runOnce(()-> CmdAutoAlign.hasTimedOut = false),
-                    new CmdAutoAlign(3, false),
+                    new CmdAutoAlign(3, TIMEOUT, false),
                     run(()-> swerve.drive(
                         new Translation2d(), 
                         maxAngularVelocity / 4.0 * (counterClockwise ? 1 : -1) * (Robot.getAlliance() == Alliance.Red ? -1 : 1), 
@@ -292,9 +294,9 @@ public class Trajectories {
     public static Command alignSearch(boolean counterClockwise) {
         return sequence(
             runOnce(()-> CmdAutoAlign.hasTimedOut = false),
-            new CmdAutoAlign(3, false),
+            new CmdAutoAlign(3, TIMEOUT, false),
             turnDegrees(counterClockwise, 45).until(()-> limelight.hasValidTarget()),
-            new CmdAutoAlign(3, false)
+            new CmdAutoAlign(3, TIMEOUT, false)
         ).until(()-> intake.intakeRollers.hasObjectPresent())
         .beforeStarting(runOnce(()->{turning = true;})).andThen(runOnce(()->{turning = false;}));
     }
@@ -302,9 +304,9 @@ public class Trajectories {
     public static Command align() {
         return sequence(
             runOnce(()-> CmdAutoAlign.hasTimedOut = false),
-            new CmdAutoAlign(3, false),
+            new CmdAutoAlign(3, TIMEOUT, false),
             waitSeconds(1).until(()-> limelight.hasValidTarget()),
-            new CmdAutoAlign(3, false)
+            new CmdAutoAlign(3, TIMEOUT, false)
         ).until(()-> intake.intakeRollers.hasObjectPresent())
         .beforeStarting(runOnce(()->{turning = true;})).andThen(runOnce(()->{turning = false;}));
     }

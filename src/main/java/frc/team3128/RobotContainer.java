@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import static edu.wpi.first.wpilibj2.command.Commands.*;
+import static frc.team3128.Constants.LimelightConstants.TIMEOUT;
 import static frc.team3128.Constants.ShooterConstants.AMP_RPM;
 import static frc.team3128.Constants.ShooterConstants.EDGE_FEED_ANGLE;
 import static frc.team3128.Constants.ShooterConstants.EDGE_FEED_RPM;
@@ -145,7 +146,7 @@ public class RobotContainer {
             CmdSwerveDrive.setTurnSetpoint(Robot.getAlliance() == Alliance.Red ? 270 : 90);
         }));
 
-        controller.getButton(XboxButton.kY).onTrue(new CmdAutoAlign(3, false));
+        controller.getButton(XboxButton.kY).onTrue(new CmdAutoAlign(3, TIMEOUT, false));
 
         buttonPad.getButton(1).onTrue(shooter.setShooter(1)).onFalse(shooter.setShooter(0));
         buttonPad.getButton(2).onTrue(intake.intakePivot.runPivot(0.2)).onFalse(intake.intakePivot.runPivot(0));

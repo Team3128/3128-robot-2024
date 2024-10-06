@@ -5,6 +5,7 @@ import common.hardware.limelight.LimelightKey;
 import common.utility.shuffleboard.NAR_Shuffleboard;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.team3128.RobotContainer;
 import frc.team3128.subsystems.Intake;
@@ -18,8 +19,8 @@ public class CmdAutoAlign extends WaitCommand {
     private Limelight limelight;
     private double maxSpeed;
 
-    public CmdAutoAlign(double maxSpeed, boolean shouldRequire) {
-        super(TIMEOUT);
+    public CmdAutoAlign(double maxSpeed, double timeout, boolean shouldRequire) {
+        super(timeout);
         swerve = Swerve.getInstance();
         limelight = RobotContainer.limelight;
         controller = new PIDController(KP, KI, KD);
@@ -36,20 +37,23 @@ public class CmdAutoAlign extends WaitCommand {
 
     @Override
     public void execute() {
-        if (!limelight.hasValidTarget()) {
-            plateauCount++;
-            controller.reset();
-            // swerve.stop();
-            return;
-        }
-
-        plateauCount = 0;
         final double strafe = -controller.calculate(limelight.getValue(LimelightKey.HORIZONTAL_OFFSET));
         NAR_Shuffleboard.addData("Limelight", "Output", strafe, 2, 2);
         final double forward = -Math.sqrt(Math.max(Math.pow(maxSpeed, 2) - Math.pow(strafe, 2), 0));
         NAR_Shuffleboard.addData("Limelight", "Forward", forward, 2, 3);
 
-        swerve.drive(new Translation2d(forward, strafe), 0, false);
+        if (!limelight.hasValidTarget()) {
+            plateauCount++;
+            controller.reset();
+            // swerve.stop();
+
+            // Continue to go forwards even target not visible to prevent missing a note
+            swerve.drive(new ChassisSpeeds(forward, 0, 0));
+            return;
+        }
+
+        plateauCount = 0;
+        swerve.drive(new ChassisSpeeds(forward, strafe, 0));
     }
 
     @Override

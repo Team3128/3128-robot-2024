@@ -31,7 +31,7 @@ import edu.wpi.first.math.geometry.Translation3d;
  * Team 3128's class to control the robot's cameras and vision processing.
  * 
  * @since 2024 Crescendo
- * @author Mason Lam, William Yuan
+ * @author Audrey Zheng
  */
 public class Camera1 {
 
@@ -300,10 +300,11 @@ public class Camera1 {
     }
 
     public void initShuffleboard() {
-        // NAR_Shuffleboard.addData(camera.getName(), "Estimated Pose", () -> estimatedPose.toString(), 0, 0, 4, 1);
-        // // NAR_Shuffleboard.addData(camera.getName(), "Distance", () -> distance, 0, 1, 2, 1);
-        // NAR_Shuffleboard.addData(camera.getName(), "Is Disabled", () -> isDisabled, 2, 1, 1, 1);
-        // NAR_Shuffleboard.addData(camera.getName(), "Has target", () -> result.hasTargets(), 3, 2, 1, 1);
+        NAR_Shuffleboard.addData(camera.getName(), "Estimated Pose", () -> estimatedPose.toString(), 0, 0, 4, 1);
+        // NAR_Shuffleboard.addData(camera.getName(), "Distance", () -> distance, 0, 1, 2, 1);
+        NAR_Shuffleboard.addData(camera.getName(), "Is Disabled", () -> isDisabled, 2, 1, 1, 1);
+        NAR_Shuffleboard.addData(camera.getName(), "Has target", () -> result.hasTargets(), 3, 2, 1, 1);
+        NAR_Shuffleboard.addData(camera.getName(), "gyro", ()->gyro.getAsDouble(), 0, 3, 1, 1).withWidget("Gyro");
     }
 
     // public void update() {
