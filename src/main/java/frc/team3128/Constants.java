@@ -418,9 +418,7 @@ public class Constants {
         public static final double POSITION_MINIMUM = 0;
         public static final double POSITION_MAXIMUM = 220;
 
-        public static final int RIGHT_ROLLER_MOTOR_ID = 32;
         public static final int LEFT_ROLLER_MOTOR_ID = 33;
-        public static final NAR_CANSpark RIGHT_ROLLER_MOTOR = new NAR_CANSpark(RIGHT_ROLLER_MOTOR_ID);
         public static final NAR_CANSpark LEFT_ROLLER_MOTOR = new NAR_CANSpark(LEFT_ROLLER_MOTOR_ID);
         public static final double ANGLE_TOLERANCE = 3;
         public static final int CURRENT_LIMIT = 40;
