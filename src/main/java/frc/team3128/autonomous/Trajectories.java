@@ -270,6 +270,7 @@ public class Trajectories {
                 Swerve.getInstance().drive(new ChassisSpeeds(vx, vy, Units.degreesToRadians(output)));
                 // NAR_Shuffleboard.addData("HElp", "help", output, 0, 0);
             },
+            2,
             Swerve.getInstance()
         ).beforeStarting(runOnce(()-> {CmdSwerveDrive.disableTurn(); swerve.resetEncoders();}));
     }
@@ -344,6 +345,7 @@ public class Trajectories {
                 Swerve.getInstance().drive(new ChassisSpeeds(vx, vy, Units.degreesToRadians(output)));
                 NAR_Shuffleboard.addData("HElp", "help", output, 0, 0);
             },
+            2,
             swerve
         ).beforeStarting(runOnce(()-> CmdSwerveDrive.disableTurn()));
     }
@@ -358,6 +360,7 @@ public class Trajectories {
                 Swerve.getInstance().drive(new ChassisSpeeds(vx, vy, Units.degreesToRadians(output)));
                 NAR_Shuffleboard.addData("HElp", "help", output, 0, 0);
             },
+            2,
             swerve
         ).beforeStarting(runOnce(()-> CmdSwerveDrive.disableTurn()));
     }
@@ -374,6 +377,7 @@ public class Trajectories {
                 NAR_Shuffleboard.addData("HElp", "At Setpoint", TURN_CONTROLLER.getController().atSetpoint(),0, 1);
                 NAR_Shuffleboard.addData("HElp", "Error", TURN_CONTROLLER.getController().getPositionError(),0, 1);
             },
+            2,
             swerve
         ).beforeStarting(runOnce(()-> CmdSwerveDrive.disableTurn()));
     }

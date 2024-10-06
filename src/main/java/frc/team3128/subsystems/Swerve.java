@@ -214,13 +214,14 @@ public class Swerve extends SwerveBase {
 
                 Swerve.getInstance().drive(translation, Units.degreesToRadians(output), true);
             },
+            2,
             Swerve.getInstance()
         ).beforeStarting(runOnce(()-> CmdSwerveDrive.disableTurn()));
     }
 
     public boolean isConfigured() {
         for (final SwerveModule module : modules) {
-            final double CANCoderAngle = module.getCanCoder().getDegrees();
+            final double CANCoderAngle = module.getAbsoluteAngle().getDegrees();
             final double AngleMotorAngle = module.getAngleMotor().getPosition();
             if (CANCoderAngle == 0 || AngleMotorAngle == 0) return false;
         }
