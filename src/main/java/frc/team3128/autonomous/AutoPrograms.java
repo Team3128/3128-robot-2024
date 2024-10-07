@@ -48,7 +48,7 @@ public class AutoPrograms {
             "only-note2.1-wing",
             "only-wing-note2.2",
             "only-note2.2-wing",
-            "only-wing-note2.3",
+            //"only-wing-note2.3",
             "only-note2.3-wing"
         };
         

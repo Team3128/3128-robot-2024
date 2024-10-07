@@ -176,8 +176,8 @@ public class Trajectories {
             findNote2_2(),
             autoPrograms.getPath("note2.2-wing"),
             autoShoot(0.75).onlyIf(hasNote),
-            autoPrograms.getPath("only-wing-note2.3"),
-            findNote2_3(),
+            //autoPrograms.getPath("only-wing-note2.3"),
+            //findNotef2_3(),
             autoPrograms.getPath("note2.3-wing"),
             autoShoot(0.75).onlyIf(hasNote)
         );
