@@ -85,18 +85,20 @@ public class Intake {
         private DigitalInput limitSwitch;
 
         private IntakeRollers() {
-            super(STALL_CURRENT, INTAKE_POWER, OUTTAKE_POWER, STALL_POWER, 0.3, LEFT_ROLLER_MOTOR);
+            super(STALL_CURRENT, INTAKE_POWER, OUTTAKE_POWER, STALL_POWER, 0.3, RIGHT_ROLLER_MOTOR);
             limitSwitch = new DigitalInput(7);
             initShuffleboard();
         }
 
         @Override
         protected void configMotors() {
+            RIGHT_ROLLER_MOTOR.setInverted(false);
             LEFT_ROLLER_MOTOR.setInverted(true);
-            LEFT_ROLLER_MOTOR.enableVoltageCompensation(9);
-            LEFT_ROLLER_MOTOR.setNeutralMode(Neutral.COAST);
-            LEFT_ROLLER_MOTOR.setCurrentLimit(CURRENT_LIMIT);
-            LEFT_ROLLER_MOTOR.setStatusFrames(SparkMaxConfig.VELOCITY);
+            RIGHT_ROLLER_MOTOR.enableVoltageCompensation(9);
+            LEFT_ROLLER_MOTOR.follow(RIGHT_ROLLER_MOTOR);
+            RIGHT_ROLLER_MOTOR.setNeutralMode(Neutral.COAST);
+            RIGHT_ROLLER_MOTOR.setCurrentLimit(CURRENT_LIMIT);
+            RIGHT_ROLLER_MOTOR.setStatusFrames(SparkMaxConfig.VELOCITY);
         }
 
         public Command runNoRequirements(double power) {
@@ -138,7 +140,7 @@ public class Intake {
             return new CurrentTest
             (
                 "testRollers", 
-                LEFT_ROLLER_MOTOR, 
+                RIGHT_ROLLER_MOTOR, 
                 CURRENT_TEST_POWER, 
                 CURRENT_TEST_TIMEOUT,
                 CURRENT_TEST_PLATEAU,
@@ -230,8 +232,8 @@ public class Intake {
 
     public State getRunningState() {
         if (PIVOT_MOTOR.getState() == State.DISCONNECTED) return State.DISCONNECTED;
-        if (LEFT_ROLLER_MOTOR.getState() == State.DISCONNECTED) return State.DISCONNECTED;
-        if (LEFT_ROLLER_MOTOR.getState() == State.DISCONNECTED) return State.PARTIALLY_RUNNING;
+        if (LEFT_ROLLER_MOTOR.getState() == State.DISCONNECTED && RIGHT_ROLLER_MOTOR.getState() == State.DISCONNECTED) return State.DISCONNECTED;
+        if (LEFT_ROLLER_MOTOR.getState() == State.DISCONNECTED || RIGHT_ROLLER_MOTOR.getState() == State.DISCONNECTED) return State.PARTIALLY_RUNNING;
         return State.RUNNING;
     }
 
