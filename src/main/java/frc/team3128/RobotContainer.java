@@ -115,7 +115,7 @@ public class RobotContainer {
         // controller.getButton(XboxButton.kY).onTrue(runOnce(() -> ampAlign().schedule()));
         // controller.getButton(XboxButton.kB).onTrue(rampUpFeed(MIDDLE_FEED_RPM, MIDDLE_FEED_RPM, 13)).onFalse(feed(MIDDLE_FEED_RPM, 13,MIDDLE_FEED_ANGLE));
         // controller.getButton(XboxButton.kY).onTrue(rampUpFeed(EDGE_FEED_RPM, EDGE_FEED_RPM, 13)).onFalse(feed(EDGE_FEED_RPM, 13, EDGE_FEED_ANGLE));   //Feed Shot
-        // controller.getButton(XboxButton.kY).onTrue(rampUp(()->13, EDGE_FEED_RPM)).onFalse(feed(EDGE_FEED_RPM, 13, EDGE_FEED_ANGLE));   //Feed Shot
+        controller.getButton(XboxButton.kY).onTrue(rampUp(()->13, EDGE_FEED_RPM)).onFalse(feed(EDGE_FEED_RPM, 13, EDGE_FEED_ANGLE));   //Feed Shot
 
         controller.getButton(XboxButton.kRightBumper).onTrue(rampUp(()->Climber.Setpoint.RAMSHOT.setpoint, RAM_SHOT_RPM)).onFalse(ramShot()); //Ram Shot
         controller.getButton(XboxButton.kRightTrigger).onTrue(rampUp(()->MAX_RPM, 0)).onFalse(shootDist());     //Auto Shoot
@@ -146,7 +146,7 @@ public class RobotContainer {
             CmdSwerveDrive.setTurnSetpoint(Robot.getAlliance() == Alliance.Red ? 270 : 90);
         }));
 
-        controller.getButton(XboxButton.kY).onTrue(new CmdAutoAlign(3, TIMEOUT, false));
+        // controller.getButton(XboxButton.kY).onTrue(new CmdAutoAlign(3, TIMEOUT, false));
 
         buttonPad.getButton(1).onTrue(shooter.setShooter(1)).onFalse(shooter.setShooter(0));
         buttonPad.getButton(2).onTrue(intake.intakePivot.runPivot(0.2)).onFalse(intake.intakePivot.runPivot(0));
