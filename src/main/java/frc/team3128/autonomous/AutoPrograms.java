@@ -71,19 +71,20 @@ public class AutoPrograms {
     }
 
     public Command getAutonomousCommand() {
-        // String selectedAutoName = NarwhalDashboard.getInstance().getSelectedAuto();
-        // String hardcode = "middleClose_4note";
+        String selectedAutoName = NarwhalDashboard.getInstance().getSelectedAuto();
+        String hardcode = "middleClose_5note";
         
-        // Command autoCommand;
-        // if (selectedAutoName == null) {
-        //     selectedAutoName = hardcode;
-        // }
-        // else if (selectedAutoName.equals("default")) {
-        //     defaultAuto();
-        // }
-        // autoCommand = autoMap.get(selectedAutoName);
+        Command autoCommand;
+        if (selectedAutoName == null) {
+            selectedAutoName = hardcode;
+        }
+        else if (selectedAutoName.equals("default")) {
+            defaultAuto();
+        }
+        autoCommand = autoMap.get(selectedAutoName);
+        return autoCommand;
 
-        return Trajectories.middleClose_4note().beforeStarting(Trajectories.resetAuto());
+        // return Trajectories.middleClose_4note().beforeStarting(Trajectories.resetAuto());
         // return Trajectories.middle_4note().beforeStarting(Trajectories.resetAuto());
     }
 
