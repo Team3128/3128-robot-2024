@@ -39,7 +39,8 @@ public class AutoPrograms {
             "middle_6note",
             "bottom_7note",
             "special_3note",
-            "middle_6note_cond"
+            "middle_6note_cond",
+            "middleClose_3note_BATB"
         };
         final String[] pathStrings = new String[] {
             "only-note1.2-note2.3",
@@ -72,7 +73,7 @@ public class AutoPrograms {
 
     public Command getAutonomousCommand() {
         String selectedAutoName = NarwhalDashboard.getInstance().getSelectedAuto();
-        String hardcode = "middleClose_5note";
+        String hardcode = "middleClose_3note_BATB";
         
         Command autoCommand;
         if (selectedAutoName == null) {
