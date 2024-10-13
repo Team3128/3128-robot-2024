@@ -318,9 +318,9 @@ public class Trajectories {
             climber.climbTo(Climber.Setpoint.RAMSHOT),
             shooter.shoot(RAM_SHOT_RPM, RAM_SHOT_RPM),
             waitUntil(()-> climber.atSetpoint() && shooter.atSetpoint()).withTimeout(1.5),
-            intake.intakeRollers.runNoRequirements(OUTTAKE_POWER),
-            waitSeconds(0.35),
-            shooter.shoot(MAX_RPM)
+            intake.intakeRollers.runNoRequirements(OUTTAKE_POWER) //,
+            // waitSeconds(0.35),
+            // shooter.shoot(MAX_RPM)
         );
     }
 
