@@ -13,11 +13,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import static edu.wpi.first.wpilibj2.command.Commands.*;
 import static frc.team3128.Constants.LimelightConstants.TIMEOUT;
-import static frc.team3128.Constants.ShooterConstants.AMP_RPM;
-import static frc.team3128.Constants.ShooterConstants.EDGE_FEED_ANGLE;
-import static frc.team3128.Constants.ShooterConstants.EDGE_FEED_RPM;
-import static frc.team3128.Constants.ShooterConstants.MAX_RPM;
-import static frc.team3128.Constants.ShooterConstants.RAM_SHOT_RPM;
+import static frc.team3128.Constants.ShooterConstants.*;
 import static frc.team3128.commands.CmdManager.*;
 
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
@@ -113,14 +109,14 @@ public class RobotContainer {
 
         // TODO: what is kY
         // controller.getButton(XboxButton.kY).onTrue(runOnce(() -> ampAlign().schedule()));
-        // controller.getButton(XboxButton.kB).onTrue(rampUpFeed(MIDDLE_FEED_RPM, MIDDLE_FEED_RPM, 13)).onFalse(feed(MIDDLE_FEED_RPM, 13,MIDDLE_FEED_ANGLE));
+        controller.getButton(XboxButton.kB).onTrue(rampUp(()-> 13, MIDDLE_FEED_RPM)).onFalse(feed(MIDDLE_FEED_RPM, 13, MIDDLE_FEED_ANGLE));
         // controller.getButton(XboxButton.kY).onTrue(rampUpFeed(EDGE_FEED_RPM, EDGE_FEED_RPM, 13)).onFalse(feed(EDGE_FEED_RPM, 13, EDGE_FEED_ANGLE));   //Feed Shot
         controller.getButton(XboxButton.kY).onTrue(rampUp(()->13, EDGE_FEED_RPM)).onFalse(feed(EDGE_FEED_RPM, 13, EDGE_FEED_ANGLE));   //Feed Shot
 
         controller.getButton(XboxButton.kRightBumper).onTrue(rampUp(()->Climber.Setpoint.RAMSHOT.setpoint, RAM_SHOT_RPM)).onFalse(ramShot()); //Ram Shot
         controller.getButton(XboxButton.kRightTrigger).onTrue(rampUp(()->MAX_RPM, 0)).onFalse(shootDist());     //Auto Shoot
         controller.getButton(XboxButton.kX).onTrue(rampUp(()->Climber.Setpoint.AMP.setpoint, AMP_RPM).andThen(ampMechanism.extend())).onFalse(ampShoot()); //Amp Shot
-        controller.getButton(XboxButton.kB).onTrue(new InstantCommand(()->swerve.resetEncoders()));
+        // controller.getButton(XboxButton.kB).onTrue(new InstantCommand(()->swerve.resetEncoders()));
 
         controller.getButton(XboxButton.kA).onTrue(sequence(runOnce(()-> intake.isRetracting = false), intake.intakePivot.pivotTo(150), climber.climbTo(Climber.Setpoint.EXTENDED))); //Extend Climber
         controller.getButton(XboxButton.kBack).onTrue(sequence(climber.setClimber(-0.35), waitSeconds(1), climber.setClimber(-1), waitUntil(()->climber.isClimbed()), climber.setClimber(0)));   //Retract Climber
@@ -129,6 +125,7 @@ public class RobotContainer {
         controller.getButton(XboxButton.kLeftBumper).onTrue(intake.retract(false));         //Retract Intake
 
         controller.getButton(XboxButton.kStart).onTrue(intake.outtake()); //Amp LED
+        controller.getButton(XboxButton.kBack).onTrue(runOnce(()-> swerve.zeroGyro(0)));
 
         controller.getButton(XboxButton.kRightStick).onTrue(runOnce(()-> CmdSwerveDrive.setTurnSetpoint()));
         controller.getUpPOVButton().onTrue(runOnce(()-> {
@@ -186,7 +183,7 @@ public class RobotContainer {
 
     public void initCameras() {
         Camera1.setResources(() -> swerve.getYaw(), (pose,time)->swerve.addVisionMeasurement(pose, time), AprilTagFields.k2024Crescendo.loadAprilTagLayoutField(), ()->swerve.getPose());
-        Camera1.addIgnoredTags(13);
+        Camera1.addIgnoredTags(14);
         if (Robot.isReal()) {
             // final Camera camera = new Camera("FRONT_LEFT", Units.inchesToMeters(10.055), Units.inchesToMeters(9.79), Units.degreesToRadians(30), Units.degreesToRadians(-28.125), 0);
             // final Camera camera2 = new Camera("FRONT_RIGHT", Units.inchesToMeters(10.055), -Units.inchesToMeters(9.79), Units.degreesToRadians(-30), Units.degreesToRadians(-28.125), 0);

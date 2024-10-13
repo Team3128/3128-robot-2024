@@ -112,7 +112,7 @@ public class Camera1 {
         Camera1.multipleTargets = multipleTargets;
     }
 
-        public void update() {
+    public void update() {
         if (isDisabled) return;
         hasSeenTag = false;
         result = camera.getLatestResult();
@@ -149,6 +149,27 @@ public class Camera1 {
      * @param result Latest result from the camera
      * @return The estimated robot pose
      */
+
+    public Optional<Pose2d> getPose1(PhotonPipelineResult result) {
+        double lowestAmbiguityScore = 10;
+        PhotonTrackedTarget lowestAmbiguityTarget = null;
+
+        if (!result.hasTargets()) return Optional.empty();
+
+        for (PhotonTrackedTarget target : result.targets) {
+            if (isValidTarget(target) && getPoseAmbiguity(target) < lowestAmbiguityScore && getPoseAmbiguity(target) != -1) {
+                lowestAmbiguityScore = getPoseAmbiguity(target);
+                lowestAmbiguityTarget = target;
+                hasSeenTag = tags.contains(target.getFiducialId());
+            }
+        }
+
+        if (lowestAmbiguityTarget == null) return Optional.empty();
+
+        Optional<Pose3d> targetPosition = aprilTags.getTagPose(lowestAmbiguityTarget.getFiducialId());
+        estimatedPose = targetPosition.get().transformBy(lowestAmbiguityTarget.getBestCameraToTarget().inverse()).transformBy(offset.inverse()).toPose2d();
+        return Optional.of(estimatedPose);
+    }
     public Optional<Pose2d> getPose(PhotonPipelineResult result) {
         double lowestAmbiguityScore = 10;
         PhotonTrackedTarget lowestAmbiguityTarget = null;
@@ -216,7 +237,7 @@ public class Camera1 {
     // }
 
     public Pose2d getGyroPose(PhotonPipelineResult result) {
-        Pose2d pose = getPose(result).get();
+        Pose2d pose = getPose1(result).get();
         double test = gyro.getAsDouble();
         // Pose2d pose = getPose(result, test).get();
         Rotation2d gyroAngle = Rotation2d.fromDegrees(MathUtil.inputModulus(test, -180, 180));
@@ -300,11 +321,11 @@ public class Camera1 {
     }
 
     public void initShuffleboard() {
-        NAR_Shuffleboard.addData(camera.getName(), "Estimated Pose", () -> estimatedPose.toString(), 0, 0, 4, 1);
-        // NAR_Shuffleboard.addData(camera.getName(), "Distance", () -> distance, 0, 1, 2, 1);
-        NAR_Shuffleboard.addData(camera.getName(), "Is Disabled", () -> isDisabled, 2, 1, 1, 1);
-        NAR_Shuffleboard.addData(camera.getName(), "Has target", () -> result.hasTargets(), 3, 2, 1, 1);
-        NAR_Shuffleboard.addData(camera.getName(), "gyro", ()->gyro.getAsDouble(), 0, 3, 1, 1).withWidget("Gyro");
+        // NAR_Shuffleboard.addData(camera.getName(), "Estimated Pose", () -> estimatedPose.toString(), 0, 0, 4, 1);
+        // // NAR_Shuffleboard.addData(camera.getName(), "Distance", () -> distance, 0, 1, 2, 1);
+        // NAR_Shuffleboard.addData(camera.getName(), "Is Disabled", () -> isDisabled, 2, 1, 1, 1);
+        // NAR_Shuffleboard.addData(camera.getName(), "Has target", () -> result.hasTargets(), 3, 2, 1, 1);
+        // NAR_Shuffleboard.addData(camera.getName(), "gyro", ()->gyro.getAsDouble(), 0, 3, 1, 1).withWidget("Gyro");
     }
 
     // public void update() {

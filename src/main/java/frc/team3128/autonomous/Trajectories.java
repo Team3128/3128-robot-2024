@@ -71,7 +71,7 @@ public class Trajectories {
     //USED FOR HARDCODED SHOTS
     public enum ShootPosition {
         // find values
-        WING(5.213),    //Change this for top 
+        WING(5.15),    //Change this for top prev 5.213
         BOTTOM(7.5),    //Change this for bottom auto
         RAM(24.5);
 
