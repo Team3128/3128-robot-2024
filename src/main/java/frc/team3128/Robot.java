@@ -23,7 +23,11 @@ import static edu.wpi.first.wpilibj2.command.Commands.*;
 import frc.team3128.Constants.LedConstants.Colors;
 import frc.team3128.autonomous.AutoPrograms;
 import frc.team3128.commands.CmdManager;
+import frc.team3128.subsystems.AmpMechanism;
+import frc.team3128.subsystems.Climber;
+import frc.team3128.subsystems.Intake;
 import frc.team3128.subsystems.Leds;
+import frc.team3128.subsystems.Shooter;
 import frc.team3128.subsystems.Swerve;
 
 /**
@@ -157,6 +161,10 @@ public class Robot extends NAR_Robot {
 
     @Override
     public void disabledInit() {
+        AmpMechanism.getInstance().disable();
+        Climber.getInstance().disable();
+        Intake.getInstance().intakePivot.disable();
+        Shooter.getInstance().disable();
         Swerve.getInstance().setBrakeMode(true);
         CommandScheduler.getInstance().cancelAll();
         sequence(
