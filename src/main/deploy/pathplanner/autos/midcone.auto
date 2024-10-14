@@ -1,0 +1,43 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.2166888285485989,
+      "y": 0.46011289217342244
+    },
+    "rotation": 0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "low cone (preload)"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "pickup mid cone"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "align midcone"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "drop midcone"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

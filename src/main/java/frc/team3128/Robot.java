@@ -23,8 +23,6 @@ import static edu.wpi.first.wpilibj2.command.Commands.*;
 import frc.team3128.Constants.LedConstants.Colors;
 import frc.team3128.autonomous.AutoPrograms;
 import frc.team3128.commands.CmdManager;
-import frc.team3128.subsystems.Leds;
-import frc.team3128.subsystems.Swerve;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -110,12 +108,12 @@ public class Robot extends NAR_Robot {
     @Override
     public void autonomousInit() {
         RobotContainer.limelight.setLEDMode(LEDMode.ON);
-        Swerve.getInstance().resetEncoders();
+     
 
         Camera.enableAll();
         Camera.overrideThreshold = 0;
         Camera.validDist = 30;
-        Leds.getInstance().setDefaultColor();
+    
         Command m_autonomousCommand = autoPrograms.getAutonomousCommand();
         if (m_autonomousCommand != null) {
             m_autonomousCommand.schedule();
@@ -129,7 +127,6 @@ public class Robot extends NAR_Robot {
 
     @Override
     public void teleopInit() {
-        Swerve.getInstance().resetEncoders();
         RobotContainer.limelight.setLEDMode(LEDMode.OFF);
         
         Camera.overrideThreshold = 30;
@@ -137,7 +134,7 @@ public class Robot extends NAR_Robot {
         Camera.enableAll();
         CommandScheduler.getInstance().cancelAll();
         
-        CmdManager.neutral().schedule();
+        // CmdManager.neutral().schedule();
     }
 
     @Override
@@ -157,24 +154,21 @@ public class Robot extends NAR_Robot {
 
     @Override
     public void disabledInit() {
-        Swerve.getInstance().setBrakeMode(true);
+       
         CommandScheduler.getInstance().cancelAll();
         sequence(
-            waitSeconds(3.0).ignoringDisable(true),
-            runOnce(()->Swerve.getInstance().setBrakeMode(false)).ignoringDisable(true)
+            waitSeconds(3.0).ignoringDisable(true)
         ).schedule();
 
         if (hasInitialized) {
-            Leds.getInstance().setLedColor(Colors.AMP);
+           
         }
         hasInitialized = true;
     }
 
     @Override
     public void disabledExit() {
-        Leds.getInstance().setDefaultColor();
-        Swerve.getInstance().setBrakeMode(true
-        );
+    
     }
     
     @Override
