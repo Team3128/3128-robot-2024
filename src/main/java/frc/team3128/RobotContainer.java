@@ -20,7 +20,7 @@ import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
 import frc.team3128.Constants.LedConstants.Colors;
 import frc.team3128.autonomous.AutoPrograms;
-import frc.team3128.autonomous.Trajectories;
+import static frc.team3128.autonomous.Trajectories.*;
 import frc.team3128.autonomous.Trajectories.ShootPosition;
 import frc.team3128.commands.CmdAutoAlign;
 import frc.team3128.commands.CmdSwerveDrive;
@@ -109,7 +109,11 @@ public class RobotContainer {
 
         // TODO: what is kY
         // controller.getButton(XboxButton.kY).onTrue(runOnce(() -> ampAlign().schedule()));
+
+        // controller.getButton(XboxButton.kB).onTrue(autoShootWing());
+        // TODO: UNCOMMENT
         controller.getButton(XboxButton.kB).onTrue(rampUp(()-> 13, MIDDLE_FEED_RPM)).onFalse(feed(MIDDLE_FEED_RPM, 13, MIDDLE_FEED_ANGLE));
+
         // controller.getButton(XboxButton.kY).onTrue(rampUpFeed(EDGE_FEED_RPM, EDGE_FEED_RPM, 13)).onFalse(feed(EDGE_FEED_RPM, 13, EDGE_FEED_ANGLE));   //Feed Shot
         controller.getButton(XboxButton.kY).onTrue(rampUp(()->13, EDGE_FEED_RPM)).onFalse(feed(EDGE_FEED_RPM, 13, EDGE_FEED_ANGLE));   //Feed Shot
 

@@ -40,7 +40,8 @@ public class AutoPrograms {
             "bottom_7note",
             "special_3note",
             "middle_6note_cond",
-            "middleClose_3note_BATB"
+            "middleClose_3note_BATB",
+            "topFar_4note_skip"
         };
         final String[] pathStrings = new String[] {
             "only-note1.2-note2.3",
@@ -73,7 +74,7 @@ public class AutoPrograms {
 
     public Command getAutonomousCommand() {
         String selectedAutoName = NarwhalDashboard.getInstance().getSelectedAuto();
-        String hardcode = "middleClose_3note_BATB";
+        String hardcode = "topFar_4note";
         
         Command autoCommand;
         if (selectedAutoName == null) {
@@ -83,7 +84,7 @@ public class AutoPrograms {
             defaultAuto();
         }
         autoCommand = autoMap.get(selectedAutoName);
-        return autoCommand;
+        return autoCommand.beforeStarting(Trajectories.resetAuto());
 
         // return Trajectories.middleClose_4note().beforeStarting(Trajectories.resetAuto());
         // return Trajectories.middle_4note().beforeStarting(Trajectories.resetAuto());

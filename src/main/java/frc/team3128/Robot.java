@@ -44,6 +44,7 @@ public class Robot extends NAR_Robot {
         if (alliance == null) {
             Optional<Alliance> DSalliance = DriverStation.getAlliance();
             if (DSalliance.isPresent()) alliance = DSalliance.get();
+            alliance = Alliance.Blue;
         }
         return alliance;
     }
@@ -136,10 +137,13 @@ public class Robot extends NAR_Robot {
         Swerve.getInstance().resetEncoders();
         RobotContainer.limelight.setLEDMode(LEDMode.OFF);
         
-        Camera.overrideThreshold = 30;
-        Camera.validDist = 0.5;
+        // Camera.overrideThreshold = 30;
+        // Camera.validDist = 0.5;
         Camera1.enableAll();
         CommandScheduler.getInstance().cancelAll();
+        if(Intake.getInstance().intakePivot.getMeasurement() < 0){
+            Intake.getInstance().intakePivot.reset(0).schedule();
+        }
         
         CmdManager.neutral().schedule();
     }

@@ -71,7 +71,7 @@ public class Trajectories {
     //USED FOR HARDCODED SHOTS
     public enum ShootPosition {
         // find values
-        WING(5.15),    //Change this for top prev 5.213
+        WING(4.8),    //Change this for top prev 5.213,5.15,5.1,5
         BOTTOM(7.5),    //Change this for bottom auto
         RAM(24.5);
 
@@ -102,6 +102,7 @@ public class Trajectories {
         NamedCommands.registerCommand("RamShoot", ramShotAuto());
         NamedCommands.registerCommand("BottomShoot", autoShootPreset(ShootPosition.BOTTOM));
         NamedCommands.registerCommand("WingRamp", rampUpAuto(ShootPosition.WING));
+        NamedCommands.registerCommand("WingShoot", autoShootWing());
         NamedCommands.registerCommand("Align", align());
         NamedCommands.registerCommand("AlignCCW", alignSearch(true));
         NamedCommands.registerCommand("AlignCW", alignSearch(false));
@@ -298,7 +299,7 @@ public class Trajectories {
             new CmdAutoAlign(3, TIMEOUT, false),
             turnDegrees(counterClockwise, 45).until(()-> limelight.hasValidTarget()),
             new CmdAutoAlign(3, TIMEOUT, false)
-        ).until(()-> intake.intakeRollers.hasObjectPresent())
+        ).until(()-> intake.intakeRollers.hasObjectPresent()).withTimeout(1)
         .beforeStarting(runOnce(()->{turning = true;})).andThen(runOnce(()->{turning = false;}));
     }
 
@@ -312,15 +313,32 @@ public class Trajectories {
         .beforeStarting(runOnce(()->{turning = true;})).andThen(runOnce(()->{turning = false;}));
     }
 
+    public static Command autoShootWing() {
+        return sequence(
+            parallel (
+                runOnce(()->{turning = true;}),
+                runOnce(()-> climber.climbTo(5)),
+                runOnce(()-> shooter.shoot(MAX_RPM)),
+                // rampUp(()->MAX_RPM, position.getHeight()),
+                turnInPlace().withTimeout(0.5)
+            ),
+            runOnce(()->{turning = false;}),
+            intake.intakeRollers.outtake(),
+            waitSeconds(0.25),
+            intake.intakeRollers.runManipulator(0)
+        );
+    }
+
     public static Command ramShotAuto() {
         return sequence(
+            intake.retractAuto(),
             new InstantCommand(()->swerve.resetEncoders()),
             climber.climbTo(Climber.Setpoint.RAMSHOT),
             shooter.shoot(RAM_SHOT_RPM, RAM_SHOT_RPM),
             waitUntil(()-> climber.atSetpoint() && shooter.atSetpoint()).withTimeout(1.5),
-            intake.intakeRollers.runNoRequirements(OUTTAKE_POWER) //,
-            // waitSeconds(0.35),
-            // shooter.shoot(MAX_RPM)
+            intake.intakeRollers.runManipulator(OUTTAKE_POWER), //,
+            waitSeconds(0.35),
+            shooter.shoot(MAX_RPM)
         );
     }
 
@@ -383,14 +401,11 @@ public class Trajectories {
     }
 
     public static Command rampUpAuto(ShootPosition pos) {
-        return either(
+        return 
             sequence(
                 shooter.shoot(MAX_RPM),
                 rampUp(()->pos.getHeight(), ShooterConstants.MAX_RPM).until(()-> climber.atSetpoint()),
                 intake.retractAuto()
-            ),
-            none(),
-            ()-> true
             // ()->intake.intakeRollers.hasObjectPresent()
         );
     }
@@ -437,6 +452,7 @@ public class Trajectories {
             intake.intakeRollers.runManipulator(0)
         );
     }
+    
 
     public static Command autoShootNoTurn() {
         return sequence(
@@ -469,7 +485,7 @@ public class Trajectories {
                     turnInPlace().withTimeout(turnTimeout)
                 ),
                 runOnce(()->{turning = false;}),
-                intake.intakeRollers.outtake(),
+                intake.intakeRollers.runManipulator(OUTTAKE_POWER),
                 waitSeconds(0.25),
                 intake.intakeRollers.runManipulator(0)
             ),
