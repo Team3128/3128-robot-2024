@@ -61,8 +61,7 @@ public class Manipulator extends SubsystemBase {
     
     protected void setPower(double power){
         final double output = (debug != null && debug.getAsBoolean()) ? powerSetpoint.getAsDouble() : power;
-        for (final NAR_Motor motor : motors) {
-            motor.set(output);
+        //set the power
     }
     
     public Command run(double power){
