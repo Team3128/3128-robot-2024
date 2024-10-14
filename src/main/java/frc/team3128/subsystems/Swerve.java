@@ -59,6 +59,14 @@ public class Swerve extends SwerveBase {
         );
     }
 
+    public static Translation2d blueToAlliance(Translation2d translation) {
+        if (Robot.getAlliance() == Alliance.Blue) return translation;
+        return new Translation2d(
+            FieldConstants.FIELD_X_LENGTH - translation.getX(),
+            translation.getY()
+        );
+    }
+
     private Swerve() {
         super(swerveKinematics, SVR_STATE_STD, SVR_VISION_MEASUREMENT_STD, Mod0, Mod1, Mod2, Mod3);
         chassisVelocityCorrection = false;
@@ -210,13 +218,14 @@ public class Swerve extends SwerveBase {
 
                 Swerve.getInstance().drive(translation, Units.degreesToRadians(output), true);
             },
+            2,
             Swerve.getInstance()
         ).beforeStarting(runOnce(()-> CmdSwerveDrive.disableTurn()));
     }
 
     public boolean isConfigured() {
         for (final SwerveModule module : modules) {
-            final double CANCoderAngle = module.getCanCoder().getDegrees();
+            final double CANCoderAngle = module.getAbsoluteAngle().getDegrees();
             final double AngleMotorAngle = module.getAngleMotor().getPosition();
             if (CANCoderAngle == 0 || AngleMotorAngle == 0) return false;
         }

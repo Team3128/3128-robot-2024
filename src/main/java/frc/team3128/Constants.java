@@ -2,6 +2,7 @@ package frc.team3128;
 
 import java.util.HashMap;
 
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.pathplanner.lib.path.PathConstraints;
 
 import common.core.controllers.Controller;
@@ -9,6 +10,7 @@ import common.core.controllers.PIDFFConfig;
 import common.core.controllers.Controller.Type;
 import common.core.swerve.SwerveConversions;
 import common.core.swerve.SwerveModuleConfig;
+import common.core.swerve.SwerveModuleConfig.SwerveEncoderConfig;
 import common.core.swerve.SwerveModuleConfig.SwerveMotorConfig;
 import common.hardware.motorcontroller.NAR_CANSpark;
 import common.hardware.motorcontroller.NAR_TalonFX;
@@ -139,36 +141,28 @@ public class Constants {
             0, 
             new SwerveMotorConfig(new NAR_TalonFX(1), driveMotorConfig, drivePIDConfig),
             new SwerveMotorConfig(new NAR_CANSpark(2, ControllerType.CAN_SPARK_FLEX), angleMotorConfig, anglePIDConfig),
-            10,
-            63.017578125-2.021484375 - 180,
-            canCoderInvert,
+            new SwerveEncoderConfig(new CANcoder(10), 63.017578125-2.021484375 - 180, canCoderInvert),
             maxSpeed);
 
         public static final SwerveModuleConfig Mod1 = new SwerveModuleConfig(
             1, 
             new SwerveMotorConfig(new NAR_TalonFX(3), driveMotorConfig, drivePIDConfig),
             new SwerveMotorConfig(new NAR_CANSpark(4, ControllerType.CAN_SPARK_FLEX), angleMotorConfig, anglePIDConfig),
-            11,
-            110.478515625+2.021484375+0.615234375 - 180,
-            canCoderInvert,
+            new SwerveEncoderConfig(new CANcoder(11), 110.478515625+2.021484375+0.615234375 - 180, canCoderInvert),
             maxSpeed);
-        
+
         public static final SwerveModuleConfig Mod2 = new SwerveModuleConfig(
             2, 
             new SwerveMotorConfig(new NAR_TalonFX(5), driveMotorConfig, drivePIDConfig),
             new SwerveMotorConfig(new NAR_CANSpark(6, ControllerType.CAN_SPARK_FLEX), angleMotorConfig, anglePIDConfig),
-            12,
-            -48.076171875-0.263671875 + 180,
-            canCoderInvert,
+            new SwerveEncoderConfig(new CANcoder(12), -48.076171875-0.263671875 + 180, canCoderInvert),
             maxSpeed);
         
         public static final SwerveModuleConfig Mod3 = new SwerveModuleConfig(
             3, 
             new SwerveMotorConfig(new NAR_TalonFX(7), driveMotorConfig, drivePIDConfig),
             new SwerveMotorConfig(new NAR_CANSpark(8, ControllerType.CAN_SPARK_FLEX), angleMotorConfig, anglePIDConfig),
-            13,
-            -158.37890625000003+0.703125000000028 + 180,
-            canCoderInvert,
+            new SwerveEncoderConfig(new CANcoder(13), -158.37890625000003+0.703125000000028 + 180, canCoderInvert),
             maxSpeed);
 
         public static final double turnkP = 5;
@@ -181,7 +175,7 @@ public class Constants {
         public static final PIDFFConfig config = new PIDFFConfig(turnkP, turnkI, turnkD, turnkS, turnkV, turnkA, 0);
 
         public static final Controller TURN_CONTROLLER = new Controller(config, Type.POSITION);
-        public static final double TURN_TOLERANCE = 1;
+        public static final double TURN_TOLERANCE = 5;
 
         static {
             TURN_CONTROLLER.enableContinuousInput(-180, 180);
@@ -242,7 +236,26 @@ public class Constants {
         public static final double FIELD_X_LENGTH = Units.inchesToMeters(651.25); // meters
         public static final double FIELD_Y_LENGTH = Units.inchesToMeters(315.5); // meters
         public static final Pose2d SPEAKER = new Pose2d(Units.inchesToMeters(324.5), Units.inchesToMeters(315.5), Rotation2d.fromDegrees(0));
+        public static final double TOO_CLOSE = 0.2;
+        
+        public enum Note {
+            NOTE1_1(2.89, 6.99),
+            NOTE1_2(2.89, 5.55),
+            NOTE1_3(2.89, 4.11),
+            NOTE2_1(6.45, 7.44),
+            NOTE2_2(6.45, 5.79),
+            NOTE2_3(6.45, 4.10),
+            NOTE2_4(6.45, 2.45),
+            NOTE2_5(6.45, 0.77);
 
+            private final Translation2d translation;
+            private Note(double x, double y) {
+                translation = new Translation2d(x, y);
+            }
+            public Translation2d getTranslation() {
+                return translation;
+            }
+        }
 
         public static Pose2d allianceFlip(Pose2d pose) {
             if (Robot.getAlliance() == Alliance.Red) {
@@ -430,8 +443,8 @@ public class Constants {
     public static class LimelightConstants {
         public static final double TX_THRESHOLD = 1;
         public static final double HORIZONTAL_OFFSET_GOAL = 0;
-        public static final double PLATEAU_THRESHOLD = 5;
-        public static final double TIMEOUT = 1;
+        public static final double PLATEAU_THRESHOLD = 25; //roughly 0.5 seconds
+        public static final double TIMEOUT = 0.75;
         public static final double KP = 0.1;
         public static final double KI = 0;
         public static final double KD = 0;

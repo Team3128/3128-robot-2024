@@ -23,7 +23,11 @@ import static edu.wpi.first.wpilibj2.command.Commands.*;
 import frc.team3128.Constants.LedConstants.Colors;
 import frc.team3128.autonomous.AutoPrograms;
 import frc.team3128.commands.CmdManager;
+import frc.team3128.subsystems.AmpMechanism;
+import frc.team3128.subsystems.Climber;
+import frc.team3128.subsystems.Intake;
 import frc.team3128.subsystems.Leds;
+import frc.team3128.subsystems.Shooter;
 import frc.team3128.subsystems.Swerve;
 
 /**
@@ -67,7 +71,7 @@ public class Robot extends NAR_Robot {
             e.printStackTrace();
         }
 
-        autoPrograms = new AutoPrograms();
+        autoPrograms = AutoPrograms.getInstance();
         m_robotContainer.initDashboard();
         LiveWindow.disableAllTelemetry();
         // runOnce(()-> Swerve.getInstance().zeroGyro(Robot.getAlliance() == Alliance.Red ? 0 : 180));
@@ -87,9 +91,9 @@ public class Robot extends NAR_Robot {
         Log.info("State", "DS Connected");
         Log.info("Alliance", getAlliance().toString());
         if (getAlliance() == Alliance.Red) {
-            Camera.addTags(3, 4, 5, 11, 12);
+            Camera.addIgnoredTags(3, 4, 5, 11, 12);
         } else {
-            Camera.addTags(6, 7, 8, 15, 16);
+            Camera.addIgnoredTags(6, 7, 8, 15, 16);
         }
         if (!NAR_Robot.logWithAdvantageKit) return;
         if(DriverStation.getMatchType() != MatchType.None){
@@ -104,7 +108,7 @@ public class Robot extends NAR_Robot {
 
     @Override
     public void robotPeriodic(){
-        Camera.updateAll();
+        Camera1.updateAll();
     }
 
     @Override
@@ -112,7 +116,7 @@ public class Robot extends NAR_Robot {
         RobotContainer.limelight.setLEDMode(LEDMode.ON);
         Swerve.getInstance().resetEncoders();
 
-        Camera.enableAll();
+        Camera1.enableAll();
         Camera.overrideThreshold = 0;
         Camera.validDist = 30;
         Leds.getInstance().setDefaultColor();
@@ -134,7 +138,7 @@ public class Robot extends NAR_Robot {
         
         Camera.overrideThreshold = 30;
         Camera.validDist = 0.5;
-        Camera.enableAll();
+        Camera1.enableAll();
         CommandScheduler.getInstance().cancelAll();
         
         CmdManager.neutral().schedule();
@@ -157,6 +161,10 @@ public class Robot extends NAR_Robot {
 
     @Override
     public void disabledInit() {
+        AmpMechanism.getInstance().disable();
+        Climber.getInstance().disable();
+        Intake.getInstance().intakePivot.disable();
+        Shooter.getInstance().disable();
         Swerve.getInstance().setBrakeMode(true);
         CommandScheduler.getInstance().cancelAll();
         sequence(

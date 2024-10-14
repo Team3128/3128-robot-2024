@@ -1,0 +1,115 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.4,
+      "y": 5.55
+    },
+    "rotation": 180.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "RamShoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "RampUp-Note1.2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "middle-note1.2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Neutral"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Align"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "RampUp-Middle"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "middle-note1.1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "RampUp-Middle"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "note1.1-middle"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "RamShootMax"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "RampUp-Note1.3"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "middle-note1.3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Neutral"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "note1.3diag-leave"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

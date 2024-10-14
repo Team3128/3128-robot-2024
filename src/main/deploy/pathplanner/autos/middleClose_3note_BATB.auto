@@ -1,0 +1,85 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.4,
+      "y": 5.55
+    },
+    "rotation": 180.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "RamShoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "middle-note1.2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "note1.2-middle"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "RamShoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "middle-note1.1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "note1.1-middle"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "RamShoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "middle-note1.3"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "note1.3-middle"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "RamShoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "middle-Center"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

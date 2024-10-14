@@ -109,8 +109,10 @@ public class CmdManager {
         return sequence(
             parallel(
                 swerve.turnInPlace(()-> Robot.getAlliance() == Alliance.Blue ? 180-angle : angle).asProxy().withTimeout(1),
-                rampUp(()->rpm, height),
-                runOnce(()-> shooter.startPID(rpm, rpm))
+                climber.climbTo(height),
+                shooter.shoot(rpm)
+                // rampUp(()->rpm, height)
+                // runOnce(()-> shooter.startPID(rpm, rpm))
             ),
             intake.intakeRollers.outtakeWithTimeout(OUTTAKE_TIMEOUT),
             neutral()

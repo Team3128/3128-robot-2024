@@ -15,11 +15,18 @@ import java.util.HashMap;
 public class AutoPrograms {
 
     private HashMap<String, Command> autoMap = new HashMap<String, Command>();
+    private HashMap<String, Command> pathMap = new HashMap<String, Command>();
+    private static AutoPrograms instance;
 
-    public AutoPrograms() {
+    private AutoPrograms() {
 
         Trajectories.initTrajectories();
         initAutoSelector();
+    }
+
+    public static synchronized AutoPrograms getInstance() {
+        if (instance == null) instance = new AutoPrograms();
+        return instance;
     }
 
     private void initAutoSelector() {
@@ -31,19 +38,42 @@ public class AutoPrograms {
             "middleClose_5note",
             "middle_6note",
             "bottom_7note",
-            "special_3note"
+            "special_3note",
+            "middle_6note_cond",
+            "middleClose_3note_BATB"
+        };
+        final String[] pathStrings = new String[] {
+            "only-note1.2-note2.3",
+            "only-note2.3-middle",
+            "only-top-note2.1",
+            "only-note2.1-wing",
+            "only-wing-note2.2",
+            "only-note2.2-wing",
+            //"only-wing-note2.3",
+            "only-note2.3-wing"
         };
         
         NarwhalDashboard.getInstance().addAutos(autoStrings);
-        for (final String auto : autoStrings) {
+        for (String auto : autoStrings) {
             if (auto.equals("default")) continue;
             autoMap.put(auto, Trajectories.getPathPlannerAuto(auto));
         }
+        for (String path : pathStrings) {
+            pathMap.put(path, Trajectories.getPathPlannerPath(path));
+        }
+    }
+
+    public Command getAuto(String name) {
+        return autoMap.get(name);
+    }
+
+    public Command getPath(String name) {
+        return pathMap.get(name);
     }
 
     public Command getAutonomousCommand() {
         String selectedAutoName = NarwhalDashboard.getInstance().getSelectedAuto();
-        String hardcode = "middleClose_4note";
+        String hardcode = "middleClose_3note_BATB";
         
         Command autoCommand;
         if (selectedAutoName == null) {
@@ -53,8 +83,10 @@ public class AutoPrograms {
             defaultAuto();
         }
         autoCommand = autoMap.get(selectedAutoName);
+        return autoCommand;
 
-        return autoCommand.beforeStarting(Trajectories.resetAuto());
+        // return Trajectories.middleClose_4note().beforeStarting(Trajectories.resetAuto());
+        // return Trajectories.middle_4note().beforeStarting(Trajectories.resetAuto());
     }
 
     private Command defaultAuto(){
