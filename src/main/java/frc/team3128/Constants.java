@@ -24,7 +24,6 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import frc.team3128.subsystems.Swerve;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
@@ -39,8 +38,8 @@ public class Constants {
         public static final double slowSpeed = 1.5;
         public static final double slowAcceleration = 2;
 
-        public static final PathConstraints constraints = new PathConstraints(
-            SwerveConstants.maxSpeed, SwerveConstants.maxAcceleration, SwerveConstants.maxAngularVelocity, SwerveConstants.maxAngularAcceleration); 
+        // public static final PathConstraints constraints = new PathConstraints(
+        //     SwerveConstants.maxSpeed, SwerveConstants.maxAcceleration, SwerveConstants.maxAngularVelocity, SwerveConstants.maxAngularAcceleration); 
 
         /* Translation PID Values */
         public static final double translationKP = 2;
@@ -57,135 +56,6 @@ public class Constants {
         public static final double RAMP_THRESHOLD = 9; //8, 10
         public static final double DRIVE_SPEED = Units.inchesToMeters(20); //30, 40
 
-    }
-
-    public static class SwerveConstants {
-        public static final double RAMP_TIME = 3;
-
-        public static final int pigeonID = 30; 
-
-        /* Drivetrain Constants */
-        public static final double bumperLength = Units.inchesToMeters(5);
-        public static final double trackWidth = Units.inchesToMeters(20.75); //Hand measure later
-        public static final double wheelBase = Units.inchesToMeters(20.75); //Hand measure later
-        public static final double robotLength = Units.inchesToMeters(26.5) + bumperLength; // bumperLength + trackWidth;
-        public static final double wheelDiameter = Units.inchesToMeters(4);
-        public static final double wheelCircumference = wheelDiameter * Math.PI;
-
-        public static final double closedLoopRamp = 0.0;
-
-        public static final double driveGearRatio = 225.0 / 42.0;
-        public static final double angleGearRatio = (300.0 / 14.0); 
-
-        public static final SwerveDriveKinematics swerveKinematics = new SwerveDriveKinematics(
-                new Translation2d(wheelBase / 2.0, trackWidth / 2.0),
-                new Translation2d(wheelBase / 2.0, -trackWidth / 2.0),
-                new Translation2d(-wheelBase / 2.0, trackWidth / 2.0),
-                new Translation2d(-wheelBase / 2.0, -trackWidth / 2.0)); 
-
-        /* Swerve Current Limiting */
-        public static final int angleLimit = 30; //30
-        public static final int driveLimit = 60;
-        public static final int offset = 20;
-         //40;
-        public static final int stallLimit = 40;
-
-        /* Angle Motor PID Values */
-        // switched 364 pid values to SDS pid values
-        public static final double angleKP = 0.15 * 30; // 0.6; // citrus: 0.3 //0.15
-        public static final double angleKI = 0.0;
-        public static final double angleKD = 0.0; // 12.0; // citrus: 0
-        public static final double angleKF = 0.0;
-
-        /* Drive Motor PID Values */
-        public static final double driveKP = 4e-5; //4e-5, //0.05
-        public static final double driveKI = 0.0;
-        public static final double driveKD = 0.0;
-        public static final double driveKF = 0.0;
-
-        /* Drive Motor Characterization Values */
-        public static final double driveKS = 0.19057;//0.60094; // 0.19225;
-        public static final double driveKV = 2.01208;//1.1559;  // 2.4366
-        public static final double driveKA = 0.15168; //0.12348; // 0.34415
-
-        /* Swerve Profiling Values */
-        // Theoretical: v = 4.96824, omega = 11.5
-        // Real: v = 4.5, omega = 10
-        // For safety, use less than theoretical and real values
-        public static final double maxSpeed = 5.87;//4.8; //meters per second - 16.3 ft/sec
-        public static final double maxAttainableSpeed = maxSpeed; //Stole from citrus.
-        public static final double maxAcceleration = 5;
-        public static final double maxAngularVelocity = 8; //3; //11.5; // citrus: 10 - Mason look at this later wtf
-        public static final double maxAngularAcceleration = 2 * Math.PI; //I stole from citrus.
-
-        /* Motor Inverts */
-        public static final boolean driveMotorInvert = false;
-        public static final boolean angleMotorInvert = true;
-
-        /* Angle Encoder Invert */
-        public static final boolean canCoderInvert = false;
-
-        public static final MotorConfig driveMotorConfig = new MotorConfig(SwerveConversions.rotationsToMeters(1, wheelCircumference, driveGearRatio), 60, driveLimit, driveMotorInvert, Neutral.BRAKE);
-
-        public static final MotorConfig angleMotorConfig = new MotorConfig(SwerveConversions.rotationsToDegrees(1, angleGearRatio), 1, angleLimit, angleMotorInvert, Neutral.BRAKE);
-
-        public static final PIDFFConfig drivePIDConfig = new PIDFFConfig(driveKP, driveKI, driveKD, driveKS, driveKV, driveKA);
-
-        public static final PIDFFConfig anglePIDConfig = new PIDFFConfig(angleKP, angleKI, angleKD);
-
-        public static final SwerveModuleConfig Mod0 = new SwerveModuleConfig(
-            0, 
-            new SwerveMotorConfig(new NAR_TalonFX(1), driveMotorConfig, drivePIDConfig),
-            new SwerveMotorConfig(new NAR_CANSpark(2, ControllerType.CAN_SPARK_FLEX), angleMotorConfig, anglePIDConfig),
-            10,
-            63.017578125-2.021484375 - 180,
-            canCoderInvert,
-            maxSpeed);
-
-        public static final SwerveModuleConfig Mod1 = new SwerveModuleConfig(
-            1, 
-            new SwerveMotorConfig(new NAR_TalonFX(3), driveMotorConfig, drivePIDConfig),
-            new SwerveMotorConfig(new NAR_CANSpark(4, ControllerType.CAN_SPARK_FLEX), angleMotorConfig, anglePIDConfig),
-            11,
-            110.478515625+2.021484375+0.615234375 - 180,
-            canCoderInvert,
-            maxSpeed);
-        
-        public static final SwerveModuleConfig Mod2 = new SwerveModuleConfig(
-            2, 
-            new SwerveMotorConfig(new NAR_TalonFX(5), driveMotorConfig, drivePIDConfig),
-            new SwerveMotorConfig(new NAR_CANSpark(6, ControllerType.CAN_SPARK_FLEX), angleMotorConfig, anglePIDConfig),
-            12,
-            -48.076171875-0.263671875 + 180,
-            canCoderInvert,
-            maxSpeed);
-        
-        public static final SwerveModuleConfig Mod3 = new SwerveModuleConfig(
-            3, 
-            new SwerveMotorConfig(new NAR_TalonFX(7), driveMotorConfig, drivePIDConfig),
-            new SwerveMotorConfig(new NAR_CANSpark(8, ControllerType.CAN_SPARK_FLEX), angleMotorConfig, anglePIDConfig),
-            13,
-            -158.37890625000003+0.703125000000028 + 180,
-            canCoderInvert,
-            maxSpeed);
-
-        public static final double turnkP = 5;
-        public static final double turnkI = 0;
-        public static final double turnkD = 0;
-        public static final double turnkS = 0.1; //0.05748
-        public static final double turnkV = 0.01723; //0.01723
-        public static final double turnkA = 0.0064; //0.0064
-        public static final Constraints constraints = new Constraints(Units.radiansToDegrees(maxAngularVelocity), Units.radiansToDegrees(maxAngularAcceleration));
-        public static final PIDFFConfig config = new PIDFFConfig(turnkP, turnkI, turnkD, turnkS, turnkV, turnkA, 0);
-
-        public static final Controller TURN_CONTROLLER = new Controller(config, Type.POSITION);
-        public static final double TURN_TOLERANCE = 1;
-
-        static {
-            TURN_CONTROLLER.enableContinuousInput(-180, 180);
-            TURN_CONTROLLER.setMeasurementSource(()-> Swerve.getInstance().getYaw());
-            TURN_CONTROLLER.setTolerance(TURN_TOLERANCE);
-        }
     }
 
 

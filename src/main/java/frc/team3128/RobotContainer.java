@@ -76,12 +76,6 @@ public class RobotContainer {
 
         NAR_Shuffleboard.WINDOW_WIDTH = 10;
 
-        swerve = Swerve.getInstance();
-        shooter = Shooter.getInstance();
-        ampMechanism = AmpMechanism.getInstance();
-        climber = Climber.getInstance();
-        intake = Intake.getInstance();
-        leds = Leds.getInstance();
 
         // shooter.addShooterTests();
         // climber.addClimberTests();
