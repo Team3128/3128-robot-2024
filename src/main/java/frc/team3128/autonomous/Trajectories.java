@@ -52,6 +52,7 @@ import frc.team3128.commands.CmdSwerveDrive;
 // import frc.team3128.commands.NAR_PIDCommand;
 
 import static frc.team3128.commands.CmdManager.rampUp;
+import static frc.team3128.commands.CmdManager.shootDist;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
@@ -71,7 +72,7 @@ public class Trajectories {
     //USED FOR HARDCODED SHOTS
     public enum ShootPosition {
         // find values
-        WING(4.8),    //Change this for top prev 5.213,5.15,5.1,5
+        WING(5.13),    //Change this for top prev 5.213,5.15,5.1,5
         BOTTOM(7.5),    //Change this for bottom auto
         RAM(24.5);
 
@@ -98,11 +99,12 @@ public class Trajectories {
         Pathfinding.setPathfinder(new LocalADStar());
 
         NamedCommands.registerCommand("Intake", intake.intakeAuto());
-        NamedCommands.registerCommand("Shoot", either(autoShoot(0.75), runOnce(()->Log.info("test", "skip shot")), hasNote));
+        NamedCommands.registerCommand("Shoot", autoShoot(0.75));
         NamedCommands.registerCommand("RamShoot", ramShotAuto());
         NamedCommands.registerCommand("BottomShoot", autoShootPreset(ShootPosition.BOTTOM));
-        NamedCommands.registerCommand("WingRamp", rampUpAuto(ShootPosition.WING));
-        NamedCommands.registerCommand("WingShoot", autoShootWing());
+        // NamedCommands.registerCommand("WingRamp", rampUpAuto(Climber.getInstance().interpolate(Swerve.getDist(focalPointBlue, new Translation2d(4.5, 6.58)))));
+        NamedCommands.registerCommand("WingRamp", rampUpAuto(0));
+        NamedCommands.registerCommand("WingShoot", shootDist().onlyIf(hasNote));
         NamedCommands.registerCommand("Align", align());
         NamedCommands.registerCommand("AlignCCW", alignSearch(true));
         NamedCommands.registerCommand("AlignCW", alignSearch(false));
@@ -240,7 +242,7 @@ public class Trajectories {
                 // This aligns
                 parallel(
                     intake.intakeAuto(),
-                    new CmdAutoAlign(3, TIMEOUT, true).beforeStarting(() -> CmdAutoAlign.hasTimedOut = false)
+                    alignSearchClose(true)
                 ),
                 parallel(intake.retractAuto(), turnInPlace().withTimeout(0.75))
             ).onlyIf(() -> limelight.hasValidTarget() && note.minus(swerve.getPose().getTranslation()).getNorm() > TOO_CLOSE)
@@ -293,6 +295,16 @@ public class Trajectories {
             ).beforeStarting(runOnce(()->{turning = true;})).andThen(runOnce(()->{turning = false;})));
     }
 
+    public static Command alignSearchClose(boolean counterClockwise) {
+        return sequence(
+            runOnce(()-> CmdAutoAlign.hasTimedOut = false),
+            new CmdAutoAlign(3, 1.5, false),
+            turnDegrees(counterClockwise, 45).until(()-> limelight.hasValidTarget()),
+            new CmdAutoAlign(3, 1.5, false)
+        ).until(()-> intake.intakeRollers.hasObjectPresent()).withTimeout(1)
+        .beforeStarting(runOnce(()->{turning = true;})).andThen(runOnce(()->{turning = false;}));
+    }
+
     public static Command alignSearch(boolean counterClockwise) {
         return sequence(
             runOnce(()-> CmdAutoAlign.hasTimedOut = false),
@@ -315,14 +327,7 @@ public class Trajectories {
 
     public static Command autoShootWing() {
         return sequence(
-            parallel (
-                runOnce(()->{turning = true;}),
-                runOnce(()-> climber.climbTo(5)),
-                runOnce(()-> shooter.shoot(MAX_RPM)),
-                // rampUp(()->MAX_RPM, position.getHeight()),
-                turnInPlace().withTimeout(0.5)
-            ),
-            runOnce(()->{turning = false;}),
+            waitUntil(()->climber.atSetpoint() && shooter.atSetpoint()),
             intake.intakeRollers.outtake(),
             waitSeconds(0.25),
             intake.intakeRollers.runManipulator(0)
@@ -398,6 +403,16 @@ public class Trajectories {
             2,
             swerve
         ).beforeStarting(runOnce(()-> CmdSwerveDrive.disableTurn()));
+    }
+
+    public static Command rampUpAuto(double height) {
+        return 
+            sequence(
+                shooter.shoot(MAX_RPM),
+                rampUp(()->height, ShooterConstants.MAX_RPM).until(()-> climber.atSetpoint() && shooter.atSetpoint()),
+                intake.retractAuto()
+            // ()->intake.intakeRollers.hasObjectPresent()
+        );
     }
 
     public static Command rampUpAuto(ShootPosition pos) {

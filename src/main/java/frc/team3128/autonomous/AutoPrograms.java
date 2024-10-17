@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import common.utility.narwhaldashboard.NarwhalDashboard;
 
 import static edu.wpi.first.wpilibj2.command.Commands.*;
+import static frc.team3128.autonomous.Trajectories.middleClose_4note;
 
 import java.util.HashMap;
 
@@ -41,7 +42,8 @@ public class AutoPrograms {
             "special_3note",
             "middle_6note_cond",
             "middleClose_3note_BATB",
-            "topFar_4note_skip"
+            "topFar_4note_skip",
+            "wingTest"
         };
         final String[] pathStrings = new String[] {
             "only-note1.2-note2.3",
@@ -74,7 +76,8 @@ public class AutoPrograms {
 
     public Command getAutonomousCommand() {
         String selectedAutoName = NarwhalDashboard.getInstance().getSelectedAuto();
-        String hardcode = "topFar_4note";
+        String hardcode = "middleClose_3note_BATB";
+        // return middleClose_4note();
         
         Command autoCommand;
         if (selectedAutoName == null) {

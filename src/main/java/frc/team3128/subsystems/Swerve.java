@@ -175,7 +175,7 @@ public class Swerve extends SwerveBase {
         return getDist(getPose().getTranslation(), point);
     }
 
-    public double getDist(Translation2d point1, Translation2d point2) {
+    public static double getDist(Translation2d point1, Translation2d point2) {
         return point1.getDistance(point2) - robotLength / 2.0;
     }
 

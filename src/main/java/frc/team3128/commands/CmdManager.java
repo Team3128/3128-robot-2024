@@ -44,7 +44,7 @@ public class CmdManager {
     }
 
     public static Command shootDist() {
-        return deadline(
+        return parallel(
             sequence(
                 climber.climbTo(()-> climber.interpolate(swerve.getDist())),
                 shooter.shoot(MAX_RPM),
@@ -58,7 +58,7 @@ public class CmdManager {
                 runOnce(()-> CmdSwerveDrive.setTurnSetpoint(swerve.getTurnAngle(Robot.getAlliance() == Alliance.Red ? focalPointRed : focalPointBlue))),
                 waitSeconds(0.1)
             )
-        ).andThen(runOnce(()-> CmdSwerveDrive.disableTurn()));
+        ).withTimeout(1).andThen(runOnce(()-> CmdSwerveDrive.disableTurn()));
     }
 
     public static Command autoShoot() {

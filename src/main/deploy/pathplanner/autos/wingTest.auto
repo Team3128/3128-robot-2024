@@ -1,0 +1,37 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.5131038535971493,
+      "y": 6.745441850370149
+    },
+    "rotation": 180.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "WingRamp"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "note2.1-wing"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "WingShoot"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

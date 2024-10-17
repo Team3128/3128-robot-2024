@@ -44,7 +44,6 @@ public class Robot extends NAR_Robot {
         if (alliance == null) {
             Optional<Alliance> DSalliance = DriverStation.getAlliance();
             if (DSalliance.isPresent()) alliance = DSalliance.get();
-            alliance = Alliance.Blue;
         }
         return alliance;
     }
@@ -121,6 +120,7 @@ public class Robot extends NAR_Robot {
         Camera.overrideThreshold = 0;
         Camera.validDist = 30;
         Leds.getInstance().setDefaultColor();
+        CommandScheduler.getInstance().cancelAll();
         Command m_autonomousCommand = autoPrograms.getAutonomousCommand();
         if (m_autonomousCommand != null) {
             m_autonomousCommand.schedule();
@@ -168,6 +168,7 @@ public class Robot extends NAR_Robot {
         AmpMechanism.getInstance().disable();
         Climber.getInstance().disable();
         Intake.getInstance().intakePivot.disable();
+        Intake.getInstance().intakeRollers.runManipulator(0);
         Shooter.getInstance().disable();
         Swerve.getInstance().setBrakeMode(true);
         CommandScheduler.getInstance().cancelAll();

@@ -118,7 +118,7 @@ public class RobotContainer {
         controller.getButton(XboxButton.kY).onTrue(rampUp(()->13, EDGE_FEED_RPM)).onFalse(feed(EDGE_FEED_RPM, 13, EDGE_FEED_ANGLE));   //Feed Shot
 
         controller.getButton(XboxButton.kRightBumper).onTrue(rampUp(()->Climber.Setpoint.RAMSHOT.setpoint, RAM_SHOT_RPM)).onFalse(ramShot()); //Ram Shot
-        controller.getButton(XboxButton.kRightTrigger).onTrue(rampUp(()->MAX_RPM, 0)).onFalse(shootDist());     //Auto Shoot
+        controller.getButton(XboxButton.kRightTrigger).onTrue(rampUp(()->0, MAX_RPM)).onFalse(shootDist());     //Auto Shoot
         controller.getButton(XboxButton.kX).onTrue(rampUp(()->Climber.Setpoint.AMP.setpoint, AMP_RPM).andThen(ampMechanism.extend())).onFalse(ampShoot()); //Amp Shot
         // controller.getButton(XboxButton.kB).onTrue(new InstantCommand(()->swerve.resetEncoders()));
 

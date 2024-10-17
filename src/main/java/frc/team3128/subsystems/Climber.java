@@ -66,7 +66,7 @@ public class Climber extends NAR_PIDSubsystem {
         NAR_Shuffleboard.addSendable("Commands", "IntakePivot", Intake.getInstance().intakePivot, 0, 3);
         NAR_Shuffleboard.addSendable("Commands", "IntakeRollers", Intake.getInstance().intakeRollers, 0, 4);
         NAR_Shuffleboard.addSendable("Commands", "CommandScheduler", CommandScheduler.getInstance(), 3, 0);
-        x = NAR_Shuffleboard.debug("Shooter Function", "Concavity", -1.08, 0, 0);
+        x = NAR_Shuffleboard.debug("Shooter Function", "Concavity", -1.325, 0, 0); //prev -1.08
 
     }
     
