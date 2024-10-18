@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 import static edu.wpi.first.wpilibj2.command.Commands.*;
 import static frc.team3128.Constants.AutoConstants.*;
@@ -104,7 +105,7 @@ public class Trajectories {
         NamedCommands.registerCommand("BottomShoot", autoShootPreset(ShootPosition.BOTTOM));
         // NamedCommands.registerCommand("WingRamp", rampUpAuto(Climber.getInstance().interpolate(Swerve.getDist(focalPointBlue, new Translation2d(4.5, 6.58)))));
         NamedCommands.registerCommand("WingRamp", rampUpAuto(0));
-        NamedCommands.registerCommand("WingShoot", shootDist().onlyIf(hasNote));
+        NamedCommands.registerCommand("WingShoot", shootDist().beforeStarting(new WaitCommand(0.5)).onlyIf(hasNote));
         NamedCommands.registerCommand("Align", align());
         NamedCommands.registerCommand("AlignCCW", alignSearch(true));
         NamedCommands.registerCommand("AlignCW", alignSearch(false));
