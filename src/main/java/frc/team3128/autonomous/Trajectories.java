@@ -52,6 +52,7 @@ import frc.team3128.commands.CmdManager;
 import frc.team3128.commands.CmdSwerveDrive;
 // import frc.team3128.commands.NAR_PIDCommand;
 
+import static frc.team3128.commands.CmdManager.neutral;
 import static frc.team3128.commands.CmdManager.rampUp;
 import static frc.team3128.commands.CmdManager.shootDist;
 
@@ -103,9 +104,10 @@ public class Trajectories {
         NamedCommands.registerCommand("Shoot", autoShoot(0.75));
         NamedCommands.registerCommand("RamShoot", ramShotAuto());
         NamedCommands.registerCommand("BottomShoot", autoShootPreset(ShootPosition.BOTTOM));
-        // NamedCommands.registerCommand("WingRamp", rampUpAuto(Climber.getInstance().interpolate(Swerve.getDist(focalPointBlue, new Translation2d(4.5, 6.58)))));
-        NamedCommands.registerCommand("WingRamp", rampUpAuto(0));
-        NamedCommands.registerCommand("WingShoot", shootDist().beforeStarting(new WaitCommand(0.5)).onlyIf(hasNote));
+        NamedCommands.registerCommand("WingRamp", rampUpAuto(Climber.getInstance().interpolate(Swerve.getDist(focalPointBlue, new Translation2d(4.5, 6.58))-.45)));
+        // NamedCommands.registerCommand("WingRamp", rampUpAuto(0));
+        // NamedCommands.registerCommand("WingShoot", shootDist().beforeStarting(new WaitCommand(0.5)).onlyIf(hasNote));
+        NamedCommands.registerCommand("WingShoot", turnAndOuttake());
         NamedCommands.registerCommand("Align", align());
         NamedCommands.registerCommand("AlignCCW", alignSearch(true));
         NamedCommands.registerCommand("AlignCW", alignSearch(false));
@@ -256,6 +258,16 @@ public class Trajectories {
             vx = velocity.vxMetersPerSecond;
             vy = velocity.vyMetersPerSecond;
         }
+    }
+
+    public static Command turnAndOuttake() {
+        return sequence(
+            repeatingSequence(  
+                runOnce(()-> CmdSwerveDrive.setTurnSetpoint(swerve.getTurnAngle(Robot.getAlliance() == Alliance.Red ? focalPointRed : focalPointBlue))),
+                waitSeconds(0.1)
+            ).withTimeout(0.75),
+            intake.intakeRollers.outtakeWithTimeout(0.25)
+        ).andThen(runOnce(()-> CmdSwerveDrive.disableTurn()));
     }
 
     public static Command turnDegrees(boolean counterClockwise, double angle) {
@@ -410,7 +422,7 @@ public class Trajectories {
         return 
             sequence(
                 shooter.shoot(MAX_RPM),
-                rampUp(()->height, ShooterConstants.MAX_RPM).until(()-> climber.atSetpoint() && shooter.atSetpoint()),
+                rampUp(()->height, ShooterConstants.MAX_RPM, MAX_RPM - 1500).until(()-> climber.atSetpoint() && shooter.atSetpoint()),
                 intake.retractAuto()
             // ()->intake.intakeRollers.hasObjectPresent()
         );

@@ -77,6 +77,7 @@ public class AutoPrograms {
     public Command getAutonomousCommand() {
         String selectedAutoName = NarwhalDashboard.getInstance().getSelectedAuto();
         String hardcode = "middleClose_3note_BATB";
+        // String hardcode = "topFarCopy_4note";
         // return middleClose_4note();
         
         Command autoCommand;
