@@ -1,5 +1,4 @@
 package frc.team3128.subsystems;
-
 import static edu.wpi.first.wpilibj2.command.Commands.deadline;
 import static edu.wpi.first.wpilibj2.command.Commands.either;
 import static edu.wpi.first.wpilibj2.command.Commands.parallel;
@@ -10,7 +9,6 @@ import static edu.wpi.first.wpilibj2.command.Commands.waitUntil;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-
 import common.core.subsystems.ManipulatorTemplate;
 import common.core.subsystems.PivotTemplate;
 import common.hardware.motorcontroller.NAR_CANSpark;
