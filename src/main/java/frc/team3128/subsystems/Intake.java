@@ -91,10 +91,6 @@ public class Intake {
         //setCurrentLimit as 40
         }
     
-    @Override
-    public boolean hasObjectPresent(){
-        return Math.abs(getCurrent()) > CURRENT_THRESHHOLD;
-    }
 
 }
 
@@ -111,27 +107,36 @@ public class Intake {
     private Intake(){
         //create a new intakePivot 
         //create a new intakeRollers
-
     }
+
     
     public Command intake(Setpoint setpoint) {
         return sequence(
             deadline(
-                intakeRollers.intake(),
+                //use intakeRollers to call intake(). Remember to add a comma after your sentence (proper format for sequence/parallel commands)
                 sequence(
-                    intakePivot.pivotTo(setpoint.angle)
+                    //have your intakePivot pivot to setpoint.angle
+                    waitUntil(() -> hasObjectPresent()),
+                    runOnce(() -> setPower(STALL_POWER))
                 )
-            )
-        );
+                )
+            );
     }
 
     public Command outtake() {
         return sequence (
-            intakePivot.pivotTo(Setpoint.ENUM.angle),
-            waitUntil(()-> intakePivot.getMeasurement() > 45).withTimeout(2),
-            intakeRollers.runManipulator(-1),
-            waitSeconds(0.5)
+            //outtaking so have your intakePivot pivot to your enum state
+            //have intakeRollers run manipulator at outake power
+
         );
+    }
+
+    public boolean hasObjectPresent(){
+        return Math.abs(getCurrent()) > CURRENT_THRESHHOLD;
+    }
+    
+    public double getCurrent(){
+        return motors.getStallCurrent();
     }
     
 }
