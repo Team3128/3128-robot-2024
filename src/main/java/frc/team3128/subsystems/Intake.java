@@ -93,9 +93,7 @@ public class Intake {
         @Override
         protected void configMotors() {
             RIGHT_ROLLER_MOTOR.setInverted(false);
-            LEFT_ROLLER_MOTOR.setInverted(true);
             RIGHT_ROLLER_MOTOR.enableVoltageCompensation(9);
-            LEFT_ROLLER_MOTOR.follow(RIGHT_ROLLER_MOTOR);
             RIGHT_ROLLER_MOTOR.setNeutralMode(Neutral.COAST);
             RIGHT_ROLLER_MOTOR.setCurrentLimit(CURRENT_LIMIT);
             RIGHT_ROLLER_MOTOR.setStatusFrames(SparkMaxConfig.VELOCITY);
@@ -232,8 +230,7 @@ public class Intake {
 
     public State getRunningState() {
         if (PIVOT_MOTOR.getState() == State.DISCONNECTED) return State.DISCONNECTED;
-        if (LEFT_ROLLER_MOTOR.getState() == State.DISCONNECTED && RIGHT_ROLLER_MOTOR.getState() == State.DISCONNECTED) return State.DISCONNECTED;
-        if (LEFT_ROLLER_MOTOR.getState() == State.DISCONNECTED || RIGHT_ROLLER_MOTOR.getState() == State.DISCONNECTED) return State.PARTIALLY_RUNNING;
+        if (RIGHT_ROLLER_MOTOR.getState() == State.DISCONNECTED) return State.DISCONNECTED;
         return State.RUNNING;
     }
 

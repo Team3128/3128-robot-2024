@@ -6,16 +6,14 @@ import static frc.team3128.Constants.VisionConstants.SVR_VISION_MEASUREMENT_STD;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
+import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.Pigeon2;
-// import com.google.errorprone.annotations.OverridingMethodsMustInvokeSuper;
 
 import common.core.commands.NAR_PIDCommand;
 import common.core.swerve.SwerveBase;
 import common.core.swerve.SwerveModule;
 import common.hardware.motorcontroller.NAR_Motor.Control;
 import common.utility.shuffleboard.NAR_Shuffleboard;
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -23,22 +21,23 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.team3128.Robot;
 import frc.team3128.RobotContainer;
 import frc.team3128.Constants.FieldConstants;
 import frc.team3128.Constants.ShooterConstants;
-import frc.team3128.Constants.SwerveConstants;
 import frc.team3128.commands.CmdSwerveDrive;
 
 import static frc.team3128.Constants.SwerveConstants.*;
 import static frc.team3128.Constants.FocalAimConstants.*;
+
+import static edu.wpi.first.wpilibj2.command.Commands.*;
 
 public class Swerve extends SwerveBase {
 
     private static Swerve instance;
 
     private Pigeon2 gyro;
-
     public double throttle = 1;
 
     public Supplier<Double> yaw;
@@ -48,23 +47,6 @@ public class Swerve extends SwerveBase {
             instance = new Swerve();
         }
         return instance;
-    }
-
-    public static Pose2d blueToAlliance(Pose2d pose) {
-        if (Robot.getAlliance() == Alliance.Blue) return pose;
-        return new Pose2d(
-            FieldConstants.FIELD_X_LENGTH - pose.getX(),
-            pose.getY(),
-            Rotation2d.fromDegrees(MathUtil.inputModulus(180 - pose.getRotation().getDegrees(), -180, 180))
-        );
-    }
-
-    public static Translation2d blueToAlliance(Translation2d translation) {
-        if (Robot.getAlliance() == Alliance.Blue) return translation;
-        return new Translation2d(
-            FieldConstants.FIELD_X_LENGTH - translation.getX(),
-            translation.getY()
-        );
     }
 
     private Swerve() {
@@ -118,13 +100,7 @@ public class Swerve extends SwerveBase {
     public double getRoll() {
         return 0;
     }
-    
-    public int getdriveLimit(){
-        return driveLimit;
-    }
-    public int getOffSet(){
-        return SwerveConstants.offset;
-    }
+
     @Override
     public void zeroGyro(double reset) {
         gyro.setYaw(reset);
@@ -175,7 +151,7 @@ public class Swerve extends SwerveBase {
         return getDist(getPose().getTranslation(), point);
     }
 
-    public static double getDist(Translation2d point1, Translation2d point2) {
+    public double getDist(Translation2d point1, Translation2d point2) {
         return point1.getDistance(point2) - robotLength / 2.0;
     }
 
@@ -214,14 +190,13 @@ public class Swerve extends SwerveBase {
 
                 Swerve.getInstance().drive(translation, Units.degreesToRadians(output), true);
             },
-            2,
             Swerve.getInstance()
         ).beforeStarting(runOnce(()-> CmdSwerveDrive.disableTurn()));
     }
 
     public boolean isConfigured() {
         for (final SwerveModule module : modules) {
-            final double CANCoderAngle = module.getAbsoluteAngle().getDegrees();
+            final double CANCoderAngle = module.getCanCoder().getDegrees();
             final double AngleMotorAngle = module.getAngleMotor().getPosition();
             if (CANCoderAngle == 0 || AngleMotorAngle == 0) return false;
         }
@@ -244,6 +219,29 @@ public class Swerve extends SwerveBase {
         NAR_Shuffleboard.addSendable("Commands", "Swerve Commands", this, 0, 0);
     }
 
+    public boolean isCrashing(double stallLimit, double accelerationLimit){
+        int cnt = 0;
+        for(SwerveModule module : modules){
+            if (module.getDriveMotor().getStallCurrent() > stallLimit && 
+            gyro.getAccelerationX().getValueAsDouble() + gyro.getAccelerationY().getValueAsDouble() < accelerationLimit){
+                cnt++;
+            }
+        }
+        return cnt >= 3;
+    }
+    public void setCurrentModulesMethod(){
+        for(SwerveModule module : modules){
+            module.getDriveMotor().setCurrentLimit(60);
+    }
+    }
+
+    public Command setCurrentModules(){
+        return runOnce(()->setCurrentModulesMethod());
+    }
+    public Trigger trigger = new Trigger(()->isCrashing(0,0));
+    
+
+    
 }
     
 
