@@ -43,8 +43,6 @@ public class Swerve extends SwerveBase {
 
     public Supplier<Double> yaw;
 
-    public boolean toSpeakerToggle = false;
-
     public static synchronized Swerve getInstance() {
         if (instance == null) {
             instance = new Swerve();
@@ -244,10 +242,6 @@ public class Swerve extends SwerveBase {
     public void initShuffleboard(){
         super.initShuffleboard();
         NAR_Shuffleboard.addSendable("Commands", "Swerve Commands", this, 0, 0);
-    }
-
-    public void toggleSpeaker(){
-        toSpeakerToggle = !toSpeakerToggle;
     }
 
 }

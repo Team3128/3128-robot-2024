@@ -16,8 +16,6 @@ import static frc.team3128.Constants.LimelightConstants.TIMEOUT;
 import static frc.team3128.Constants.ShooterConstants.*;
 import static frc.team3128.commands.CmdManager.*;
 
-import java.util.function.BooleanSupplier;
-
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
 import frc.team3128.Constants.LedConstants.Colors;
@@ -26,7 +24,6 @@ import frc.team3128.autonomous.Trajectories;
 import frc.team3128.autonomous.Trajectories.ShootPosition;
 import frc.team3128.commands.CmdAutoAlign;
 import frc.team3128.commands.CmdSwerveDrive;
-import frc.team3128.Constants.FieldConstants;
 import common.core.swerve.SwerveModule;
 import common.hardware.camera.Camera;
 import common.hardware.input.NAR_ButtonBoard;
@@ -94,10 +91,8 @@ public class RobotContainer {
         controller = new NAR_XboxController(2);
         buttonPad = new NAR_ButtonBoard(3);
 
-        controller.getButton(XboxButton.kLeftStick).onTrue(runOnce(()->swerve.toggleSpeaker()));
-        BooleanSupplier toSpeaker = () -> (swerve.getDist() > FieldConstants.TOO_CLOSE && intake.intakeRollers.hasObjectPresent() && swerve.toSpeakerToggle);
         //uncomment line below to enable driving
-        CommandScheduler.getInstance().setDefaultCommand(swerve, new CmdSwerveDrive(controller::getLeftX,controller::getLeftY, controller::getRightX, true, toSpeaker));
+        CommandScheduler.getInstance().setDefaultCommand(swerve, new CmdSwerveDrive(controller::getLeftX,controller::getLeftY, controller::getRightX, true));
 
         // initRobotTest();
         
@@ -178,8 +173,6 @@ public class RobotContainer {
         // buttonPad.getButton(13).onTrue(intake.intakeRollers.outtake()).onFalse(intake.intakeRollers.runManipulator(0));
         // buttonPad.getButton(16).onTrue(intake.intakeRollers.outtake()).onFalse(intake.intakeRollers.runManipulator(0));
         // buttonPad.getButton(16).onTrue(intake.outtake());
-        
-        buttonPad.getButton(15).and(() -> swerve.getDist() > FieldConstants.TOO_CLOSE).whileTrue(rampUp());
 
         new Trigger(()-> intake.intakeRollers.hasObjectPresent()).onTrue(runOnce(()-> leds.setLedColor(Colors.GREEN))).onFalse(runOnce(()-> leds.setDefaultColor()));
 

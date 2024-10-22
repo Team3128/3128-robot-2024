@@ -1,6 +1,5 @@
 package frc.team3128.commands;
 
-import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.MathUtil;
@@ -28,18 +27,14 @@ public class CmdSwerveDrive extends Command {
     public static PIDController rController;
     private static boolean enabled = false;
     private static double rSetpoint;
-
-    private BooleanSupplier toSetpoint;
     
-    public CmdSwerveDrive(DoubleSupplier xAxis, DoubleSupplier yAxis, DoubleSupplier zAxis, boolean fieldRelative, BooleanSupplier toSetpoint) {
+    public CmdSwerveDrive(DoubleSupplier xAxis, DoubleSupplier yAxis, DoubleSupplier zAxis, boolean fieldRelative) {
         this.swerve = Swerve.getInstance();
         addRequirements(swerve);
 
         this.xAxis = xAxis;
         this.yAxis = yAxis;
         this.zAxis = zAxis;
-
-        this.toSetpoint = toSetpoint;
 
         rController = new PIDController(turnkP, 0, 0);
         rController.setTolerance(1);
@@ -67,7 +62,7 @@ public class CmdSwerveDrive extends Command {
             enabled = false;
         }
         if (enabled) {
-            rotation = Units.degreesToRadians(rController.calculate(swerve.getGyroRotation2d().getDegrees(), toSetpoint.getAsBoolean() ? swerve.getTurnAngle() : rSetpoint));
+            rotation = Units.degreesToRadians(rController.calculate(swerve.getGyroRotation2d().getDegrees(), rSetpoint));
             if (rController.atSetpoint()) {
                 rotation = 0;
             }
