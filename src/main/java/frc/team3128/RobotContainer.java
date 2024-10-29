@@ -39,6 +39,7 @@ import common.utility.Log;
 import common.utility.narwhaldashboard.NarwhalDashboard;
 import common.utility.narwhaldashboard.NarwhalDashboard.State;
 import common.utility.shuffleboard.NAR_Shuffleboard;
+import common.utility.sysid.CmdSysId;
 import common.utility.tester.Tester;
 // import common.utility.tester.Tester.UnitTest;
 import frc.team3128.subsystems.AmpMechanism;
@@ -117,7 +118,8 @@ public class RobotContainer {
         controller.getButton(XboxButton.kB).onTrue(rampUp(()-> 13, MIDDLE_FEED_RPM)).onFalse(feed(MIDDLE_FEED_RPM, 13, MIDDLE_FEED_ANGLE));
 
         // controller.getButton(XboxButton.kY).onTrue(rampUpFeed(EDGE_FEED_RPM, EDGE_FEED_RPM, 13)).onFalse(feed(EDGE_FEED_RPM, 13, EDGE_FEED_ANGLE));   //Feed Shot
-        controller.getButton(XboxButton.kY).onTrue(rampUp(()->13, EDGE_FEED_RPM)).onFalse(feed(EDGE_FEED_RPM, 13, EDGE_FEED_ANGLE));   //Feed Shot
+        // controller.getButton(XboxButton.kY).onTrue(rampUp(()->13, EDGE_FEED_RPM)).onFalse(feed(EDGE_FEED_RPM, 13, EDGE_FEED_ANGLE));   //Feed Shot TODO: CHANGE BACK
+        controller.getButton(XboxButton.kY).onTrue(new CmdSysId("Swerve", (output)->swerve.setVoltageAngle(output), ()->swerve.getModules()[0].getDriveMotor().getVelocity(),()->swerve.getModules()[0].getDriveMotor().getPosition(), 50,true, swerve));
 
         controller.getButton(XboxButton.kRightBumper).onTrue(rampUp(()->Climber.Setpoint.RAMSHOT.setpoint, RAM_SHOT_RPM)).onFalse(ramShot()); //Ram Shot
         controller.getButton(XboxButton.kRightTrigger).onTrue(rampUp(()->0, MAX_RPM)).onFalse(shootDist());     //Auto Shoot
