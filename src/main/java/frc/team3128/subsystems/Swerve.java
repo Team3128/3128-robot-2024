@@ -98,11 +98,6 @@ public class Swerve extends SwerveBase {
             module.getDriveMotor().setVolts(volts);
         }
     }
-    public void setVoltageAngle(double volts) {
-        for (final SwerveModule module : modules) {
-            module.getDriveMotor().setVolts(volts);
-        }
-    }
 
     public double getVelocity() {
         var x = getRobotVelocity();

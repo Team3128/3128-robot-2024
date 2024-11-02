@@ -19,16 +19,16 @@ public class AutoPrograms {
     private HashMap<String, Command> pathMap = new HashMap<String, Command>();
     private static AutoPrograms instance;
 
-    public AutoPrograms() {
+    private AutoPrograms() {
 
         Trajectories.initTrajectories();
         initAutoSelector();
     }
 
-    // public static synchronized AutoPrograms getInstance() {
-    //     if (instance == null) instance = new AutoPrograms();
-    //     return instance;
-    // }
+    public static synchronized AutoPrograms getInstance() {
+        if (instance == null) instance = new AutoPrograms();
+        return instance;
+    }
 
     private void initAutoSelector() {
         final String[] autoStrings = new String[] {
@@ -76,7 +76,7 @@ public class AutoPrograms {
 
     public Command getAutonomousCommand() {
         String selectedAutoName = NarwhalDashboard.getInstance().getSelectedAuto();
-        String hardcode = "topFar_4note";
+        String hardcode = "middleClose_3note_BATB";
         // String hardcode = "topFarCopy_4note";
         // return middleClose_4note();
         

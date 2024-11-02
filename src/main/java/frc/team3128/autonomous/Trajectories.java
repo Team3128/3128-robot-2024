@@ -95,7 +95,7 @@ public class Trajectories {
     private static double vx = 0, vy = 0;
     private static boolean turning = false;
     private static BooleanSupplier hasNote = intake.intakeRollers::hasObjectPresent;
-    // private static final AutoPrograms autoPrograms = new AutoPr
+    private static final AutoPrograms autoPrograms = AutoPrograms.getInstance();
 
     public static void initTrajectories() {
         Pathfinding.setPathfinder(new LocalADStar());
@@ -158,36 +158,36 @@ public class Trajectories {
         );
     }
 
-    // public static Command middle_5note() {
-    //     return sequence(
-    //         autoShootNoTurn(),
-    //         findAndScore(allianceFlip(Note.NOTE1_2.getTranslation())),
-    //         autoPrograms.getPath("only-note1.2-note2.3"),
-    //         findNoTurn(allianceFlip(Note.NOTE2_3.getTranslation())),
-    //         autoPrograms.getPath("note2.3-middle"),
-    //         autoShootNoTurn().onlyIf(hasNote),
-    //         findAndScore(allianceFlip(Note.NOTE1_1.getTranslation())),
-    //         findAndScore(allianceFlip(Note.NOTE1_3.getTranslation()))
-    //     );
-    // }
+    public static Command middle_5note() {
+        return sequence(
+            autoShootNoTurn(),
+            findAndScore(allianceFlip(Note.NOTE1_2.getTranslation())),
+            autoPrograms.getPath("only-note1.2-note2.3"),
+            findNoTurn(allianceFlip(Note.NOTE2_3.getTranslation())),
+            autoPrograms.getPath("note2.3-middle"),
+            autoShootNoTurn().onlyIf(hasNote),
+            findAndScore(allianceFlip(Note.NOTE1_1.getTranslation())),
+            findAndScore(allianceFlip(Note.NOTE1_3.getTranslation()))
+        );
+    }
 
-    // public static Command top_4note() {
-    //     return sequence(
-    //         autoShootNoTurn(),
-    //         autoPrograms.getPath("only-top-note2.1"),
-    //         findNote2_1(),
-    //         autoPrograms.getPath("note2.1-wing"),
-    //         autoShoot(0.75).onlyIf(hasNote),
-    //         autoPrograms.getPath("only-wing-note2.2"),
-    //         findNote2_2(),
-    //         autoPrograms.getPath("note2.2-wing"),
-    //         autoShoot(0.75).onlyIf(hasNote),
-    //         //autoPrograms.getPath("only-wing-note2.3"),
-    //         //findNotef2_3(),
-    //         autoPrograms.getPath("note2.3-wing"),
-    //         autoShoot(0.75).onlyIf(hasNote)
-    //     );
-    // }
+    public static Command top_4note() {
+        return sequence(
+            autoShootNoTurn(),
+            autoPrograms.getPath("only-top-note2.1"),
+            findNote2_1(),
+            autoPrograms.getPath("note2.1-wing"),
+            autoShoot(0.75).onlyIf(hasNote),
+            autoPrograms.getPath("only-wing-note2.2"),
+            findNote2_2(),
+            autoPrograms.getPath("note2.2-wing"),
+            autoShoot(0.75).onlyIf(hasNote),
+            //autoPrograms.getPath("only-wing-note2.3"),
+            //findNotef2_3(),
+            autoPrograms.getPath("note2.3-wing"),
+            autoShoot(0.75).onlyIf(hasNote)
+        );
+    }
 
     // Find Note2_1, if it is there
     // If not, find Note2_2

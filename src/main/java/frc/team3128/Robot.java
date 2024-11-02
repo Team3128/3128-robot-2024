@@ -71,7 +71,7 @@ public class Robot extends NAR_Robot {
             e.printStackTrace();
         }
 
-        autoPrograms = new AutoPrograms();
+        autoPrograms = AutoPrograms.getInstance();
         m_robotContainer.initDashboard();
         LiveWindow.disableAllTelemetry();
         // runOnce(()-> Swerve.getInstance().zeroGyro(Robot.getAlliance() == Alliance.Red ? 0 : 180));
@@ -115,7 +115,6 @@ public class Robot extends NAR_Robot {
     public void autonomousInit() {
         RobotContainer.limelight.setLEDMode(LEDMode.ON);
         Swerve.getInstance().resetEncoders();
-        Swerve.getInstance().setBrakeMode(true);
 
         Camera1.enableAll();
         Camera.overrideThreshold = 0;
@@ -137,7 +136,6 @@ public class Robot extends NAR_Robot {
     public void teleopInit() {
         Swerve.getInstance().resetEncoders();
         RobotContainer.limelight.setLEDMode(LEDMode.OFF);
-        Swerve.getInstance().setBrakeMode(true);
         
         // Camera.overrideThreshold = 30;
         // Camera.validDist = 0.5;
@@ -167,7 +165,6 @@ public class Robot extends NAR_Robot {
 
     @Override
     public void disabledInit() {
-        autoPrograms = new AutoPrograms();
         AmpMechanism.getInstance().disable();
         Climber.getInstance().disable();
         Intake.getInstance().intakePivot.disable();
@@ -189,7 +186,8 @@ public class Robot extends NAR_Robot {
     @Override
     public void disabledExit() {
         Leds.getInstance().setDefaultColor();
-        Swerve.getInstance().setBrakeMode(true);
+        Swerve.getInstance().setBrakeMode(true
+        );
     }
     
     @Override
