@@ -175,6 +175,7 @@ public class Intake {
             waitUntil(()-> Climber.getInstance().isNeutral()),
             runOnce(()-> isRetracting = true),
             intakePivot.pivotTo(5),
+            waitUntil(intakePivot::atSetpoint),
             // intakePivot.hardReset(-0.2),
             runOnce(()-> isRetracting = false),
             either(intakeRollers.serialize().withTimeout(1).andThen(intakeRollers.runManipulator(0)), intakeRollers.runManipulator(0), ()-> serialize)

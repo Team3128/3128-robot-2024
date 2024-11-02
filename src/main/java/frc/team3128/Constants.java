@@ -322,7 +322,7 @@ public class Constants {
         public static final double AMP_RPM = 2500;
         public static final double RAM_SHOT_RPM = 4500;
         
-        public static final double EDGE_FEED_RPM = 5000;
+        public static final double EDGE_FEED_RPM = 4750; //5000
         public static final double EDGE_FEED_ANGLE = 35;
         public static final double MIDDLE_FEED_RPM = 4500;
         public static final double MIDDLE_FEED_ANGLE = 25;
@@ -441,7 +441,7 @@ public class Constants {
     public static class LimelightConstants {
         public static final double TX_THRESHOLD = 1;
         public static final double HORIZONTAL_OFFSET_GOAL = 0;
-        public static final double PLATEAU_THRESHOLD = 25; //roughly 0.5 seconds
+        public static final double PLATEAU_THRESHOLD = 32; //25 //roughly 0.5 seconds
         public static final double TIMEOUT = 0.5;
         public static final double KP = 0.1;
         public static final double KI = 0;
