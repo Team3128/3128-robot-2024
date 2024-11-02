@@ -175,7 +175,7 @@ public class Intake {
             waitUntil(()-> Climber.getInstance().isNeutral()),
             runOnce(()-> isRetracting = true),
             intakePivot.pivotTo(5),
-            intakePivot.hardReset(-0.2),
+            // intakePivot.hardReset(-0.2),
             runOnce(()-> isRetracting = false),
             either(intakeRollers.serialize().withTimeout(1).andThen(intakeRollers.runManipulator(0)), intakeRollers.runManipulator(0), ()-> serialize)
         );
@@ -234,6 +234,7 @@ public class Intake {
         if (PIVOT_MOTOR.getState() == State.DISCONNECTED) return State.DISCONNECTED;
         if (LEFT_ROLLER_MOTOR.getState() == State.DISCONNECTED && RIGHT_ROLLER_MOTOR.getState() == State.DISCONNECTED) return State.DISCONNECTED;
         if (LEFT_ROLLER_MOTOR.getState() == State.DISCONNECTED || RIGHT_ROLLER_MOTOR.getState() == State.DISCONNECTED) return State.PARTIALLY_RUNNING;
+        if (RIGHT_ROLLER_MOTOR.getState() == State.DISCONNECTED) return State.DISCONNECTED;
         return State.RUNNING;
     }
 
