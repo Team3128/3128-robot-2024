@@ -39,6 +39,7 @@ import common.utility.Log;
 import common.utility.narwhaldashboard.NarwhalDashboard;
 import common.utility.narwhaldashboard.NarwhalDashboard.State;
 import common.utility.shuffleboard.NAR_Shuffleboard;
+import common.utility.sysid.CmdSysId;
 import common.utility.tester.Tester;
 // import common.utility.tester.Tester.UnitTest;
 import frc.team3128.subsystems.AmpMechanism;
@@ -118,19 +119,28 @@ public class RobotContainer {
 
         // controller.getButton(XboxButton.kY).onTrue(rampUpFeed(EDGE_FEED_RPM, EDGE_FEED_RPM, 13)).onFalse(feed(EDGE_FEED_RPM, 13, EDGE_FEED_ANGLE));   //Feed Shot
         controller.getButton(XboxButton.kY).onTrue(rampUp(()->13, EDGE_FEED_RPM)).onFalse(feed(EDGE_FEED_RPM, 13, EDGE_FEED_ANGLE));   //Feed Shot
+        // controller.getButton(XboxButton.kY).onTrue(new CmdSysId("Swerve", (output)->swerve.setVoltageAngle(output), ()->swerve.getModules()[0].getDriveMotor().getVelocity(),()->swerve.getModules()[0].getDriveMotor().getPosition(), 50,true, swerve));
 
         controller.getButton(XboxButton.kRightBumper).onTrue(rampUp(()->Climber.Setpoint.RAMSHOT.setpoint, RAM_SHOT_RPM)).onFalse(ramShot()); //Ram Shot
         controller.getButton(XboxButton.kRightTrigger).onTrue(rampUp(()->0, MAX_RPM)).onFalse(shootDist());     //Auto Shoot
+        // controller.getButton(XboxButton.kRightBumper).onTrue(runOnce(() -> intake.intakePivot.enable()));
+        // controller.getButton(XboxButton.kRightTrigger).onTrue(runOnce(() -> intake.intakePivot.disable()));
         controller.getButton(XboxButton.kX).onTrue(rampUp(()->Climber.Setpoint.AMP.setpoint, AMP_RPM).andThen(ampMechanism.extend())).onFalse(ampShoot()); //Amp Shot
         // controller.getButton(XboxButton.kX).onTrue(rampUpAuto(Climber.getInstance().interpolate(Swerve.getDist(focalPointBlue, new Translation2d(4.5, 6.58))-.45)))
         // .onFalse(turnAndOuttake());
         // controller.getButton(XboxButton.kB).onTrue(new InstantCommand(()->swerve.resetEncoders()));
 
         controller.getButton(XboxButton.kA).onTrue(sequence(runOnce(()-> intake.isRetracting = false), intake.intakePivot.pivotTo(150), climber.climbTo(Climber.Setpoint.EXTENDED))); //Extend Climber
+        // controller.getButton(XboxButton.kA).onTrue(runOnce(() -> intake.intakePivot.reset(0)));
         controller.getButton(XboxButton.kBack).onTrue(sequence(climber.setClimber(-0.35), waitSeconds(1), climber.setClimber(-1), waitUntil(()->climber.isClimbed()), climber.setClimber(0)));   //Retract Climber
 
         controller.getButton(XboxButton.kLeftTrigger).onTrue(intake.intake(Intake.Setpoint.EXTENDED));  //Extend Intake
+        // controller.getButton(XboxButton.kLeftTrigger).onTrue(intake.intakePivot.pivotTo(Intake.Setpoint.EXTENDED.angle));  //Extend Intake
+
+        
+        // controller.getButton(XboxButton.kLeftTrigger).onTrue(runOnce(()->intake.intakePivot.enable()));
         controller.getButton(XboxButton.kLeftBumper).onTrue(intake.retract(false));         //Retract Intake
+        // controller.getButton(XboxButton.kLeftBumper).onTrue(runOnce(() -> intake.intakePivot.runPivot(0.4)));
 
         controller.getButton(XboxButton.kStart).onTrue(intake.outtake()); //Amp LED
         controller.getButton(XboxButton.kBack).onTrue(runOnce(()-> swerve.zeroGyro(0)));
