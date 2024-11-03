@@ -68,7 +68,7 @@ public class RobotContainer {
     // private NAR_ButtonBoard judgePad;
     private NAR_ButtonBoard buttonPad;
 
-    public static NAR_XboxController controller;
+    public static NAR_XboxController controller, controller2;
 
     private NarwhalDashboard dashboard;
 
@@ -92,7 +92,8 @@ public class RobotContainer {
         // intake.addIntakeTests();
 
         controller = new NAR_XboxController(2);
-        buttonPad = new NAR_ButtonBoard(3);
+        controller2 = new NAR_XboxController(3);
+        buttonPad = new NAR_ButtonBoard(4);
 
         //uncomment line below to enable driving
         CommandScheduler.getInstance().setDefaultCommand(swerve, new CmdSwerveDrive(controller::getLeftX,controller::getLeftY, controller::getRightX, true));
@@ -181,6 +182,9 @@ public class RobotContainer {
         
         buttonPad.getButton(11).onTrue(intake.intakePivot.reset(0));
         buttonPad.getButton(12).onTrue(climber.reset());
+        controller2.getButton(XboxButton.kA).onTrue(ampMechanism.reset(-90));
+        controller2.getButton(XboxButton.kB).onTrue(intake.intakePivot.reset(0));
+        controller2.getButton(XboxButton.kX).onTrue(climber.reset());
         // buttonPad.getButton(12).onTrue(runOnce(()->NAR_CANSpark.burnFlashAll()));
 
         // buttonPad.getButton(13).onTrue(runOnce(()-> CommandScheduler.getInstance().cancelAll()));

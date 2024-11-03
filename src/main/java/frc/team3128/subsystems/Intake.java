@@ -92,8 +92,8 @@ public class Intake {
 
         @Override
         protected void configMotors() {
-            RIGHT_ROLLER_MOTOR.setInverted(false);
-            LEFT_ROLLER_MOTOR.setInverted(true);
+            RIGHT_ROLLER_MOTOR.setInverted(true);
+            LEFT_ROLLER_MOTOR.setInverted(false);
             RIGHT_ROLLER_MOTOR.enableVoltageCompensation(9);
             LEFT_ROLLER_MOTOR.follow(RIGHT_ROLLER_MOTOR);
             RIGHT_ROLLER_MOTOR.setNeutralMode(Neutral.COAST);
@@ -176,6 +176,7 @@ public class Intake {
             runOnce(()-> isRetracting = true),
             intakePivot.pivotTo(5),
             waitUntil(intakePivot::atSetpoint),
+            runOnce(()->intakePivot.setPower(-.1)),
             // intakePivot.hardReset(-0.2),
             runOnce(()-> isRetracting = false),
             either(intakeRollers.serialize().withTimeout(1).andThen(intakeRollers.runManipulator(0)), intakeRollers.runManipulator(0), ()-> serialize)
@@ -227,7 +228,7 @@ public class Intake {
             intakeRollers.runManipulator(STALL_POWER),
             intakePivot.pivotTo(()-> Climber.getInstance().getAngle()),
             waitUntil(() -> intakePivot.atSetpoint()).withTimeout(1),
-            intakePivot.runPivot(0)
+            intakePivot.runPivot(-0.1)
         );
     }
 

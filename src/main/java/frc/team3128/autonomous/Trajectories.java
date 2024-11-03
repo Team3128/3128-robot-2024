@@ -540,6 +540,8 @@ public class Trajectories {
 
     public static Command resetAuto() {
         return sequence(
+            Intake.getInstance().intakePivot.runPivot(-0.1),
+            waitSeconds(0.1),
             intake.intakePivot.reset(0),
             climber.reset(),
             // runOnce(()-> swerve.zeroGyro(Robot.getAlliance() == Alliance.Red ? 0 : 180)),
