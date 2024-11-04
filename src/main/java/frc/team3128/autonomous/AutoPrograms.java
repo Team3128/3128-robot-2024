@@ -1,6 +1,7 @@
 package frc.team3128.autonomous;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import common.utility.Log;
 import common.utility.narwhaldashboard.NarwhalDashboard;
 
 import static edu.wpi.first.wpilibj2.command.Commands.*;
@@ -88,6 +89,8 @@ public class AutoPrograms {
             defaultAuto();
         }
         autoCommand = autoMap.get(selectedAutoName);
+
+        Log.info("AUTO_SELECTED", selectedAutoName);
         return autoCommand.beforeStarting(Trajectories.resetAuto());
 
         // return Trajectories.middleClose_4note().beforeStarting(Trajectories.resetAuto());

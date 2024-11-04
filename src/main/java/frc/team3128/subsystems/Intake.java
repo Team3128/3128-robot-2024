@@ -92,8 +92,8 @@ public class Intake {
 
         @Override
         protected void configMotors() {
-            RIGHT_ROLLER_MOTOR.setInverted(true);
-            LEFT_ROLLER_MOTOR.setInverted(false);
+            RIGHT_ROLLER_MOTOR.setInverted(false);
+            LEFT_ROLLER_MOTOR.setInverted(true);
             RIGHT_ROLLER_MOTOR.enableVoltageCompensation(9);
             LEFT_ROLLER_MOTOR.follow(RIGHT_ROLLER_MOTOR);
             RIGHT_ROLLER_MOTOR.setNeutralMode(Neutral.COAST);

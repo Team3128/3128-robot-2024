@@ -322,7 +322,7 @@ public class Constants {
         public static final double AMP_RPM = 2500;
         public static final double RAM_SHOT_RPM = 4500;
         
-        public static final double EDGE_FEED_RPM = 4750; //5000
+        public static final double EDGE_FEED_RPM = 5000; //4750
         public static final double EDGE_FEED_ANGLE = 35;
         public static final double MIDDLE_FEED_RPM = 4500;
         public static final double MIDDLE_FEED_ANGLE = 25;

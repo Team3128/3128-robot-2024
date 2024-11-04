@@ -66,7 +66,7 @@ public class RobotContainer {
     private Leds leds;
 
     // private NAR_ButtonBoard judgePad;
-    private NAR_ButtonBoard buttonPad;
+    // private NAR_ButtonBoard // buttonPad;
 
     public static NAR_XboxController controller, controller2;
 
@@ -93,7 +93,7 @@ public class RobotContainer {
 
         controller = new NAR_XboxController(2);
         controller2 = new NAR_XboxController(3);
-        buttonPad = new NAR_ButtonBoard(4);
+        // buttonPad = new NAR_ButtonBoard(4);
 
         //uncomment line below to enable driving
         CommandScheduler.getInstance().setDefaultCommand(swerve, new CmdSwerveDrive(controller::getLeftX,controller::getLeftY, controller::getRightX, true));
@@ -169,37 +169,37 @@ public class RobotContainer {
 
         // controller.getButton(XboxButton.kY).onTrue(new CmdAutoAlign(3, TIMEOUT, false));
 
-        buttonPad.getButton(1).onTrue(shooter.setShooter(1)).onFalse(shooter.setShooter(0));
-        buttonPad.getButton(2).onTrue(intake.intakePivot.runPivot(0.2)).onFalse(intake.intakePivot.runPivot(0));
-        buttonPad.getButton(3).onTrue(climber.setClimber(-0.5)).onFalse(climber.setClimber(0));
-        buttonPad.getButton(4).onTrue(shooter.setShooter(1)).onFalse(shooter.setShooter(0));
-        buttonPad.getButton(5).onTrue(intake.intakePivot.runPivot(-0.2)).onFalse(intake.intakePivot.runPivot(0));
-        buttonPad.getButton(6).onTrue(climber.setClimber(0.5)).onFalse(climber.setClimber(0));
-        buttonPad.getButton(7).onTrue(shooter.shoot(0));
-        buttonPad.getButton(8).onTrue(intake.intakePivot.pivotTo(0));
-        buttonPad.getButton(9).onTrue(climber.climbTo(0));
-        buttonPad.getButton(10).onTrue(ampMechanism.reset(-90));
+        // buttonPad.getButton(1).onTrue(shooter.setShooter(1)).onFalse(shooter.setShooter(0));
+        // buttonPad.getButton(2).onTrue(intake.intakePivot.runPivot(0.2)).onFalse(intake.intakePivot.runPivot(0));
+        // buttonPad.getButton(3).onTrue(climber.setClimber(-0.5)).onFalse(climber.setClimber(0));
+        // buttonPad.getButton(4).onTrue(shooter.setShooter(1)).onFalse(shooter.setShooter(0));
+        // buttonPad.getButton(5).onTrue(intake.intakePivot.runPivot(-0.2)).onFalse(intake.intakePivot.runPivot(0));
+        // buttonPad.getButton(6).onTrue(climber.setClimber(0.5)).onFalse(climber.setClimber(0));
+        // buttonPad.getButton(7).onTrue(shooter.shoot(0));
+        // buttonPad.getButton(8).onTrue(intake.intakePivot.pivotTo(0));
+        // buttonPad.getButton(9).onTrue(climber.climbTo(0));
+        // buttonPad.getButton(10).onTrue(ampMechanism.reset(-90));
         
-        buttonPad.getButton(11).onTrue(intake.intakePivot.reset(0));
-        buttonPad.getButton(12).onTrue(climber.reset());
+        // buttonPad.getButton(11).onTrue(intake.intakePivot.reset(0));
+        // buttonPad.getButton(12).onTrue(climber.reset());
         controller2.getButton(XboxButton.kA).onTrue(ampMechanism.reset(-90));
         controller2.getButton(XboxButton.kB).onTrue(intake.intakePivot.reset(0));
         controller2.getButton(XboxButton.kX).onTrue(climber.reset());
-        // buttonPad.getButton(12).onTrue(runOnce(()->NAR_CANSpark.burnFlashAll()));
+        // // buttonPad.getButton(12).onTrue(runOnce(()->NAR_CANSpark.burnFlashAll()));
 
-        // buttonPad.getButton(13).onTrue(runOnce(()-> CommandScheduler.getInstance().cancelAll()));
-        // buttonPad.getButton(13).onTrue(ampMechanism.runRollers(AMP_POWER)).onFalse(ampMechanism.runRollers(0));
-        // buttonPad.getButton(14).onTrue(intake.intakeRollers.runManipulator(OUTTAKE_POWER));
-        // buttonPad.getButton(13).onTrue(intake.intakeRollers.intake()).onFalse(intake.intakeRollers.runManipulator(0));
-        buttonPad.getButton(14).onTrue(runOnce(()-> swerve.zeroGyro(0)));
+        // // buttonPad.getButton(13).onTrue(runOnce(()-> CommandScheduler.getInstance().cancelAll()));
+        // // buttonPad.getButton(13).onTrue(ampMechanism.runRollers(AMP_POWER)).onFalse(ampMechanism.runRollers(0));
+        // // buttonPad.getButton(14).onTrue(intake.intakeRollers.runManipulator(OUTTAKE_POWER));
+        // // buttonPad.getButton(13).onTrue(intake.intakeRollers.intake()).onFalse(intake.intakeRollers.runManipulator(0));
+        // buttonPad.getButton(14).onTrue(runOnce(()-> swerve.zeroGyro(0)));
 
-        // buttonPad.getButton(15).onTrue(runOnce(()-> autoAmpAlign().schedule()));
-        //buttonPad.getButton(15).onTrue(new CmdSysId("Swerve", (Double output)-> swerve.setVoltage(output), ()-> swerve.getVelocity(), swerve));
-        buttonPad.getButton(16).onTrue(sequence(runOnce(()-> swerve.stop(), swerve), runOnce(()-> leds.setDefaultColor())));
-        // buttonPad.getButton(15).onTrue(ampMechanism.runRollers(0.5)).onFalse(ampMechanism.runRollers(0));
-        // buttonPad.getButton(13).onTrue(intake.intakeRollers.outtake()).onFalse(intake.intakeRollers.runManipulator(0));
-        // buttonPad.getButton(16).onTrue(intake.intakeRollers.outtake()).onFalse(intake.intakeRollers.runManipulator(0));
-        // buttonPad.getButton(16).onTrue(intake.outtake());
+        // // buttonPad.getButton(15).onTrue(runOnce(()-> autoAmpAlign().schedule()));
+        //// buttonPad.getButton(15).onTrue(new CmdSysId("Swerve", (Double output)-> swerve.setVoltage(output), ()-> swerve.getVelocity(), swerve));
+        // buttonPad.getButton(16).onTrue(sequence(runOnce(()-> swerve.stop(), swerve), runOnce(()-> leds.setDefaultColor())));
+        // // buttonPad.getButton(15).onTrue(ampMechanism.runRollers(0.5)).onFalse(ampMechanism.runRollers(0));
+        // // buttonPad.getButton(13).onTrue(intake.intakeRollers.outtake()).onFalse(intake.intakeRollers.runManipulator(0));
+        // // buttonPad.getButton(16).onTrue(intake.intakeRollers.outtake()).onFalse(intake.intakeRollers.runManipulator(0));
+        // // buttonPad.getButton(16).onTrue(intake.outtake());
 
         new Trigger(()-> intake.intakeRollers.hasObjectPresent()).onTrue(runOnce(()-> leds.setLedColor(Colors.GREEN))).onFalse(runOnce(()-> leds.setDefaultColor()));
 
