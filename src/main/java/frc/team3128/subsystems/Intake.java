@@ -1,7 +1,6 @@
 package frc.team3128.subsystems;
 
 import static frc.team3128.Constants.IntakeConstants.*;
-
 import static edu.wpi.first.wpilibj2.command.Commands.deadline;
 // import static edu.wpi.first.wpilibj2.command.Commands.either;
 // import static edu.wpi.first.wpilibj2.command.Commands.parallel;
@@ -9,6 +8,7 @@ import static edu.wpi.first.wpilibj2.command.Commands.runOnce;
 import static edu.wpi.first.wpilibj2.command.Commands.sequence;
 // import static edu.wpi.first.wpilibj2.command.Commands.waitSeconds;
 import static edu.wpi.first.wpilibj2.command.Commands.waitUntil;
+
 // import edu.wpi.first.wpilibj2.command.InstantCommand;
 // import static edu.wpi.first.wpilibj2.command.Commands.*;
 
@@ -33,20 +33,27 @@ import common.hardware.motorcontroller.NAR_Motor.Neutral;
 import edu.wpi.first.math.MathUtil;
 // import edu.wpi.first.math.util.Units;
 // import edu.wpi.first.wpilibj.DigitalInput;
+
 import edu.wpi.first.wpilibj2.command.Command;
 // import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import common.utility.tester.CurrentTest;
+
+
+import common.utility.tester.CurrentTest;
+import common.utility.tester.Tester;
+import common.utility.tester.Tester.*;
+
 
 public class Intake {
 
     public enum Setpoint {
 
         //define your enums here (the diff heights you want to place cones at - ie. low pole, mid pole, etc)
+        INTAKING(0),
         LOWPOLE(20),
-        MIDPOLE(32),
-        HIGHPOLE(49);
-
+        MIDPOLE(45),
+        HIGHPOLE(70);
 
         public final double angle;
         private Setpoint(double angle) {
@@ -56,40 +63,60 @@ public class Intake {
 
     public class IntakePivot extends PivotTemplate {
 
+        private double currSetpoint;
 
-        private IntakePivot() {
-            super(new TrapController(PIDConstants, TRAP_CONSTRAINTS), PIVOT_MOTOR);
-            setTolerance(ANGLE_TOLERANCE);
-            setConstraints(POSITION_MINIMUM, POSITION_MAXIMUM);
-            initShuffleboard();
-            //define your controller here (using trap controller)
-            //setTolerance here (aka the max angle error that's acceptable)
-            //setConstraints (min and max position of the intake - in degrees)
-            //call initShuffleboard so you can debug using shuffleboard
+       private IntakePivot() {
+           super(new TrapController(PIDConstants, TRAP_CONSTRAINTS), PIVOT_MOTOR);
+           setTolerance(ANGLE_TOLERANCE);
+           setConstraints(POSITION_MINIMUM, POSITION_MAXIMUM);
+           initShuffleboard();
+           currSetpoint = Setpoint.INTAKING.angle;
+           //define your controller here (using trap controller)
+           //setTolerance here (aka the max angle error that's acceptable)
+           //setConstraints (min and max position of the intake - in degrees)
+           //call initShuffleboard so you can debug using shuffleboard
 
 
+       }
+
+
+       @Override 
+       protected void configMotors() {
+           PIVOT_MOTOR.setInverted(false);
+           PIVOT_MOTOR.setNeutralMode(Neutral.COAST);
+           //define one motor (use NAR_CANspark as the type of motor)
+           //motor should have setInverted as false
+           //set motor's NeutralMode as COAST
+      
+       }
+
+
+       @Override
+       public void useOutput(double output, double setpoint) {
+           PIVOT_MOTOR.setVolts(MathUtil.clamp(output, -12, 12));
+          // motor.setVolts(MathUtil.clamp(output, -12, 12));
+       }
+      
+       public Command pivotTo(double setpoint) {
+        currSetpoint = setpoint;
+       return runOnce(()-> startPID(setpoint));
         }
 
-        @Override 
-        protected void configMotors() {
-            PIVOT_MOTOR.setInverted(false);
-            PIVOT_MOTOR.setNeutralMode(Neutral.COAST);
-            //define one motor (use NAR_CANspark as the type of motor)
-            //motor should have setInverted as false
-            //set motor's NeutralMode as COAST
-       
+       public Command pivotTo(DoubleSupplier setpoint) {
+            currSetpoint = setpoint.getAsDouble();
+           return runOnce(()-> startPID(setpoint.getAsDouble()));
+       }
+
+        public double GetSetpoint() {
+            return currSetpoint;
         }
 
+        public Command reset() {
+            return runOnce(() -> PIVOT_MOTOR.resetPosition(Setpoint.INTAKING.angle));
+        }
+   }
 
-        @Override
-        public void useOutput(double output, double setpoint) {
-            PIVOT_MOTOR.setVolts(MathUtil.clamp(output, -12, 12));
-            // motor.setVolts(MathUtil.clamp(output, -12, 12));
-        }
-       
-        public Command pivotTo(DoubleSupplier setpoint) {
-            return runOnce(()-> startPID(setpoint.getAsDouble()));
-        }
+   public class IntakeRollers extends ManipulatorTemplate {
 
         public Command pivotTo(double setpoint) {
             return runOnce(()-> startPID(setpoint));
@@ -116,6 +143,7 @@ public class Intake {
  
     private IntakeRollers() {
         super(STALL_CURRENT, INTAKE_POWER, OUTTAKE_POWER, STALL_POWER, 0.3, RIGHT_ROLLER_MOTOR);
+
  
  
         /*
@@ -133,7 +161,6 @@ public class Intake {
         //??????????????????????????????????????limitSwitch = new DigitalInput(7);
         initShuffleboard();
     }
- 
  
     @Override
     protected void configMotors() {
@@ -177,8 +204,6 @@ public class Intake {
 
 
     public boolean isRetracting = false;
-
-
     //create a getInstance() so you can always create a new intake
     //ie. public static synchronized Intake getInstance(){
     public static synchronized Intake getInstance() {
@@ -188,15 +213,12 @@ public class Intake {
         return instance;
     }
 
-
     private Intake(){
         //create a new intakePivot
         intakePivot = new IntakePivot();
         //create a new intakeRollers
         intakeRollers = new IntakeRollers();
     }
-
-
 
     public Command intake(Setpoint setpoint) {
         return sequence(
@@ -209,10 +231,9 @@ public class Intake {
                     waitUntil(() -> hasObjectPresent()),
                     runOnce(() -> intakeRollers.setPower(STALL_POWER))
                 )
-                )
-            );
+            )
+        );
     }
-
 
     public Command outtake(Setpoint setpoint) {
         return sequence (
@@ -222,14 +243,48 @@ public class Intake {
             intakeRollers.runManipulator(OUTTAKE_POWER)
         );
     }
-
+   
     public boolean hasObjectPresent(){
         return Math.abs(getCurrent()) > STALL_CURRENT;
     }
-
+   
     public double getCurrent(){
-        return RIGHT_ROLLER_MOTOR.getStallCurrent();
+        return ROLLER_MOTOR.getStallCurrent();
     }
 
-   
+
+    private void setPower(double stallPower) {
+        ROLLER_MOTOR.set(stallPower);
+    }
+
+    public State getRunningState() {
+        //how do you find the state?
+        if (PIVOT_MOTOR.getState() == State.DISCONNECTED) return State.DISCONNECTED;
+        if (ROLLER_MOTOR.getState() == State.DISCONNECTED) return State.DISCONNECTED;
+        return State.RUNNING;
+    }
+
+    public Setpoint GetSetpointUp(double setpoint) {
+        if (setpoint == Setpoint.MIDPOLE.angle) {
+            return Setpoint.HIGHPOLE;
+        } else if (setpoint == Setpoint.LOWPOLE.angle) {
+            return Setpoint.MIDPOLE;
+        } else if (setpoint == Setpoint.INTAKING.angle) {
+            return Setpoint.LOWPOLE;
+        }
+
+        return Setpoint.HIGHPOLE;
+    }
+
+    public Setpoint GetSetpointDown(double setpoint) {
+        if (setpoint == Setpoint.LOWPOLE.angle) {
+            return Setpoint.INTAKING;
+        } else if (setpoint == Setpoint.MIDPOLE.angle) {
+            return Setpoint.LOWPOLE;
+        } else if (setpoint == Setpoint.HIGHPOLE.angle) {
+            return Setpoint.MIDPOLE;
+        }
+
+        return Setpoint.INTAKING;
+    }
 }

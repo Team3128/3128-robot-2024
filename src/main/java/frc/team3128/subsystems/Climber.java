@@ -46,7 +46,7 @@ public class Climber extends NAR_PIDSubsystem {
     protected void useOutput(double output, double setpoint) {
         if ( retracting and neutral) {
             leftMotor.setVolts(0)
-            RightMotor.setVolts(0)
+            rightMotor.setVolts(0)
             return;
         }
 

@@ -235,6 +235,7 @@ public class Constants {
         public static final double POSITION_MAXIMUM = 30;
         public static final double HEIGHT_OFFSET = 7; // 14 degrees ish
         public static final double ANGLE_OFFSET = 14;
+        
 
         public static final double NEUTRAL_THRESHOLD = 1;
         public static final InterpolatingDoubleTreeMap climberHeightMap = new InterpolatingDoubleTreeMap();
@@ -280,6 +281,10 @@ public class Constants {
         public static final double OUTTAKE_POWER = -1;
         public static final double INTAKE_POWER = 0.7 /0.75;
         public static final double AMP_POWER = -0.18 / 0.75;
+        public static final double CURRENT_THRESHHOLD = 50; //find through testing
+
+        public static final int ROLLER_MOTOR_ID = 2;
+        public static final NAR_CANSpark ROLLER_MOTOR = new NAR_CANSpark(ROLLER_MOTOR_ID);
 
         public static final double CURRENT_TEST_POWER = OUTTAKE_POWER;
         public static final double CURRENT_TEST_PLATEAU = 1;
