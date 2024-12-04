@@ -1,6 +1,11 @@
 package frc.team3128;
 
+import static frc.team3128.Constants.SwerveConstants.controllerInputRotationAngle;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.function.Function;
 
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.pathplanner.lib.path.PathConstraints;
@@ -14,12 +19,11 @@ import common.core.swerve.SwerveModuleConfig.SwerveEncoderConfig;
 import common.core.swerve.SwerveModuleConfig.SwerveMotorConfig;
 import common.hardware.motorcontroller.NAR_CANSpark;
 import common.hardware.motorcontroller.NAR_TalonFX;
-import common.hardware.motorcontroller.NAR_TalonSRX;
 import common.hardware.motorcontroller.NAR_CANSpark.ControllerType;
 import common.hardware.motorcontroller.NAR_Motor.MotorConfig;
 import common.hardware.motorcontroller.NAR_Motor.Neutral;
+import common.hardware.motorcontroller.NAR_Motor.StatusFrames;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
@@ -62,9 +66,10 @@ public class Constants {
     }
 
     public static class SwerveConstants {
-        public static final double RAMP_TIME = 3;
 
         public static final int pigeonID = 30; 
+
+        public static final double controllerInputRotationAngle = -90;
 
         /* Drivetrain Constants */
         public static final double bumperLength = Units.inchesToMeters(5);
@@ -87,9 +92,7 @@ public class Constants {
 
         /* Swerve Current Limiting */
         public static final int angleLimit = 30; //30
-        public static final int driveLimit = 60;
-        public static final int offset = 20;
-         //40;
+        public static final int driveLimit = 60; //40;
         public static final int stallLimit = 40;
 
         /* Angle Motor PID Values */
@@ -117,7 +120,7 @@ public class Constants {
         public static final double maxSpeed = 5.87;//4.8; //meters per second - 16.3 ft/sec
         public static final double maxAttainableSpeed = maxSpeed; //Stole from citrus.
         public static final double maxAcceleration = 5;
-        public static final double maxAngularVelocity = 8; //3; //11.5; // citrus: 10 - Mason look at this later wtf
+        public static final double maxAngularVelocity = 8; //3; //11.5; // citrus: 10
         public static final double maxAngularAcceleration = 2 * Math.PI; //I stole from citrus.
 
         /* Motor Inverts */
@@ -127,9 +130,27 @@ public class Constants {
         /* Angle Encoder Invert */
         public static final boolean canCoderInvert = false;
 
-        public static final MotorConfig driveMotorConfig = new MotorConfig(SwerveConversions.rotationsToMeters(1, wheelCircumference, driveGearRatio), 60, driveLimit, driveMotorInvert, Neutral.BRAKE);
+        public static final MotorConfig driveMotorConfig = 
+                            new MotorConfig(
+                                SwerveConversions.rotationsToMeters(1, wheelCircumference, driveGearRatio), 
+                                60, 
+                                driveLimit,
+                                12, 
+                                driveMotorInvert, 
+                                Neutral.BRAKE,
+                                StatusFrames.VELOCITY
+                            );
 
-        public static final MotorConfig angleMotorConfig = new MotorConfig(SwerveConversions.rotationsToDegrees(1, angleGearRatio), 1, angleLimit, angleMotorInvert, Neutral.BRAKE);
+        public static final MotorConfig angleMotorConfig = 
+                            new MotorConfig(
+                                SwerveConversions.rotationsToDegrees(1, angleGearRatio), 
+                                1, 
+                                angleLimit, 
+                                12,
+                                angleMotorInvert, 
+                                Neutral.BRAKE,
+                                StatusFrames.POSITION
+                            );
 
         public static final PIDFFConfig drivePIDConfig = new PIDFFConfig(driveKP, driveKI, driveKD, driveKS, driveKV, driveKA);
 
@@ -140,45 +161,63 @@ public class Constants {
             new SwerveMotorConfig(new NAR_TalonFX(1), driveMotorConfig, drivePIDConfig),
             new SwerveMotorConfig(new NAR_CANSpark(2, ControllerType.CAN_SPARK_FLEX), angleMotorConfig, anglePIDConfig),
             new SwerveEncoderConfig(new CANcoder(10), 63.017578125-2.021484375 - 180, canCoderInvert),
-            maxSpeed);
+            maxSpeed
+        );
 
         public static final SwerveModuleConfig Mod1 = new SwerveModuleConfig(
             1, 
             new SwerveMotorConfig(new NAR_TalonFX(3), driveMotorConfig, drivePIDConfig),
             new SwerveMotorConfig(new NAR_CANSpark(4, ControllerType.CAN_SPARK_FLEX), angleMotorConfig, anglePIDConfig),
             new SwerveEncoderConfig(new CANcoder(11), 110.478515625+2.021484375+0.615234375 - 180, canCoderInvert),
-            maxSpeed);
+            maxSpeed
+        );
 
         public static final SwerveModuleConfig Mod2 = new SwerveModuleConfig(
             2, 
             new SwerveMotorConfig(new NAR_TalonFX(5), driveMotorConfig, drivePIDConfig),
             new SwerveMotorConfig(new NAR_CANSpark(6, ControllerType.CAN_SPARK_FLEX), angleMotorConfig, anglePIDConfig),
             new SwerveEncoderConfig(new CANcoder(12), -48.076171875-0.263671875 + 180, canCoderInvert),
-            maxSpeed);
+            maxSpeed
+        );
         
         public static final SwerveModuleConfig Mod3 = new SwerveModuleConfig(
             3, 
             new SwerveMotorConfig(new NAR_TalonFX(7), driveMotorConfig, drivePIDConfig),
             new SwerveMotorConfig(new NAR_CANSpark(8, ControllerType.CAN_SPARK_FLEX), angleMotorConfig, anglePIDConfig),
             new SwerveEncoderConfig(new CANcoder(13), -158.37890625000003+0.703125000000028 + 180, canCoderInvert),
-            maxSpeed);
+            maxSpeed
+        );
 
-        public static final double turnkP = 5;
-        public static final double turnkI = 0;
-        public static final double turnkD = 0;
-        public static final double turnkS = 0.1; //0.05748
-        public static final double turnkV = 0.01723; //0.01723
-        public static final double turnkA = 0.0064; //0.0064
-        public static final Constraints constraints = new Constraints(Units.radiansToDegrees(maxAngularVelocity), Units.radiansToDegrees(maxAngularAcceleration));
-        public static final PIDFFConfig config = new PIDFFConfig(turnkP, turnkI, turnkD, turnkS, turnkV, turnkA, 0);
+        public static final Constraints translationConstraints = new Constraints(maxAttainableSpeed, AutoConstants.slowAcceleration);
+        public static final PIDFFConfig translationConfig = new PIDFFConfig(2.5, 0, 0, 0.1, 0.01723, 0.0064);
 
-        public static final Controller TURN_CONTROLLER = new Controller(config, Type.POSITION);
+        public static final Constraints rotationConstraints = new Constraints(Units.radiansToDegrees(maxAngularVelocity), Units.radiansToDegrees(maxAngularAcceleration));
+        public static final PIDFFConfig rotationConfig = new PIDFFConfig(2, 0, 0, driveKS, driveKV, driveKA);
+
+        public static final Controller translationController = new Controller(translationConfig, Type.POSITION);
+        public static final double TRANSLATION_TOLERANCE = 0.02;
+
+        public static final Controller rotationController = new Controller(rotationConfig, Type.POSITION);
         public static final double TURN_TOLERANCE = 5;
 
         static {
-            TURN_CONTROLLER.enableContinuousInput(-180, 180);
-            TURN_CONTROLLER.setMeasurementSource(()-> Swerve.getInstance().getYaw());
-            TURN_CONTROLLER.setTolerance(TURN_TOLERANCE);
+            translationController.setTolerance(TRANSLATION_TOLERANCE);
+            translationController.setOutputRange(-maxAttainableSpeed, maxAttainableSpeed);
+            translationController.setDisableAtSetpoint(true);
+            
+            rotationController.setTolerance(TURN_TOLERANCE);
+            rotationController.setOutputRange(-maxAngularVelocity, maxAngularVelocity);
+            rotationController.setDisableAtSetpoint(true);
+            rotationController.enableContinuousInput(-180, 180);
+        }
+
+        public static final List<Rotation2d> snapToAngles = new ArrayList<>();
+        static {
+            snapToAngles.add(Rotation2d.fromDegrees(-180));
+            snapToAngles.add(Rotation2d.fromDegrees(-90));
+            snapToAngles.add(Rotation2d.fromDegrees(0));
+            snapToAngles.add(Rotation2d.fromDegrees(90));
+            snapToAngles.add(Rotation2d.fromDegrees(180));
         }
     }
 
@@ -233,8 +272,12 @@ public class Constants {
 
         public static final double FIELD_X_LENGTH = Units.inchesToMeters(651.25); // meters
         public static final double FIELD_Y_LENGTH = Units.inchesToMeters(315.5); // meters
-        public static final Pose2d SPEAKER = new Pose2d(Units.inchesToMeters(324.5), Units.inchesToMeters(315.5), Rotation2d.fromDegrees(0));
-        public static final double TOO_CLOSE = 0.2;
+        public static final Pose2d SPEAKER = 
+            new Pose2d(
+                Units.inchesToMeters(324.5), 
+                Units.inchesToMeters(315.5), 
+                Rotation2d.fromDegrees(0)
+            );
         
         public enum Note {
             NOTE1_1(2.89, 6.99),
@@ -290,152 +333,18 @@ public class Constants {
         public static Rotation2d flipRotation(Rotation2d rotation) {
             return Rotation2d.fromDegrees(MathUtil.inputModulus(180 - rotation.getDegrees(), -180, 180));
         }
-    }
 
-    public static class FocalAimConstants {
-        public static final double speakerLength = 1.043;
-        public static final double speakerMidpointY = Units.inchesToMeters(218.29);//5.4;
-        
-        ; //6.151 - speakerLength / 2;
-        public static final double focalPointX = 0.1; //0.229; //1.4583577128;
-        public static final Translation2d speakerMidpointBlue = new Translation2d(0, speakerMidpointY);
-        public static final Translation2d speakerMidpointRed = new Translation2d(FieldConstants.FIELD_X_LENGTH, speakerMidpointY);
-        public static final Translation2d focalPointBlue = new Translation2d(focalPointX, speakerMidpointY);
-        public static final Translation2d focalPointRed = new Translation2d(FieldConstants.FIELD_X_LENGTH - focalPointX, speakerMidpointY);
-        public static final double angleOffset = 0;
-        //testing: kV: drivetrain spinning consistently (ie. v1 = vel at  vel at 1 rad/sec v2=2 rad/sec). 1/(v2-v1) = kV
-        //kS: plug kV into 1= kS + kV(v1)
-        public static final double offset = 0.3;
-        public static final double lowerBound = speakerMidpointY - offset;
-        public static final double higherBound = speakerMidpointY + offset;
-    }
-
-    public static class ShooterConstants {
-        public static final PIDFFConfig PIDConstants = new PIDFFConfig(0.0025, 0, 0, 0, 0.00179104, 0); // 0.00187623
-        public static final double kF = 0.3582; //0.144578;
-        public static final int LEFT_MOTOR_ID = 41;
-        public static final int RIGHT_MOTOR_ID = 42;
-        public static final double GEAR_RATIO = 1;
-        public static final double MAX_RPM = 5500;
-        public static final double MIN_RPM = 0;
-        public static final double TOLERANCE = 150;
-        public static final double AMP_RPM = 2500;
-        public static final double RAM_SHOT_RPM = 4500;
-        
-        public static final double EDGE_FEED_RPM = 5000; //4750
-        public static final double EDGE_FEED_ANGLE = 35;
-        public static final double MIDDLE_FEED_RPM = 4500;
-        public static final double MIDDLE_FEED_ANGLE = 25;
-        
-
-        public static final double CURRENT_TEST_POWER = 0;
-        public static final double CURRENT_TEST_PLATEAU = 0;
-        public static final double CURRENT_TEST_TIMEOUT = 0;
-        public static final double CURRENT_TEST_TOLERANCE = 0;
-        public static final double CURRENT_TEST_EXPECTED_CURRENT = 0;
-
-        public static final double SHOOTER_TEST_PLATEAU = 1;
-        public static final double SHOOTER_TEST_TIMEOUT = 2.5;
-
-        public static final double PROJECTILE_SPEED = 100; // m/s
-    }
-
-    public static class AmpWristConstants {
-        public static final PIDFFConfig PIDConstants = new PIDFFConfig(0.25, 0, 0, 0.08, 0, 0.22);
-        public static final double MAX_VELOCITY = 10000000;
-        public static final double MAX_ACCELERATION = 1000000;
-        public static final Constraints TRAP_CONSTRAINTS = new Constraints(MAX_VELOCITY, MAX_ACCELERATION);
-
-        public static final int WRIST_MOTOR_ID = 53;
-        public static final NAR_CANSpark WRIST_MOTOR = new NAR_CANSpark(WRIST_MOTOR_ID);
-        public static final double GEAR_RATIO = 1.0 / 70.875;
-        public static final double CURRENT_LIMIT = 20;
-        public static final double POSITION_TOLERANCE = 1;
-
-        public static final int ROLLER_MOTOR_ID = 52;
-        public static final NAR_TalonSRX ROLLER_MOTOR = new NAR_TalonSRX(ROLLER_MOTOR_ID);
-        public static final double AMP_POWER = 0.8;
-
-        public static final double EXTEND_TIMEOUT = 1;
-        public static final double RETRACTED_TIMEOUT = 1;
-
-        public static final double ROLLER_TIMEOUT = 5;
-        public static final double ROLLER_TEST_PLATEAU = 0.5;
-        public static final double ROLLER_TEST_EXPECTED_CURRENT = 1.25;
-    }
-    public static class ClimberConstants {
-        public static final PIDFFConfig PIDConstants = new PIDFFConfig(2, 0, 0, 0.18, 0, 0, 0.3);//240
-        public static final double MAX_VELOCTIY = 10000000;
-        public static final double MAX_ACCELERATION = 100000;
-        public static final Constraints TRAP_CONSTRAINTS = new Constraints(MAX_VELOCTIY, MAX_ACCELERATION);
-        public static final int LEFT_MOTOR_ID = 21;
-        public static final int RIGHT_MOTOR_ID = 22;
-        public static final double GEAR_RATIO = 1.0 / 15.0;
-        public static final double WHEEL_CIRCUMFERENCE = Units.inchesToMeters(1.751) * Math.PI;
-        public static final double POSITION_TOLERANCE = 0.5;
-        public static final double PIVOT_CLIMBER_DIST = 28;
-        public static final double POSITION_MINIMUM = 0;
-        public static final double POSITION_MAXIMUM = 30;
-        public static final double HEIGHT_OFFSET = 7; // 14 degrees ish
-        public static final double ANGLE_OFFSET = 14;
-
-        public static final double NEUTRAL_THRESHOLD = 1;
-        public static final InterpolatingDoubleTreeMap climberHeightMap = new InterpolatingDoubleTreeMap();
-        static {
-            climberHeightMap.put(0.0 + 0.93, 25.0);
-            climberHeightMap.put(0.25 + 0.93, 25.0);
-            climberHeightMap.put(0.5 + 0.93, 20.0);
-            climberHeightMap.put(0.75 + 0.93, 17.0);
-            climberHeightMap.put(1.0 + 0.93, 15.0);
-            climberHeightMap.put(1.25 + 0.93, 14.0);
-            climberHeightMap.put(1.5 + 0.93, 13.0);
-            climberHeightMap.put(1.75 + 0.93, 12.0);
-            climberHeightMap.put(2.0 + 0.93, 11.25);
-            climberHeightMap.put(2.25 + 0.93, 10.0);
-            climberHeightMap.put(2.5 + 0.93, 9.7);
-            climberHeightMap.put(2.75 + 0.93, 9.5);
-            climberHeightMap.put(3.0 + 0.93, 9.5);
+        public static Translation2d orthogonalizeInputs(double x, double y) {
+            return orthogonalizeInputs(new Translation2d(x, y));
         }
 
-        public static final double SETPOINT_TEST_TIMEOUT_EXTEND = 1;
-        public static final double SETPOINT_TEST_TIMEOUT_RETRACT = 1;
-    }
-
-    public static class IntakeConstants {
-        public static final PIDFFConfig PIDConstants = new PIDFFConfig(0.1, 0, 0, 0.2, 0, 0, 0.3625);
-        public static final int PIVOT_MOTOR_ID = 31;
-        public static final NAR_CANSpark PIVOT_MOTOR = new NAR_CANSpark(PIVOT_MOTOR_ID);
-        public static final double GEAR_RATIO = 1.0 / 40.0;
-        public static final double MAX_VELOCITY = 1000000;
-        public static final double MAX_ACCELERATION = 100000;
-        public static final Constraints TRAP_CONSTRAINTS = new Constraints(MAX_VELOCITY, MAX_ACCELERATION);
-        public static final double POSITION_MINIMUM = 0;
-        public static final double POSITION_MAXIMUM = 220;
-
-        public static final int RIGHT_ROLLER_MOTOR_ID = 32;
-        public static final int LEFT_ROLLER_MOTOR_ID = 33;
-        public static final NAR_CANSpark RIGHT_ROLLER_MOTOR = new NAR_CANSpark(RIGHT_ROLLER_MOTOR_ID);
-        public static final NAR_CANSpark LEFT_ROLLER_MOTOR = new NAR_CANSpark(LEFT_ROLLER_MOTOR_ID);
-        public static final double ANGLE_TOLERANCE = 3;
-        public static final int CURRENT_LIMIT = 40;
-        public static final double STALL_CURRENT = 50;
-        public static final double STALL_POWER = .05;
-        public static final double OUTTAKE_POWER = -1;
-        public static final double INTAKE_POWER = 0.7 /0.75;
-        public static final double AMP_POWER = -0.18 / 0.75;
-
-        public static final double CURRENT_TEST_POWER = OUTTAKE_POWER;
-        public static final double CURRENT_TEST_PLATEAU = 1;
-        public static final double CURRENT_TEST_TIMEOUT = 5;
-        public static final double CURRENT_TEST_TOLERANCE = 40;
-        public static final double CURRENT_TEST_EXPECTED_CURRENT = 12.5;
-
-        public static final double SETPOINT_TEST_PLATEAU = 1;
-        public static final double SETPOINT_TEST_TIMEOUT = 3;
-
-        public static final double OUTTAKE_TIMEOUT = 0.35;
-
-        public static final double INTAKE_TEST_TIMEOUT = 30;
+        public static Translation2d orthogonalizeInputs(Translation2d translation) {
+            Rotation2d rotation = Rotation2d.fromDegrees(-90);
+            if(Robot.getAlliance() == Alliance.Red || !Swerve.getInstance().fieldRelative) {
+                rotation.unaryMinus();
+            }
+            return translation.rotateBy(rotation);
+        }
     }
 
     public static class LimelightConstants {
@@ -488,8 +397,7 @@ public class Constants {
     
             FLAME(0,0,0,true),
             CHARGE(255, 0, 0, true),
-            DISCHARGE(0, 0, 0, true),
-            AMP(0,0,0,true);
+            DISCHARGE(0, 0, 0, true);
     
             public final int r;
             public final int b;

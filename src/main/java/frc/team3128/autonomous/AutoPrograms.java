@@ -5,7 +5,6 @@ import common.utility.Log;
 import common.utility.narwhaldashboard.NarwhalDashboard;
 
 import static edu.wpi.first.wpilibj2.command.Commands.*;
-import static frc.team3128.autonomous.Trajectories.middleClose_4note;
 
 import java.util.HashMap;
 
@@ -57,7 +56,7 @@ public class AutoPrograms {
             "only-note2.3-wing"
         };
         
-        NarwhalDashboard.getInstance().addAutos(autoStrings);
+        // NarwhalDashboard.getInstance().addAutos(autoStrings);
         for (String auto : autoStrings) {
             if (auto.equals("default")) continue;
             autoMap.put(auto, Trajectories.getPathPlannerAuto(auto));
@@ -76,7 +75,7 @@ public class AutoPrograms {
     }
 
     public Command getAutonomousCommand() {
-        String selectedAutoName = NarwhalDashboard.getInstance().getSelectedAuto();
+        String selectedAutoName = null;//NarwhalDashboard.getInstance().getSelectedAuto();
         String hardcode = "middleClose_3note_BATB";
         // String hardcode = "topFar_4note";
         // return middleClose_4note();
@@ -91,7 +90,7 @@ public class AutoPrograms {
         autoCommand = autoMap.get(selectedAutoName);
 
         Log.info("AUTO_SELECTED", selectedAutoName);
-        return autoCommand.beforeStarting(Trajectories.resetAuto());
+        return autoCommand;
 
         // return Trajectories.middleClose_4note().beforeStarting(Trajectories.resetAuto());
         // return Trajectories.middle_4note().beforeStarting(Trajectories.resetAuto());

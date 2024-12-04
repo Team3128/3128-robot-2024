@@ -47,11 +47,6 @@ public class Leds extends SubsystemBase {
     public void setLedColor(Colors color) {
 
         switch (color) {
-            case AMP:
-                resetAnimationSlot(2);
-                m_candle.animate(new RainbowAnimation(BRIGHTNESS, r_SPEED, PIVOT_FRONT, false, STARTING_ID), 0);
-                m_candle.animate(new RainbowAnimation(BRIGHTNESS, r_SPEED, PIVOT_BACK, true, STARTING_ID + PIVOT_FRONT), 1);
-                break;
             case FLAME:
                 resetAnimationSlot(2);
                 m_candle.animate(new FireAnimation(BRIGHTNESS, r_SPEED, NUM_LED, SPARKING, COOLING, false, 5), 0);

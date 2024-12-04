@@ -51,6 +51,8 @@ def includeDesktopSupport = false
 // Also defines JUnit 5.
 dependencies {
 
+    implementation project(':libs:3128-common')
+
     implementation wpi.java.deps.wpilib()
     implementation wpi.java.vendor.java()
 

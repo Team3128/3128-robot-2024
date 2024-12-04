@@ -10,6 +10,7 @@
       "/Shuffleboard/Commands/IntakeRollers": "Subsystem",
       "/Shuffleboard/Commands/Shooter": "Subsystem",
       "/Shuffleboard/Commands/Swerve Commands": "Subsystem",
+      "/Shuffleboard/Elevator/PID_Controller": "PIDController",
       "/Shuffleboard/IntakePivot/PID_Controller": "ProfiledPIDController",
       "/Shuffleboard/Shooter/PID_Controller": "PIDController",
       "/Shuffleboard/Shooter/rightController": "PIDController"

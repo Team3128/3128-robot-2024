@@ -23,11 +23,7 @@ import static edu.wpi.first.wpilibj2.command.Commands.*;
 import frc.team3128.Constants.LedConstants.Colors;
 import frc.team3128.autonomous.AutoPrograms;
 import frc.team3128.commands.CmdManager;
-import frc.team3128.subsystems.AmpMechanism;
-import frc.team3128.subsystems.Climber;
-import frc.team3128.subsystems.Intake;
 import frc.team3128.subsystems.Leds;
-import frc.team3128.subsystems.Shooter;
 import frc.team3128.subsystems.Swerve;
 
 /**
@@ -143,11 +139,6 @@ public class Robot extends NAR_Robot {
         // Camera.validDist = 0.5;
         Camera1.enableAll();
         CommandScheduler.getInstance().cancelAll();
-        if(Intake.getInstance().intakePivot.getMeasurement() < 0){
-            Intake.getInstance().intakePivot.reset(0).schedule();
-        }
-        
-        CmdManager.neutral().schedule();
     }
 
     @Override
@@ -168,11 +159,6 @@ public class Robot extends NAR_Robot {
     @Override
     public void disabledInit() {
         autoPrograms = new AutoPrograms();
-        AmpMechanism.getInstance().disable();
-        Climber.getInstance().disable();
-        Intake.getInstance().intakePivot.disable();
-        Intake.getInstance().intakeRollers.runManipulator(0);
-        Shooter.getInstance().disable();
         Swerve.getInstance().setBrakeMode(true);
         CommandScheduler.getInstance().cancelAll();
         sequence(
@@ -181,7 +167,7 @@ public class Robot extends NAR_Robot {
         ).schedule();
 
         if (hasInitialized) {
-            Leds.getInstance().setLedColor(Colors.AMP);
+            Leds.getInstance().setLedColor(Colors.CONFIGURED);
         }
         hasInitialized = true;
     }

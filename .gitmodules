@@ -1,0 +1,4 @@
+[submodule "libs/3128-common"]
+	path = libs/3128-common
+	url = https://github.com/Team3128/3128-common.git
+	branch = 2025rewrite

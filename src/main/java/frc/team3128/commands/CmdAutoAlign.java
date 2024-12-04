@@ -8,7 +8,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.team3128.RobotContainer;
-import frc.team3128.subsystems.Intake;
 import frc.team3128.subsystems.Swerve;
 
 public class CmdAutoAlign extends WaitCommand {
@@ -59,7 +58,7 @@ public class CmdAutoAlign extends WaitCommand {
     @Override
     public boolean isFinished() {
         if (super.isFinished()) hasTimedOut = true;
-        return plateauCount > PLATEAU_THRESHOLD || Intake.getInstance().intakeRollers.hasObjectPresent() || hasTimedOut;
+        return plateauCount > PLATEAU_THRESHOLD || hasTimedOut;
     }
 
     @Override
