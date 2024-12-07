@@ -21,9 +21,9 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import static edu.wpi.first.wpilibj2.command.Commands.*;
 
 import frc.team3128.Constants.LedConstants.Colors;
-import frc.team3128.autonomous.AutoPrograms;
+// import frc.team3128.autonomous.AutoPrograms;
 import frc.team3128.commands.CmdManager;
-import frc.team3128.subsystems.Leds;
+// import frc.team3128.subsystems.Leds;
 import frc.team3128.subsystems.Swerve;
 
 /**
@@ -47,7 +47,7 @@ public class Robot extends NAR_Robot {
     public static Robot instance;
 
     public static RobotContainer m_robotContainer = new RobotContainer();
-    public static AutoPrograms autoPrograms;
+    // public static AutoPrograms autoPrograms;
 
     public static synchronized Robot getInstance() {
         if (instance == null) {
@@ -59,15 +59,15 @@ public class Robot extends NAR_Robot {
     @Override
     public void robotInit(){
         
-        try {
-            Class<?> container = Class.forName("processor.ClassManager");
-            container.getDeclaredMethod("process").invoke(null);
-        } catch (Exception e) {
-            Log.info("Annotation Processor", "Failed to invoke ClassManager");
-            e.printStackTrace();
-        }
+        // try {
+        //     Class<?> container = Class.forName("processor.ClassManager");
+        //     container.getDeclaredMethod("process").invoke(null);
+        // } catch (Exception e) {
+        //     Log.info("Annotation Processor", "Failed to invoke ClassManager");
+        //     e.printStackTrace();
+        // }
 
-        autoPrograms = new AutoPrograms();
+        // autoPrograms = new AutoPrograms();
         m_robotContainer.initDashboard();
         LiveWindow.disableAllTelemetry();
         // runOnce(()-> Swerve.getInstance().zeroGyro(Robot.getAlliance() == Alliance.Red ? 0 : 180));
@@ -104,24 +104,25 @@ public class Robot extends NAR_Robot {
 
     @Override
     public void robotPeriodic(){
-        Camera1.updateAll();
+        // Camera1.updateAll();
+        CommandScheduler.getInstance().run();
     }
 
     @Override
     public void autonomousInit() {
-        RobotContainer.limelight.setLEDMode(LEDMode.ON);
-        Swerve.getInstance().resetEncoders();
-        Swerve.getInstance().setBrakeMode(true);
+        // RobotContainer.limelight.setLEDMode(LEDMode.ON);
+        // Swerve.getInstance().resetEncoders();
+        // Swerve.getInstance().setBrakeMode(true);
 
-        Camera1.enableAll();
-        Camera.overrideThreshold = 0;
-        Camera.validDist = 30;
-        Leds.getInstance().setDefaultColor();
+        // Camera1.enableAll();
+        // Camera.overrideThreshold = 0;
+        // Camera.validDist = 30;
+        // Leds.getInstance().setDefaultColor();
         CommandScheduler.getInstance().cancelAll();
-        Command m_autonomousCommand = autoPrograms.getAutonomousCommand();
-        if (m_autonomousCommand != null) {
-            m_autonomousCommand.schedule();
-        }
+        // Command m_autonomousCommand = autoPrograms.getAutonomousCommand();
+        // if (m_autonomousCommand != null) {
+        //     m_autonomousCommand.schedule();
+        // }
     }
 
     @Override
@@ -132,12 +133,12 @@ public class Robot extends NAR_Robot {
     @Override
     public void teleopInit() {
         Swerve.getInstance().resetEncoders();
-        RobotContainer.limelight.setLEDMode(LEDMode.OFF);
+        // RobotContainer.limelight.setLEDMode(LEDMode.OFF);
         Swerve.getInstance().setBrakeMode(true);
         
         // Camera.overrideThreshold = 30;
         // Camera.validDist = 0.5;
-        Camera1.enableAll();
+        // Camera1.enableAll();
         CommandScheduler.getInstance().cancelAll();
     }
 
@@ -158,7 +159,7 @@ public class Robot extends NAR_Robot {
 
     @Override
     public void disabledInit() {
-        autoPrograms = new AutoPrograms();
+        // autoPrograms = new AutoPrograms();
         Swerve.getInstance().setBrakeMode(true);
         CommandScheduler.getInstance().cancelAll();
         sequence(
@@ -167,14 +168,14 @@ public class Robot extends NAR_Robot {
         ).schedule();
 
         if (hasInitialized) {
-            Leds.getInstance().setLedColor(Colors.CONFIGURED);
+            // Leds.getInstance().setLedColor(Colors.CONFIGURED);
         }
         hasInitialized = true;
     }
 
     @Override
     public void disabledExit() {
-        Leds.getInstance().setDefaultColor();
+        // Leds.getInstance().setDefaultColor();
         Swerve.getInstance().setBrakeMode(true);
     }
     

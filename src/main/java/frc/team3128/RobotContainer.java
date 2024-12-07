@@ -1,11 +1,15 @@
 package frc.team3128;
 
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.team3128.Constants.LedConstants.Colors;
 import common.hardware.input.NAR_XboxController;
+import common.hardware.input.NAR_XboxController.XboxButton;
 import common.hardware.limelight.Limelight;
 import common.hardware.limelight.LimelightKey;
 import common.hardware.motorcontroller.NAR_CANSpark;
@@ -14,9 +18,9 @@ import common.utility.Log;
 import common.utility.narwhaldashboard.NarwhalDashboard;
 import common.utility.shuffleboard.NAR_Shuffleboard;
 // import common.utility.tester.Tester.UnitTest;
-import frc.team3128.subsystems.Leds;
+// import frc.team3128.subsystems.Leds;
 import frc.team3128.subsystems.Swerve;
-import frc.team3128.subsystems.Amper.Elevator;
+// import frc.team3128.subsystems.Amper.Elevator;
 
 /**
  * Command-based is a "declarative" paradigm, very little robot logic should
@@ -27,8 +31,8 @@ import frc.team3128.subsystems.Amper.Elevator;
 public class RobotContainer {
 
     private Swerve swerve;
-    private Leds leds;
-    private Elevator elevator;
+    // private Leds leds;
+    // private Elevator elevator;
 
 
     public static NAR_XboxController controller, controller2;
@@ -44,8 +48,8 @@ public class RobotContainer {
         NAR_Shuffleboard.WINDOW_WIDTH = 10;
 
         swerve = Swerve.getInstance();
-        leds = Leds.getInstance();
-        elevator = new Elevator();
+        // leds = Leds.getInstance();
+        // elevator = new Elevator();
 
 
         controller = new NAR_XboxController(2);
@@ -67,22 +71,25 @@ public class RobotContainer {
     }   
 
     private void configureButtonBindings() {
-      
+        controller.getButton(XboxButton.kX).onTrue(Commands.runOnce(() -> Swerve.getInstance().resetGyroTo(0)));
+        controller.getButton(XboxButton.kRightTrigger)
+        .onTrue(Commands.runOnce(() -> Swerve.getInstance().rotateTo(new Translation2d())));
+        // .onFalse(runOnce(() -> Swerve.getInstance().))
     }
 
     public void initCameras() {
-        Camera1.setResources(() -> swerve.getYaw(), (pose,time)->swerve.addVisionMeasurement(pose, time), AprilTagFields.k2024Crescendo.loadAprilTagLayoutField(), ()->swerve.getPose());
-        Camera1.addIgnoredTags(14);
-        if (Robot.isReal()) {
-            // final Camera camera = new Camera("FRONT_LEFT", Units.inchesToMeters(10.055), Units.inchesToMeters(9.79), Units.degreesToRadians(30), Units.degreesToRadians(-28.125), 0);
-            // final Camera camera2 = new Camera("FRONT_RIGHT", Units.inchesToMeters(10.055), -Units.inchesToMeters(9.79), Units.degreesToRadians(-30), Units.degreesToRadians(-28.125), 0);
-            // camera.setCamDistanceThreshold(3.5);
-            // camera2.setCamDistanceThreshold(5);
-            final Camera1 camera = new Camera1("FRONT_LEFT", Units.inchesToMeters(10.055), Units.inchesToMeters(9.79), Units.degreesToRadians(30), Units.degreesToRadians(-28.125), 0);
-            final Camera1 camera2 = new Camera1("FRONT_RIGHT", Units.inchesToMeters(10.055), -Units.inchesToMeters(9.79), Units.degreesToRadians(-30), Units.degreesToRadians(-28.125), 0);
-        }
+        // Camera1.setResources(() -> swerve.getYaw(), (pose,time)->swerve.addVisionMeasurement(pose, time), AprilTagFields.k2024Crescendo.loadAprilTagLayoutField(), ()->swerve.getPose());
+        // Camera1.addIgnoredTags(14);
+        // if (Robot.isReal()) {
+        //     // final Camera camera = new Camera("FRONT_LEFT", Units.inchesToMeters(10.055), Units.inchesToMeters(9.79), Units.degreesToRadians(30), Units.degreesToRadians(-28.125), 0);
+        //     // final Camera camera2 = new Camera("FRONT_RIGHT", Units.inchesToMeters(10.055), -Units.inchesToMeters(9.79), Units.degreesToRadians(-30), Units.degreesToRadians(-28.125), 0);
+        //     // camera.setCamDistanceThreshold(3.5);
+        //     // camera2.setCamDistanceThreshold(5);
+        //     final Camera1 camera = new Camera1("FRONT_LEFT", Units.inchesToMeters(10.055), Units.inchesToMeters(9.79), Units.degreesToRadians(30), Units.degreesToRadians(-28.125), 0);
+        //     final Camera1 camera2 = new Camera1("FRONT_RIGHT", Units.inchesToMeters(10.055), -Units.inchesToMeters(9.79), Units.degreesToRadians(-30), Units.degreesToRadians(-28.125), 0);
+        // }
 
-        limelight = new Limelight("limelight-mason", 0, 0, 0, 0);
+        // limelight = new Limelight("limelight-mason", 0, 0, 0, 0);
     }
 
     public void initDashboard() {
@@ -99,17 +106,17 @@ public class RobotContainer {
         // dashboard.addUpdate("driveLimit", ()-> swerve.getdriveLimit());
         // dashboard.addUpdate("offset", ()-> swerve.getOffSet());
 
-        if (NAR_TalonFX.getNumFailedConfigs() + NAR_CANSpark.getNumFailedConfigs() > 0) {
-            Log.recoverable("Colors", "Errors configuring: " + NAR_CANSpark.getNumFailedConfigs() + NAR_TalonFX.getNumFailedConfigs());
-            Leds.getInstance().setLedColor(Colors.ERROR);
-        }
-        else if (!swerve.isConfigured()) {
-            Log.info("Colors", "Swerve Not Configured");
-            Leds.getInstance().setLedColor(Colors.RED);
-        }
-        else {
-            Log.info("Colors", "No errors configuring");
-            Leds.getInstance().setLedColor(Colors.CONFIGURED);
-        }
+        // if (NAR_TalonFX.getNumFailedConfigs() + NAR_CANSpark.getNumFailedConfigs() > 0) {
+        //     Log.recoverable("Colors", "Errors configuring: " + NAR_CANSpark.getNumFailedConfigs() + NAR_TalonFX.getNumFailedConfigs());
+        //     Leds.getInstance().setLedColor(Colors.ERROR);
+        // }
+        // else if (!swerve.isConfigured()) {
+        //     Log.info("Colors", "Swerve Not Configured");
+        //     Leds.getInstance().setLedColor(Colors.RED);
+        // }
+        // else {
+        //     Log.info("Colors", "No errors configuring");
+        //     Leds.getInstance().setLedColor(Colors.CONFIGURED);
+        // }
     }
 }

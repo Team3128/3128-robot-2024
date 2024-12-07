@@ -67,7 +67,7 @@ public class Constants {
 
     public static class SwerveConstants {
 
-        public static final int pigeonID = 30; 
+        public static final int pigeonID = 15; 
 
         public static final double controllerInputRotationAngle = -90;
 
@@ -158,33 +158,33 @@ public class Constants {
 
         public static final SwerveModuleConfig Mod0 = new SwerveModuleConfig(
             0, 
-            new SwerveMotorConfig(new NAR_TalonFX(1), driveMotorConfig, drivePIDConfig),
-            new SwerveMotorConfig(new NAR_CANSpark(2, ControllerType.CAN_SPARK_FLEX), angleMotorConfig, anglePIDConfig),
-            new SwerveEncoderConfig(new CANcoder(10), 63.017578125-2.021484375 - 180, canCoderInvert),
+            new SwerveMotorConfig(new NAR_TalonFX(1, "Drivetrain"), driveMotorConfig, drivePIDConfig),
+            new SwerveMotorConfig(new NAR_TalonFX(2, "Drivetrain"), angleMotorConfig, anglePIDConfig),
+            new SwerveEncoderConfig(new CANcoder(11, "Drivetrain"), 105.15, canCoderInvert),
             maxSpeed
         );
 
         public static final SwerveModuleConfig Mod1 = new SwerveModuleConfig(
             1, 
-            new SwerveMotorConfig(new NAR_TalonFX(3), driveMotorConfig, drivePIDConfig),
-            new SwerveMotorConfig(new NAR_CANSpark(4, ControllerType.CAN_SPARK_FLEX), angleMotorConfig, anglePIDConfig),
-            new SwerveEncoderConfig(new CANcoder(11), 110.478515625+2.021484375+0.615234375 - 180, canCoderInvert),
+            new SwerveMotorConfig(new NAR_TalonFX(3, "Drivetrain"), driveMotorConfig, drivePIDConfig),
+            new SwerveMotorConfig(new NAR_TalonFX(4, "Drivetrain"), angleMotorConfig, anglePIDConfig),
+            new SwerveEncoderConfig(new CANcoder(12, "Drivetrain"), -62.4, canCoderInvert),
             maxSpeed
         );
 
         public static final SwerveModuleConfig Mod2 = new SwerveModuleConfig(
             2, 
-            new SwerveMotorConfig(new NAR_TalonFX(5), driveMotorConfig, drivePIDConfig),
-            new SwerveMotorConfig(new NAR_CANSpark(6, ControllerType.CAN_SPARK_FLEX), angleMotorConfig, anglePIDConfig),
-            new SwerveEncoderConfig(new CANcoder(12), -48.076171875-0.263671875 + 180, canCoderInvert),
+            new SwerveMotorConfig(new NAR_TalonFX(5, "Drivetrain"), driveMotorConfig, drivePIDConfig),
+            new SwerveMotorConfig(new NAR_TalonFX(6, "Drivetrain"), angleMotorConfig, anglePIDConfig),
+            new SwerveEncoderConfig(new CANcoder(13, "Drivetrain"), -84.287, canCoderInvert),
             maxSpeed
         );
         
         public static final SwerveModuleConfig Mod3 = new SwerveModuleConfig(
             3, 
-            new SwerveMotorConfig(new NAR_TalonFX(7), driveMotorConfig, drivePIDConfig),
-            new SwerveMotorConfig(new NAR_CANSpark(8, ControllerType.CAN_SPARK_FLEX), angleMotorConfig, anglePIDConfig),
-            new SwerveEncoderConfig(new CANcoder(13), -158.37890625000003+0.703125000000028 + 180, canCoderInvert),
+            new SwerveMotorConfig(new NAR_TalonFX(7, "Drivetrain"), driveMotorConfig, drivePIDConfig),
+            new SwerveMotorConfig(new NAR_TalonFX(8, "Drivetrain"), angleMotorConfig, anglePIDConfig),
+            new SwerveEncoderConfig(new CANcoder(14, "Drivetrain"), 167.6, canCoderInvert),
             maxSpeed
         );
 
@@ -198,7 +198,7 @@ public class Constants {
         public static final double TRANSLATION_TOLERANCE = 0.02;
 
         public static final Controller rotationController = new Controller(rotationConfig, Type.POSITION);
-        public static final double TURN_TOLERANCE = 5;
+        public static final double TURN_TOLERANCE = 0.01;
 
         static {
             translationController.setTolerance(TRANSLATION_TOLERANCE);

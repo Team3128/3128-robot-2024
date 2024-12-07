@@ -9,6 +9,7 @@ import com.ctre.phoenix6.hardware.Pigeon2;
 import common.core.controllers.Controller;
 import common.core.swerve.SwerveBase;
 import common.core.swerve.SwerveModule;
+import common.utility.Log;
 import common.utility.shuffleboard.NAR_Shuffleboard;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -46,7 +47,7 @@ public class Swerve extends SwerveBase {
         super(swerveKinematics, SVR_STATE_STD, SVR_VISION_MEASUREMENT_STD, Mod0, Mod1, Mod2, Mod3);
         chassisVelocityCorrection = false;
         Timer.delay(1);
-        gyro = new Pigeon2(pigeonID);
+        gyro = new Pigeon2(pigeonID, "Drivetrain");
         Timer.delay(1);
         gyro.getYaw().setUpdateFrequency(100);
         yaw = gyro.getYaw().asSupplier();
@@ -66,7 +67,7 @@ public class Swerve extends SwerveBase {
         initShuffleboard();
         NAR_Shuffleboard.addData("Auto", "Setpoint", ()-> rotationController.atSetpoint());
         initStateCheck();
-        setDefaultCommand(null);
+        // setDefaultCommand(null);
     }
 
     @Override
@@ -100,6 +101,7 @@ public class Swerve extends SwerveBase {
 
         if(rotationController.isEnabled()){
             if(rotationController.atSetpoint()){
+                // Log.info("Swerve", "Disable rotController");
                 rotationController.disable();
             }
             velocity.omegaRadiansPerSecond = rotationController.calculate(getGyroRotation2d().getRadians(), rotationSetpointSupplier.get().getRadians());
@@ -113,12 +115,14 @@ public class Swerve extends SwerveBase {
             ()-> {}, 
             ()-> driveOverridable(inputToChassisSpeeds(x, y, z)),
             (Boolean interrupted)-> stop(),
-            ()-> false);
+            ()-> false,
+            this);
     }
 
     private ChassisSpeeds inputToChassisSpeeds(DoubleSupplier x, DoubleSupplier y, DoubleSupplier z){
         final Translation2d translation = FieldConstants.orthogonalizeInputs(x.getAsDouble(), y.getAsDouble()).times(maxAttainableSpeed);
-        final double rotation = Math.pow(-z.getAsDouble(), 1.48) * maxAngularVelocity;
+        // final double rotation = Math.pow(-z.getAsDouble(), 1.48) * maxAngularVelocity;
+        final double rotation = Math.copySign(Math.pow(z.getAsDouble(), 3/2), z.getAsDouble()) * maxAngularVelocity;
         return new ChassisSpeeds(translation.getX(), translation.getY(), rotation);
     }
 
