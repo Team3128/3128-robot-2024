@@ -15,13 +15,16 @@ import static edu.wpi.first.wpilibj2.command.Commands.*;
 import static frc.team3128.Constants.ShooterConstants.AMP_RPM;
 import static frc.team3128.Constants.ShooterConstants.EDGE_FEED_ANGLE;
 import static frc.team3128.Constants.ShooterConstants.EDGE_FEED_RPM;
+import static frc.team3128.Constants.ShooterConstants.LEFT_MOTOR_ID;
 import static frc.team3128.Constants.ShooterConstants.MAX_RPM;
 import static frc.team3128.Constants.ShooterConstants.RAM_SHOT_RPM;
 import static frc.team3128.commands.CmdManager.*;
 
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
+import frc.team3128.Constants.TankConstants;
 import frc.team3128.Constants.LedConstants.Colors;
+import frc.team3128.Constants.TankConstants;
 import frc.team3128.commands.TankCommand;
 import common.core.swerve.SwerveModule;
 import common.hardware.camera.Camera;
@@ -33,7 +36,8 @@ import common.hardware.motorcontroller.NAR_CANSpark;
 import common.hardware.motorcontroller.NAR_TalonFX;
 import common.utility.Log;
 import common.utility.narwhaldashboard.NarwhalDashboard;
-import common.utility.narwhaldashboard.NarwhalDashboard.State;
+import common.utility.shuffleboard.NAR_Shuffleboard;
+// import common.utility.shuffleboard.NAR_Shuffleboard.State;
 import common.utility.shuffleboard.NAR_Shuffleboard;
 import common.utility.tester.Tester;
 // import common.utility.tester.Tester.UnitTest;
@@ -72,7 +76,7 @@ public class RobotContainer {
         joystick = new NAR_Joystick(0); //change if necessary
 
         //uncomment line below to enable driving
-        CommandScheduler.getInstance().setDefaultCommand(tank, new TankCommand(controller::getLeftY, controller::getRightX, true));
+        // CommandScheduler.getInstance().setDefaultCommand(tank, new TankCommand(controller::getLeftY, controller::getRightX, true));
 
         // initRobotTest();
         
@@ -91,6 +95,12 @@ public class RobotContainer {
 
         controller.getButton(XboxButton.kRightTrigger).onTrue(intake.intakePivot.pivotTo(intake.GetSetpointUp(intake.intakePivot.getSetpoint()).angle));  //1 up
         controller.getButton(XboxButton.kRightBumper).onTrue(intake.intakePivot.pivotTo(intake.GetSetpointDown(intake.intakePivot.getSetpoint()).angle));  //1 down
+
+        controller.getButton(XboxButton.kA).onTrue(runOnce(() -> tank.tankDrive(TankConstants.MOTOR_POWER, TankConstants.MOTOR_POWER)));
+        controller.getButton(XboxButton.kB).onTrue(runOnce(() -> tank.tankDrive(-TankConstants.MOTOR_POWER, -TankConstants.MOTOR_POWER)));
+        //controller.getButton(XboxButton.kA).onTrue(tank.tankDrive(TankConstants.MOTOR_POWER, TankConstants.MOTOR_POWER));
+        //tank.tankDrive(TankConstants.MOTOR_POWER, TankConstants.MOTOR_POWER)
+        
 
         controller.getButton(XboxButton.kStart).onTrue(intake.intakePivot.reset()); //reset
 
@@ -116,37 +126,35 @@ public class RobotContainer {
         // buttonPad example: buttonPad.getButton(12).onTrue(runOnce(()->NAR_CANSpark.burnFlashAll()));
     }
 
-    public void initDashboard() {
+    public void initNAR_Shuffleboard() {
         dashboard = NarwhalDashboard.getInstance();
         dashboard.addUpdate("time", ()-> Timer.getMatchTime());
-        dashboard.addUpdate("voltage",()-> RobotController.getBatteryVoltage());
-        dashboard.addUpdate("robotX", ()-> tank.getPose().getX());
-        dashboard.addUpdate("robotY", ()-> tank.getPose().getY());
-        dashboard.addUpdate("robotYaw", ()-> tank.getPose().getRotation().getDegrees());
+        dashboard.addUpdate("voltage", ()-> RobotController.getBatteryVoltage());
+        // dashboard.addUpdate("robotX", ()-> tank.getPose().getX());
+        // dashboard.addUpdate("robotY", ()-> tank.getPose().getY());
+        // dashboard.addUpdate("robotYaw", ()-> tank.getPose().getRotation().getDegrees());
         dashboard.checkState("IntakeState", ()-> intake.getRunningState());
-        dashboard.addUpdate("driveLimit", ()-> tank.getdriveLimit());
-        dashboard.addUpdate("offset", ()-> tank.getOffSet());
+        // dashboard.addUpdate("driveLimit", ()-> tank.getdriveLimit());
+        // dashboard.addUpdate("offset", ()-> tank.getOffSet());
 
         if (NAR_TalonFX.getNumFailedConfigs() + NAR_CANSpark.getNumFailedConfigs() > 0 || !isConnected()) {
             Log.recoverable("Colors", "Errors configuring: " + NAR_CANSpark.getNumFailedConfigs() + NAR_TalonFX.getNumFailedConfigs());
         }
-        else if (!tank.isConfigured()) {
-            Log.info("Colors", "Tank Not Configured");
-        }
+        // else if (!tank.isConfigured()) {
+        //     Log.info("Colors", "Tank Not Configured");
+        // }
         else {
             Log.info("Colors", "No errors configuring");
         }
     }
 
     public boolean isConnected() {
-        for (SwerveModule module : tank.getModules()) {
-            if (module.getRunningState() != State.RUNNING) {
-                Log.info("State Check", "Module " + module.moduleNumber +" failed.");
-                return false;
-            }
+        if (tank.getRunningState() != NarwhalDashboard.State.RUNNING) {
+            Log.info("State Check", "Tank failed.");
+            return false;
         }
 
-        if (intake.getRunningState() != State.RUNNING) {
+        if (intake.getRunningState() != NarwhalDashboard.State.RUNNING) {
             Log.info("State Check", "Intake failed.");
             return false;
         }

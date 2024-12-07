@@ -2,6 +2,7 @@ package frc.team3128;
 
 import java.util.HashMap;
 
+import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.path.PathConstraints;
 
 import common.core.controllers.Controller;
@@ -24,6 +25,7 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
@@ -32,7 +34,15 @@ import edu.wpi.first.math.geometry.Rotation2d;
 
 
 public class Constants {
+    public static class TankConstants {
+        
+        public static final double MOTOR_POWER = 12;
 
+        public static final NAR_CANSpark LEFT_MOTOR = new NAR_CANSpark(135);
+        public static final NAR_CANSpark RIGHT_MOTOR = new NAR_CANSpark(136);
+
+        public static final Pigeon2 PIGEON2 = new Pigeon2(72);
+    }
     public static class AutoConstants {
 
         public static final double slowSpeed = 1.5;
