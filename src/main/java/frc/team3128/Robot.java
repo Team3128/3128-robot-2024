@@ -6,23 +6,13 @@ package frc.team3128;
 
 import java.util.Optional;
 
-import org.littletonrobotics.junction.Logger;
-
 import common.core.misc.NAR_Robot;
-import common.hardware.camera.Camera;
-import common.hardware.limelight.LEDMode;
-import common.utility.Log;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.DriverStation.MatchType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import static edu.wpi.first.wpilibj2.command.Commands.*;
 
-import frc.team3128.Constants.LedConstants.Colors;
-// import frc.team3128.autonomous.AutoPrograms;
-import frc.team3128.commands.CmdManager;
 // import frc.team3128.subsystems.Leds;
 import frc.team3128.subsystems.Swerve;
 
@@ -84,22 +74,7 @@ public class Robot extends NAR_Robot {
 
     @Override
     public void driverStationConnected() {
-        Log.info("State", "DS Connected");
-        Log.info("Alliance", getAlliance().toString());
-        if (getAlliance() == Alliance.Red) {
-            Camera.addIgnoredTags(3, 4, 5, 11, 12);
-        } else {
-            Camera.addIgnoredTags(6, 7, 8, 15, 16);
-        }
-        if (!NAR_Robot.logWithAdvantageKit) return;
-        if(DriverStation.getMatchType() != MatchType.None){
-            addReceiver(true, LoggingState.FULLMATCH);
- 
-        }else{
-            addReceiver(true, LoggingState.SESSION);
-        }
-
-        Logger.start();
+        
     }
 
     @Override

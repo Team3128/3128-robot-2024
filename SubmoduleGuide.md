@@ -151,3 +151,8 @@ To collaborate:
 * `git push` 		Update remote refs along with associated objects
 
 <br> Call `git help -a` to read all git commands.
+
+
+### General Commit Process
+
+1. 

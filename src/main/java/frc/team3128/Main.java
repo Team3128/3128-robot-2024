@@ -21,7 +21,6 @@ public final class Main {
     * <p>If you change your main robot class, change the parameter type.
     */
     public static void main(String... args) {
-        NAR_Robot.logWithAdvantageKit = true;
         RobotBase.startRobot(Robot::getInstance);
     }
 }
