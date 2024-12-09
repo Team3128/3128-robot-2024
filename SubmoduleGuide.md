@@ -153,6 +153,15 @@ To collaborate:
 <br> Call `git help -a` to read all git commands.
 
 
-### General Commit Process
+### 10 Step Commit Process
 
-1. 
+1. `./gradlew build`		Build gradle project for compile time errors
+2. `git pull`		Fetch from and integrate with origin
+3. `git branch -a`		View all local and remote branches
+4. `git checkout <BRANCH NAME>`			Switch branches with working tree files
+5. `git staus`		Show the working tree staus
+6. `git add --all`		Stage all untracked files
+7. `git status`		Show the working tree status with all untracked files
+8. `git branch`		Double check current branch
+9. `git commit -m <COMMIT MESSAGE>`		Commit staged changes to current local branch
+10. `git push`		Push commit changes from local to origin
