@@ -21,6 +21,8 @@ import common.utility.shuffleboard.NAR_Shuffleboard;
 // import frc.team3128.subsystems.Leds;
 import frc.team3128.subsystems.Swerve;
 // import frc.team3128.subsystems.Amper.Elevator;
+import frc.team3128.subsystems.Amper.Amper;
+import frc.team3128.subsystems.Amper.AmperStates;
 
 /**
  * Command-based is a "declarative" paradigm, very little robot logic should
@@ -33,6 +35,7 @@ public class RobotContainer {
     private Swerve swerve;
     // private Leds leds;
     // private Elevator elevator;
+    Amper amper;
 
 
     public static NAR_XboxController controller, controller2;
@@ -48,6 +51,7 @@ public class RobotContainer {
         NAR_Shuffleboard.WINDOW_WIDTH = 10;
 
         swerve = Swerve.getInstance();
+        amper = Amper.getInstance();
         // leds = Leds.getInstance();
         // elevator = new Elevator();
 
@@ -55,6 +59,7 @@ public class RobotContainer {
         controller = new NAR_XboxController(2);
         controller2 = new NAR_XboxController(3);
         // buttonPad = new NAR_ButtonBoard(4);
+        
 
         //uncomment line below to enable driving
         CommandScheduler.getInstance().setDefaultCommand(swerve, swerve.getDriveCommand(controller::getLeftX,controller::getLeftY, controller::getRightX));
@@ -71,10 +76,17 @@ public class RobotContainer {
     }   
 
     private void configureButtonBindings() {
-        controller.getButton(XboxButton.kX).onTrue(Commands.runOnce(() -> Swerve.getInstance().resetGyroTo(0)));
+        controller.getButton(XboxButton.kX)
+            .onTrue(Commands.runOnce(() -> Swerve.getInstance().resetGyroTo(0)));
         controller.getButton(XboxButton.kRightTrigger)
-        .onTrue(Commands.runOnce(() -> Swerve.getInstance().rotateTo(new Translation2d())));
-        // .onFalse(runOnce(() -> Swerve.getInstance().))
+            .onTrue(Commands.runOnce(() -> Swerve.getInstance().rotateTo(new Translation2d())));
+        controller.getButton(XboxButton.kX)
+            .onTrue(amper.setStateAsCommand(AmperStates.EXTENDED))
+            .onFalse(amper.setStateAsCommand(AmperStates.IDLE));
+        // control
+        controller.getButton(XboxButton.kA)
+            .onTrue(amper.pidTo(AmperStates.EXTENDED))
+            .onFalse(amper.setStateAsCommand(AmperStates.IDLE));
     }
 
     public void initCameras() {
