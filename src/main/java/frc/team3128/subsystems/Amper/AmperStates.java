@@ -1,8 +1,8 @@
 package frc.team3128.subsystems.Amper;
 
 public enum AmperStates {
-    EXTENDED(21.25, 5500),
-    PRIMED(21.25 * 0.7, 5500),
+    EXTENDED(10, 5500),
+    PRIMED(10 * 0.7, 5500),
     IDLE(0, 0);
 
     private double elevatorSetpoint;

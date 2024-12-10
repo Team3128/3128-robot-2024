@@ -31,10 +31,13 @@ public class Amper extends StateSubsystemBase<AmperStates> {
 
     public void registerTransitions() {
         getTransitionManager().applyConvergingFunction((AmperStates S) -> pidTo(S), EXTENDED, PRIMED, IDLE);
+        getTransitionManager().addTransition(IDLE, EXTENDED, pidTo(EXTENDED));
+        getTransitionManager().addTransition(EXTENDED, IDLE, pidTo(IDLE));
         // getTransitionManager().addTransition(IDLE, SYS_ID, elevator.characterization(3, 1));
     }
 
     public Command pidTo(AmperStates state) {
+        if (elevator == null || roller == null) return Commands.none();
         return sequence(
             elevator.pidTo(state.getElevatorSetpoint()),
             roller.pidTo(state.getRollerSetpoint())

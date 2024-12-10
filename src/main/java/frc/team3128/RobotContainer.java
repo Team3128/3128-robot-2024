@@ -8,6 +8,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.team3128.Constants.LedConstants.Colors;
+
+import static edu.wpi.first.wpilibj2.command.Commands.sequence;
+
 import common.hardware.input.NAR_XboxController;
 import common.hardware.input.NAR_XboxController.XboxButton;
 import common.hardware.limelight.Limelight;
@@ -81,12 +84,19 @@ public class RobotContainer {
         controller.getButton(XboxButton.kRightTrigger)
             .onTrue(Commands.runOnce(() -> Swerve.getInstance().rotateTo(new Translation2d())));
         controller.getButton(XboxButton.kX)
-            .onTrue(amper.setStateAsCommand(AmperStates.EXTENDED))
-            .onFalse(amper.setStateAsCommand(AmperStates.IDLE));
+            .onTrue(sequence(
+                amper.setStateAsCommand(AmperStates.EXTENDED),
+                Commands.runOnce(()-> amper.setState(AmperStates.EXTENDED), amper),
+                Commands.runOnce(() -> Log.info("State", "1" + amper.getState().name()))
+            ))
+            .onFalse(sequence(
+                amper.setStateAsCommand(AmperStates.IDLE),
+                Commands.runOnce(() -> Log.info("State", amper.getState().name()))
+            ));
         // control
         controller.getButton(XboxButton.kA)
             .onTrue(amper.pidTo(AmperStates.EXTENDED))
-            .onFalse(amper.setStateAsCommand(AmperStates.IDLE));
+            .onFalse(amper.pidTo(AmperStates.IDLE));
     }
 
     public void initCameras() {

@@ -3,6 +3,7 @@ package frc.team3128.subsystems.Amper;
 import common.core.controllers.Controller;
 import common.core.controllers.PIDFFConfig;
 import common.core.subsystems.PositionSubsystemBase;
+import common.hardware.motorcontroller.NAR_CANSpark;
 import common.hardware.motorcontroller.NAR_Motor;
 import common.hardware.motorcontroller.NAR_TalonFX;
 import edu.wpi.first.math.util.Units;
@@ -15,7 +16,7 @@ public class Elevator extends PositionSubsystemBase{
     private static PIDFFConfig controllerConfig = new PIDFFConfig(0.95, 0, 0, 0.21115, 0.00182, 0.00182, 0.0);
     private static Controller controller = new Controller(controllerConfig, Controller.Type.POSITION);
 
-    private static NAR_Motor leftMotor = new NAR_TalonFX(0);
+    private static NAR_Motor leftMotor = new NAR_CANSpark(21);
     // private static NAR_Motor rightMotor = new NAR_TalonFX(1);
 
     public static final double GEAR_RATIO = 1.0 / (6 + 2/3);
