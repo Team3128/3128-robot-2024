@@ -23,7 +23,7 @@ public class AmperExposed extends SubsystemBase{
     private Roller roller;
 
     public AmperExposed() {
-        state = AmperStates.EXTENDED;
+        state = AmperStates.IDLE;
         transitionManager = new TransitionManager<>(AmperStates.class);
         elevator = Elevator.getInstance();
         roller = Roller.getInstance();
@@ -31,25 +31,32 @@ public class AmperExposed extends SubsystemBase{
     }
 
     public void pidTo(AmperStates state) {
-        elevator.pidTo(state.getElevatorSetpoint());
-        roller.pidTo(state.getRollerSetpoint());
+        elevator.pidTo(state.getElevatorSetpoint()).schedule();
+        roller.pidTo(state.getRollerSetpoint()).schedule();
     }
 
     public void registerTransitions() {
-        transitionManager.addTransition(IDLE, PRIMED, runOnce(()-> pidTo(PRIMED)));
-        transitionManager.addTransition(PRIMED, EXTENDED, runOnce(()-> pidTo(EXTENDED)));
-        transitionManager.addTransition(EXTENDED, IDLE, runOnce(()-> pidTo(IDLE)));
+        transitionManager.addTransition(IDLE, PRIMED, runOnce(()-> {pidTo(PRIMED); state = PRIMED;}));
+        transitionManager.addTransition(PRIMED, EXTENDED, runOnce(()-> {pidTo(EXTENDED); state = EXTENDED;}));
+        transitionManager.addTransition(EXTENDED, IDLE, runOnce(()-> {pidTo(IDLE); state = IDLE;}));
     }
 
     public void setState(AmperStates nextState) {
+        Log.info("State", state.name() + " -> " + nextState.name());
         Transition<AmperStates> transition = transitionManager.getTransition(getState(), nextState);
 
         Log.info("State", "Check1");
         // if not the same state
-        if(stateEquals(nextState)) Log.info("Amper", "State already set to " + nextState.name());
+        if(stateEquals(nextState)) {
+            Log.info("Amper", "State already set to " + nextState.name());
+            return;
+        }
 
         // if invalid trnasition
-        if(transition == null) Log.info("Amper", "State transition null");
+        if(transition == null) {
+            Log.info("Amper", "State transition null");
+            return;
+        }
 
         // if not transitioning
         Log.info("State", "Check2");
@@ -57,7 +64,6 @@ public class AmperExposed extends SubsystemBase{
         transition.execute();
         Log.info("Amper", "State transition successful. " + transition.toString());
 
-        Log.info("Amper", "State transition failed");
     }
 
     public AmperStates getState() {

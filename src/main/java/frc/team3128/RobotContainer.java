@@ -83,13 +83,10 @@ public class RobotContainer {
             .onTrue(Commands.runOnce(() -> Swerve.getInstance().rotateTo(new Translation2d())));
         controller.getButton(XboxButton.kX)
             .onTrue(sequence(
-                amper.setStateAsCommand(AmperStates.EXTENDED),
-                Commands.runOnce(()-> amper.setState(AmperStates.EXTENDED), amper),
-                Commands.runOnce(() -> Log.info("State", "1" + amper.getState().name()))
+                Commands.runOnce(()-> amper.setState(AmperStates.EXTENDED))
             ))
             .onFalse(sequence(
-                amper.setStateAsCommand(AmperStates.IDLE),
-                Commands.runOnce(() -> Log.info("State", amper.getState().name()))
+                Commands.runOnce(()-> amper.setState(AmperStates.IDLE))
             ));
 
         controller.getButton(XboxButton.kY)
@@ -105,9 +102,9 @@ public class RobotContainer {
         );
         
         // control
-        controller.getButton(XboxButton.kA)
-            .onTrue(amper.pidTo(AmperStates.EXTENDED))
-            .onFalse(amper.pidTo(AmperStates.IDLE));
+        // controller.getButton(XboxButton.kA)
+        //     .onTrue(amper.pidTo(AmperStates.EXTENDED))
+        //     .onFalse(amper.pidTo(AmperStates.IDLE));
     }
 
     public void initCameras() {
