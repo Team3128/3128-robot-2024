@@ -1,20 +1,15 @@
 package frc.team3128;
 
-import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.team3128.Constants.LedConstants.Colors;
-
 import static edu.wpi.first.wpilibj2.command.Commands.sequence;
+import static edu.wpi.first.wpilibj2.command.Commands.waitSeconds;
 
 import common.hardware.input.NAR_XboxController;
 import common.hardware.input.NAR_XboxController.XboxButton;
 import common.hardware.limelight.Limelight;
-import common.hardware.limelight.LimelightKey;
 import common.hardware.motorcontroller.NAR_CANSpark;
 import common.hardware.motorcontroller.NAR_TalonFX;
 import common.utility.Log;
@@ -25,6 +20,7 @@ import common.utility.shuffleboard.NAR_Shuffleboard;
 import frc.team3128.subsystems.Swerve;
 // import frc.team3128.subsystems.Amper.Elevator;
 import frc.team3128.subsystems.Amper.Amper;
+import frc.team3128.subsystems.Amper.AmperExposed;
 import frc.team3128.subsystems.Amper.AmperStates;
 
 /**
@@ -39,6 +35,7 @@ public class RobotContainer {
     // private Leds leds;
     // private Elevator elevator;
     Amper amper;
+    AmperExposed amperExposed;
 
 
     public static NAR_XboxController controller, controller2;
@@ -55,6 +52,7 @@ public class RobotContainer {
 
         swerve = Swerve.getInstance();
         amper = Amper.getInstance();
+        amperExposed = AmperExposed.getInstance();
         // leds = Leds.getInstance();
         // elevator = new Elevator();
 
@@ -93,6 +91,19 @@ public class RobotContainer {
                 amper.setStateAsCommand(AmperStates.IDLE),
                 Commands.runOnce(() -> Log.info("State", amper.getState().name()))
             ));
+
+        controller.getButton(XboxButton.kY)
+            .onTrue(Commands.runOnce(()-> amperExposed.pidTo(AmperStates.EXTENDED)))
+            .onFalse(Commands.runOnce(()-> amperExposed.pidTo(AmperStates.IDLE))
+        );
+
+        controller.getButton(XboxButton.kB)
+            .onTrue(Commands.runOnce(()-> amperExposed.setState(AmperStates.PRIMED)))
+            .onFalse(Commands.runOnce(()-> amperExposed.setState(AmperStates.EXTENDED))
+                                .andThen(waitSeconds(1))
+                                .andThen(()-> amperExposed.setState(AmperStates.IDLE))
+        );
+        
         // control
         controller.getButton(XboxButton.kA)
             .onTrue(amper.pidTo(AmperStates.EXTENDED))
