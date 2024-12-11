@@ -19,7 +19,7 @@ import common.utility.shuffleboard.NAR_Shuffleboard;
 // import frc.team3128.subsystems.Leds;
 import frc.team3128.subsystems.Swerve;
 // import frc.team3128.subsystems.Amper.Elevator;
-import frc.team3128.subsystems.Amper.Amper;
+// import frc.team3128.subsystems.Amper.Amper;
 import frc.team3128.subsystems.Amper.AmperExposed;
 import frc.team3128.subsystems.Amper.AmperStates;
 
@@ -34,7 +34,7 @@ public class RobotContainer {
     private Swerve swerve;
     // private Leds leds;
     // private Elevator elevator;
-    Amper amper;
+    // Amper amper;
     AmperExposed amperExposed;
 
 
@@ -51,7 +51,7 @@ public class RobotContainer {
         NAR_Shuffleboard.WINDOW_WIDTH = 10;
 
         swerve = Swerve.getInstance();
-        amper = Amper.getInstance();
+        // amper = Amper.getInstance();
         amperExposed = AmperExposed.getInstance();
         // leds = Leds.getInstance();
         // elevator = new Elevator();
@@ -77,17 +77,17 @@ public class RobotContainer {
     }   
 
     private void configureButtonBindings() {
-        controller.getButton(XboxButton.kX)
-            .onTrue(Commands.runOnce(() -> Swerve.getInstance().resetGyroTo(0)));
-        controller.getButton(XboxButton.kRightTrigger)
-            .onTrue(Commands.runOnce(() -> Swerve.getInstance().rotateTo(new Translation2d())));
-        controller.getButton(XboxButton.kX)
-            .onTrue(sequence(
-                Commands.runOnce(()-> amper.setState(AmperStates.EXTENDED))
-            ))
-            .onFalse(sequence(
-                Commands.runOnce(()-> amper.setState(AmperStates.IDLE))
-            ));
+        // controller.getButton(XboxButton.kX)
+        //     .onTrue(Commands.runOnce(() -> Swerve.getInstance().resetGyroTo(0)));
+        // controller.getButton(XboxButton.kRightTrigger)
+        //     .onTrue(Commands.runOnce(() -> Swerve.getInstance().rotateTo(new Translation2d())));
+        // controller.getButton(XboxButton.kX)
+        //     .onTrue(sequence(
+        //         Commands.runOnce(()-> amper.setState(AmperStates.EXTENDED))
+        //     ))
+        //     .onFalse(sequence(
+        //         Commands.runOnce(()-> amper.setState(AmperStates.IDLE))
+        //     ));
 
         controller.getButton(XboxButton.kY)
             .onTrue(Commands.runOnce(()-> amperExposed.pidTo(AmperStates.EXTENDED)))

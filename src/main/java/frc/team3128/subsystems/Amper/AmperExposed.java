@@ -18,6 +18,7 @@ public class AmperExposed extends SubsystemBase{
     }
 
     private TransitionManager<AmperStates> transitionManager;
+    private Transition<AmperStates> lastScheduledTransition;
     private AmperStates state;
     private Elevator elevator;
     private Roller roller;
@@ -42,28 +43,35 @@ public class AmperExposed extends SubsystemBase{
     }
 
     public void setState(AmperStates nextState) {
-        Log.info("State", state.name() + " -> " + nextState.name());
-        Transition<AmperStates> transition = transitionManager.getTransition(getState(), nextState);
-
-        Log.info("State", "Check1");
+        Log.info("COMMANDED", state.name() + " -> " + nextState.name());
         // if not the same state
         if(stateEquals(nextState)) {
-            Log.info("Amper", "State already set to " + nextState.name());
+            Log.info("COMMANDED", "State already set to " + nextState.name());
             return;
         }
 
+        Transition<AmperStates> transition = transitionManager.getTransition(getState(), nextState);
         // if invalid trnasition
         if(transition == null) {
-            Log.info("Amper", "State transition null");
+            Log.info("TRANSITION", "State transition null");
             return;
         }
+        Log.info("TRANSITION", transition.toString());
 
-        // if not transitioning
-        Log.info("State", "Check2");
-        Log.info("State", "Transitioning...");
-        transition.execute();
-        Log.info("Amper", "State transition successful. " + transition.toString());
+        if(isTransitioning()) {
+            Log.info("TRANSITION", "Already transitioning, procceeding to override");
+            lastScheduledTransition.cancel();
+        }
 
+        state = nextState;
+        lastScheduledTransition = transition;
+        lastScheduledTransition.execute();
+
+        if(isTransitioning()) Log.info("State", "Transitioning...");
+    }
+
+    public boolean isTransitioning() {
+        return lastScheduledTransition != null && lastScheduledTransition.isRunning();
     }
 
     public AmperStates getState() {
@@ -73,5 +81,4 @@ public class AmperExposed extends SubsystemBase{
     public boolean stateEquals(AmperStates other) {
         return state.name().equals(other.name());
     }
-
 }
