@@ -15,6 +15,7 @@ import common.hardware.motorcontroller.NAR_TalonFX;
 import common.utility.Log;
 import common.utility.narwhaldashboard.NarwhalDashboard;
 import common.utility.shuffleboard.NAR_Shuffleboard;
+import frc.team3128.autonomous.PathManager;
 // import common.utility.tester.Tester.UnitTest;
 // import frc.team3128.subsystems.Leds;
 import frc.team3128.subsystems.Swerve;
@@ -74,6 +75,7 @@ public class RobotContainer {
         // NAR_Shuffleboard.addData("Debug Test", "Debug Value", x);
         // NAR_Shuffleboard.addData("Limelight", "ValidTarget", ()-> limelight.hasValidTarget(), 0, 0);
         // NAR_Shuffleboard.addData("Limelight", "TX", ()-> limelight.getValue(LimelightKey.HORIZONTAL_OFFSET), 0, 1);
+        PathManager.getInstance().topOnePiece().schedule();
     }   
 
     private void configureButtonBindings() {

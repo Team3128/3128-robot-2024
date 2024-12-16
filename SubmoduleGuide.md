@@ -160,7 +160,7 @@ To collaborate:
 3. `git branch -a`		View all local and remote branches
 4. `git checkout <BRANCH NAME>`			Switch branches with working tree files
 5. `git staus`		Show the working tree staus
-6. `git add --all`		Stage all untracked files
+6. `git add -A` or `git add <FILE PATH>`		Stage all untracked files or may specify certain files
 7. `git status`		Show the working tree status with all untracked files
 8. `git branch`		Double check current branch
 9. `git commit -m <COMMIT MESSAGE>`		Commit staged changes to current local branch

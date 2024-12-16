@@ -3,48 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.3,
-        "y": 5.55
+        "x": 2.477180560553251,
+        "y": 5.53309952388134
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.4000000000000001,
-        "y": 5.55
+        "x": 1.977180560553251,
+        "y": 5.53309952388134
       },
       "isLocked": false,
-      "linkedName": "middle"
+      "linkedName": "NOTE1b"
     },
     {
       "anchor": {
-        "x": 2.45950738420841,
-        "y": 5.55
+        "x": 1.3382086033558644,
+        "y": 5.53309952388134
       },
       "prevControl": {
-        "x": 2.3595073842084098,
-        "y": 5.55
+        "x": 1.8382086033558644,
+        "y": 5.53309952388134
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "note1.2"
+      "linkedName": "RAMSHOT"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "Intake",
-      "waypointRelativePos": 0.0,
+      "name": "RAMP",
+      "waypointRelativePos": 0,
       "command": {
         "type": "parallel",
         "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "Intake"
-              }
-            }
-          ]
+          "commands": []
         }
       }
     }
@@ -63,5 +56,5 @@
   "reversed": false,
   "folder": null,
   "previewStartingState": null,
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }
