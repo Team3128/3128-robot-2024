@@ -165,3 +165,12 @@ To collaborate:
 8. `git branch`		Double check current branch
 9. `git commit -m <COMMIT MESSAGE>`		Commit staged changes to current local branch
 10. `git push`		Push commit changes from local to origin
+
+
+### Running the Bash Setup
+
+```
+chmod +x setup.sh
+./setup.sh
+
+```
